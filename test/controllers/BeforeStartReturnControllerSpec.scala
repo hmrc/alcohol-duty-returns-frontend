@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimes, ErrorModel, ObligationData, ReturnPeriod, UserAnswers}
+import models.{AlcoholRegimes, ErrorModel, ObligationData, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
@@ -138,9 +138,12 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           Left(mockUpstreamErrorResponse)
         )
 
+        when(mockReturnPeriodViewModelFactory(any)(any)).thenReturn(returnPeriodViewModel)
+
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[ReturnPeriodViewModelFactory].toInstance(mockReturnPeriodViewModelFactory),
             bind[Clock].toInstance(clock)
           )
           .build()
@@ -151,21 +154,20 @@ class BeforeStartReturnControllerSpec extends SpecBase {
             controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
           )
 
+          when(mockReturnPeriodViewModelFactory(any)(any)).thenReturn(returnPeriodViewModel)
+
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[BeforeStartReturnView]
 
-          val returnPeriodViewModel =
-            new ReturnPeriodViewModelFactory(createDateTimeHelper())(
-              ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
-            )
-
           status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
+          contentAsString(result) mustEqual view(returnPeriodViewModel, beforeStartReturnViewModel)(
             request,
             getMessages(application)
           ).toString
         }
+
+        verify(mockReturnPeriodViewModelFactory, times(1)).apply(returnPeriod)(getMessages(application))
       }
 
       "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
@@ -320,10 +322,11 @@ class BeforeStartReturnControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    val mockUserAnswersConnector     = mock[UserAnswersConnector]
-    val mockBeforeStartReturnService = mock[BeforeStartReturnService]
-    val mockUserAnswersAuditHelper   = mock[UserAnswersAuditHelper]
-    val mockUpstreamErrorResponse    = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector         = mock[UserAnswersConnector]
+    val mockBeforeStartReturnService     = mock[BeforeStartReturnService]
+    val mockUserAnswersAuditHelper       = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse        = mock[UpstreamErrorResponse]
+    val mockReturnPeriodViewModelFactory = mock[ReturnPeriodViewModelFactory]
 
     implicit val messages: Messages = getMessages(app)
 
@@ -337,7 +340,10 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       validUntil = Some(Instant.now(clock))
     )
 
-    val currentDate = LocalDate.now(clock)
-    val viewModel   = new BeforeStartReturnViewModelFactory(createDateTimeHelper())(returnPeriod, currentDate)
+    val currentDate    = LocalDate.now(clock)
+    val dateTimeHelper = createDateTimeHelper()
+
+    val beforeStartReturnViewModel = new BeforeStartReturnViewModelFactory(dateTimeHelper)(returnPeriod, currentDate)
+    val returnPeriodViewModel      = new ReturnPeriodViewModelFactory(dateTimeHelper)(returnPeriod)
   }
 }

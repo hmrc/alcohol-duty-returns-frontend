@@ -26,8 +26,7 @@ import RateBandDescription.toDescription
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TellUsAboutMultipleSPRRateSummary {
-
+class TellUsAboutMultipleSPRRateSummary {
   def rows(regime: AlcoholRegime, answers: UserAnswers, index: Option[Int])(implicit
     messages: Messages
   ): Seq[SummaryListRow] =

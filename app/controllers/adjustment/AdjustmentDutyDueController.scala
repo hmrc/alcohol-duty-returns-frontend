@@ -85,5 +85,4 @@ class AdjustmentDutyDueController @Inject() (
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
-
 }

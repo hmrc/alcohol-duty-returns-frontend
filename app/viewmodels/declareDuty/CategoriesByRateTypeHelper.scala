@@ -31,7 +31,7 @@ case class CategoriesByRateTypeViewModel(
   draughtAndSmallProducer: Seq[CategoryViewModel]
 )
 
-object CategoriesByRateTypeHelper {
+class CategoriesByRateTypeHelper {
   def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime)(implicit
     messages: Messages
   ): CategoriesByRateTypeViewModel = {

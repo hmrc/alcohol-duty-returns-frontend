@@ -26,41 +26,36 @@ import RateBandDescription.toDescription
 import config.Constants.{Css, Format}
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-object MultipleSPRListHelper {
-
+class MultipleSPRListHelper {
   def sprTableViewModel(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
     messages: Messages
   ): Either[String, TableViewModel] =
-    getSprListEntries(userAnswers, regime) match {
-      case Right(sprList) =>
-        Right(
-          TableViewModel(
-            head = Seq(
-              HeadCell(
-                content = Text(messages("multipleSPRList.description.label"))
-              ),
-              HeadCell(
-                format = Some(Format.numeric),
-                content = Text(messages("multipleSPRList.totalLitres.label"))
-              ),
-              HeadCell(
-                format = Some(Format.numeric),
-                content = Text(messages("multipleSPRList.pureAlcohol.label"))
-              ),
-              HeadCell(
-                format = Some(Format.numeric),
-                content = Text(messages("multipleSPRList.dutyRate.label"))
-              ),
-              HeadCell(
-                content = Text(messages("multipleSPRList.action.label")),
-                classes = Css.oneQuarterCssClass
-              )
-            ),
-            rows = getSPREntryRows(sprList, regime)
+    getSprListEntries(userAnswers, regime).map(sprList =>
+      TableViewModel(
+        head = Seq(
+          HeadCell(
+            content = Text(messages("multipleSPRList.description.label"))
+          ),
+          HeadCell(
+            format = Some(Format.numeric),
+            content = Text(messages("multipleSPRList.totalLitres.label"))
+          ),
+          HeadCell(
+            format = Some(Format.numeric),
+            content = Text(messages("multipleSPRList.pureAlcohol.label"))
+          ),
+          HeadCell(
+            format = Some(Format.numeric),
+            content = Text(messages("multipleSPRList.dutyRate.label"))
+          ),
+          HeadCell(
+            content = Text(messages("multipleSPRList.action.label")),
+            classes = Css.oneQuarterCssClass
           )
-        )
-      case Left(e)        => Left(e)
-    }
+        ),
+        rows = getSPREntryRows(sprList, regime)
+      )
+    )
 
   private case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
 

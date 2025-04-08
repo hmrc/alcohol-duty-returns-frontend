@@ -24,33 +24,23 @@ import pages.declareDuty.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclare
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.declareDuty.CheckYourAnswersSPRSummaryListHelper
+import viewmodels.declareDuty.TellUsAboutMultipleSPRRateSummary
 import views.html.declareDuty.CheckYourAnswersSPRView
 
 import scala.concurrent.Future
 
 class CheckYourAnswersSPRControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val regime                  = regimeGen.sample.value
-  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
-  val volumeAndRateByTaxTypes = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
-
-  val userAnswers = emptyUserAnswers
-    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
-    .success
-    .value
-    .setByKey(TellUsAboutMultipleSPRRatePage, regime, volumeAndRateByTaxTypes)
-    .success
-    .value
-
   "CheckYourAnswerSPR Controller" - {
+    "must return OK and the correct view for a GET" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[TellUsAboutMultipleSPRRateSummary].toInstance(mockTellUsAboutMultipleSPRRateSummary)
+        )
+        .build()
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockTellUsAboutMultipleSPRRateSummary.rows(any, any, any)(any)).thenReturn(rows)
 
       running(application) {
         val request =
@@ -60,16 +50,17 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersSPRView]
 
-        val summaryList =
-          CheckYourAnswersSPRSummaryListHelper.summaryList(regime, userAnswers, None)(getMessages(application)).get
-
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(regime, summaryList, None)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(regime, SummaryList(rows), None)(
+          request,
+          getMessages(application)
+        ).toString
       }
+
+      verify(mockTellUsAboutMultipleSPRRateSummary, times(1)).rows(regime, userAnswers, None)(getMessages(application))
     }
 
-    "must redirect to the Journey Recovery page if there is no data for a GET" in {
-
+    "must redirect to the Journey Recovery page if there is no data for a GET" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -83,8 +74,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recovery page if there is no data for a POST" in {
-
+    "must redirect to the Journey Recovery page if there is no data for a POST" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -98,8 +88,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the MultipleSPRList page if there is data for a POST" in {
-
+    "must redirect to the MultipleSPRList page if there is data for a POST" in new SetUp {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -124,8 +113,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the MultipleSPRList page if there is data for a POST with an index" in {
-
+    "must redirect to the MultipleSPRList page if there is data for a POST with an index" in new SetUp {
       val index = Some(0)
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
@@ -151,5 +139,26 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
           .url
       }
     }
+  }
+
+  class SetUp {
+    def onwardRoute = Call("GET", "/foo")
+
+    val mockTellUsAboutMultipleSPRRateSummary = mock[TellUsAboutMultipleSPRRateSummary]
+
+    val regime                  = regimeGen.sample.value
+    val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
+    val volumeAndRateByTaxTypes = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
+
+    val userAnswers = emptyUserAnswers
+      .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+      .success
+      .value
+      .setByKey(TellUsAboutMultipleSPRRatePage, regime, volumeAndRateByTaxTypes)
+      .success
+      .value
+
+    val rows =
+      new TellUsAboutMultipleSPRRateSummary().rows(regime, userAnswers, None)(getMessages(app))
   }
 }

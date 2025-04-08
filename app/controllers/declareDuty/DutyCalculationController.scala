@@ -41,6 +41,7 @@ class DutyCalculationController @Inject() (
   userAnswersConnector: UserAnswersConnector,
   calculatorConnector: AlcoholDutyCalculatorConnector,
   val controllerComponents: MessagesControllerComponents,
+  dutyCalculationHelper: DutyCalculationHelper,
   view: DutyCalculationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -54,7 +55,7 @@ class DutyCalculationController @Inject() (
         totalDuty          <- calculatorConnector.calculateTotalDuty(totalDutyCalculatorRequest)
         updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(DutyCalculationPage, regime, totalDuty))
         _                  <- userAnswersConnector.set(updatedUserAnswers)
-      } yield DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
+      } yield dutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
         case Left(errorMessage)      =>
           logger.warn(s"Failed to create duty due table view model: $errorMessage")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

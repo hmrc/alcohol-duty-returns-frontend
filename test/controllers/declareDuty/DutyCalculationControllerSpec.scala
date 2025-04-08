@@ -30,92 +30,27 @@ import views.html.declareDuty.DutyCalculationView
 import scala.concurrent.Future
 
 class DutyCalculationControllerSpec extends SpecBase {
-  val calculatorMock  = mock[AlcoholDutyCalculatorConnector]
-  val regime          = regimeGen.sample.value
-  val rateBands       = genListOfRateBandForRegime(regime).sample.value.toSet
-  val volumesAndRates = arbitraryVolumeAndRateByTaxType(
-    rateBands.toSeq
-  ).arbitrary.sample.value
-
-  val userAnswers = emptyUserAnswers
-    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
-    .success
-    .value
-    .setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, false)
-    .success
-    .value
-    .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRates)
-    .success
-    .value
-
-  val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
-    val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
-    DutyByTaxType(
-      taxType = volumeAndRate.taxType,
-      totalLitres = volumeAndRate.totalLitres,
-      pureAlcohol = volumeAndRate.pureAlcohol,
-      dutyRate = volumeAndRate.dutyRate,
-      dutyDue = totalDuty
-    )
-  }
-
-  val alcoholDuty = AlcoholDuty(
-    dutiesByTaxType = dutiesByTaxType,
-    totalDuty = dutiesByTaxType.map(_.dutyDue).sum
-  )
-
-  when(calculatorMock.calculateTotalDuty(any())(any())).thenReturn(Future.successful(alcoholDuty))
-
-  "DutyCalculation Controller" - {
-
-    "must return OK and the correct view for a GET if No is selected for add Multiple SPR option" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
+  "DutyCalculationController" - {
+    "must return OK and the correct view for a GET if No is selected for add Multiple SPR option" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[DutyCalculationHelper].toInstance(mockDutyCalculationHelper)
         )
         .build()
 
-      running(application) {
-        val request = FakeRequest(GET, controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[DutyCalculationView]
-
-        val tableViewModel =
-          DutyCalculationHelper
-            .dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(application))
-            .toOption
-            .get
-
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
-          request,
-          getMessages(application)
-        ).toString
-      }
-    }
-
-    "must return OK and the correct view for a GET if Yes is selected for add Multiple SPR option" in {
-
-      val updatedUserAnswer = userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val tableViewModel =
+        new DutyCalculationHelper()
+          .dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(application))
+          .toOption
+          .get
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application = applicationBuilder(userAnswers = Some(updatedUserAnswer))
-        .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
+      when(mockAlcoholDutyCalculatorConnector.calculateTotalDuty(any())(any()))
+        .thenReturn(Future.successful(alcoholDuty))
+      when(mockDutyCalculationHelper.dutyDueTableViewModel(any(), any(), any())(any()))
+        .thenReturn(Right(tableViewModel))
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
@@ -124,11 +59,47 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DutyCalculationView]
 
-        val tableViewModel =
-          DutyCalculationHelper
-            .dutyDueTableViewModel(alcoholDuty, updatedUserAnswer, regime)(getMessages(application))
-            .toOption
-            .get
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
+          request,
+          getMessages(application)
+        ).toString
+      }
+
+      verify(mockDutyCalculationHelper, times(1)).dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(
+        getMessages(application)
+      )
+    }
+
+    "must return OK and the correct view for a GET if Yes is selected for add Multiple SPR option" in new SetUp {
+      val updatedUserAnswers = userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
+
+      val application = applicationBuilder(userAnswers = Some(updatedUserAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[DutyCalculationHelper].toInstance(mockDutyCalculationHelper)
+        )
+        .build()
+
+      val tableViewModel =
+        new DutyCalculationHelper()
+          .dutyDueTableViewModel(alcoholDuty, updatedUserAnswers, regime)(getMessages(application))
+          .toOption
+          .get
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAlcoholDutyCalculatorConnector.calculateTotalDuty(any())(any()))
+        .thenReturn(Future.successful(alcoholDuty))
+      when(mockDutyCalculationHelper.dutyDueTableViewModel(any(), any(), any())(any()))
+        .thenReturn(Right(tableViewModel))
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[DutyCalculationView]
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
@@ -136,20 +107,52 @@ class DutyCalculationControllerSpec extends SpecBase {
           getMessages(application)
         ).toString
       }
+
+      verify(mockDutyCalculationHelper, times(1)).dutyDueTableViewModel(alcoholDuty, updatedUserAnswers, regime)(
+        getMessages(application)
+      )
     }
 
-    "must redirect in the Journey Recovery screen if the user answers are empty" in {
+    "must redirect in the Journey Recovery screen if unable to get the view model" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[DutyCalculationHelper].toInstance(mockDutyCalculationHelper)
+        )
+        .build()
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAlcoholDutyCalculatorConnector.calculateTotalDuty(any())(any()))
+        .thenReturn(Future.successful(alcoholDuty))
+      when(mockDutyCalculationHelper.dutyDueTableViewModel(any(), any(), any())(any())).thenReturn(Left("Error!"))
 
+      running(application) {
+        val request = FakeRequest(GET, controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+
+      verify(mockDutyCalculationHelper, times(1)).dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(
+        getMessages(application)
+      )
+    }
+
+    "must redirect in the Journey Recovery screen if the user answers are empty" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
+
+      when(mockAlcoholDutyCalculatorConnector.calculateTotalDuty(any())(any()))
+        .thenReturn(Future.successful(alcoholDuty))
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
@@ -161,17 +164,13 @@ class DutyCalculationControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the MultipleSPRList page if there is data for a POST" in {
-
+    "must redirect to the MultipleSPRList page if there is data for a POST" in new SetUp {
       val updatedUserAnswers = userAnswers.setByKey(DutyCalculationPage, regime, alcoholDuty).success.value
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(updatedUserAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -186,15 +185,11 @@ class DutyCalculationControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recover page if there is no data for a POST" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+    "must redirect to the Journey Recover page if there is no data for a POST" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -208,5 +203,44 @@ class DutyCalculationControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+  }
+
+  class SetUp {
+    val mockUserAnswersConnector           = mock[UserAnswersConnector]
+    val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+    val mockDutyCalculationHelper          = mock[DutyCalculationHelper]
+
+    val regime          = regimeGen.sample.value
+    val rateBands       = genListOfRateBandForRegime(regime).sample.value.toSet
+    val volumesAndRates = arbitraryVolumeAndRateByTaxType(
+      rateBands.toSeq
+    ).arbitrary.sample.value
+
+    val userAnswers = emptyUserAnswers
+      .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+      .success
+      .value
+      .setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, false)
+      .success
+      .value
+      .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRates)
+      .success
+      .value
+
+    val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
+      val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
+      DutyByTaxType(
+        taxType = volumeAndRate.taxType,
+        totalLitres = volumeAndRate.totalLitres,
+        pureAlcohol = volumeAndRate.pureAlcohol,
+        dutyRate = volumeAndRate.dutyRate,
+        dutyDue = totalDuty
+      )
+    }
+
+    val alcoholDuty = AlcoholDuty(
+      dutiesByTaxType = dutiesByTaxType,
+      totalDuty = dutiesByTaxType.map(_.dutyDue).sum
+    )
   }
 }

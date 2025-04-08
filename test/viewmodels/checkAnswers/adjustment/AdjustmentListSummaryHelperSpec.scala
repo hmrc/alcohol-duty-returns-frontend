@@ -72,13 +72,15 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
     "must return a table with the correct head" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+      val table       =
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       table.head.size mustBe 4
     }
 
     "must return a table with the correct rows" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+      val table       =
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       table.rows.size mustBe adjustmentEntryList.size
       table.rows.zipWithIndex.foreach { case (row, index) =>
         row.actions.head.href mustBe controllers.adjustment.routes.CheckYourAnswersController
@@ -89,7 +91,8 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
     "must return the correct total" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+      val table       =
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       table.total.map(_.rows.head.value).get.content mustBe Text(
         Money.format(
           adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
@@ -103,7 +106,8 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
       val userAnswers =
         emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList :+ undefinedDutyAdjustmentEntry).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+      val table       =
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
 
       table.total.map(_.rows.head.value).get.content mustBe Text(Money.format(expectedSum)(getMessages(app)))
     }
@@ -113,7 +117,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
       val adjustmentEntryListMissingType = List(adjustmentEntryWithoutType)
       val userAnswers                    = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryListMissingType).success.value
       val exception                      = intercept[RuntimeException] {
-        AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       }
       exception.getMessage mustBe "Couldn't fetch adjustment type value from user answers"
     }

@@ -26,7 +26,7 @@ import RateBandDescription.toDescription
 import config.Constants.Format
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-object DutyCalculationHelper {
+class DutyCalculationHelper {
 
   def dutyDueTableViewModel(
     totalDutyCalculationResponse: AlcoholDuty,

@@ -21,9 +21,11 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-object TellUsAboutMultipleSPRRateHelper {
+import javax.inject.Inject
+
+class TellUsAboutMultipleSPRRateHelper @Inject() (categoriesByRateTypeHelper: CategoriesByRateTypeHelper) {
   def radioItems(rateBands: Set[RateBand], regime: AlcoholRegime)(implicit messages: Messages): Seq[RadioItem] = {
-    val categoryViewModels                = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
+    val categoryViewModels                = categoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
     val smallProducerRadioItems           = categoryViewModels.smallProducer
       .map { category =>
         RadioItem(content = Text(category.description.capitalize), value = Some(category.taxTypeCode))

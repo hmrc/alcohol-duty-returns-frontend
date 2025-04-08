@@ -26,8 +26,9 @@ import play.api.Logging
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.declareDuty.CheckYourAnswersSPRSummaryListHelper
+import viewmodels.declareDuty.TellUsAboutMultipleSPRRateSummary
 import views.html.declareDuty.CheckYourAnswersSPRView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,6 +41,7 @@ class CheckYourAnswersSPRController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  tellUsAboutMultipleSPRRateSummary: TellUsAboutMultipleSPRRateSummary,
   view: CheckYourAnswersSPRView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -48,12 +50,12 @@ class CheckYourAnswersSPRController @Inject() (
 
   def onPageLoad(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
-        case None              =>
+      tellUsAboutMultipleSPRRateSummary.rows(regime, request.userAnswers, index) match {
+        case Seq() =>
           logger.warn("No SPR summary list items found")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        case Some(summaryList) =>
-          Ok(view(regime, summaryList, index))
+        case rows  =>
+          Ok(view(regime, SummaryList(rows), index))
       }
     }
 

@@ -18,7 +18,7 @@ package controllers.declareDuty
 
 import base.SpecBase
 import forms.declareDuty.MultipleSPRListFormProvider
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
@@ -32,32 +32,20 @@ import views.html.declareDuty.MultipleSPRListView
 import scala.concurrent.Future
 
 class MultipleSPRListControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new MultipleSPRListFormProvider()
-  val form         = formProvider()
-
-  val regime = regimeGen.sample.value
-
-  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
-  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
-
-  val userAnswers = emptyUserAnswers
-    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
-    .success
-    .value
-    .setByKey(MultipleSPRListPage, regime, volumeAndRateByTaxTypes)
-    .success
-    .value
-
-  lazy val multipleSPRListRoute = controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime).url
-
   "MultipleSPRList Controller" - {
+    "must return OK and the correct view for a GET" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
+        )
+        .build()
 
-    "must return OK and the correct view for a GET" in {
+      val sprTable = new MultipleSPRListHelper()
+        .sprTableViewModel(userAnswers, regime)(getMessages(application))
+        .toOption
+        .get
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockMultipleSPRListHelper.sprTableViewModel(any(), any())(any())).thenReturn(Right(sprTable))
 
       running(application) {
         val request = FakeRequest(GET, multipleSPRListRoute)
@@ -65,21 +53,29 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[MultipleSPRListView]
-
-        val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(userAnswers, regime)(getMessages(application))
-          .getOrElse(fail())
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, sprTable)(request, getMessages(application)).toString
       }
+
+      verify(mockMultipleSPRListHelper, times(1)).sprTableViewModel(userAnswers, regime)(getMessages(application))
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp {
       val filledUserAnswers = userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true).success.value
 
-      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers))
+        .overrides(
+          bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
+        )
+        .build()
+
+      val sprTable = new MultipleSPRListHelper()
+        .sprTableViewModel(filledUserAnswers, regime)(getMessages(application))
+        .toOption
+        .get
+
+      when(mockMultipleSPRListHelper.sprTableViewModel(any(), any())(any())).thenReturn(Right(sprTable))
 
       running(application) {
         val request = FakeRequest(GET, multipleSPRListRoute)
@@ -87,10 +83,6 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[MultipleSPRListView]
 
         val result = route(application, request).value
-
-        val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(userAnswers, regime)(getMessages(application))
-          .getOrElse(fail())
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), regime, sprTable)(
@@ -98,19 +90,19 @@ class MultipleSPRListControllerSpec extends SpecBase {
           getMessages(application)
         ).toString
       }
+
+      verify(mockMultipleSPRListHelper, times(1)).sprTableViewModel(filledUserAnswers, regime)(getMessages(application))
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+    "must redirect to the next page when valid data is submitted" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
           )
           .build()
 
@@ -126,9 +118,20 @@ class MultipleSPRListControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp {
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
+          )
+          .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val sprTable = new MultipleSPRListHelper()
+        .sprTableViewModel(userAnswers, regime)(getMessages(application))
+        .toOption
+        .get
+
+      when(mockMultipleSPRListHelper.sprTableViewModel(any(), any())(any())).thenReturn(Right(sprTable))
 
       running(application) {
         val request =
@@ -141,17 +144,38 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(userAnswers, regime)(getMessages(application))
-          .getOrElse(fail())
-
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, sprTable)(request, getMessages(application)).toString
       }
+
+      verify(mockMultipleSPRListHelper, times(1)).sprTableViewModel(userAnswers, regime)(getMessages(application))
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery when invalid data is submitted and cannot get the table" in new SetUp {
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
+          )
+          .build()
 
+      when(mockMultipleSPRListHelper.sprTableViewModel(any(), any())(any())).thenReturn(Left("Error!"))
+
+      running(application) {
+        val request =
+          FakeRequest(POST, multipleSPRListRoute)
+            .withFormUrlEncodedBody(("value", ""))
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+
+      verify(mockMultipleSPRListHelper, times(1)).sprTableViewModel(userAnswers, regime)(getMessages(application))
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -164,8 +188,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if empty user data is provided" in {
-
+    "must redirect to Journey Recovery for a GET if empty user data is provided" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -178,8 +201,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -194,8 +216,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if empty user data is provided" in {
-
+    "must redirect to Journey Recovery for a POST if empty user data is provided" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -208,38 +229,67 @@ class MultipleSPRListControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
+    }
+
+    "must return an error if tax types in MultipleSPRListPage are not found in rate bands" in new SetUp {
+      val unmatchedRateBand = genRateBandForRegimeWithSPR(regime).sample.value
+      val unmatchedTaxType  = genVolumeAndRateByTaxTypeRateBand(unmatchedRateBand).arbitrary.sample.value
+
+      val incompleteUserAnswers = emptyUserAnswers
+        .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+        .success
+        .value
+        .setByKey(MultipleSPRListPage, regime, Seq(unmatchedTaxType))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(incompleteUserAnswers))
+          .overrides(
+            bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
+          )
+          .build()
+
+      when(mockMultipleSPRListHelper.sprTableViewModel(any(), any())(any())).thenReturn(Left("Error!"))
+
+      running(application) {
+        val request = FakeRequest(GET, multipleSPRListRoute)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+
+      verify(mockMultipleSPRListHelper, times(1)).sprTableViewModel(incompleteUserAnswers, regime)(
+        getMessages(application)
+      )
     }
   }
 
-  "must return an error if tax types in MultipleSPRListPage are not found in rate bands" in {
+  class SetUp {
+    def onwardRoute = Call("GET", "/foo")
 
-    val unmatchedRateBand = genRateBandForRegimeWithSPR(regime).sample.value
-    val unmatchedTaxType  = genVolumeAndRateByTaxTypeRateBand(unmatchedRateBand).arbitrary.sample.value
+    val mockUserAnswersConnector  = mock[UserAnswersConnector]
+    val mockReturnsNavigator      = mock[ReturnsNavigator]
+    val mockMultipleSPRListHelper = mock[MultipleSPRListHelper]
 
-    val rateBands = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
+    val formProvider = new MultipleSPRListFormProvider()
+    val form         = formProvider()
 
-    val incompleteUserAnswers = emptyUserAnswers
+    val regime = regimeGen.sample.value
+
+    val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
+    val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+
+    val userAnswers = emptyUserAnswers
       .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
       .success
       .value
-      .setByKey(MultipleSPRListPage, regime, Seq(unmatchedTaxType))
+      .setByKey(MultipleSPRListPage, regime, volumeAndRateByTaxTypes)
       .success
       .value
 
-    val application = applicationBuilder(userAnswers = Some(incompleteUserAnswers)).build()
-
-    running(application) {
-      val request = FakeRequest(GET, multipleSPRListRoute)
-
-      val result = route(application, request).value
-
-      val sprTable = MultipleSPRListHelper
-        .sprTableViewModel(incompleteUserAnswers, regime)(getMessages(application))
-
-      sprTable mustBe Left(s"Tax types not found: ${unmatchedTaxType.taxType}")
-
-      status(result)                 mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-    }
+    val multipleSPRListRoute = controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime).url
   }
 }

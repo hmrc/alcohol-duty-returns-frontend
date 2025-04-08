@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import connectors.UserAnswersConnector
 import models.declareDuty.VolumeAndRateByTaxType
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.declareDuty.TellUsAboutMultipleSPRRateHelper
+import viewmodels.declareDuty.{CategoriesByRateTypeHelper, TellUsAboutMultipleSPRRateHelper}
 import views.html.declareDuty.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.Future
@@ -64,8 +64,11 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton =
-          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
+        val categoriesByRateTypeHelper = new CategoriesByRateTypeHelper()
+        val rateBandRadioButton        =
+          new TellUsAboutMultipleSPRRateHelper(categoriesByRateTypeHelper).radioItems(rateBands, regime)(
+            getMessages(application)
+          )
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -88,8 +91,11 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton =
-          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
+        val categoriesByRateTypeHelper = new CategoriesByRateTypeHelper()
+        val rateBandRadioButton        =
+          new TellUsAboutMultipleSPRRateHelper(categoriesByRateTypeHelper).radioItems(rateBands, regime)(
+            getMessages(application)
+          )
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -126,8 +132,11 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton =
-          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
+        val categoriesByRateTypeHelper = new CategoriesByRateTypeHelper()
+        val rateBandRadioButton        =
+          new TellUsAboutMultipleSPRRateHelper(categoriesByRateTypeHelper).radioItems(rateBands, regime)(
+            getMessages(application)
+          )
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -161,8 +170,11 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton =
-          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
+        val categoriesByRateTypeHelper = new CategoriesByRateTypeHelper()
+        val rateBandRadioButton        =
+          new TellUsAboutMultipleSPRRateHelper(categoriesByRateTypeHelper).radioItems(rateBands, regime)(
+            getMessages(application)
+          )
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -409,8 +421,11 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton =
-          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
+        val categoriesByRateTypeHelper = new CategoriesByRateTypeHelper()
+        val rateBandRadioButton        =
+          new TellUsAboutMultipleSPRRateHelper(categoriesByRateTypeHelper).radioItems(rateBands, regime)(
+            getMessages(application)
+          )
 
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, regime, rateBandRadioButton, None)(

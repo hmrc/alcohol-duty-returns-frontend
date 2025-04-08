@@ -34,7 +34,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.TableViewModel
 import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
 import views.html.adjustment.AdjustmentListView
 
@@ -42,83 +41,24 @@ import java.time.YearMonth
 import scala.concurrent.Future
 
 class AdjustmentListControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider                              = new AdjustmentListFormProvider()
-  val form: Form[Boolean]                       = formProvider()
-  val pageNumber                                = 1
-  lazy val adjustmentListRoute: String          =
-    controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
-  val dutyDue: BigDecimal                       = BigDecimal(34.2)
-  val rate: BigDecimal                          = BigDecimal(9.27)
-  val pureAlcoholVolume: BigDecimal             = BigDecimal(3.69)
-  val taxCode                                   = "311"
-  val volume: BigDecimal                        = BigDecimal(10)
-  val repackagedRate: BigDecimal                = BigDecimal(10)
-  val repackagedDuty: BigDecimal                = BigDecimal(33.2)
-  val newDuty: BigDecimal                       = BigDecimal(1)
-  val rateBand: RateBand                        = RateBand(
-    "310",
-    "some band",
-    RateType.DraughtRelief,
-    Some(BigDecimal(10.99)),
-    Set(
-      RangeDetailsByRegime(
-        AlcoholRegime.Beer,
-        NonEmptySeq.one(
-          ABVRange(
-            AlcoholType.Beer,
-            AlcoholByVolume(0.1),
-            AlcoholByVolume(5.8)
-          )
-        )
-      )
-    )
-  )
-  val adjustmentEntry: AdjustmentEntry          = AdjustmentEntry(
-    pureAlcoholVolume = Some(pureAlcoholVolume),
-    totalLitresVolume = Some(volume),
-    rateBand = Some(rateBand),
-    spoiltRegime = Some(Beer),
-    duty = Some(dutyDue),
-    adjustmentType = Some(Spoilt),
-    period = Some(YearMonth.of(24, 1))
-  )
-  val adjustmentEntryList: Seq[AdjustmentEntry] = List(adjustmentEntry)
-
-  val userAnswsers: UserAnswers = emptyUserAnswers
-    .set(AdjustmentEntryListPage, adjustmentEntryList)
-    .success
-    .value
-
-  val userAnswersWithCurrent: UserAnswers = userAnswsers
-    .set(CurrentAdjustmentEntryPage, adjustmentEntry)
-    .success
-    .value
-
-  val cleanedUserAnswers: UserAnswers = userAnswsers
-    .set(AdjustmentListPage, true)
-    .success
-    .value
-
-  val total: BigDecimal = BigDecimal(0)
-
   "AdjustmentList Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-      val mockUserAnswersConnector           = mock[UserAnswersConnector]
+    "must return OK and the correct view for a GET" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
       )
-      val application                        = applicationBuilder(userAnswers = Some(userAnswsers))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper)
         )
         .build()
+
+      val tableViewModel =
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(application))
+      when(mockAdjustmentListSummaryHelper.adjustmentEntryTable(any, any, any)(any)).thenReturn(tableViewModel)
 
       running(application) {
         val request = FakeRequest(GET, adjustmentListRoute)
@@ -127,34 +67,39 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentListView]
 
-        val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total, pageNumber)(getMessages(app))
-
-        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
+        val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, adjustmentTable, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(form, tableViewModel, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString
       }
+
+      verify(mockAdjustmentListSummaryHelper, times(1)).adjustmentEntryTable(userAnswers, total, pageNumber)(
+        getMessages(application)
+      )
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-      val mockUserAnswersConnector           = mock[UserAnswersConnector]
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val updatedUserAnswers                 =
-        userAnswsers.set(AdjustmentListPage, true).success.value.set(AdjustmentTotalPage, total).success.value
-      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      val updatedUserAnswers =
+        userAnswers.set(AdjustmentListPage, true).success.value.set(AdjustmentTotalPage, total).success.value
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
       )
-      val application                        = applicationBuilder(userAnswers = Some(updatedUserAnswers))
+
+      val application = applicationBuilder(userAnswers = Some(updatedUserAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper)
         )
         .build()
+
+      val tableViewModel = new AdjustmentListSummaryHelper()
+        .adjustmentEntryTable(updatedUserAnswers, total, pageNumber)(getMessages(application))
+      when(mockAdjustmentListSummaryHelper.adjustmentEntryTable(any, any, any)(any)).thenReturn(tableViewModel)
 
       running(application) {
         val request = FakeRequest(GET, adjustmentListRoute)
@@ -163,23 +108,21 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total, pageNumber)(getMessages(app))
-
-        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
+        val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(form.fill(true), tableViewModel, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString
       }
+
+      verify(mockAdjustmentListSummaryHelper, times(1)).adjustmentEntryTable(updatedUserAnswers, total, pageNumber)(
+        getMessages(application)
+      )
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+    "must redirect to the next page when valid data is submitted" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
@@ -203,18 +146,15 @@ class AdjustmentListControllerSpec extends SpecBase {
       }
     }
 
-    "must clear current adjustment entry when valid data is submitted" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+    "must clear current adjustment entry when valid data is submitted" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithCurrent))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper)
           )
           .build()
 
@@ -232,9 +172,16 @@ class AdjustmentListControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper)
+        )
+        .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswsers)).build()
+      val tableViewModel =
+        new AdjustmentListSummaryHelper().adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(application))
+      when(mockAdjustmentListSummaryHelper.adjustmentEntryTable(any, any, any)(any)).thenReturn(tableViewModel)
 
       running(application) {
         val request =
@@ -247,21 +194,21 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total, pageNumber)(getMessages(app))
-
-        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
+        val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, adjustmentTable, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(boundForm, tableViewModel, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString
       }
+
+      verify(mockAdjustmentListSummaryHelper, times(1)).adjustmentEntryTable(userAnswers, total, pageNumber)(
+        getMessages(application)
+      )
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -274,8 +221,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -290,16 +236,12 @@ class AdjustmentListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to first page of AdjustmentList for a GET if a pageNumber is out of bounds" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+    "must redirect to first page of AdjustmentList for a GET if a pageNumber is out of bounds" in new SetUp {
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
       )
 
-      val application = applicationBuilder(userAnswers = Some(userAnswsers))
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -320,18 +262,12 @@ class AdjustmentListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery if calculator call fails" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
-
+    "must redirect to Journey Recovery if calculator call fails" in new SetUp {
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.failed(
         new Exception("Calculation failed")
       )
 
-      val application = applicationBuilder(userAnswers = Some(userAnswsers))
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -347,5 +283,73 @@ class AdjustmentListControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+  }
+
+  class SetUp {
+    def onwardRoute = Call("GET", "/foo")
+
+    val mockUserAnswersConnector           = mock[UserAnswersConnector]
+    val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+    val mockAdjustmentListSummaryHelper    = mock[AdjustmentListSummaryHelper]
+    val mockAdjustmentNavigator            = mock[AdjustmentNavigator]
+
+    val formProvider                              = new AdjustmentListFormProvider()
+    val form: Form[Boolean]                       = formProvider()
+    val pageNumber                                = 1
+    lazy val adjustmentListRoute: String          =
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+    val dutyDue: BigDecimal                       = BigDecimal(34.2)
+    val rate: BigDecimal                          = BigDecimal(9.27)
+    val pureAlcoholVolume: BigDecimal             = BigDecimal(3.69)
+    val taxCode                                   = "311"
+    val volume: BigDecimal                        = BigDecimal(10)
+    val repackagedRate: BigDecimal                = BigDecimal(10)
+    val repackagedDuty: BigDecimal                = BigDecimal(33.2)
+    val newDuty: BigDecimal                       = BigDecimal(1)
+    val rateBand: RateBand                        = RateBand(
+      "310",
+      "some band",
+      RateType.DraughtRelief,
+      Some(BigDecimal(10.99)),
+      Set(
+        RangeDetailsByRegime(
+          AlcoholRegime.Beer,
+          NonEmptySeq.one(
+            ABVRange(
+              AlcoholType.Beer,
+              AlcoholByVolume(0.1),
+              AlcoholByVolume(5.8)
+            )
+          )
+        )
+      )
+    )
+    val adjustmentEntry: AdjustmentEntry          = AdjustmentEntry(
+      pureAlcoholVolume = Some(pureAlcoholVolume),
+      totalLitresVolume = Some(volume),
+      rateBand = Some(rateBand),
+      spoiltRegime = Some(Beer),
+      duty = Some(dutyDue),
+      adjustmentType = Some(Spoilt),
+      period = Some(YearMonth.of(24, 1))
+    )
+    val adjustmentEntryList: Seq[AdjustmentEntry] = List(adjustmentEntry)
+
+    val userAnswers: UserAnswers = emptyUserAnswers
+      .set(AdjustmentEntryListPage, adjustmentEntryList)
+      .success
+      .value
+
+    val userAnswersWithCurrent: UserAnswers = userAnswers
+      .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+      .success
+      .value
+
+    val cleanedUserAnswers: UserAnswers = userAnswers
+      .set(AdjustmentListPage, true)
+      .success
+      .value
+
+    val total: BigDecimal = BigDecimal(0)
   }
 }

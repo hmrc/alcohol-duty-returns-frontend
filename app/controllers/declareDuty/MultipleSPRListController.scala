@@ -42,6 +42,7 @@ class MultipleSPRListController @Inject() (
   requireData: DataRequiredAction,
   formProvider: MultipleSPRListFormProvider,
   val controllerComponents: MessagesControllerComponents,
+  multipleSPRListHelper: MultipleSPRListHelper,
   view: MultipleSPRListView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -57,7 +58,7 @@ class MultipleSPRListController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      MultipleSPRListHelper
+      multipleSPRListHelper
         .sprTableViewModel(request.userAnswers, regime)
         .fold(
           error => {
@@ -74,7 +75,7 @@ class MultipleSPRListController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            MultipleSPRListHelper
+            multipleSPRListHelper
               .sprTableViewModel(request.userAnswers, regime)
               .fold(
                 error => {

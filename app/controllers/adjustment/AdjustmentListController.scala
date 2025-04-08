@@ -45,7 +45,8 @@ class AdjustmentListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentListView,
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
-  adjustmentOverUnderDeclarationCalculationHelper: AdjustmentOverUnderDeclarationCalculationHelper
+  adjustmentOverUnderDeclarationCalculationHelper: AdjustmentOverUnderDeclarationCalculationHelper,
+  adjustmentListSummaryHelper: AdjustmentListSummaryHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -118,7 +119,7 @@ class AdjustmentListController @Inject() (
     val adjustmentEntries       = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
     val totalPages              =
       if (adjustmentEntries.isEmpty) 1 else Math.ceil(adjustmentEntries.size.toDouble / rowsPerPage).toInt
-    val paginatedTableViewModel = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
+    val paginatedTableViewModel = adjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
     PaginatedViewModel(totalPages, paginatedTableViewModel)
   }
 

@@ -43,6 +43,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
   requireData: DataRequiredAction,
   formProvider: TellUsAboutSingleSPRRateFormProvider,
   val controllerComponents: MessagesControllerComponents,
+  categoriesByRateTypeHelper: CategoriesByRateTypeHelper,
   view: TellUsAboutSingleSPRRateView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -60,12 +61,12 @@ class TellUsAboutSingleSPRRateController @Inject() (
           logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
-          val preparedForm               = request.userAnswers.getByKey(currentPage, regime) match {
+          val preparedForm                  = request.userAnswers.getByKey(currentPage, regime) match {
             case None        => form
             case Some(value) => form.fill(value)
           }
-          val categoriesByRateTypeHelper = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
-          Ok(view(preparedForm, regime, categoriesByRateTypeHelper, mode))
+          val categoriesByRateTypeViewModel = categoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
+          Ok(view(preparedForm, regime, categoriesByRateTypeViewModel, mode))
       }
     }
 
@@ -85,7 +86,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
                     view(
                       formWithErrors,
                       regime,
-                      CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime),
+                      categoriesByRateTypeHelper.rateBandCategories(rateBands, regime),
                       mode
                     )
                   )

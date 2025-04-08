@@ -31,7 +31,7 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
         volumeAndRateByTaxType1
       )
 
-      val rows = TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None)
+      val rows = new TellUsAboutMultipleSPRRateSummary().rows(Beer, answers, None)
       rows.map(_.key.content)   mustBe
         Seq(Text("Description"), Text("Total beer"), Text("Total pure alcohol"), Text("Duty rate"))
       rows.map(_.value.content) mustBe
@@ -46,13 +46,13 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
     "must return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
       val answers = tellUsAboutMultipleSPRRatePage(userAnswersWithBeer, Beer, volumeAndRateByTaxType1)
 
-      TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None) mustBe Seq.empty
+      new TellUsAboutMultipleSPRRateSummary().rows(Beer, answers, None) mustBe Seq.empty
     }
 
     "must return no rows if TellUsAboutMultipleSPRRatePage page doesn't have an answer" in new SetUp {
       val answers = whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands)
 
-      TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None) mustBe Seq.empty
+      new TellUsAboutMultipleSPRRateSummary().rows(Beer, answers, None) mustBe Seq.empty
     }
 
     "must return no rows if a tax type is not found in the rateBands" in new SetUp {
@@ -64,7 +64,7 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
         badVolumeAndRateByTaxType
       )
 
-      TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None) mustBe Seq.empty
+      new TellUsAboutMultipleSPRRateSummary().rows(Beer, answers, None) mustBe Seq.empty
     }
   }
 

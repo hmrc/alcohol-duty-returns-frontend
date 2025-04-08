@@ -77,12 +77,14 @@ class BeforeStartReturnController @Inject() (
                 Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
             }
           case Left(error) =>
-            Future.successful(handleGetUserAnswersError(appaId, periodKey, returnPeriod, session, error))
+            Future.successful(
+              handleGetUserAnswersErrorOrShowViewIfNotFound(appaId, periodKey, returnPeriod, session, error)
+            )
         }
     }
   }
 
-  private def handleGetUserAnswersError(
+  private def handleGetUserAnswersErrorOrShowViewIfNotFound(
     appaId: String,
     periodKey: String,
     returnPeriod: ReturnPeriod,

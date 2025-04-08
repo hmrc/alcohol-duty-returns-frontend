@@ -52,7 +52,7 @@ class DutyCalculationHelperSpec extends SpecBase {
         .success
         .value
 
-      val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
+      val result = new DutyCalculationHelper().dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
 
       result.isRight mustBe true
 
@@ -64,7 +64,8 @@ class DutyCalculationHelperSpec extends SpecBase {
     "must return a Left with error message when no rate bands found" in {
       val alcoholDuty = AlcoholDuty(Seq.empty, BigDecimal(0))
 
-      val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, emptyUserAnswers, regime)(getMessages(app))
+      val result =
+        new DutyCalculationHelper().dutyDueTableViewModel(alcoholDuty, emptyUserAnswers, regime)(getMessages(app))
 
       result mustBe Left("No rate bands found")
     }
@@ -91,7 +92,7 @@ class DutyCalculationHelperSpec extends SpecBase {
 
       val alcoholDuty = AlcoholDuty(dutyByTaxType, totalDuty)
 
-      val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
+      val result = new DutyCalculationHelper().dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
 
       val errorMsg = result.left.getOrElse(fail("Expected Left(errorMessage) but got Right"))
       assert(errorMsg.startsWith("No rate band found for taxType:"))

@@ -26,6 +26,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalacheck.Arbitrary._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.CategoriesByRateTypeHelper
@@ -34,36 +35,15 @@ import views.html.declareDuty.HowMuchDoYouNeedToDeclareView
 import scala.concurrent.Future
 
 class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val regime = arbitrary[AlcoholRegime].sample.value
-
-  val formProvider = new HowMuchDoYouNeedToDeclareFormProvider()
-
-  lazy val howMuchDoYouNeedToDeclareRoute =
-    routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-
-  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
-  val volumeAndRateByTaxTypes = arbitraryVolumeAndRateByTaxType(
-    rateBands.toSeq
-  ).arbitrary.sample.value
-
-  val userAnswers = emptyUserAnswers
-    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
-    .success
-    .value
-
-  val filledUserAnswers = userAnswers
-    .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumeAndRateByTaxTypes)
-    .success
-    .value
-
   "HowMuchDoYouNeedToDeclare Controller" - {
+    "must return OK and the correct view for a GET" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CategoriesByRateTypeHelper].toInstance(mockCategoriesByRateTypeHelper)
+        )
+        .build()
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockCategoriesByRateTypeHelper.rateBandCategories(any(), any())(any())).thenReturn(returnSummaryList)
 
       running(application) {
         val request = FakeRequest(GET, howMuchDoYouNeedToDeclareRoute)
@@ -72,21 +52,26 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
-        val form                      = formProvider(regime)(getMessages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, regime, expectedReturnSummaryList, NormalMode)(
+        contentAsString(result) mustEqual view(form, regime, returnSummaryList, NormalMode)(
           request,
           getMessages(application)
         ).toString
       }
+
+      verify(mockCategoriesByRateTypeHelper, times(1)).rateBandCategories(rateBands, regime)(getMessages(application))
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers))
+        .overrides(
+          bind[CategoriesByRateTypeHelper].toInstance(mockCategoriesByRateTypeHelper)
+        )
+        .build()
 
-      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
+      when(mockCategoriesByRateTypeHelper.rateBandCategories(any(), any())(any())).thenReturn(returnSummaryList)
 
       running(application) {
         val request = FakeRequest(GET, howMuchDoYouNeedToDeclareRoute)
@@ -95,28 +80,23 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
-        val form                      = formProvider(regime)(getMessages(application))
+        val form = formProvider(regime)(getMessages(application))
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(volumeAndRateByTaxTypes.map(_.toVolumes)),
           regime,
-          expectedReturnSummaryList,
+          returnSummaryList,
           NormalMode
         )(
           request,
           getMessages(application)
         ).toString
       }
+
+      verify(mockCategoriesByRateTypeHelper, times(1)).rateBandCategories(rateBands, regime)(getMessages(application))
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
+    "must redirect to the next page when valid data is submitted" in new SetUp {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
@@ -125,8 +105,12 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
           )
           .build()
 
-      running(application) {
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator.nextPageWithRegime(eqTo(HowMuchDoYouNeedToDeclarePage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
+      running(application) {
         val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
           Seq(
             s"volumes[$index].taxType"     -> value.taxType,
@@ -146,9 +130,14 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CategoriesByRateTypeHelper].toInstance(mockCategoriesByRateTypeHelper)
+        )
+        .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockCategoriesByRateTypeHelper.rateBandCategories(any(), any())(any())).thenReturn(returnSummaryList)
 
       running(application) {
         val request =
@@ -163,18 +152,17 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
-
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, regime, summaryList, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, regime, returnSummaryList, NormalMode)(
           request,
           getMessages(application)
         ).toString
       }
+
+      verify(mockCategoriesByRateTypeHelper, times(1)).rateBandCategories(rateBands, regime)(getMessages(application))
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -187,8 +175,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if empty user data is provided" in {
-
+    "must redirect to Journey Recovery for a GET if empty user data is provided" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -201,8 +188,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -217,8 +203,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if empty user data is provided" in {
-
+    "must redirect to Journey Recovery for a POST if empty user data is provided" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -233,19 +218,8 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if incoherent data is found" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+    "must redirect to Journey Recovery for a POST if incoherent data is found" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
 
@@ -267,5 +241,38 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         ) must have message "Failed to find rate band for tax type"
       }
     }
+  }
+
+  class SetUp {
+    def onwardRoute = Call("GET", "/foo")
+
+    val mockCategoriesByRateTypeHelper = mock[CategoriesByRateTypeHelper]
+    val mockUserAnswersConnector       = mock[UserAnswersConnector]
+    val mockReturnsNavigator           = mock[ReturnsNavigator]
+
+    val regime = arbitrary[AlcoholRegime].sample.value
+
+    val formProvider = new HowMuchDoYouNeedToDeclareFormProvider()
+
+    lazy val howMuchDoYouNeedToDeclareRoute =
+      routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+
+    val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+    val volumeAndRateByTaxTypes = arbitraryVolumeAndRateByTaxType(
+      rateBands.toSeq
+    ).arbitrary.sample.value
+
+    val userAnswers = emptyUserAnswers
+      .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+      .success
+      .value
+
+    val filledUserAnswers = userAnswers
+      .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumeAndRateByTaxTypes)
+      .success
+      .value
+
+    val returnSummaryList =
+      new CategoriesByRateTypeHelper().rateBandCategories(rateBands, regime)(getMessages(app))
   }
 }

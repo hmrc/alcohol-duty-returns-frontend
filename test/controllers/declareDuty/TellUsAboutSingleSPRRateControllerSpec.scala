@@ -66,7 +66,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val categoriesByRateTypeViewModel =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet, regime)(getMessages(application))
+          new CategoriesByRateTypeHelper().rateBandCategories(rateBands.toSet, regime)(getMessages(application))
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -89,7 +89,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val result                        = route(application, request).value
         val categoriesByRateTypeViewModel =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet, regime)(getMessages(application))
+          new CategoriesByRateTypeHelper().rateBandCategories(rateBands.toSet, regime)(getMessages(application))
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -156,7 +156,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val categoriesByRateTypeViewModel =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet, regime)(getMessages(application))
+          new CategoriesByRateTypeHelper().rateBandCategories(rateBands.toSet, regime)(getMessages(application))
 
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, categoriesByRateTypeViewModel, NormalMode)(

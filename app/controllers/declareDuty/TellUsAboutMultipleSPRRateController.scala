@@ -44,6 +44,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
   requireData: DataRequiredAction,
   formProvider: TellUsAboutMultipleSPRRateFormProvider,
   val controllerComponents: MessagesControllerComponents,
+  tellUsAboutMultipleSPRRateHelper: TellUsAboutMultipleSPRRateHelper,
   view: TellUsAboutMultipleSPRRateView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -55,7 +56,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       val result = for {
         rateBands <- request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
         form      <- prepareForm(request.userAnswers, regime, mode, index)
-      } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime), index))
+      } yield Ok(view(form, mode, regime, tellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime), index))
 
       result.getOrElse {
         logger.warn("Error creating the form for TellUsAboutMultipleSPRRate screen")
@@ -80,7 +81,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
                       formWithErrors,
                       mode,
                       regime,
-                      TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime),
+                      tellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime),
                       index
                     )
                   )

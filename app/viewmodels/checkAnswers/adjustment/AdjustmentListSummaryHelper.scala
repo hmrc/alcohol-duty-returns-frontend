@@ -29,7 +29,7 @@ import viewmodels._
 import viewmodels.declareDuty.RateBandDescription
 import viewmodels.govuk.summarylist._
 
-object AdjustmentListSummaryHelper {
+class AdjustmentListSummaryHelper {
 
   def adjustmentEntryTable(userAnswers: UserAnswers, total: BigDecimal, pageNumber: Int)(implicit
     messages: Messages

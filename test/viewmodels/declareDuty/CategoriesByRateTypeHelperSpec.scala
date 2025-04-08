@@ -26,7 +26,7 @@ import scala.collection.immutable.SortedSet
 class CategoriesByRateTypeHelperSpec extends SpecBase {
   "CategoriesByRateTypeHelper" - {
     "must return an empty view model when no ratebands are passed" in new SetUp {
-      CategoriesByRateTypeHelper
+      new CategoriesByRateTypeHelper()
         .rateBandCategories(Set.empty, regime) mustBe CategoriesByRateTypeViewModel(
         Seq.empty,
         Seq.empty,
@@ -36,7 +36,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "must return rate band description when all ratebands are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(allRateBands, regime) mustBe CategoriesByRateTypeViewModel(
+      new CategoriesByRateTypeHelper().rateBandCategories(allRateBands, regime) mustBe CategoriesByRateTypeViewModel(
         Seq(
           CategoryViewModel(
             "123",
@@ -65,7 +65,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "must return rate band description when all ratebands except core are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(
+      new CategoriesByRateTypeHelper().rateBandCategories(
         allRateBands - coreRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
@@ -92,7 +92,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "must return rate band description when all ratebands except draught relief are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(
+      new CategoriesByRateTypeHelper().rateBandCategories(
         allRateBands - draughtReliefRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
@@ -119,7 +119,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "must return rate band description when all ratebands except small producer relief are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(
+      new CategoriesByRateTypeHelper().rateBandCategories(
         allRateBands - smallProducerReliefRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
@@ -146,7 +146,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "must return rate band description when all ratebands except draught and small producer relief are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(
+      new CategoriesByRateTypeHelper().rateBandCategories(
         allRateBands - draughtAndSmallProducerReliefRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
@@ -173,7 +173,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "must group types and sort by tax code" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(
+      new CategoriesByRateTypeHelper().rateBandCategories(
         threeCoreRandBandsReversed,
         regime
       ) mustBe CategoriesByRateTypeViewModel(

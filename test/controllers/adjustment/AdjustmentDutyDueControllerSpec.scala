@@ -19,15 +19,13 @@ package controllers.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.UserAnswersConnector
-import models.AlcoholRegime.Beer
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
+import models.adjustment.AdjustmentType.{Overdeclaration, RepackagedDraughtProducts}
 import org.mockito.ArgumentMatchers.any
-import play.api.i18n.Messages
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
 import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelCreator
@@ -36,18 +34,149 @@ import java.time.YearMonth
 import scala.concurrent.Future
 
 class AdjustmentDutyDueControllerSpec extends SpecBase {
-  private lazy val adjustmentDutyDueRoute = controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad().url
-
   "AdjustmentDutyDue Controller" - {
+    "must return OK and the correct view for a GET when not RepackagedDraughtProducts" in new SetUp {
+      when(mockAdjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-    val dutyDue           = BigDecimal(34.2)
-    val rate              = BigDecimal(9.27)
-    val pureAlcoholVolume = BigDecimal(3.69)
-    val volume            = BigDecimal(10)
-    val repackagedRate    = BigDecimal(10)
-    val repackagedDuty    = BigDecimal(33.2)
-    val newDuty           = BigDecimal(1)
-    val rateBand          = RateBand(
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[AdjustmentEntryService].toInstance(mockAdjustmentEntryService),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AdjustmentDutyDueViewModelCreator].toInstance(mockAdjustmentDutyDueViewModelCreator)
+        )
+        .build()
+
+      when(mockAdjustmentDutyDueViewModelCreator(any, any, any, any, any, any, any)(any))
+        .thenReturn(adjustmentDutyDueViewModel)
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentDutyDueRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AdjustmentDutyDueView]
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(
+          adjustmentDutyDueViewModel,
+          Overdeclaration
+        )(
+          request,
+          getMessages(application)
+        ).toString
+      }
+
+      verify(mockAdjustmentDutyDueViewModelCreator, times(1))(
+        Overdeclaration,
+        dutyDue,
+        BigDecimal(0),
+        pureAlcoholVolume,
+        rate,
+        BigDecimal(0),
+        BigDecimal(0)
+      )(getMessages(application))
+    }
+
+    "must return OK and the correct view for a GET when RepackagedDraughtProducts" in new SetUp {
+      when(mockAdjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(
+        repackagedAdjustmentEntry
+      )
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[AdjustmentEntryService].toInstance(mockAdjustmentEntryService),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AdjustmentDutyDueViewModelCreator].toInstance(mockAdjustmentDutyDueViewModelCreator)
+        )
+        .build()
+
+      when(mockAdjustmentDutyDueViewModelCreator(any, any, any, any, any, any, any)(any))
+        .thenReturn(adjustmentDutyDueViewModel)
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentDutyDueRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AdjustmentDutyDueView]
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(
+          adjustmentDutyDueViewModel,
+          RepackagedDraughtProducts
+        )(
+          request,
+          getMessages(application)
+        ).toString
+      }
+
+      verify(mockAdjustmentDutyDueViewModelCreator, times(1))(
+        RepackagedDraughtProducts,
+        dutyDue,
+        newDuty,
+        pureAlcoholVolume,
+        rate,
+        repackagedRate,
+        repackagedDuty
+      )(getMessages(application))
+    }
+
+    "must redirect to Journey Recovery if no existing data is found" in new SetUp {
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, adjustmentDutyDueRoute)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    Seq(
+      ((entry: AdjustmentEntry) => entry.copy(pureAlcoholVolume = None), "pureAlcoholVolume"),
+      ((entry: AdjustmentEntry) => entry.copy(duty = None), "duty")
+    ).foreach { case (clearAdjustmentEntry, msg) =>
+      s"must redirect to Journey Recovery for a GET if adjustment entry does not contain $msg" in new SetUp {
+        val adjustmentEntryWithMissingValue = clearAdjustmentEntry(adjustmentEntry)
+        when(mockAdjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(
+          adjustmentEntryWithMissingValue
+        )
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[AdjustmentEntryService].toInstance(mockAdjustmentEntryService),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
+
+        running(application) {
+          val request = FakeRequest(GET, adjustmentDutyDueRoute)
+
+          val result = route(application, request).value
+
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+    }
+  }
+
+  class SetUp {
+    val dutyDue            = BigDecimal(34.2)
+    val rate               = BigDecimal(9.27)
+    val repackagedRate     = BigDecimal(10.27)
+    val pureAlcoholVolume  = BigDecimal(3.69)
+    val volume             = BigDecimal(10)
+    val repackagedDuty     = BigDecimal(33.2)
+    val newDuty            = BigDecimal(1)
+    val rateBand           = RateBand(
       "310",
       "some band",
       RateType.DraughtRelief,
@@ -65,15 +194,23 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
         )
       )
     )
-
-    val spoiltAdjustmentEntry = AdjustmentEntry(
-      pureAlcoholVolume = Some(pureAlcoholVolume),
-      totalLitresVolume = Some(volume),
-      rateBand = Some(rateBand),
-      duty = Some(dutyDue),
-      spoiltRegime = Some(Beer),
-      adjustmentType = Some(Spoilt),
-      period = Some(YearMonth.of(24, 1))
+    val repackagedRateBand = RateBand(
+      "311",
+      "some repackaged band",
+      RateType.DraughtRelief,
+      Some(repackagedRate),
+      Set(
+        RangeDetailsByRegime(
+          AlcoholRegime.Beer,
+          NonEmptySeq.one(
+            ABVRange(
+              AlcoholType.Beer,
+              AlcoholByVolume(0.1),
+              AlcoholByVolume(5.8)
+            )
+          )
+        )
+      )
     )
 
     val adjustmentEntry = AdjustmentEntry(
@@ -85,133 +222,42 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       period = Some(YearMonth.of(24, 1))
     )
 
-    val mockUserAnswersConnector = mock[UserAnswersConnector]
-    when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-    "must return OK and the correct view for a GET" in {
-
-      val adjustmentEntryService = mock[AdjustmentEntryService]
-      when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
-
-      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-      implicit val messages: Messages = getMessages(application)
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentDutyDueRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AdjustmentDutyDueView]
-
-        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
-          Overdeclaration,
-          dutyDue,
-          newDuty,
-          pureAlcoholVolume,
-          rate,
-          repackagedRate,
-          repackagedDuty
-        )
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          adjustmentDutyDueViewModel,
-          Overdeclaration
-        )(
-          request,
-          getMessages(application)
-        ).toString
-      }
-    }
-
-    "must return OK and the correct view for a GET for a spoilt adjustment" in {
-
-      val adjustmentEntryService = mock[AdjustmentEntryService]
-      when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(spoiltAdjustmentEntry)
-
-      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-      implicit val messages: Messages = getMessages(application)
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentDutyDueRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AdjustmentDutyDueView]
-
-        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
-          Spoilt,
-          dutyDue,
-          newDuty,
-          pureAlcoholVolume,
-          rate,
-          repackagedRate,
-          repackagedDuty
-        )
-
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          adjustmentDutyDueViewModel,
-          Spoilt
-        )(
-          request,
-          getMessages(application)
-        ).toString
-      }
-    }
-
-    "must redirect to Journey Recovery if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(GET, adjustmentDutyDueRoute)
-
-        val result = route(application, request).value
-
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    val incompleteAdjustmentEntries = List(
-      (adjustmentEntry.copy(pureAlcoholVolume = None), "pureAlcoholVolume"),
-      (adjustmentEntry.copy(duty = None), "duty")
+    val repackagedAdjustmentEntry = AdjustmentEntry(
+      pureAlcoholVolume = Some(pureAlcoholVolume),
+      totalLitresVolume = Some(volume),
+      rateBand = Some(rateBand),
+      duty = Some(dutyDue),
+      newDuty = Some(newDuty),
+      adjustmentType = Some(RepackagedDraughtProducts),
+      period = Some(YearMonth.of(24, 1)),
+      repackagedDuty = Some(repackagedDuty),
+      repackagedRateBand = Some(repackagedRateBand)
     )
 
-    incompleteAdjustmentEntries.foreach { case (adjustmentEntry, msg) =>
-      s"must redirect to Journey Recovery for a GET if adjustment entry does not contain $msg" in {
+    val mockAdjustmentEntryService            = mock[AdjustmentEntryService]
+    val mockUserAnswersConnector              = mock[UserAnswersConnector]
+    val mockAdjustmentDutyDueViewModelCreator = mock[AdjustmentDutyDueViewModelCreator]
 
-        val adjustmentEntryService = mock[AdjustmentEntryService]
-        when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
+    val adjustmentDutyDueRoute = controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad().url
 
-        val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .overrides(
-              bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
-              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-            )
-            .build()
+    val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
+      Overdeclaration,
+      dutyDue,
+      BigDecimal(0),
+      pureAlcoholVolume,
+      rate,
+      BigDecimal(0),
+      BigDecimal(0)
+    )(getMessages(app))
 
-        running(application) {
-          val request = FakeRequest(GET, adjustmentDutyDueRoute)
-
-          val result = route(application, request).value
-
-          status(result)                 mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
-    }
+    val repackagedAdjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
+      Overdeclaration,
+      dutyDue,
+      newDuty,
+      pureAlcoholVolume,
+      rate,
+      repackagedRate,
+      repackagedDuty
+    )(getMessages(app))
   }
 }

@@ -27,7 +27,7 @@ import scala.collection.immutable.SortedSet
 class TellUsAboutMultipleSPRRateHelperSpec extends SpecBase {
   "TellUsAboutMultipleSPRRateHelper" - {
     "return the expected radio items" in new SetUp {
-      val rateBandsReversed = SortedSet(
+      val rateBandsReversed          = SortedSet(
         smallProducerReliefRateBand2,
         draughtAndSmallProducerReliefRateBand2,
         coreRateBand,
@@ -35,7 +35,9 @@ class TellUsAboutMultipleSPRRateHelperSpec extends SpecBase {
         smallProducerReliefRateBand,
         draughtAndSmallProducerReliefRateBand
       )((x: RateBand, y: RateBand) => y.taxTypeCode(2) - x.taxTypeCode(2))
-      val result            = TellUsAboutMultipleSPRRateHelper.radioItems(rateBandsReversed, regime)
+      val categoriesByRateTypeHelper = new CategoriesByRateTypeHelper()
+      val result                     =
+        new TellUsAboutMultipleSPRRateHelper(categoriesByRateTypeHelper).radioItems(rateBandsReversed, regime)
 
       result.map(_.content) mustBe Seq(
         Text("Non-draught beer between 3% and 4% ABV (tax type code 125 SPR)"),
