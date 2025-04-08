@@ -17,17 +17,17 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.declareDuty.HowMuchDoYouNeedToDeclareFormProvider
 import models.{AlcoholRegime, NormalMode}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.scalacheck.Arbitrary._
 import pages.declareDuty.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.scalacheck.Arbitrary._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.CategoriesByRateTypeHelper
 import views.html.declareDuty.HowMuchDoYouNeedToDeclareView
@@ -100,7 +100,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -127,6 +127,17 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(HowMuchDoYouNeedToDeclarePage),
+            eqTo(NormalMode),
+            any(),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
       }
     }
 

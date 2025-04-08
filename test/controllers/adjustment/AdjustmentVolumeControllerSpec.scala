@@ -18,18 +18,19 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
+import connectors.UserAnswersConnector
 import forms.adjustment.AdjustmentVolumeFormProvider
+import models.AlcoholRegime.Beer
+import models.adjustment.AdjustmentType.Underdeclaration
+import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.CurrentAdjustmentEntryPage
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import models.AlcoholRegime.Beer
-import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
-import models.adjustment.AdjustmentType.Underdeclaration
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
 
@@ -154,14 +155,15 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentVolumePage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -178,6 +180,10 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentVolumePage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
@@ -198,14 +204,15 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
           .value
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentVolumePage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -222,6 +229,10 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentVolumePage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
@@ -241,18 +252,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
           .success
           .value
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+        applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =

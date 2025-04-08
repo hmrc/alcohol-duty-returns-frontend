@@ -35,8 +35,7 @@ class WhatDoYouNeedToDeclareSummary {
             CardTitle(content =
               Text(
                 messages(
-                  s"whatDoYouNeedToDeclare.checkYourAnswersLabel.card",
-                  messages(regime.regimeMessageKey)
+                  s"whatDoYouNeedToDeclare.checkYourAnswersLabel.card.${regime.regimeMessageKey}"
                 ).capitalize
               )
             )
@@ -58,8 +57,7 @@ class WhatDoYouNeedToDeclareSummary {
   private def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = messages(
-        s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
-        messages(regime.regimeMessageKey)
+        s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row.${regime.regimeMessageKey}"
       ),
       value = ValueViewModel(
         HtmlContent(

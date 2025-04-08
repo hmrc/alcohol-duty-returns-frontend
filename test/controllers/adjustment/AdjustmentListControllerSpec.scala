@@ -24,8 +24,8 @@ import forms.adjustment.AdjustmentListFormProvider
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentType.Spoilt
 import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
+import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage}
@@ -47,7 +47,6 @@ class AdjustmentListControllerSpec extends SpecBase {
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
       )
-
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
@@ -124,12 +123,12 @@ class AdjustmentListControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentListPage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -143,18 +142,23 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentListPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
     "must clear current adjustment entry when valid data is submitted" in new SetUp {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentListPage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithCurrent))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper)
+            bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -169,6 +173,8 @@ class AdjustmentListControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(cleanedUserAnswers))(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentListPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
@@ -243,8 +249,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
 
@@ -259,6 +264,8 @@ class AdjustmentListControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
           .onPageLoad(1)
           .url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).calculateTotalAdjustment(any())(any())
       }
     }
 
@@ -269,8 +276,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
 
@@ -281,6 +287,8 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).calculateTotalAdjustment(any())(any())
       }
     }
   }
