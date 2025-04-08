@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimes, ErrorModel, ObligationData, UserAnswers}
+import models.{AlcoholRegimes, ErrorModel, ObligationData, ReturnPeriod, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import services.BeforeStartReturnService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.UserAnswersAuditHelper
-import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
+import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
 
 import java.time.{Clock, Instant, LocalDate}
@@ -151,7 +151,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         running(application) {
           val request = FakeRequest(
             GET,
-            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+            controllers.routes.BeforeStartReturnController.onPageLoad(periodKeyToTest).url
           )
 
           when(mockReturnPeriodViewModelFactory(any)(any)).thenReturn(returnPeriodViewModel)
@@ -167,7 +167,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           ).toString
         }
 
-        verify(mockReturnPeriodViewModelFactory, times(1)).apply(returnPeriod)(getMessages(application))
+        verify(mockReturnPeriodViewModelFactory, times(1)).apply(returnPeriodToTest)(getMessages(application))
       }
 
       "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
@@ -205,7 +205,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         running(application) {
           val request = FakeRequest(
             GET,
-            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+            controllers.routes.BeforeStartReturnController.onPageLoad(periodKeyToTest).url
           )
 
           val result = route(application, request).value
@@ -232,7 +232,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         running(application) {
           val request = FakeRequest(
             GET,
-            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+            controllers.routes.BeforeStartReturnController.onPageLoad(periodKeyToTest).url
           )
 
           val result = route(application, request).value
@@ -343,7 +343,18 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     val currentDate    = LocalDate.now(clock)
     val dateTimeHelper = createDateTimeHelper()
 
-    val beforeStartReturnViewModel = new BeforeStartReturnViewModelFactory(dateTimeHelper)(returnPeriod, currentDate)
-    val returnPeriodViewModel      = new ReturnPeriodViewModelFactory(dateTimeHelper)(returnPeriod)
+    val periodKeyToTest = periodKeyJun
+    val returnPeriodToTest = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyToTest)
+
+    val periodFromDate = returnPeriodToTest.periodFromDate()
+    val periodToDate = returnPeriodToTest.periodToDate()
+    val periodDueDate = returnPeriodToTest.periodDueDate()
+
+    val beforeStartReturnViewModel = BeforeStartReturnViewModel(periodDueDate, dateTimeHelper.formatDateMonthYear(periodDueDate), LocalDate.now(clock))
+    val returnPeriodViewModel      =     ReturnPeriodViewModel(
+      dateTimeHelper.formatDateMonthYear(periodFromDate),
+      dateTimeHelper.formatDateMonthYear(periodToDate),
+      dateTimeHelper.formatDateMonthYear(periodDueDate)
+    )
   }
 }

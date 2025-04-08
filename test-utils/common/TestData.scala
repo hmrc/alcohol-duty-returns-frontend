@@ -52,7 +52,7 @@ trait TestData extends ModelGenerators {
 
   val returnAndUserDetails = ReturnAndUserDetails(returnId, groupId, internalId)
 
-  val returnPeriod = ReturnPeriod.fromPeriodKey(periodKey).get
+  val returnPeriod = ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
 
   val badPeriodKey = "24A"
 
