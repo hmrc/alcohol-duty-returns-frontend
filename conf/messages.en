@@ -23,12 +23,6 @@ site.returnToBusinessAccount = Return to your business tax account
 site.year = {0,number,####}
 site.warning = Warning
 
-#Welsh helpers - in Welsh y and w are also vowels
-
-#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
-welsh.and.consonant = and
-welsh.and.vowel = and
-
 date.day = Day
 date.month = Month
 date.year = Year
@@ -316,12 +310,18 @@ return.journey.abv.interval.label.Wine.nondraught = non-draught wine
 return.journey.abv.interval.label.Spirits.nondraught = non-draught spirits
 return.journey.abv.interval.label.OtherFermentedProduct.nondraught = non-draught other fermented products
 
+return.journey.abv.rangeKey.3 = between {0}% and {1}%
+return.journey.abv.rangeKey.4 = between {0}% and {1}%
+return.journey.abv.rangeKey.5 = between {0}% and {1}%
+return.journey.abv.rangeKey.8 = between {0}% and {1}%
+return.journey.abv.rangeKey.22 = between {0}% and {1}%
+return.journey.abv.rangeKey.100 = at or above {0}%
+
 return.journey.abv.taxTypeCode = tax type code {0}
 return.journey.abv.taxTypeCode.SPR = tax type code {0} SPR
 
-return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV ({2})
-return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
+return.journey.abv.single.interval = {0} {1} ABV ({2})
+return.journey.abv.multi.interval = {0} {1} ABV and {2} {3} ABV ({4})
 
 return.journey.totalLitres.regime.beer = Total litres of beer
 return.journey.totalLitres.regime.cider = Total litres of cider

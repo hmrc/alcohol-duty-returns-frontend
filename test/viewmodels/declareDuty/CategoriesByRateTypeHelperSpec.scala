@@ -40,7 +40,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         Seq(
           CategoryViewModel(
             "123",
-            "non-draught beer between 1% and 2% ABV (tax type code 123)"
+            "non-draught beer between 1% and 3% ABV (tax type code 123)"
           )
         ),
         Seq(
@@ -99,7 +99,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         Seq(
           CategoryViewModel(
             "123",
-            "non-draught beer between 1% and 2% ABV (tax type code 123)"
+            "non-draught beer between 1% and 3% ABV (tax type code 123)"
           )
         ),
         Seq.empty,
@@ -126,7 +126,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         Seq(
           CategoryViewModel(
             "123",
-            "non-draught beer between 1% and 2% ABV (tax type code 123)"
+            "non-draught beer between 1% and 3% ABV (tax type code 123)"
           )
         ),
         Seq(
@@ -153,7 +153,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         Seq(
           CategoryViewModel(
             "123",
-            "non-draught beer between 1% and 2% ABV (tax type code 123)"
+            "non-draught beer between 1% and 3% ABV (tax type code 123)"
           )
         ),
         Seq(
@@ -180,15 +180,15 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         Seq(
           CategoryViewModel(
             "123",
-            "non-draught beer between 1% and 2% ABV (tax type code 123)"
+            "non-draught beer between 1% and 3% ABV (tax type code 123)"
           ),
           CategoryViewModel(
             "124",
-            "non-draught beer between 1% and 2% ABV (tax type code 124)"
+            "non-draught beer between 1% and 3% ABV (tax type code 124)"
           ),
           CategoryViewModel(
             "125",
-            "non-draught beer between 1% and 2% ABV (tax type code 125)"
+            "non-draught beer between 1% and 3% ABV (tax type code 125)"
           )
         ),
         Seq.empty,
