@@ -285,12 +285,14 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
     val returnSummaryList = CategoriesByRateTypeViewModel(
       core = Seq.empty,
-      draught = rateBands.map(rateBand =>
-        CategoryViewModel(
-          taxTypeCode = rateBand.taxTypeCode,
-          description = RateBandDescription.toDescription(rateBand, Some(regime))(getMessages(app))
+      draught = rateBands
+        .map(rateBand =>
+          CategoryViewModel(
+            taxTypeCode = rateBand.taxTypeCode,
+            description = RateBandDescription.toDescription(rateBand, Some(regime))(getMessages(app))
+          )
         )
-      ).toSeq,
+        .toSeq,
       smallProducer = Seq.empty,
       draughtAndSmallProducer = Seq.empty
     )

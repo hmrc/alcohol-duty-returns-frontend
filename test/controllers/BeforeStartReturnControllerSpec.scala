@@ -343,15 +343,16 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     val currentDate    = LocalDate.now(clock)
     val dateTimeHelper = createDateTimeHelper()
 
-    val periodKeyToTest = periodKeyJun
+    val periodKeyToTest    = periodKeyJun
     val returnPeriodToTest = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyToTest)
 
     val periodFromDate = returnPeriodToTest.periodFromDate()
-    val periodToDate = returnPeriodToTest.periodToDate()
-    val periodDueDate = returnPeriodToTest.periodDueDate()
+    val periodToDate   = returnPeriodToTest.periodToDate()
+    val periodDueDate  = returnPeriodToTest.periodDueDate()
 
-    val beforeStartReturnViewModel = BeforeStartReturnViewModel(periodDueDate, dateTimeHelper.formatDateMonthYear(periodDueDate), LocalDate.now(clock))
-    val returnPeriodViewModel      =     ReturnPeriodViewModel(
+    val beforeStartReturnViewModel =
+      BeforeStartReturnViewModel(periodDueDate, dateTimeHelper.formatDateMonthYear(periodDueDate), LocalDate.now(clock))
+    val returnPeriodViewModel      = ReturnPeriodViewModel(
       dateTimeHelper.formatDateMonthYear(periodFromDate),
       dateTimeHelper.formatDateMonthYear(periodToDate),
       dateTimeHelper.formatDateMonthYear(periodDueDate)

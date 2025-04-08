@@ -242,14 +242,17 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     val adjustmentDutyDueRoute = controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad().url
 
     val adjustmentDutyDueViewModel =
-      AdjustmentDutyDueViewModel(Overdeclaration, BigDecimal(34.2),
-        Seq(Text("you declared 3.6900 litres of pure alcohol (LPA)"),
-            Text("the duty rate is £9.27 per litre of pure alcohol"),
-            Text("the duty is £34.20 (duty rate multiplied by the litres of pure alcohol")
+      AdjustmentDutyDueViewModel(
+        Overdeclaration,
+        BigDecimal(34.2),
+        Seq(
+          Text("you declared 3.6900 litres of pure alcohol (LPA)"),
+          Text("the duty rate is £9.27 per litre of pure alcohol"),
+          Text("the duty is £34.20 (duty rate multiplied by the litres of pure alcohol")
         )
       )
 
-      /*
+    /*
       val repackagedDutyDueViewModel = {
         AdjustmentDutyDueViewModel(RepackagedDraughtProducts, BigDecimal(34.2),
           Seq(Text("you declared 3.6900 litres of pure alcohol (LPA)"),
@@ -259,7 +262,9 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
         ) */
 
     val repackagedAdjustmentDutyDueViewModel =
-      AdjustmentDutyDueViewModel(RepackagedDraughtProducts, BigDecimal(1),
+      AdjustmentDutyDueViewModel(
+        RepackagedDraughtProducts,
+        BigDecimal(1),
         Seq(
           Text("the reduced duty rate was £9.27 per litre of pure alcohol"),
           Text("you declared 3.6900 litres of pure alcohol (LPA)"),
