@@ -157,8 +157,7 @@ class AdjustmentListControllerSpec extends SpecBase {
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            bind[AdjustmentListSummaryHelper].toInstance(mockAdjustmentListSummaryHelper)
           )
           .build()
 

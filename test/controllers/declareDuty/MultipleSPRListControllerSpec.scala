@@ -108,8 +108,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
           .overrides(
             bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            bind[MultipleSPRListHelper].toInstance(mockMultipleSPRListHelper)
           )
           .build()
 
