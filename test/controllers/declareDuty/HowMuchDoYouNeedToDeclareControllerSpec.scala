@@ -29,7 +29,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.declareDuty.CategoriesByRateTypeHelper
+import viewmodels.declareDuty.{CategoriesByRateTypeHelper, CategoriesByRateTypeViewModel, CategoryViewModel, RateBandDescription}
 import views.html.declareDuty.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.Future
@@ -283,7 +283,16 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       .success
       .value
 
-    val returnSummaryList =
-      new CategoriesByRateTypeHelper().rateBandCategories(rateBands, regime)(getMessages(app))
+    val returnSummaryList = CategoriesByRateTypeViewModel(
+      core = Seq.empty,
+      draught = rateBands.map(rateBand =>
+        CategoryViewModel(
+          taxTypeCode = rateBand.taxTypeCode,
+          description = RateBandDescription.toDescription(rateBand, Some(regime))(getMessages(app))
+        )
+      ).toSeq,
+      smallProducer = Seq.empty,
+      draughtAndSmallProducer = Seq.empty
+    )
   }
 }

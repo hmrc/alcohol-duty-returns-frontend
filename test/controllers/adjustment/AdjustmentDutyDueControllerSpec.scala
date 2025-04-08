@@ -28,7 +28,8 @@ import models.adjustment.AdjustmentType.{Overdeclaration, RepackagedDraughtProdu
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
-import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelCreator
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import viewmodels.checkAnswers.adjustment.{AdjustmentDutyDueViewModel, AdjustmentDutyDueViewModelCreator}
 
 import java.time.YearMonth
 import scala.concurrent.Future
@@ -240,24 +241,34 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
     val adjustmentDutyDueRoute = controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad().url
 
-    val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
-      Overdeclaration,
-      dutyDue,
-      BigDecimal(0),
-      pureAlcoholVolume,
-      rate,
-      BigDecimal(0),
-      BigDecimal(0)
-    )(getMessages(app))
+    val adjustmentDutyDueViewModel =
+      AdjustmentDutyDueViewModel(Overdeclaration, BigDecimal(34.2),
+        Seq(Text("you declared 3.6900 litres of pure alcohol (LPA)"),
+            Text("the duty rate is £9.27 per litre of pure alcohol"),
+            Text("the duty is £34.20 (duty rate multiplied by the litres of pure alcohol")
+        )
+      )
 
-    val repackagedAdjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
-      Overdeclaration,
-      dutyDue,
-      newDuty,
-      pureAlcoholVolume,
-      rate,
-      repackagedRate,
-      repackagedDuty
-    )(getMessages(app))
+      /*
+      val repackagedDutyDueViewModel = {
+        AdjustmentDutyDueViewModel(RepackagedDraughtProducts, BigDecimal(34.2),
+          Seq(Text("you declared 3.6900 litres of pure alcohol (LPA)"),
+            Text("the duty rate is £9.27 per litre of pure alcohol"),
+            Text("the duty is £34.20 (duty rate multiplied by the litres of pure alcohol")
+          )
+        ) */
+
+    val repackagedAdjustmentDutyDueViewModel =
+      AdjustmentDutyDueViewModel(RepackagedDraughtProducts, BigDecimal(1),
+        Seq(
+          Text("the reduced duty rate was £9.27 per litre of pure alcohol"),
+          Text("you declared 3.6900 litres of pure alcohol (LPA)"),
+          Text("you originally paid £34.20"),
+          Text("repackaged draught products are not eligible for reduced rates"),
+          Text("the standard duty rate is £10.27 per litre of pure alcohol"),
+          Text("the new duty value at the standard duty rate is £33.20"),
+          Text("the duty to pay is £1.00: the new duty value minus the old duty value")
+        )
+      )
   }
 }
