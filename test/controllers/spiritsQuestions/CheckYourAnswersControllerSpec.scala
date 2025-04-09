@@ -33,26 +33,7 @@ import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswers Controller" - {
-    val completedUserAnswers = emptyUserAnswers
-      .set(
-        SpiritTypePage,
-        Set[SpiritType](SpiritType.Other)
-      )
-      .success
-      .value
-      .set(OtherSpiritsProducedPage, "Coco Pops")
-      .success
-      .value
-      .set(DeclareSpiritsTotalPage, BigDecimal(11))
-      .success
-      .value
-      .set(WhiskyPage, Whisky(BigDecimal(1), BigDecimal(2)))
-      .success
-      .value
-
     "must return OK and the correct view for a GET if all necessary questions are answered (Other spirits is selected)" in new SetUp {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(completedUserAnswers))
@@ -81,8 +62,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must return OK and the correct view for a GET if any optional questions are not required (Other spirits is not selected)" in new SetUp {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers = completedUserAnswers
@@ -122,8 +101,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must return OK and the correct view for a GET if multiple Spirit types including Other are checked" in new SetUp {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers = completedUserAnswers
@@ -196,8 +173,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       "if one of the necessary pages has not been populated" - {
         "whisky page is not populated" in new SetUp {
-          val mockUserAnswersConnector = mock[UserAnswersConnector]
-
           when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
           val userAnswers = completedUserAnswers
@@ -275,6 +250,23 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   }
 
   class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val mockUserAnswersConnector = mock[UserAnswersConnector]
+    val completedUserAnswers = emptyUserAnswers
+      .set(
+        SpiritTypePage,
+        Set[SpiritType](SpiritType.Other)
+      )
+      .success
+      .value
+      .set(OtherSpiritsProducedPage, "Coco Pops")
+      .success
+      .value
+      .set(DeclareSpiritsTotalPage, BigDecimal(11))
+      .success
+      .value
+      .set(WhiskyPage, Whisky(BigDecimal(1), BigDecimal(2)))
+      .success
+      .value
     val additionalConfig = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
   }
 }
