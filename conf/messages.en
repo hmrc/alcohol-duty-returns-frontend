@@ -533,7 +533,7 @@ multipleSPRList.heading.regime.wine = Wine with Small Producer Relief duty to de
 multipleSPRList.heading.regime.spirits = Spirits with Small Producer Relief duty to declare
 multipleSPRList.heading.regime.otherfermentedproduct = Other fermented products with Small Producer Relief duty to declare
 multipleSPRList.question = Do you want to add another?
-multipleSPRList.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
+multipleSPRList.error.required = Select yes if you have another Small Producer Relief duty rate to declare
 
 multipleSPRList.description.label = Description
 multipleSPRList.totalLitres.label = Total volume declared (litres)
