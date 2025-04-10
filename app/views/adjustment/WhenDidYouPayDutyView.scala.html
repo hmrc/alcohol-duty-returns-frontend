@@ -35,10 +35,10 @@
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
 
 @heading = @{
-    if(adjustmentType == Underdeclaration) {
+    if (adjustmentType == Underdeclaration) {
         messages("whenDidYouPayDuty.under-declaration.title")
-    } else if(adjustmentType == Spoilt) {
-        messages("whenDidYouPayDuty.spoilt.title")
+    } else if (adjustmentType == Spoilt) {
+        throw new IllegalArgumentException("Not expecting WhenDidYouPayDuty to be asked for Spoilt")
     } else {
         messages("whenDidYouPayDuty.default.title")
     }
@@ -59,10 +59,8 @@
 
         @formGroupWithError(form.errors.nonEmpty){
                 @pageHeading(
-                            if(adjustmentType == Underdeclaration){
+                            if (adjustmentType == Underdeclaration){
                                 messages("whenDidYouPayDuty.under-declaration.heading")
-                            } else if(adjustmentType == Spoilt){
-                                messages("whenDidYouPayDuty.spoilt.heading")
                             } else {
                                 messages("whenDidYouPayDuty.default.heading")
                             }

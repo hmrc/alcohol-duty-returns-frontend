@@ -34,8 +34,6 @@ timeout.signOut = Allgofnodi
 
 error.prefix = Gwall
 error.title.prefix = Gwall:
-error.boolean = Rhowch ateb
-error.required = Mae angen i chi nodi gwerth
 error.summary.title = Mae problem.
 
 checkYourAnswers.title = Gwirio’ch atebion
@@ -55,10 +53,6 @@ returnLocked.title = Mae’r Datganiad hwn wedi’i gloi dros dro
 returnLocked.heading = Mae’r Datganiad hwn wedi’i gloi dros dro
 returnLocked.p1 = Mae’r Datganiad hwn wedi cael ei gloi dros dro, oherwydd bod rhywun arall yn ei olygu.
 returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
-
-signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
-signedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
-signedOut.guidance = Ni wnaethom gadw’ch atebion.
 
 unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
@@ -843,9 +837,7 @@ spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcoh
 whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.under-declaration.title = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.spoilt.title = I’r mis agosaf, pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.under-declaration.heading = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.spoilt.heading = I’r mis agosaf, pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.exciseEnquiries.link = Ffoniwch CThEF neu cysylltwch â CThEF drwy’r post (yn agor tab newydd)
 whenDidYouPayDuty.paragraph = os cyhoeddwyd hyn yn wreiddiol cyn mis Awst 2023.
 whenDidYouPayDuty.hint = Er enghraifft, 10 2024
