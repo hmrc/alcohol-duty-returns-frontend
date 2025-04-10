@@ -223,13 +223,14 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
     "must throw an exception for a POST if missing rateBandDescription" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -254,13 +255,14 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
     "must throw an exception for a POST if missing taxType" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
