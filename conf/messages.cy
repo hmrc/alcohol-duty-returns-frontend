@@ -533,7 +533,7 @@ multipleSPRList.heading.regime.wine = Gwin i’w ddatgan, sydd â tholl yn sgil 
 multipleSPRList.heading.regime.spirits = Gwirodydd i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.heading.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.question = A ydych chi eisiau ychwanegu un arall?
-multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
+multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych gyfradd doll arall yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
 
 multipleSPRList.description.label = Disgrifiad
 multipleSPRList.totalLitres.label = Cyfanswm y cyfaint wedi’i ddatgan (litrau)
