@@ -562,7 +562,7 @@ dutyCalculation.table.action = Action
 
 productList.caption = Duty due
 
-# Beginning of duty suspended deliveries sub-journey
+# Beginning of OLD duty suspended deliveries sub-journey
 
 declareDutySuspendedDeliveriesQuestion.title = Have you delivered or received any duty suspended finished alcoholic product?
 declareDutySuspendedDeliveriesQuestion.heading = Have you delivered or received any duty suspended finished alcoholic product?
@@ -677,7 +677,15 @@ dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces = Total net 
 
 checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
 
-# End of of duty suspended deliveries sub-journey
+# End of OLD duty suspended deliveries sub-journey
+
+# Beginning of NEW duty suspended deliveries sub-journey
+
+declareDutySuspendedDeliveriesQuestionNew.title = Have you delivered or received finished alcoholic products under duty suspense?
+declareDutySuspendedDeliveriesQuestionNew.heading = Have you delivered or received finished alcoholic products under duty suspense?
+declareDutySuspendedDeliveriesQuestionNew.error.required = Select yes if you have delivered or received finished alcoholic products under duty suspense
+
+# End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
 
