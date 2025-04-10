@@ -40,7 +40,7 @@ import scala.concurrent.Future
 class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
   val formProvider = new SpoiltVolumeWithDutyFormProvider()
   val regime       = Beer
-  val form         = formProvider(regime)(getMessages(app))
+  val form         = formProvider()
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
@@ -266,7 +266,6 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val form    = formProvider(regime)(getMessages(app))
         val request =
           FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
