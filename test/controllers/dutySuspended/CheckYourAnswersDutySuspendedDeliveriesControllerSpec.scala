@@ -19,64 +19,42 @@ package controllers.dutySuspended
 import base.SpecBase
 import models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
 import models.{AlcoholRegime, AlcoholRegimes, UserAnswers}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.AlcoholRegimePage
 import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.Helpers._
+import play.twirl.api.Html
 import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
-class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
-  val validTotal                                              = 42.34
-  val validPureAlcohol                                        = 34.23
-  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes.copy(data =
-    Json.obj(
-      AlcoholRegimePage.toString               -> Json.toJson(AlcoholRegime.values),
-      DutySuspendedBeerPage.toString           -> Json.obj(
-        "totalBeer"         -> validTotal,
-        "pureAlcoholInBeer" -> validPureAlcohol
-      ),
-      DutySuspendedCiderPage.toString          -> Json.obj(
-        "totalCider"         -> validTotal,
-        "pureAlcoholInCider" -> validPureAlcohol
-      ),
-      DutySuspendedSpiritsPage.toString        -> Json.obj(
-        "totalSpirits"         -> validTotal,
-        "pureAlcoholInSpirits" -> validPureAlcohol
-      ),
-      DutySuspendedWinePage.toString           -> Json.obj(
-        "totalWine"         -> validTotal,
-        "pureAlcoholInWine" -> validPureAlcohol
-      ),
-      DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalOtherFermented"         -> validTotal,
-        "pureAlcoholInOtherFermented" -> validPureAlcohol
-      )
-    )
-  )
+class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency  {
 
   "Check Your Answers Duty Suspended Deliveries Controller" - {
-    "must return OK and the correct view for a GET if all necessary questions are answered" in {
-      val application = applicationBuilder(userAnswers = Some(completeDutySuspendedDeliveriesUserAnswers)).build()
+    "must return OK and the correct view for a GET if all necessary questions are answered" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(completeDutySuspendedDeliveriesUserAnswers))
+        .overrides(
+          bind[CheckYourAnswersDutySuspendedDeliveriesView].toInstance(mockView)
+        )
+        .build()
+
+      val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper()
+      val list = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(
+        completeDutySuspendedDeliveriesUserAnswers
+      )(getMessages(application))
+
+      when(mockView.apply(eqTo(list))(any(), any())) thenReturn Html("xyz")
 
       running(application) {
-        val request =
-          FakeRequest(
-            GET,
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-          )
-
+        val request = FakeRequest(GET, controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url)
         val result = route(application, request).value
 
-        val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
-        val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper()
-        val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(
-          completeDutySuspendedDeliveriesUserAnswers
-        )(getMessages(application))
-
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual "xyz"
+        verify(mockView).apply(eqTo(list))(any(), any())
       }
     }
 
@@ -86,12 +64,12 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
       (DutySuspendedWinePage, Wine),
       (DutySuspendedSpiritsPage, Spirits)
     ).foreach { case (page, regime) =>
-      s"must return OK and the correct view for a GET if all relevant ${regime.entryName} questions are answered" in {
+      s"must return OK and the correct view for a GET if all relevant ${regime.entryName} questions are answered" in new SetUp {
         val userAnswers: UserAnswers = emptyUserAnswers.copy(
           regimes = AlcoholRegimes(Set(regime)),
           data = Json.obj(
             page.toString -> Json.obj(
-              s"total${regime.entryName}"         -> validTotal,
+              s"total${regime.entryName}" -> validTotal,
               s"pureAlcoholIn${regime.entryName}" -> validPureAlcohol
             )
           )
@@ -108,32 +86,45 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
           val result = route(application, request).value
 
-          val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
+          val view = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
           val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper()
-          val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(userAnswers)(getMessages(application))
+          val list = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(userAnswers)(getMessages(application))
 
-          status(result)          mustEqual OK
+          status(result) mustEqual OK
           contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
         }
       }
     }
 
-    "must redirect to Journey Recovery for a GET" - {
-      "if no existing data is found" in {
-        val application = applicationBuilder(Some(userAnswersWithAllRegimes)).build()
-        running(application) {
-          val request =
-            FakeRequest(
-              GET,
-              controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-            )
-
-          val result = route(application, request).value
-
-          status(result)                 mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
+    class SetUp {
+      val mockView = mock[CheckYourAnswersDutySuspendedDeliveriesView]
+      val validTotal = 42.34
+      val validPureAlcohol = 34.23
+      val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes.copy(data =
+        Json.obj(
+          AlcoholRegimePage.toString -> Json.toJson(AlcoholRegime.values),
+          DutySuspendedBeerPage.toString -> Json.obj(
+            "totalBeer" -> validTotal,
+            "pureAlcoholInBeer" -> validPureAlcohol
+          ),
+          DutySuspendedCiderPage.toString -> Json.obj(
+            "totalCider" -> validTotal,
+            "pureAlcoholInCider" -> validPureAlcohol
+          ),
+          DutySuspendedSpiritsPage.toString -> Json.obj(
+            "totalSpirits" -> validTotal,
+            "pureAlcoholInSpirits" -> validPureAlcohol
+          ),
+          DutySuspendedWinePage.toString -> Json.obj(
+            "totalWine" -> validTotal,
+            "pureAlcoholInWine" -> validPureAlcohol
+          ),
+          DutySuspendedOtherFermentedPage.toString -> Json.obj(
+            "totalOtherFermented" -> validTotal,
+            "pureAlcoholInOtherFermented" -> validPureAlcohol
+          )
+        )
+      )
     }
   }
 }

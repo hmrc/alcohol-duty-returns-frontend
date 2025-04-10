@@ -26,23 +26,18 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import viewmodels.payments.ViewPastPaymentsViewModel
 import views.html.payments.ViewPastPaymentsView
-
 import java.time.{Clock, LocalDate}
 import scala.concurrent.Future
 
 class ViewPastPaymentsControllerSpec extends SpecBase {
 
   "ViewPastPaymentsController Controller" - {
-    "must return OK and the correct view for a GET when the claim refund gform feature toggle is disabled" in {
-      val testConfiguration  = app.injector.instanceOf[Configuration]
-      val testServicesConfig = app.injector.instanceOf[ServicesConfig]
-
+    "must return OK and the correct view for a GET when the claim refund gform feature toggle is disabled" in new SetUp {
       val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
         override val claimARefundGformEnabled = false
       }
 
       val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
-      val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
       )
@@ -87,16 +82,13 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       }
     }
 
-    "must return OK and the correct view for a GET when the claim refund gform feature toggle is enabled" in {
-      val testConfiguration  = app.injector.instanceOf[Configuration]
-      val testServicesConfig = app.injector.instanceOf[ServicesConfig]
-
+    "must return OK and the correct view for a GET when the claim refund gform feature toggle is enabled" in new SetUp {
       val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
         override val claimARefundGformEnabled = true
       }
 
       val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
-      val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
       )
@@ -139,8 +131,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET on Exception" in {
-      val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+    "must redirect to Journey Recovery for a GET on Exception" in new SetUp {
       val application                      = applicationBuilder(userAnswers = None).build()
       running(application) {
         when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
@@ -154,6 +145,11 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+  }
+  class SetUp {
+    val testConfiguration  = app.injector.instanceOf[Configuration]
+    val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+    val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
   }
 
 }
