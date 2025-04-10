@@ -22,9 +22,11 @@ import generators.ModelGenerators
 import models.SpiritType
 import models.spiritsQuestions.Whisky
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.spiritsQuestions.{DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.inject.bind
 import play.api.test.Helpers._
+import play.twirl.api.Html
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelper
 import views.html.spiritsQuestions.CheckYourAnswersView
@@ -34,30 +36,28 @@ import scala.concurrent.Future
 class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswers Controller" - {
     "must return OK and the correct view for a GET if all necessary questions are answered (Other spirits is selected)" in new SetUp {
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
       val application = applicationBuilder(userAnswers = Some(completedUserAnswers))
         .configure(additionalConfig)
         .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[CheckYourAnswersView].toInstance(mockView)
         )
         .build()
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockView.apply(any())(any(), any())) thenReturn Html("xyz")
 
       running(application) {
         val request = FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CheckYourAnswersView]
-
         val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(getMessages(application)).get
 
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(spiritsList)(
-          request,
-          getMessages(application)
-        ).toString
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual "xyz"
+        verify(mockView).apply(eqTo(spiritsList))(any(), any())
       }
     }
 
@@ -251,6 +251,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
     val mockUserAnswersConnector = mock[UserAnswersConnector]
+    val mockView = mock[CheckYourAnswersView]
     val completedUserAnswers = emptyUserAnswers
       .set(
         SpiritTypePage,

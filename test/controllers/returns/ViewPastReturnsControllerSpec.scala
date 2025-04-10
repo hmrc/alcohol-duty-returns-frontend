@@ -42,7 +42,8 @@ class ViewPastReturnsControllerSpec extends SpecBase {
       when(mockViewPastReturnsView.apply(any(), any())(any(), any())).thenReturn(Html("Expected content"))
 
       when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
-        Seq(obligationDataSingleOpen, obligationDataSingleFulfilled))
+        Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)
+      )
 
       running(application) {
         val request = FakeRequest(GET, controllers.returns.routes.ViewPastReturnsController.onPageLoad.url)
@@ -60,11 +61,11 @@ class ViewPastReturnsControllerSpec extends SpecBase {
           getMessages(application)
         ).toString
       }
-      verify (mockViewPastReturnsView, times(2)).apply(any(), any())(any(), any())
+      verify(mockViewPastReturnsView, times(2)).apply(any(), any())(any(), any())
     }
 
     "must redirect to Journey Recovery for a GET on Exception" in new SetUp {
-      val application                     = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None).build()
       running(application) {
         when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.failed(
           new Exception("test Exception")
@@ -82,6 +83,6 @@ class ViewPastReturnsControllerSpec extends SpecBase {
   class SetUp {
     val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
     val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-    val mockViewPastReturnsView = mock[ViewPastReturnsView]
+    val mockViewPastReturnsView         = mock[ViewPastReturnsView]
   }
 }
