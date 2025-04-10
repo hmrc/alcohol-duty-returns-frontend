@@ -1025,7 +1025,7 @@ trait TestData extends ModelGenerators {
     Set(
       RangeDetailsByRegime(
         Beer,
-        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(3))))
       )
     )
   )
@@ -1038,7 +1038,7 @@ trait TestData extends ModelGenerators {
     Set(
       RangeDetailsByRegime(
         Beer,
-        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(3))))
       )
     )
   )
@@ -1051,7 +1051,7 @@ trait TestData extends ModelGenerators {
     Set(
       RangeDetailsByRegime(
         Beer,
-        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(3))))
       )
     )
   )
@@ -1090,7 +1090,7 @@ trait TestData extends ModelGenerators {
     Set(
       RangeDetailsByRegime(
         Beer,
-        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(6)), AlcoholByVolume(BigDecimal(7))))
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(6)), AlcoholByVolume(BigDecimal(8))))
       )
     )
   )
@@ -1116,7 +1116,7 @@ trait TestData extends ModelGenerators {
     Set(
       RangeDetailsByRegime(
         Beer,
-        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(3))))
       )
     )
   )

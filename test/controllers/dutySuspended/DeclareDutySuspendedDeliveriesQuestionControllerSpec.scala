@@ -20,10 +20,10 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{NormalMode, ReturnId, UserAnswers}
-import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
+import navigation.DeclareDutySuspendedDeliveriesNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.dutySuspended._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -89,16 +89,18 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector             = mock[UserAnswersConnector]
+      val mockDutySuspendedDeliveriesNavigator = mock[DeclareDutySuspendedDeliveriesNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockDutySuspendedDeliveriesNavigator.nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(
-              new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)
-            ),
+            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -112,6 +114,10 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockDutySuspendedDeliveriesNavigator, times(1))
+          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(NormalMode), any())
       }
     }
 
@@ -166,8 +172,11 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
     }
 
     "must redirect to the Task list and clear user answers when declare duty suspended deliveries question is answered as No" in {
-      val mockUserAnswersConnector     = mock[UserAnswersConnector]
-      val mockUserAnswers: UserAnswers = mock[UserAnswers]
+      val taskListRoute = controllers.routes.TaskListController.onPageLoad
+
+      val mockUserAnswersConnector             = mock[UserAnswersConnector]
+      val mockUserAnswers: UserAnswers         = mock[UserAnswers]
+      val mockDutySuspendedDeliveriesNavigator = mock[DeclareDutySuspendedDeliveriesNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
@@ -182,11 +191,13 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
         DeclareDutySuspendedDeliveriesQuestionPage,
         false
       )
+      when(
+        mockDutySuspendedDeliveriesNavigator.nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), any(), any())
+      ) thenReturn taskListRoute
 
       val application = applicationBuilder(userAnswers = Some(mockUserAnswers))
         .overrides(
-          bind[DeclareDutySuspendedDeliveriesNavigator]
-            .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+          bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -198,11 +209,13 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
           )
         val result  = route(application, request).value
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual taskListRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockUserAnswers, times(1)).set(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(false))(any())
         verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockDutySuspendedDeliveriesNavigator, times(1))
+          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(NormalMode), any())
       }
     }
   }

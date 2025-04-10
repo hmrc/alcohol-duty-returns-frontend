@@ -150,8 +150,7 @@ class DutyDueForThisReturnHelper @Inject() (
       dutiesByRegime.map { case (alcoholRegime, alcoholDuty) =>
         SummaryListRow(
           key = Key(
-            content =
-              Text(messages("dutyDueForThisReturn.table.dutyDue", messages(alcoholRegime.regimeMessageKey).capitalize)),
+            content = Text(messages(s"dutyDueForThisReturn.table.dutyDue.${alcoholRegime.regimeMessageKey}")),
             classes = Css.boldFontCssClass
           ),
           value = Value(
@@ -164,7 +163,7 @@ class DutyDueForThisReturnHelper @Inject() (
                   content = Text(messages("site.change")),
                   href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime).url,
                   visuallyHiddenText =
-                    Some(messages("dutyDueForThisReturn.table.dutyDue", messages(alcoholRegime.regimeMessageKey)))
+                    Some(messages(s"dutyDueForThisReturn.table.dutyDue.${alcoholRegime.regimeMessageKey}"))
                 )
               )
             )

@@ -89,6 +89,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val claimARefundGformEnabled: Boolean =
     configuration.get[Boolean]("features.claim-a-refund-gform")
 
+  val dutySuspendedNewJourneyEnabled: Boolean =
+    configuration.get[Boolean]("features.duty-suspended-new-journey")
+
   val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
 

@@ -23,12 +23,6 @@ site.returnToBusinessAccount = Yn ôl i’ch Cyfrif Treth Busnes
 site.year = {0,number,####}
 site.warning = Rhybudd
 
-#Welsh helpers - in Welsh y and w are also vowels
-
-#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
-welsh.and.consonant = a
-welsh.and.vowel = ac
-
 date.day = Diwrnod
 date.month = Mis
 date.year = Blwyddyn
@@ -335,18 +329,32 @@ return.journey.abv.interval.label.Wine.nondraught = gwin nad yw’n dod o’r ga
 return.journey.abv.interval.label.Spirits.nondraught = gwirodydd nad ydynt yn dod o’r gasgen
 return.journey.abv.interval.label.OtherFermentedProduct.nondraught = cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen
 
+return.journey.abv.rangeKey.3 = rhwng {0}% a {1}%
+return.journey.abv.rangeKey.4 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.5 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.8 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.22 = rhwng {0}% a {1}%
+return.journey.abv.rangeKey.100 = {0}% neu’n uwch
+
 return.journey.abv.taxTypeCode = cod y math o dreth: {0}
 return.journey.abv.taxTypeCode.SPR = cod y math o dreth: {0} SPR
 
-return.journey.abv.interval.exceeding.max = {0} ar {1}% ABV neu’n uwch ({2})
-return.journey.abv.single.interval = {0} rhwng {1}% {2} {3}% ABV ({4})
-return.journey.abv.multi.interval = {0} rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
+return.journey.abv.single.interval = {0} {1} ABV ({2})
+return.journey.abv.multi.interval = {0} {1} ABV and {2} {3} ABV ({4})
 
-return.journey.totalLitres = Cyfanswm y litrau o {0}
+return.journey.totalLitres.regime.beer = Cyfanswm y litrau o gwrw
+return.journey.totalLitres.regime.cider = Cyfanswm y litrau o seidr
+return.journey.totalLitres.regime.wine = Cyfanswm y litrau o win
+return.journey.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd
+return.journey.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill
 return.journey.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol
 return.journey.pureAlcohol = Litrau o alcohol pur
 return.journey.pureAlcohol.hint = Nodwch y litrau, gan gynnwys 4 lle degol
-return.journey.spr.dutyRate = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y {0} hwn
+return.journey.spr.dutyRate.regime.beer = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cwrw hwn
+return.journey.spr.dutyRate.regime.cider = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y seidr hwn
+return.journey.spr.dutyRate.regime.wine = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y gwin hwn
+return.journey.spr.dutyRate.regime.spirits = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y gwirodydd hyn
+return.journey.spr.dutyRate.regime.otherfermentedproduct = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynnyrch eplesedig arall hwn
 
 declareAlcoholDutyQuestion.title = Datgan cynhyrchion alcoholaidd at ddiben toll
 declareAlcoholDutyQuestion.heading = Datgan cynhyrchion alcoholaidd at ddiben toll
@@ -380,12 +388,30 @@ whatDoYouNeedToDeclare.error.required.Cider = Dewiswch y seidr y mae angen i chi
 whatDoYouNeedToDeclare.error.required.Wine = Dewiswch y gwin y mae angen i chi ei ddatgan
 whatDoYouNeedToDeclare.error.required.Spirits = Dewiswch y gwirodydd y mae angen i chi eu datgan
 whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Dewiswch y cynhyrchion eplesedig eraill y mae angen i chi eu datgan
+
 whatDoYouNeedToDeclare.core.heading = {0} (cyfradd safonol)
 whatDoYouNeedToDeclare.draught.heading = {0} o’r gasgen (cyfradd is)
-whatDoYouNeedToDeclare.smallProducerRelief.heading = {0} nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = {0} o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-whatDoYouNeedToDeclare.checkYourAnswersLabel.card = {0} i’w ddatgan
-whatDoYouNeedToDeclare.checkYourAnswersLabel.row = {0} a ddewiswyd i’w ddatgan
+whatDoYouNeedToDeclare.smallProducerRelief.heading.regime.beer = Cwrw nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.smallProducerRelief.heading.regime.cider = Seidr nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.smallProducerRelief.heading.regime.wine = Gwin nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.smallProducerRelief.heading.regime.spirits = Gwirodydd nad ydynt yn dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.smallProducerRelief.heading.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading.regime.beer = Cwrw o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading.regime.cider = Seidr o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading.regime.wine = Gwin o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading.regime.spirits = Gwirodydd o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card.regime.beer = Cwrw i’w ddatgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card.regime.cider = Seidr i’w ddatgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card.regime.wine = Gwin i’w ddatgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card.regime.spirits = Gwirodydd i’w datgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill i’w datgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row.regime.beer = Cwrw a ddewiswyd i’w ddatgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row.regime.cider = Seidr a ddewiswyd i’w ddatgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row.regime.wine = Gwin a ddewiswyd i’w ddatgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row.regime.spirits = Gwirodydd a ddewiswyd i’w datgan
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill a ddewiswyd i’w datgan
 
 howMuchDoYouNeedToDeclare.title.Beer = Rhoi gwybod i ni am y cwrw y mae angen i chi ei ddatgan
 howMuchDoYouNeedToDeclare.title.Cider = Rhoi gwybod i ni am y seidr y mae angen i chi ei ddatgan
@@ -407,8 +433,17 @@ howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyr
 howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 howMuchDoYouNeedToDeclare.hint = Nodwch y litrau, hyd at 2 le degol
 howMuchDoYouNeedToDeclare.pureAlcohol.hint = Nodwch y litrau, gan gynnwys 4 lle degol
-howMuchDoYouNeedToDeclare.core.heading = Faint o {0} nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
-howMuchDoYouNeedToDeclare.draught.heading = Faint o {0} o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+
+howMuchDoYouNeedToDeclare.core.heading.regime.beer = Faint o gwrw nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.cider = Faint o seidr nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.wine = Faint o win nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.spirits = Faint o wirodydd nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.otherfermentedproduct = Faint o gynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?
+howMuchDoYouNeedToDeclare.draught.heading.regime.beer = Faint o gwrw o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.draught.heading.regime.cider = Faint o seidr o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.draught.heading.regime.wine = Faint o win o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.draught.heading.regime.spirits = Faint o wirodydd o’r gasgen (cyfradd is) y mae angen i chi eu datgan?
+howMuchDoYouNeedToDeclare.draught.heading.regime.otherfermentedproduct = Faint o gynhyrchion eplesedig eraill o’r gasgen (cyfradd is) y mae angen i chi eu datgan?
 
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = Toll {0}
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description = Disgrifiad
@@ -771,7 +806,6 @@ spoiltVolumeWithDuty.error.decimalPlaces.duty = Mae’n rhaid i swm y doll a dal
 spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
 
 spoiltVolumeWithDuty.change.hidden = gwerth y doll
-spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = sydd yn y {0} wedi’i ddifetha
 
 whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
@@ -879,8 +913,17 @@ adjustmentEntryList.action = Camau
 adjustmentList.total = Cyfanswm sy’n ddyledus
 adjustmentList.question = A oes angen i chi roi gwybod i ni am unrhyw addasiadau eraill?
 adjustmentList.error.required = Dewiswch ‘Iawn’ os oes gennych addasiad arall i’w ddatgan
-adjustmentEntryList.change.hidden = NOT_FOUND
-adjustmentEntryList.remove.hidden = NOT_FOUND
+
+adjustmentEntryList.change.under-declaration.hidden = Addasiad ar gyfer tanddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.change.over-declaration.hidden = Addasiad ar gyfer gorddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.change.repackaged-draught-products.hidden = Addasiad ar gyfer cynhyrchion o’r gasgen wedi’u hailbecynnu lle gwerth y doll yw {0}
+adjustmentEntryList.change.spoilt.hidden = Addasiad ar gyfer cynhyrchion wedi’u difetha lle gwerth y doll yw {0}
+adjustmentEntryList.change.drawback.hidden = Addasiad ar gyfer ad-daliad lle gwerth y doll yw {0}
+adjustmentEntryList.remove.under-declaration.hidden = Addasiad ar gyfer tanddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.remove.over-declaration.hidden = Addasiad ar gyfer gorddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.remove.repackaged-draught-products.hidden = Addasiad ar gyfer cynhyrchion o’r gasgen wedi’u hailbecynnu lle gwerth y doll yw {0}
+adjustmentEntryList.remove.spoilt.hidden = Addasiad ar gyfer cynhyrchion wedi’u difetha lle gwerth y doll yw {0}
+adjustmentEntryList.remove.drawback.hidden = Addasiad ar gyfer ad-daliad lle gwerth y doll yw {0}
 
 deleteAdjustment.title = Tynnu’r addasiad hwn?
 deleteAdjustment.heading = Tynnu’r addasiad hwn?
@@ -913,7 +956,11 @@ dutyDueForThisReturn.bulletList.1 = Gwnaethom gyfrifo cyfanswm y doll sy’n ddy
 dutyDueForThisReturn.bulletList.3 = Gwnaethoch chi roi gwybod i ni nad oes gennych unrhyw addasiadau i’w datgan, na chynhyrchion alcoholaidd y mae toll yn berthnasol iddynt
 dutyDueForThisReturn.p2 = Gwiriwch fod gwerthoedd yr alcohol a ddatganwyd a’r addasiadau yn gywir cyn parhau.
 dutyDueForThisReturn.h3 = Crynodeb tollau terfynol
-dutyDueForThisReturn.table.dutyDue = {0} wedi’i ddatgan
+dutyDueForThisReturn.table.dutyDue.regime.beer = Cwrw wedi’i ddatgan
+dutyDueForThisReturn.table.dutyDue.regime.cider = Seidr wedi’i ddatgan
+dutyDueForThisReturn.table.dutyDue.regime.wine = Gwin wedi’i ddatgan
+dutyDueForThisReturn.table.dutyDue.regime.spirits = Gwirodydd wedi’u datgan
+dutyDueForThisReturn.table.dutyDue.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill wedi’u datgan
 dutyDueForThisReturn.table.nil.label = Toll wedi’i datgan
 dutyDueForThisReturn.table.nil.value = Dim
 dutyDueForThisReturn.table.adjustmentDue = Addasiadau i Ddatganiadau blaenorol

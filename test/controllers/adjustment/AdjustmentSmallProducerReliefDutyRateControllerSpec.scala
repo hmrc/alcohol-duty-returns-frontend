@@ -18,18 +18,19 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
-import forms.adjustment.AdjustmentSmallProducerReliefDutyRateFormProvider
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
-import org.mockito.ArgumentMatchers.any
-import pages.adjustment.CurrentAdjustmentEntryPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import forms.adjustment.AdjustmentSmallProducerReliefDutyRateFormProvider
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
+import navigation.AdjustmentNavigator
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment.{AdjustmentSmallProducerReliefDutyRatePage, CurrentAdjustmentEntryPage}
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentSmallProducerReliefDutyRateView
 
@@ -111,14 +112,17 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentSmallProducerReliefDutyRatePage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -132,8 +136,13 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentSmallProducerReliefDutyRatePage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
+
     "must redirect to the next page when the same data is submitted" in {
       val userAnswers =
         emptyUserAnswers
@@ -149,14 +158,17 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
           .value
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentSmallProducerReliefDutyRatePage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -170,8 +182,13 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentSmallProducerReliefDutyRatePage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()

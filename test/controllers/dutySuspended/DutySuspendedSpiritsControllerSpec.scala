@@ -17,17 +17,18 @@
 package controllers.dutySuspended
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.dutySuspended.DutySuspendedSpiritsFormProvider
 import models.NormalMode
 import models.dutySuspended.DutySuspendedSpirits
-import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
+import navigation.DeclareDutySuspendedDeliveriesNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.dutySuspended.DutySuspendedSpiritsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedSpiritsView
 
@@ -90,15 +91,18 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector             = mock[UserAnswersConnector]
+      val mockDutySuspendedDeliveriesNavigator = mock[DeclareDutySuspendedDeliveriesNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockDutySuspendedDeliveriesNavigator.nextPage(eqTo(DutySuspendedSpiritsPage), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithSpirits))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator]
-              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -115,6 +119,10 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockDutySuspendedDeliveriesNavigator, times(1))
+          .nextPage(eqTo(DutySuspendedSpiritsPage), eqTo(NormalMode), any())
       }
     }
 
