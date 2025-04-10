@@ -21,6 +21,7 @@ import connectors.AlcoholDutyReturnsConnector
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import play.api.test.Helpers._
+import play.twirl.api.Html
 import viewmodels.returns.ViewPastReturnsHelper
 import views.html.returns.ViewPastReturnsView
 
@@ -29,18 +30,20 @@ import scala.concurrent.Future
 
 class ViewPastReturnsControllerSpec extends SpecBase {
   "ViewPastReturns Controller" - {
-    "must return OK and the correct view for a GET" in {
-      val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
-      val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-      when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
-        Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)
-      )
-      val application                     = applicationBuilder(userAnswers = None)
+    "must return OK and the correct view for a GET" in new SetUp {
+      val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
-          bind[Clock].toInstance(clock)
+          bind[Clock].toInstance(clock),
+          bind[ViewPastReturnsView].toInstance(mockViewPastReturnsView)
         )
         .build()
+
+      when(mockViewPastReturnsView.apply(any(), any())(any(), any())).thenReturn(Html("Expected content"))
+
+      when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
+        Seq(obligationDataSingleOpen, obligationDataSingleFulfilled))
+
       running(application) {
         val request = FakeRequest(GET, controllers.returns.routes.ViewPastReturnsController.onPageLoad.url)
         val result  = route(application, request).value
@@ -57,10 +60,10 @@ class ViewPastReturnsControllerSpec extends SpecBase {
           getMessages(application)
         ).toString
       }
+      verify (mockViewPastReturnsView, times(2)).apply(any(), any())(any(), any())
     }
 
-    "must redirect to Journey Recovery for a GET on Exception" in {
-      val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+    "must redirect to Journey Recovery for a GET on Exception" in new SetUp {
       val application                     = applicationBuilder(userAnswers = None).build()
       running(application) {
         when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.failed(
@@ -76,4 +79,9 @@ class ViewPastReturnsControllerSpec extends SpecBase {
     }
   }
 
+  class SetUp {
+    val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
+    val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+    val mockViewPastReturnsView = mock[ViewPastReturnsView]
+  }
 }

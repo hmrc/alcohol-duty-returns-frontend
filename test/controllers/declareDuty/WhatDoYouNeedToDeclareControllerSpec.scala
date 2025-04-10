@@ -67,9 +67,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
   }
 
   "WhatDoYouNeedToDeclare Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
