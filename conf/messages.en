@@ -431,7 +431,7 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description = Description
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total volume
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
-doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
+doYouHaveMultipleSPRDutyRates.title = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.p1.regime.beer = You may need to declare beer with more than one Small Producer Relief duty rate for the same type of beer, for example:
 doYouHaveMultipleSPRDutyRates.p1.regime.cider = You may need to declare cider with more than one Small Producer Relief duty rate for the same type of cider, for example:
