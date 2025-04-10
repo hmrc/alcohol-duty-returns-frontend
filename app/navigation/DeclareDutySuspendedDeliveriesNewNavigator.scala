@@ -33,6 +33,8 @@ class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
     case DutySuspendedAlcoholTypePage                  =>
       // TODO: Implement for alcohol type selection page
       _ => routes.TaskListController.onPageLoad
+    case _                                             =>
+      _ => routes.TaskListController.onPageLoad
   }
 
   private val normalRoutesWithRegime: Page => UserAnswers => AlcoholRegime => Call =
@@ -44,6 +46,8 @@ class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
       userAnswers => _ => declareDutySuspendedDeliveriesQuestionPageRoute(userAnswers, CheckMode)
     case DutySuspendedAlcoholTypePage                  =>
       // TODO: Implement for alcohol type selection page
+      _ => _ => routes.TaskListController.onPageLoad
+    case _                                             =>
       _ => _ => routes.TaskListController.onPageLoad
   }
 
