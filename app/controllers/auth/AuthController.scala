@@ -21,9 +21,11 @@ import config.FrontendAppConfig
 import connectors.UserAnswersConnector
 import controllers.actions.SignOutAction
 import models.ReturnId
+import models.requests.RequestWithOptAppaId
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
@@ -40,22 +42,36 @@ class AuthController @Inject() (
     with I18nSupport {
 
   def signOut(): Action[AnyContent] = signOutAction.async { implicit request =>
+    handleSignOut(request, Seq(config.exitSurveyUrl))
+  }
+
+  def signOutDuringEnrolment(): Action[AnyContent] = signOutAction.async { implicit request =>
+    handleSignOut(
+      request,
+      Seq(
+        config.loginUrl + s"?continue=${config.loginContinueUrlRequestAccess}"
+      )
+    )
+  }
+
+  private def handleSignOut(request: RequestWithOptAppaId[AnyContent], continueUrl: Seq[String])(implicit
+    hc: HeaderCarrier
+  ) =
     request.appaId match {
       case Some(appaId) =>
         request.session.get(periodKeySessionKey) match {
           case Some(periodKey) =>
             userAnswersConnector
               .releaseLock(ReturnId(appaId, periodKey))
-              .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+              .map(_ => Redirect(config.signOutUrl, Map("continue" -> continueUrl)))
           case None            =>
             logger.info("Period key not found during sign out")
-            Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+            Future.successful(Redirect(config.signOutUrl, Map("continue" -> continueUrl)))
         }
       case None         =>
         logger.info(
           "User not authenticated. No locks to release."
         )
-        Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+        Future.successful(Redirect(config.signOutUrl, Map("continue" -> continueUrl)))
     }
-  }
 }
