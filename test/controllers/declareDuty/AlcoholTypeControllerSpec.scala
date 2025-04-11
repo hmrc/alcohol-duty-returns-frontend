@@ -17,16 +17,17 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.declareDuty.AlcoholTypeFormProvider
+import models.AlcoholRegime.{Beer, Cider, Wine}
 import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.AlcoholTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import models.AlcoholRegime.{Beer, Cider, Wine}
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.AlcoholTypeView
 
@@ -90,13 +91,15 @@ class AlcoholTypeControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockReturnsNavigator.nextPage(eqTo(AlcoholTypePage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -110,6 +113,10 @@ class AlcoholTypeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPage(eqTo(AlcoholTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 

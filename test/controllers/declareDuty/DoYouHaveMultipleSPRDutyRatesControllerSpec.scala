@@ -17,15 +17,16 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.declareDuty.DoYouHaveMultipleSPRDutyRatesFormProvider
 import models.{CheckMode, NormalMode}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.DoYouHaveMultipleSPRDutyRatesView
 
@@ -86,13 +87,18 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator
+          .nextPageWithRegime(eqTo(DoYouHaveMultipleSPRDutyRatesPage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -106,6 +112,17 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(DoYouHaveMultipleSPRDutyRatesPage),
+            eqTo(NormalMode),
+            any(),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
       }
     }
 
@@ -113,13 +130,20 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
       val userAnswers = emptyUserAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator
+          .nextPageWithRegime(eqTo(DoYouHaveMultipleSPRDutyRatesPage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -133,6 +157,17 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(DoYouHaveMultipleSPRDutyRatesPage),
+            eqTo(CheckMode),
+            any(),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
       }
     }
 
@@ -140,13 +175,18 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
       val userAnswers = emptyUserAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator
+          .nextPageWithRegime(eqTo(DoYouHaveMultipleSPRDutyRatesPage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = Some(true))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -160,6 +200,17 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(DoYouHaveMultipleSPRDutyRatesPage),
+            eqTo(CheckMode),
+            any(),
+            any(),
+            eqTo(true),
+            eqTo(None)
+          )
       }
     }
 

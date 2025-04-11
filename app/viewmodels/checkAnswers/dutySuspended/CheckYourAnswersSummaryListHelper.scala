@@ -46,7 +46,7 @@ class CheckYourAnswersSummaryListHelper @Inject() () {
       if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))) else None
     val maybePureAlcoholInWine                  =
       if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))) else None
-    val maybeTotalSpirts                        =
+    val maybeTotalSpirits                       =
       if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))) else None
     val maybePureAlcoholInSpirits               =
       if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))) else None
@@ -69,7 +69,7 @@ class CheckYourAnswersSummaryListHelper @Inject() () {
       maybePureAlcoholInCider,
       maybeTotalWine,
       maybePureAlcoholInWine,
-      maybeTotalSpirts,
+      maybeTotalSpirits,
       maybePureAlcoholInSpirits,
       maybeTotalOtherFermentedSummary,
       maybePureAlcoholInOtherFermentedSummary

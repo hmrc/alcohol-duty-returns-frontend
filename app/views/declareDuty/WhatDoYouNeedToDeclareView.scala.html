@@ -81,7 +81,7 @@
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
-                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(regime.regimeMessageKey)).capitalize).asSubheading,
+                    legend = LegendViewModel(messages(s"whatDoYouNeedToDeclare.smallProducerRelief.heading.${regime.regimeMessageKey}").capitalize).asSubheading,
                     items  = taxBandsViewModel.smallProducerRelief
                   ))
 
@@ -91,7 +91,7 @@
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
-                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(regime.regimeMessageKey)).capitalize).asSubheading,
+                    legend = LegendViewModel(messages(s"whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading.${regime.regimeMessageKey}").capitalize).asSubheading,
                     items  = taxBandsViewModel.draughtAndSmallProducerRelief
                   ))
                 }

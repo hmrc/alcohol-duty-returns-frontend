@@ -17,21 +17,21 @@
 package controllers.adjustment
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
 import models.{NormalMode, ReturnId, UserAnswers}
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import org.mockito.ArgumentMatchersSugar.eqTo
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.DeclareAdjustmentQuestionView
 
-import scala.util.Success
 import scala.concurrent.Future
+import scala.util.Success
 
 class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
 
@@ -91,14 +91,17 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(DeclareAdjustmentQuestionPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -112,13 +115,21 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(DeclareAdjustmentQuestionPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
     "must redirect to the Task list and clear user answers when valid question is answered as No" in {
+      val taskListRoute = controllers.routes.TaskListController.onPageLoad
+
       val mockUserAnswersConnector     = mock[UserAnswersConnector]
       val mockUserAnswers: UserAnswers = mock[UserAnswers]
       val mockReturnId                 = mock[ReturnId]
+      val mockAdjustmentNavigator      = mock[AdjustmentNavigator]
+
       when(mockReturnId.periodKey) thenReturn "2025-01"
       when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -131,11 +142,14 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
         DeclareAdjustmentQuestionPage,
         false
       )
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(DeclareAdjustmentQuestionPage), any(), any(), any())
+      ) thenReturn taskListRoute
 
       val application =
         applicationBuilder(userAnswers = Some(mockUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -148,11 +162,13 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual taskListRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockUserAnswers, times(1)).set(eqTo(DeclareAdjustmentQuestionPage), eqTo(false))(any())
         verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(DeclareAdjustmentQuestionPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
