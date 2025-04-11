@@ -47,16 +47,18 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
     DutySuspendedAlcoholTypePage
   )
 
-  val additionalConfig = Map("features.duty-suspended-new-journey" -> true)
-
   lazy val declareDutySuspendedDeliveriesQuestionRoute =
     routes.DeclareDutySuspendedDeliveriesQuestionNewController.onPageLoad(NormalMode).url
+
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> true
+  )
 
   "DeclareDutySuspendedDeliveriesQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).configure(additionalConfig).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
@@ -74,7 +76,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
       val userAnswers = emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, true).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).configure(additionalConfig).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
@@ -101,7 +103,6 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .configure(additionalConfig)
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNewNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -139,7 +140,6 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .configure(additionalConfig)
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNewNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -164,7 +164,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).configure(additionalConfig).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
@@ -184,7 +184,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).configure(additionalConfig).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
@@ -198,7 +198,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).configure(additionalConfig).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
@@ -241,7 +241,6 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
       ) thenReturn taskListRoute
 
       val application = applicationBuilder(userAnswers = Some(mockUserAnswers))
-        .configure(additionalConfig)
         .overrides(
           bind[DeclareDutySuspendedDeliveriesNewNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)

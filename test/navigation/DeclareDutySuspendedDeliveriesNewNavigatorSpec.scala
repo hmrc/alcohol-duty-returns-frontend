@@ -49,7 +49,7 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, true).success.value,
             Some(false)
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
           // TODO: update route when new page is created
         }
 
@@ -63,7 +63,7 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
           // TODO: update route when new page is created
         }
 
@@ -94,7 +94,8 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers,
             regime
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          // TODO: update route to task list when nextPageWithRegime is implemented properly
         }
       }
     }
@@ -117,7 +118,7 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, true).success.value,
             Some(false)
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
           // TODO: update route when new page is created
         }
 
@@ -131,7 +132,7 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
           // TODO: update route when new page is created
         }
 
@@ -153,7 +154,8 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          // TODO: update route to task list when nextPageWithRegime is implemented properly
         }
 
         Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>

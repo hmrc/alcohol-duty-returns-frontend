@@ -32,28 +32,28 @@ class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
       userAnswers => declareDutySuspendedDeliveriesQuestionPageRoute(userAnswers, NormalMode)
     case DutySuspendedAlcoholTypePage                  =>
       // TODO: Implement for alcohol type selection page
-      _ => routes.TaskListController.onPageLoad
+      _ => routes.JourneyRecoveryController.onPageLoad()
     case _                                             =>
       _ => routes.TaskListController.onPageLoad
   }
 
   private val normalRoutesWithRegime: Page => UserAnswers => AlcoholRegime => Call =
     // TODO: Implement for new pages that depend on the regime
-    _ => _ => _ => routes.TaskListController.onPageLoad
+    _ => _ => _ => routes.JourneyRecoveryController.onPageLoad()
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
     case DeclareDutySuspendedDeliveriesQuestionNewPage =>
       userAnswers => _ => declareDutySuspendedDeliveriesQuestionPageRoute(userAnswers, CheckMode)
     case DutySuspendedAlcoholTypePage                  =>
       // TODO: Implement for alcohol type selection page
-      _ => _ => routes.TaskListController.onPageLoad
+      _ => _ => routes.JourneyRecoveryController.onPageLoad()
     case _                                             =>
       _ => _ => routes.TaskListController.onPageLoad
   }
 
   private val checkRouteMapWithRegime: Page => UserAnswers => AlcoholRegime => Call =
     // TODO: Implement for new pages that depend on the regime (always go to Check Your Answers)
-    _ => _ => _ => routes.TaskListController.onPageLoad
+    _ => _ => _ => routes.JourneyRecoveryController.onPageLoad()
 
   def nextPageWithRegime(
     page: Page,
@@ -83,10 +83,10 @@ class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
     userAnswers.get(DeclareDutySuspendedDeliveriesQuestionNewPage) match {
       case Some(true) if userAnswers.regimes.regimes.size > 1 =>
         // TODO: Go to new declare quantity page for the single regime (insert mode on page load)
-        routes.TaskListController.onPageLoad
+        routes.JourneyRecoveryController.onPageLoad()
       case Some(true)                                         =>
         // TODO: Go to new alcohol type selection page (insert mode on page load)
-        routes.TaskListController.onPageLoad
+        routes.JourneyRecoveryController.onPageLoad()
       case Some(false)                                        => routes.TaskListController.onPageLoad
       case _                                                  => routes.JourneyRecoveryController.onPageLoad()
     }
