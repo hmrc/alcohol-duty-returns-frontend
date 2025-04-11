@@ -55,7 +55,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(getMessages(application)).get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual "xyz"
         verify(mockView).apply(eqTo(spiritsList))(any(), any())
       }
@@ -251,8 +251,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
     val mockUserAnswersConnector = mock[UserAnswersConnector]
-    val mockView = mock[CheckYourAnswersView]
-    val completedUserAnswers = emptyUserAnswers
+    val mockView                 = mock[CheckYourAnswersView]
+    val completedUserAnswers     = emptyUserAnswers
       .set(
         SpiritTypePage,
         Set[SpiritType](SpiritType.Other)
@@ -268,6 +268,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       .set(WhiskyPage, Whisky(BigDecimal(1), BigDecimal(2)))
       .success
       .value
-    val additionalConfig = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
   }
 }

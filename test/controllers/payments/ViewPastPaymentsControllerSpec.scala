@@ -37,7 +37,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = false
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
+      val viewModelHelper = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
       )
@@ -87,7 +87,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = true
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
+      val viewModelHelper = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
 
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
@@ -132,7 +132,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET on Exception" in new SetUp {
-      val application                      = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None).build()
       running(application) {
         when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
           new Exception("test Exception")
@@ -147,8 +147,8 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
     }
   }
   class SetUp {
-    val testConfiguration  = app.injector.instanceOf[Configuration]
-    val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+    val testConfiguration                = app.injector.instanceOf[Configuration]
+    val testServicesConfig               = app.injector.instanceOf[ServicesConfig]
     val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
   }
 
