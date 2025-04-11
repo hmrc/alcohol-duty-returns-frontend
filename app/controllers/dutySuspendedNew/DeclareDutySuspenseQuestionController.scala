@@ -66,15 +66,12 @@ class DeclareDutySuspenseQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
+              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(request.userAnswers))
               updatedAnswers                <-
-                Future.fromTry(
-                  request.userAnswers.set(DeclareDutySuspenseQuestionPage, value)
-                )
-              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
-              filterUserAnswer              <- Future.fromTry(filterDSDQuestionAnswer(singleRegimeUpdatedUserAnswer, value))
-              _                             <- userAnswersConnector.set(filterUserAnswer)
+                Future.fromTry(singleRegimeUpdatedUserAnswer.set(DeclareDutySuspenseQuestionPage, value))
+              _                             <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(
-              navigator.nextPage(DeclareDutySuspenseQuestionPage, mode, filterUserAnswer, Some(false))
+              navigator.nextPage(DeclareDutySuspenseQuestionPage, mode, updatedAnswers, Some(false))
             )
         )
     }
@@ -84,17 +81,5 @@ class DeclareDutySuspenseQuestionController @Inject() (
       userAnswer.set(DutySuspendedAlcoholTypePage, userAnswer.regimes.regimes)
     } else {
       Try(userAnswer)
-    }
-
-  private def filterDSDQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) {
-      Try(userAnswer)
-    } else {
-      // TODO: add other pages from new journey to be removed if user submits 'No'
-      userAnswer.remove(
-        List(
-          DutySuspendedAlcoholTypePage
-        )
-      )
     }
 }

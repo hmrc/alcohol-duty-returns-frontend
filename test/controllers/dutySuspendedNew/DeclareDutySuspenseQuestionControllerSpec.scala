@@ -20,11 +20,10 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspendedNew.DeclareDutySuspenseQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, Wine}
-import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
+import models.{AlcoholRegime, AlcoholRegimes, NormalMode, UserAnswers}
 import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.dutySuspended._
 import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -41,11 +40,6 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
   val formProvider = new DeclareDutySuspenseQuestionFormProvider()
   val form         = formProvider()
-
-  val pagesToDelete = List(
-    // TODO: add other pages from new journey to be removed if user submits 'No'
-    DutySuspendedAlcoholTypePage
-  )
 
   lazy val declareDutySuspenseQuestionRoute =
     routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
@@ -92,19 +86,18 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersConnector             = mock[UserAnswersConnector]
-      val mockDutySuspendedDeliveriesNavigator = mock[DutySuspendedNavigator]
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
+      val mockDutySuspendedNavigator = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
-        mockDutySuspendedDeliveriesNavigator
-          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
+        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DutySuspendedNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
+            bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -120,7 +113,7 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockDutySuspendedDeliveriesNavigator, times(1))
+        verify(mockDutySuspendedNavigator, times(1))
           .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
@@ -129,19 +122,18 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
       val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
 
-      val mockUserAnswersConnector             = mock[UserAnswersConnector]
-      val mockDutySuspendedDeliveriesNavigator = mock[DutySuspendedNavigator]
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
+      val mockDutySuspendedNavigator = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
-        mockDutySuspendedDeliveriesNavigator
-          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
+        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[DutySuspendedNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
+            bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -157,7 +149,7 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockDutySuspendedDeliveriesNavigator, times(1))
+        verify(mockDutySuspendedNavigator, times(1))
           .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
@@ -212,14 +204,12 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Task list and clear user answers when declare duty suspense question is answered as No" in {
+    "must redirect to the Task list and clear subsequent pages from user answers when declare duty suspense question is answered as No" in {
       val taskListRoute = controllers.routes.TaskListController.onPageLoad
 
-      val mockUserAnswersConnector              = mock[UserAnswersConnector]
-      val mockUserAnswers: UserAnswers          = mock[UserAnswers]
-      val mockAlcoholRegimesSet: AlcoholRegimes = mock[AlcoholRegimes]
-      val mockReturnId                          = mock[ReturnId]
-      val mockDutySuspendedDeliveriesNavigator  = mock[DutySuspendedNavigator]
+      val mockUserAnswersConnector     = mock[UserAnswersConnector]
+      val mockUserAnswers: UserAnswers = mock[UserAnswers]
+      val mockDutySuspendedNavigator   = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
@@ -227,22 +217,30 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
       ) thenReturn Success(
         mockUserAnswers
       )
-      when(mockReturnId.periodKey) thenReturn "2025-01"
-      when(mockUserAnswers.returnId) thenReturn mockReturnId
-      when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
-      when(mockAlcoholRegimesSet.regimes) thenReturn Set(Cider, Wine)
-      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
-        DeclareDutySuspendedDeliveriesQuestionPage,
-        false
-      )
       when(
-        mockDutySuspendedDeliveriesNavigator
-          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
+        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn taskListRoute
 
-      val application = applicationBuilder(userAnswers = Some(mockUserAnswers))
+      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Wine)
+
+      val userAnswers = emptyUserAnswers
+        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
+        .set(DeclareDutySuspenseQuestionPage, true)
+        .success
+        .value
+        .set(DutySuspendedAlcoholTypePage, alcoholRegimesSet)
+        .success
+        .value
+
+      val expectedCachedUserAnswers = emptyUserAnswers
+        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
+        .set(DeclareDutySuspenseQuestionPage, false)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[DutySuspendedNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
+          bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -256,13 +254,14 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual taskListRoute.url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockUserAnswers, times(1)).set(eqTo(DeclareDutySuspenseQuestionPage), eqTo(false))(any())
-        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
-        verify(mockUserAnswers, times(1)).regimes
-        verify(mockAlcoholRegimesSet, times(1)).regimes
-        verify(mockDutySuspendedDeliveriesNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
+        verify(mockDutySuspendedNavigator, times(1))
+          .nextPage(
+            eqTo(DeclareDutySuspenseQuestionPage),
+            eqTo(NormalMode),
+            eqTo(expectedCachedUserAnswers),
+            eqTo(Some(false))
+          )
       }
     }
   }
