@@ -19,7 +19,7 @@ package controllers.spiritsQuestions
 import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator
 import pages.spiritsQuestions._
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -29,7 +29,6 @@ import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try}
 
 class DeclareQuarterlySpiritsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -69,24 +68,9 @@ class DeclareQuarterlySpiritsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers      <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
-                maybeClearedAnswers <- Future.fromTry(clearUserAnswersWhenNoSelected(updatedAnswers, value))
-                _                   <- userAnswersConnector.set(maybeClearedAnswers)
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
+                _              <- userAnswersConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers, Some(true)))
           )
       }
-
-  private def clearUserAnswersWhenNoSelected(userAnswers: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) {
-      Success(userAnswers)
-    } else {
-      userAnswers.remove(
-        List(
-          DeclareSpiritsTotalPage,
-          SpiritTypePage,
-          OtherSpiritsProducedPage,
-          WhiskyPage
-        )
-      )
-    }
 }
