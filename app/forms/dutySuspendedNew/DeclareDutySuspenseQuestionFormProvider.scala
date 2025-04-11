@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package pages.dutySuspendedNew
+package forms.dutySuspendedNew
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object DeclareDutySuspendedDeliveriesQuestionNewPage extends QuestionPage[Boolean] {
+import javax.inject.Inject
 
-  override def path: JsPath = JsPath \ toString
+class DeclareDutySuspenseQuestionFormProvider @Inject() extends Mappings {
 
-  override def toString: String = "declareDutySuspendedDeliveriesQuestionNew"
+  def apply(): Form[Boolean] =
+    Form(
+      "declare-duty-suspended-deliveries-input" -> boolean("declareDutySuspenseQuestion.error.required")
+    )
 }

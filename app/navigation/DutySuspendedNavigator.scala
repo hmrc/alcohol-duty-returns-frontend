@@ -25,15 +25,15 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
+class DutySuspendedNavigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareDutySuspendedDeliveriesQuestionNewPage =>
-      userAnswers => declareDutySuspendedDeliveriesQuestionPageRoute(userAnswers, NormalMode)
-    case DutySuspendedAlcoholTypePage                  =>
+    case DeclareDutySuspenseQuestionPage =>
+      userAnswers => declareDutySuspenseQuestionPageRoute(userAnswers, NormalMode)
+    case DutySuspendedAlcoholTypePage    =>
       // TODO: Implement for alcohol type selection page
       _ => routes.JourneyRecoveryController.onPageLoad()
-    case _                                             =>
+    case _                               =>
       _ => routes.TaskListController.onPageLoad
   }
 
@@ -42,12 +42,12 @@ class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
     _ => _ => _ => routes.JourneyRecoveryController.onPageLoad()
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
-    case DeclareDutySuspendedDeliveriesQuestionNewPage =>
-      userAnswers => _ => declareDutySuspendedDeliveriesQuestionPageRoute(userAnswers, CheckMode)
-    case DutySuspendedAlcoholTypePage                  =>
+    case DeclareDutySuspenseQuestionPage =>
+      userAnswers => _ => declareDutySuspenseQuestionPageRoute(userAnswers, CheckMode)
+    case DutySuspendedAlcoholTypePage    =>
       // TODO: Implement for alcohol type selection page
       _ => _ => routes.JourneyRecoveryController.onPageLoad()
-    case _                                             =>
+    case _                               =>
       _ => _ => routes.TaskListController.onPageLoad
   }
 
@@ -79,8 +79,8 @@ class DeclareDutySuspendedDeliveriesNewNavigator @Inject() () {
       checkRouteMap(page)(userAnswers)(hasAnswerChanged.getOrElse(false))
   }
 
-  private def declareDutySuspendedDeliveriesQuestionPageRoute(userAnswers: UserAnswers, mode: Mode): Call =
-    userAnswers.get(DeclareDutySuspendedDeliveriesQuestionNewPage) match {
+  private def declareDutySuspenseQuestionPageRoute(userAnswers: UserAnswers, mode: Mode): Call =
+    userAnswers.get(DeclareDutySuspenseQuestionPage) match {
       case Some(true) if userAnswers.regimes.regimes.size > 1 =>
         // TODO: Go to new declare quantity page for the single regime (insert mode on page load)
         routes.JourneyRecoveryController.onPageLoad()

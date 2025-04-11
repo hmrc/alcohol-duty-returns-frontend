@@ -681,9 +681,9 @@ checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
 
 # Beginning of NEW duty suspended deliveries sub-journey
 
-declareDutySuspendedDeliveriesQuestionNew.title = Have you delivered or received finished alcoholic products under duty suspense?
-declareDutySuspendedDeliveriesQuestionNew.heading = Have you delivered or received finished alcoholic products under duty suspense?
-declareDutySuspendedDeliveriesQuestionNew.error.required = Select yes if you have delivered or received finished alcoholic products under duty suspense
+declareDutySuspenseQuestion.title = Have you delivered or received finished alcoholic products under duty suspense?
+declareDutySuspenseQuestion.heading = Have you delivered or received finished alcoholic products under duty suspense?
+declareDutySuspenseQuestion.error.required = Select yes if you have delivered or received finished alcoholic products under duty suspense
 
 # End of NEW duty suspended deliveries sub-journey
 

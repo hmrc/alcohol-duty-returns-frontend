@@ -210,10 +210,10 @@ GET        /complete-return/duty-suspended-deliveries/check-your-answers        
 # End of OLD duty suspended deliveries sub-journey
 
 # Beginning of NEW duty suspended deliveries sub-journey
-GET        /complete-return/duty-suspended-deliveries-new/do-you-need-to-report                        controllers.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/duty-suspended-deliveries-new/do-you-need-to-report                        controllers.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/duty-suspended-deliveries-new/change-if-you-need-to-report                  controllers.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/duty-suspended-deliveries-new/change-if-you-need-to-report                  controllers.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/duty-suspended-deliveries/do-you-need-to-report-duty-suspense                        controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/duty-suspended-deliveries/do-you-need-to-report-duty-suspense                        controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                  controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                  controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = CheckMode)
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey

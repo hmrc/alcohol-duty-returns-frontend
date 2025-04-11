@@ -18,28 +18,28 @@ package controllers.dutySuspendedNew
 
 import base.SpecBase
 import connectors.UserAnswersConnector
-import forms.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewFormProvider
+import forms.dutySuspendedNew.DeclareDutySuspenseQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, Wine}
 import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
-import navigation.DeclareDutySuspendedDeliveriesNewNavigator
+import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.dutySuspended._
-import pages.dutySuspendedNew.{DeclareDutySuspendedDeliveriesQuestionNewPage, DutySuspendedAlcoholTypePage}
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewView
+import views.html.dutySuspendedNew.DeclareDutySuspenseQuestionView
 
 import scala.concurrent.Future
 import scala.util.Success
 
-class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
+class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeclareDutySuspendedDeliveriesQuestionNewFormProvider()
+  val formProvider = new DeclareDutySuspenseQuestionFormProvider()
   val form         = formProvider()
 
   val pagesToDelete = List(
@@ -47,25 +47,25 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
     DutySuspendedAlcoholTypePage
   )
 
-  lazy val declareDutySuspendedDeliveriesQuestionRoute =
-    routes.DeclareDutySuspendedDeliveriesQuestionNewController.onPageLoad(NormalMode).url
+  lazy val declareDutySuspenseQuestionRoute =
+    routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
 
   override def configOverrides: Map[String, Any] = Map(
     "features.duty-suspended-new-journey" -> true
   )
 
-  "DeclareDutySuspendedDeliveriesQuestion Controller" - {
+  "DeclareDutySuspenseQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
+        val request = FakeRequest(GET, declareDutySuspenseQuestionRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionNewView]
+        val view = application.injector.instanceOf[DeclareDutySuspenseQuestionView]
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
@@ -74,14 +74,14 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
+        val request = FakeRequest(GET, declareDutySuspenseQuestionRoute)
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionNewView]
+        val view = application.injector.instanceOf[DeclareDutySuspenseQuestionView]
 
         val result = route(application, request).value
 
@@ -93,25 +93,25 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector             = mock[UserAnswersConnector]
-      val mockDutySuspendedDeliveriesNavigator = mock[DeclareDutySuspendedDeliveriesNewNavigator]
+      val mockDutySuspendedDeliveriesNavigator = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockDutySuspendedDeliveriesNavigator
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), any(), any(), any())
+          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNewNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
+            bind[DutySuspendedNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+          FakeRequest(POST, declareDutySuspenseQuestionRoute)
             .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-input", "true"))
 
         val result = route(application, request).value
@@ -121,7 +121,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockDutySuspendedDeliveriesNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), eqTo(NormalMode), any(), eqTo(Some(false)))
+          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
@@ -130,25 +130,25 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
       val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
 
       val mockUserAnswersConnector             = mock[UserAnswersConnector]
-      val mockDutySuspendedDeliveriesNavigator = mock[DeclareDutySuspendedDeliveriesNewNavigator]
+      val mockDutySuspendedDeliveriesNavigator = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockDutySuspendedDeliveriesNavigator
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), any(), any(), any())
+          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNewNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
+            bind[DutySuspendedNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+          FakeRequest(POST, declareDutySuspenseQuestionRoute)
             .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-input", "true"))
 
         val result = route(application, request).value
@@ -158,7 +158,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockDutySuspendedDeliveriesNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), eqTo(NormalMode), any(), eqTo(Some(false)))
+          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
@@ -168,12 +168,12 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+          FakeRequest(POST, declareDutySuspenseQuestionRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionNewView]
+        val view = application.injector.instanceOf[DeclareDutySuspenseQuestionView]
 
         val result = route(application, request).value
 
@@ -187,7 +187,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
+        val request = FakeRequest(GET, declareDutySuspenseQuestionRoute)
 
         val result = route(application, request).value
 
@@ -202,7 +202,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+          FakeRequest(POST, declareDutySuspenseQuestionRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
@@ -212,18 +212,18 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Task list and clear user answers when declare duty suspended deliveries question is answered as No" in {
+    "must redirect to the Task list and clear user answers when declare duty suspense question is answered as No" in {
       val taskListRoute = controllers.routes.TaskListController.onPageLoad
 
       val mockUserAnswersConnector              = mock[UserAnswersConnector]
       val mockUserAnswers: UserAnswers          = mock[UserAnswers]
       val mockAlcoholRegimesSet: AlcoholRegimes = mock[AlcoholRegimes]
       val mockReturnId                          = mock[ReturnId]
-      val mockDutySuspendedDeliveriesNavigator  = mock[DeclareDutySuspendedDeliveriesNewNavigator]
+      val mockDutySuspendedDeliveriesNavigator  = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
-        mockUserAnswers.set(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), eqTo(false))(any())
+        mockUserAnswers.set(eqTo(DeclareDutySuspenseQuestionPage), eqTo(false))(any())
       ) thenReturn Success(
         mockUserAnswers
       )
@@ -237,19 +237,19 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
       )
       when(
         mockDutySuspendedDeliveriesNavigator
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), any(), any(), any())
+          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn taskListRoute
 
       val application = applicationBuilder(userAnswers = Some(mockUserAnswers))
         .overrides(
-          bind[DeclareDutySuspendedDeliveriesNewNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
+          bind[DutySuspendedNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute).withFormUrlEncodedBody(
+          FakeRequest(POST, declareDutySuspenseQuestionRoute).withFormUrlEncodedBody(
             ("declare-duty-suspended-deliveries-input", "false")
           )
         val result  = route(application, request).value
@@ -257,12 +257,12 @@ class DeclareDutySuspendedDeliveriesQuestionNewControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual taskListRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockUserAnswers, times(1)).set(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), eqTo(false))(any())
+        verify(mockUserAnswers, times(1)).set(eqTo(DeclareDutySuspenseQuestionPage), eqTo(false))(any())
         verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
         verify(mockUserAnswers, times(1)).regimes
         verify(mockAlcoholRegimesSet, times(1)).regimes
         verify(mockDutySuspendedDeliveriesNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionNewPage), eqTo(NormalMode), any(), eqTo(Some(false)))
+          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
   }

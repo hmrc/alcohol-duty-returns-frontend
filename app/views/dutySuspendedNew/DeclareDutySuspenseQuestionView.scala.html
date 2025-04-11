@@ -28,9 +28,9 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("declareDutySuspendedDeliveriesQuestionNew.title"))) {
+@layout(pageTitle = title(form, messages("declareDutySuspenseQuestion.title"))) {
 
-    @formHelper(action = controllers.dutySuspendedNew.routes.DeclareDutySuspendedDeliveriesQuestionNewController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -45,7 +45,7 @@
             @govukRadios(
                 RadiosViewModel.yesNo(
                     field = form("declare-duty-suspended-deliveries-input"),
-                    legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestionNew.heading")).asPageHeading()
+                    legend = LegendViewModel(messages("declareDutySuspenseQuestion.heading")).asPageHeading()
                 )
             )
         }

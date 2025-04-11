@@ -18,30 +18,30 @@ package controllers.dutySuspendedNew
 
 import connectors.UserAnswersConnector
 import controllers.actions._
-import forms.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewFormProvider
+import forms.dutySuspendedNew.DeclareDutySuspenseQuestionFormProvider
 import models.{Mode, UserAnswers}
-import navigation.DeclareDutySuspendedDeliveriesNewNavigator
-import pages.dutySuspendedNew.{DeclareDutySuspendedDeliveriesQuestionNewPage, DutySuspendedAlcoholTypePage}
+import navigation.DutySuspendedNavigator
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.dutySuspendedNew.DeclareDutySuspendedDeliveriesQuestionNewView
+import views.html.dutySuspendedNew.DeclareDutySuspenseQuestionView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class DeclareDutySuspendedDeliveriesQuestionNewController @Inject() (
+class DeclareDutySuspenseQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
-  navigator: DeclareDutySuspendedDeliveriesNewNavigator,
+  navigator: DutySuspendedNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkDSDNewJourneyToggle: CheckDSDNewJourneyToggleAction,
-  formProvider: DeclareDutySuspendedDeliveriesQuestionNewFormProvider,
+  formProvider: DeclareDutySuspenseQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DeclareDutySuspendedDeliveriesQuestionNewView
+  view: DeclareDutySuspenseQuestionView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -50,7 +50,7 @@ class DeclareDutySuspendedDeliveriesQuestionNewController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
-      val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionNewPage) match {
+      val preparedForm = request.userAnswers.get(DeclareDutySuspenseQuestionPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -68,13 +68,13 @@ class DeclareDutySuspendedDeliveriesQuestionNewController @Inject() (
             for {
               updatedAnswers                <-
                 Future.fromTry(
-                  request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, value)
+                  request.userAnswers.set(DeclareDutySuspenseQuestionPage, value)
                 )
               singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
               filterUserAnswer              <- Future.fromTry(filterDSDQuestionAnswer(singleRegimeUpdatedUserAnswer, value))
               _                             <- userAnswersConnector.set(filterUserAnswer)
             } yield Redirect(
-              navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionNewPage, mode, filterUserAnswer, Some(false))
+              navigator.nextPage(DeclareDutySuspenseQuestionPage, mode, filterUserAnswer, Some(false))
             )
         )
     }

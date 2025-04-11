@@ -23,12 +23,12 @@ import models._
 import pages._
 import pages.dutySuspendedNew._
 
-class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
+class DutySuspendedNavigatorSpec extends SpecBase {
 
-  val navigator = new DeclareDutySuspendedDeliveriesNewNavigator
+  val navigator = new DutySuspendedNavigator
   val regime    = regimeGen.sample.value
 
-  "DeclareDutySuspendedDeliveriesNavigator" - {
+  "DutySuspendedNavigator" - {
 
     "in Normal mode" - {
 
@@ -43,23 +43,23 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from the Declare duty suspended deliveries question page to Duty suspended alcohol types page if the answer is Yes" in {
+        "must go from the Declare duty suspense question page to Duty suspended alcohol types page if the answer is Yes" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             NormalMode,
-            emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, true).success.value,
+            emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
           // TODO: update route when new page is created
         }
 
-        "must go from the Declare duty suspended deliveries question page to the Declare quantity page if the user has only 1 approval" in {
+        "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             NormalMode,
             emptyUserAnswers
               .copy(regimes = AlcoholRegimes(Set(Beer)))
-              .set(DeclareDutySuspendedDeliveriesQuestionNewPage, true)
+              .set(DeclareDutySuspenseQuestionPage, true)
               .success
               .value,
             Some(false)
@@ -67,18 +67,18 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
           // TODO: update route when new page is created
         }
 
-        "must go from the Declare duty suspended deliveries question page to task list page if the answer is No" in {
+        "must go from the Declare duty suspense question page to task list page if the answer is No" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             NormalMode,
-            emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, false).success.value,
+            emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value,
             Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer is missing" in {
+        "must go from the Declare duty suspense question page to journey recovery page if the answer is missing" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             NormalMode,
             emptyUserAnswers,
             Some(false)
@@ -112,23 +112,23 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from Declare DSD Question page to Duty suspended alcohol types page if the answer is Yes" in {
+        "must go from Declare duty suspense question page to Duty suspended alcohol types page if the answer is Yes" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             CheckMode,
-            emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, true).success.value,
+            emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
           // TODO: update route when new page is created
         }
 
-        "must go from the Declare DSD Question page to the Declare quantity page if the user has only 1 approval" in {
+        "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             CheckMode,
             emptyUserAnswers
               .copy(regimes = AlcoholRegimes(Set(Beer)))
-              .set(DeclareDutySuspendedDeliveriesQuestionNewPage, true)
+              .set(DeclareDutySuspenseQuestionPage, true)
               .success
               .value,
             Some(false)
@@ -136,11 +136,11 @@ class DeclareDutySuspendedDeliveriesNewNavigatorSpec extends SpecBase {
           // TODO: update route when new page is created
         }
 
-        "must go from the Declare DSD question page to the task list page if the answer is No" in {
+        "must go from the Declare duty suspense question page to the task list page if the answer is No" in {
           navigator.nextPage(
-            DeclareDutySuspendedDeliveriesQuestionNewPage,
+            DeclareDutySuspenseQuestionPage,
             CheckMode,
-            emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionNewPage, false).success.value,
+            emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value,
             Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }

@@ -681,9 +681,9 @@ checkYourAnswersDutySuspendedDeliveries.heading = Dosbarthiadau y gohiriwyd toll
 
 # Beginning of NEW duty suspended deliveries sub-journey
 
-declareDutySuspendedDeliveriesQuestionNew.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
-declareDutySuspendedDeliveriesQuestionNew.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
-declareDutySuspendedDeliveriesQuestionNew.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno
+declareDutySuspenseQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspenseQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspenseQuestion.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno
 
 # End of NEW duty suspended deliveries sub-journey
 
