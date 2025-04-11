@@ -22,7 +22,7 @@ import forms.declareDuty.MultipleSPRListFormProvider
 import javax.inject.Inject
 import models.{AlcoholRegime, NormalMode}
 import navigation.ReturnsNavigator
-import pages.declareDuty.DoYouWantToAddMultipleSPRToListPage
+import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, TellUsAboutMultipleSPRRatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
@@ -85,11 +85,13 @@ class MultipleSPRListController @Inject() (
               ),
           value =>
             for {
-              updatedAnswers <-
+              updatedUserAnswers <-
                 Future.fromTry(request.userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, value))
-              _              <- userAnswersConnector.set(updatedAnswers)
+              cleanedUserAnswers <-
+                Future.fromTry(updatedUserAnswers.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
+              _                  <- userAnswersConnector.set(cleanedUserAnswers)
             } yield Redirect(
-              navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, NormalMode, updatedAnswers, regime)
+              navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, NormalMode, cleanedUserAnswers, regime)
             )
         )
     }
