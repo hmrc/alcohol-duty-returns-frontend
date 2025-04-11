@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthController @Inject() (
+class SignOutController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,
   userAnswersConnector: UserAnswersConnector,

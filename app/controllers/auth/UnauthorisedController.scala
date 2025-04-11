@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.CheckSignedInAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.NotOrganisationView
+import views.html.UnauthorisedView
 
 import javax.inject.Inject
 
-class NotOrganisationController @Inject() (
+class UnauthorisedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: NotOrganisationView,
-  appConfig: FrontendAppConfig,
-  checkSignedIn: CheckSignedInAction
+  view: UnauthorisedView,
+  appConfig: FrontendAppConfig
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = checkSignedIn { implicit request =>
-    val unauthorisedUrl = appConfig.createOrganisationAccountUrl
-    val continueUrl     = controllers.auth.routes.AuthController.signOutDuringEnrolment().url
-    val signedIn        = request.signedIn
-
-    Ok(view(unauthorisedUrl, continueUrl, signedIn))
+  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    val unauthorisedUrl = appConfig.unauthorisedUrl
+    Ok(view(unauthorisedUrl = unauthorisedUrl))
   }
 }
