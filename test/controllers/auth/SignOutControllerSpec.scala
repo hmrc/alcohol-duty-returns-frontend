@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.HttpResponse
 import java.net.URLEncoder
 import scala.concurrent.Future
 
-class AuthControllerSpec extends SpecBase {
+class SignOutControllerSpec extends SpecBase {
 
   "signOut" - {
 
@@ -51,7 +51,7 @@ class AuthControllerSpec extends SpecBase {
         running(application) {
 
           val appConfig = application.injector.instanceOf[FrontendAppConfig]
-          val request   = FakeRequestWithoutSession(GET, routes.AuthController.signOut().url)
+          val request   = FakeRequestWithoutSession(GET, routes.SignOutController.signOut().url)
 
           val result = route(application, request).value
 
@@ -84,7 +84,7 @@ class AuthControllerSpec extends SpecBase {
         running(application) {
 
           val appConfig = application.injector.instanceOf[FrontendAppConfig]
-          val request   = FakeRequest(GET, routes.AuthController.signOut().url)
+          val request   = FakeRequest(GET, routes.SignOutController.signOut().url)
 
           val result = route(application, request).value
 
@@ -114,7 +114,7 @@ class AuthControllerSpec extends SpecBase {
       running(application) {
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val request   = FakeRequest(GET, routes.AuthController.signOut().url)
+        val request   = FakeRequest(GET, routes.SignOutController.signOut().url)
 
         val result = route(application, request).value
 

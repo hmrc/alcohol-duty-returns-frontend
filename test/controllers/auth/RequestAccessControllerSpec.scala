@@ -22,15 +22,15 @@ import play.api.test.Helpers._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 
-class AppaIdAuthControllerSpec extends SpecBase {
+class RequestAccessControllerSpec extends SpecBase {
 
-  "AppaIdAuthController Controller" - {
+  "RequestAccessController Controller" - {
 
     "must return OK and requestAccessUrl for a GET when logged in" in {
       val application = applicationBuilder().build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.auth.routes.AppaIdAuthController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.auth.routes.RequestAccessController.onPageLoad().url)
         val result  = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
@@ -47,11 +47,11 @@ class AppaIdAuthControllerSpec extends SpecBase {
           .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.auth.routes.AppaIdAuthController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.auth.routes.RequestAccessController.onPageLoad().url)
         val result  = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+        redirectLocation(result).value mustEqual controllers.auth.routes.UnauthorisedController.onPageLoad.url
       }
     }
   }

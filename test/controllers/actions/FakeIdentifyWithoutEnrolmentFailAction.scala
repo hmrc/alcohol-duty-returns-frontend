@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import controllers.routes
+import controllers.auth.routes
 import models.requests.IdentifierWithoutEnrolmentRequest
 import play.api.mvc.Results.Redirect
 import play.api.mvc._

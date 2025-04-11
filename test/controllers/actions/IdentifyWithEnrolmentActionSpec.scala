@@ -18,7 +18,7 @@ package controllers.actions
 
 import base.SpecBase
 import config.FrontendAppConfig
-import controllers.routes
+import controllers.auth.routes
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.mvc.{BodyParsers, Request, Result}

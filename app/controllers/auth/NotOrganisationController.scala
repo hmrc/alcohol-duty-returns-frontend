@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,27 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.IdentifyWithoutEnrolmentAction
-import play.api.i18n.{I18nSupport, MessagesApi}
+import controllers.actions.CheckSignedInAction
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.NotOrganisationView
 
 import javax.inject.Inject
 
-class AppaIdAuthController @Inject() (
-  override val messagesApi: MessagesApi,
-  identify: IdentifyWithoutEnrolmentAction,
+class NotOrganisationController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: NotOrganisationView,
   appConfig: FrontendAppConfig,
-  val controllerComponents: MessagesControllerComponents
+  checkSignedIn: CheckSignedInAction
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify { _ =>
-    Redirect(appConfig.requestAccessUrl)
+  def onPageLoad: Action[AnyContent] = checkSignedIn { implicit request =>
+    val unauthorisedUrl = appConfig.createOrganisationAccountUrl
+    val continueUrl     = controllers.auth.routes.SignOutController.signOutDuringEnrolment().url
+    val signedIn        = request.signedIn
+
+    Ok(view(unauthorisedUrl, continueUrl, signedIn))
   }
 }

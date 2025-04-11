@@ -61,6 +61,14 @@ unauthorised.p2.first = To use this service you need to
 unauthorised.p2.link.text = sign in with an organisation Government Gateway account
 unauthorised.p2.second = and be enrolled in the service.
 
+unauthorised.not-org.title = You need an organisation account to use this service
+unauthorised.not-org.heading = You need an organisation account to use this service
+unauthorised.not-org.p1 = To continue, you need to sign out and sign back in with the details for your organisation account.
+unauthorised.not-org.p2.first = You can
+unauthorised.not-org.p2.second = create an organisation account
+unauthorised.not-org.p2.third = if you do not already have one.
+unauthorised.not-org.button-text = Sign in as an organisation
+
 doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
 doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?
 doYouHaveAnAppaId.hint = This is 15 characters, for example XMADP0123456789
