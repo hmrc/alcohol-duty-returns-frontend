@@ -19,7 +19,6 @@ package pages.dutySuspendedNew
 import models.AlcoholRegime
 import models.AlcoholRegime.{Beer, Cider}
 import pages.behaviours.PageBehaviours
-import play.api.libs.json.Json
 
 class DutySuspendedAlcoholTypePageSpec extends PageBehaviours {
   "DutySuspendedAlcoholTypePage must" - {

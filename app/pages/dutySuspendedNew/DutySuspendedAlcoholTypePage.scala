@@ -33,11 +33,7 @@ case object DutySuspendedAlcoholTypePage extends QuestionPage[Set[AlcoholRegime]
       case Some(alcoholRegimes) =>
         val regimesToRemove = userAnswers.regimes.regimes.diff(alcoholRegimes)
         regimesToRemove.foldLeft(Try(userAnswers)) { (currentUserAnswers, regime) =>
-          currentUserAnswers.flatMap(
-            _.removeByKey(DutySuspendedQuantitiesPage, regime).flatMap(
-              _.removeByKey(DutySuspendedFinalVolumesPage, regime)
-            )
-          )
+          currentUserAnswers.flatMap(_.removePagesByKey(sectionPagesWithRegime, regime))
         }
       case None                 => super.cleanup(value, userAnswers)
     }

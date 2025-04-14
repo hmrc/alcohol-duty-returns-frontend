@@ -100,10 +100,10 @@ class DutySuspendedNavigator @Inject() () extends Logging {
     userAnswers.get(DeclareDutySuspenseQuestionPage) match {
       case Some(true) if userAnswers.regimes.regimes.size > 1 =>
         controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(mode)
-      case Some(true)                                          =>
+      case Some(true)                                         =>
         // TODO: Go to new declare quantity page for the single regime (insert mode on page load)
         routes.JourneyRecoveryController.onPageLoad()
-      case Some(false)                                         => routes.TaskListController.onPageLoad
-      case _                                                   => routes.JourneyRecoveryController.onPageLoad()
+      case Some(false)                                        => routes.TaskListController.onPageLoad
+      case _                                                  => routes.JourneyRecoveryController.onPageLoad()
     }
 }
