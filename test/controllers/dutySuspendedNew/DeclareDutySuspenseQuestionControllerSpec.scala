@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspendedNew.DeclareDutySuspenseQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, Wine}
-import models.{AlcoholRegime, AlcoholRegimes, NormalMode, UserAnswers}
+import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
 import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -32,7 +32,6 @@ import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspendedNew.DeclareDutySuspenseQuestionView
 
 import scala.concurrent.Future
-import scala.util.Success
 
 class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
@@ -154,6 +153,61 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to the Task list and clear subsequent pages from user answers when declare duty suspense question is answered as No" in {
+      val taskListRoute = controllers.routes.TaskListController.onPageLoad
+
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
+      val mockDutySuspendedNavigator = mock[DutySuspendedNavigator]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
+      ) thenReturn taskListRoute
+
+      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Wine)
+
+      val userAnswers = emptyUserAnswers
+        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
+        .set(DeclareDutySuspenseQuestionPage, true)
+        .success
+        .value
+        .set(DutySuspendedAlcoholTypePage, alcoholRegimesSet)
+        .success
+        .value
+
+      val expectedCachedUserAnswers = emptyUserAnswers
+        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
+        .set(DeclareDutySuspenseQuestionPage, false)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareDutySuspenseQuestionRoute).withFormUrlEncodedBody(
+            ("declare-duty-suspended-deliveries-input", "false")
+          )
+        val result  = route(application, request).value
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual taskListRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
+        verify(mockDutySuspendedNavigator, times(1))
+          .nextPage(
+            eqTo(DeclareDutySuspenseQuestionPage),
+            eqTo(NormalMode),
+            eqTo(expectedCachedUserAnswers),
+            eqTo(Some(false))
+          )
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -201,67 +255,6 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to the Task list and clear subsequent pages from user answers when declare duty suspense question is answered as No" in {
-      val taskListRoute = controllers.routes.TaskListController.onPageLoad
-
-      val mockUserAnswersConnector     = mock[UserAnswersConnector]
-      val mockUserAnswers: UserAnswers = mock[UserAnswers]
-      val mockDutySuspendedNavigator   = mock[DutySuspendedNavigator]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(
-        mockUserAnswers.set(eqTo(DeclareDutySuspenseQuestionPage), eqTo(false))(any())
-      ) thenReturn Success(
-        mockUserAnswers
-      )
-      when(
-        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
-      ) thenReturn taskListRoute
-
-      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Wine)
-
-      val userAnswers = emptyUserAnswers
-        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
-        .set(DeclareDutySuspenseQuestionPage, true)
-        .success
-        .value
-        .set(DutySuspendedAlcoholTypePage, alcoholRegimesSet)
-        .success
-        .value
-
-      val expectedCachedUserAnswers = emptyUserAnswers
-        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
-        .set(DeclareDutySuspenseQuestionPage, false)
-        .success
-        .value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, declareDutySuspenseQuestionRoute).withFormUrlEncodedBody(
-            ("declare-duty-suspended-deliveries-input", "false")
-          )
-        val result  = route(application, request).value
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual taskListRoute.url
-
-        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
-        verify(mockDutySuspendedNavigator, times(1))
-          .nextPage(
-            eqTo(DeclareDutySuspenseQuestionPage),
-            eqTo(NormalMode),
-            eqTo(expectedCachedUserAnswers),
-            eqTo(Some(false))
-          )
       }
     }
   }
