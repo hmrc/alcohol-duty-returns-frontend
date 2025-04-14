@@ -17,7 +17,6 @@
 package controllers.actions
 
 import config.FrontendAppConfig
-import controllers.routes
 import models.requests.{IdentifierRequest, IdentifierWithoutEnrolmentRequest}
 import play.api.Logging
 import play.api.mvc.Results.Redirect
@@ -25,7 +24,7 @@ import play.api.mvc.{ActionFunction, Result}
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.allEnrolments
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthProviders, AuthorisedFunctions, Enrolment, Enrolments, InsufficientEnrolments}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -72,7 +71,7 @@ class ServiceEntryCheckActionImpl @Inject() (
         Redirect(controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad())
       case e                         =>
         logger.warn("Enrolment check error: ", e)
-        Redirect(routes.UnauthorisedController.onPageLoad)
+        Redirect(controllers.auth.routes.UnauthorisedController.onPageLoad)
     }
   }
 

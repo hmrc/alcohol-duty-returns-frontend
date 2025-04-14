@@ -1,0 +1,55 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{PageHeading, Paragraph, Link}
+
+@this(
+        layout: templates.Layout,
+        paragraph: Paragraph,
+        link: Link,
+        pageHeading: PageHeading,
+        govukButton: GovukButton
+)
+
+@(createOrganisationAccountUrl: String, continueUrl: String, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
+
+    @layout(
+        pageTitle = titleNoForm(messages("unauthorised.not-org.title", messages("service.name"))),
+        timeout = signedIn,
+        showSignOut = signedIn
+    ) {
+
+        @pageHeading(messages("unauthorised.not-org.heading"))
+
+        @paragraph(messages("unauthorised.not-org.p1"))
+        @paragraph(
+            content = HtmlContent(
+                messages("unauthorised.not-org.p2.first") +
+                        link(
+                            id = "sign-in-with-an-organisation-account",
+                            text = messages("unauthorised.not-org.p2.second"),
+                            href = messages(createOrganisationAccountUrl),
+                            newTab = true) + " " +
+                        messages("unauthorised.not-org.p2.third")))
+
+
+        @govukButton(Button(
+            href = Some(continueUrl),
+            isStartButton = false,
+            content = Text(messages("unauthorised.not-org.button-text"))
+        ))
+
+    }
