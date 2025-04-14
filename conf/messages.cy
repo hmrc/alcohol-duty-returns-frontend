@@ -103,7 +103,7 @@ section.adjustment.spoilt = Addasu ar gyfer alcohol wedi’i ddifetha
 section.adjustment.drawback = Addasu ar gyfer ad-dalu toll
 section.adjustment.repackaged-draught-products = Addasu ar gyfer cynhyrchion o’r gasgen wedi’u hailbecynnu
 section.adjustment.checkAnswers = Addasiad o ddatganiad blaenorol
-section.dutySuspended = Dosbarthiadau o gynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
+section.dutySuspended = Rhoi gwybod am ddosbarthiadau o alcohol y gohiriwyd tollau arno
 section.checkAndSubmit = Anfon Datganiad
 
 viewPastReturns.heading = Eich Datganiadau
@@ -684,6 +684,10 @@ checkYourAnswersDutySuspendedDeliveries.heading = Dosbarthiadau y gohiriwyd toll
 declareDutySuspenseQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
 declareDutySuspenseQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
 declareDutySuspenseQuestion.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno
+
+dutySuspendedAlcoholType.title = Pa gynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau?
+dutySuspendedAlcoholType.heading = Pa gynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau?
+dutySuspendedAlcoholType.error.required = Dewiswch y cynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau
 
 # End of NEW duty suspended deliveries sub-journey
 

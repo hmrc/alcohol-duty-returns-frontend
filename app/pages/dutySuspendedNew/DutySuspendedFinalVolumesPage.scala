@@ -16,28 +16,14 @@
 
 package pages.dutySuspendedNew
 
-import models.UserAnswers
+import models.AlcoholRegime
+import models.dutySuspendedNew.DutySuspendedFinalVolumes
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-import scala.util.Try
-
-case object DeclareDutySuspenseQuestionPage extends QuestionPage[Boolean] {
+object DutySuspendedFinalVolumesPage extends QuestionPage[Map[AlcoholRegime, DutySuspendedFinalVolumes]] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "declareDutySuspenseQuestion"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(false)) {
-      userAnswers.remove(
-        List(
-          DutySuspendedAlcoholTypePage,
-          DutySuspendedQuantitiesPage,
-          DutySuspendedFinalVolumesPage
-        )
-      )
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+  override def toString: String = "dutySuspendedFinalVolumes"
 }

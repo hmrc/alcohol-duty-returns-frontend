@@ -20,19 +20,30 @@ import controllers._
 import models._
 import pages._
 import pages.dutySuspendedNew._
+import play.api.Logging
 import play.api.mvc.Call
+import viewmodels.AlcoholRegimesViewOrder
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DutySuspendedNavigator @Inject() () {
+class DutySuspendedNavigator @Inject() () extends Logging {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DeclareDutySuspenseQuestionPage =>
       userAnswers => declareDutySuspenseQuestionPageRoute(userAnswers, NormalMode)
     case DutySuspendedAlcoholTypePage    =>
-      // TODO: Implement for alcohol type selection page
-      _ => routes.JourneyRecoveryController.onPageLoad()
+      userAnswers =>
+        val firstRegime = userAnswers.get(DutySuspendedAlcoholTypePage).flatMap { dutySuspendedRegimes =>
+          AlcoholRegimesViewOrder.nextViewRegime(regimes = AlcoholRegimes(dutySuspendedRegimes), current = None)
+        }
+        firstRegime match {
+          case Some(regime) =>
+            // TODO: Go to new declare quantity page for the first regime
+            logger.info(s"Go to declare quantity page for regime: $regime")
+            routes.JourneyRecoveryController.onPageLoad()
+          case None         => routes.JourneyRecoveryController.onPageLoad()
+        }
     case _                               =>
       _ => routes.TaskListController.onPageLoad
   }
@@ -45,8 +56,14 @@ class DutySuspendedNavigator @Inject() () {
     case DeclareDutySuspenseQuestionPage =>
       userAnswers => _ => declareDutySuspenseQuestionPageRoute(userAnswers, CheckMode)
     case DutySuspendedAlcoholTypePage    =>
-      // TODO: Implement for alcohol type selection page
-      _ => _ => routes.JourneyRecoveryController.onPageLoad()
+      userAnswers =>
+        hasRegimesToAdd =>
+          if (hasRegimesToAdd) {
+            normalRoutes(DutySuspendedAlcoholTypePage)(userAnswers)
+          } else {
+            // TODO: Nothing new to declare, go to check your answers
+            routes.JourneyRecoveryController.onPageLoad()
+          }
     case _                               =>
       _ => _ => routes.TaskListController.onPageLoad
   }
@@ -71,23 +88,23 @@ class DutySuspendedNavigator @Inject() () {
     page: Page,
     mode: Mode,
     userAnswers: UserAnswers,
-    hasAnswerChanged: Option[Boolean]
+    hasRegimesToAdd: Option[Boolean]
   ): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page)(userAnswers)(hasAnswerChanged.getOrElse(false))
+      checkRouteMap(page)(userAnswers)(hasRegimesToAdd.getOrElse(false))
   }
 
   private def declareDutySuspenseQuestionPageRoute(userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(DeclareDutySuspenseQuestionPage) match {
-      case Some(true) if userAnswers.regimes.regimes.size > 1 =>
+      case Some(true) if userAnswers.regimes.regimes.size == 1 =>
         // TODO: Go to new declare quantity page for the single regime (insert mode on page load)
         routes.JourneyRecoveryController.onPageLoad()
-      case Some(true)                                         =>
-        // TODO: Go to new alcohol type selection page (insert mode on page load)
-        routes.JourneyRecoveryController.onPageLoad()
-      case Some(false)                                        => routes.TaskListController.onPageLoad
-      case _                                                  => routes.JourneyRecoveryController.onPageLoad()
+      case Some(true)                                          =>
+        logger.info("Go to alcohol type page")
+        controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(mode)
+      case Some(false)                                         => routes.TaskListController.onPageLoad
+      case _                                                   => routes.JourneyRecoveryController.onPageLoad()
     }
 }
