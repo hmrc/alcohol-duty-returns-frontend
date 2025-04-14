@@ -31,6 +31,7 @@ import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage, DutySuspendedQuantitiesPage}
 import pages.spiritsQuestions._
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -574,6 +575,63 @@ trait TestData extends ModelGenerators {
       drawback = 0,
       repackagedDraught = 0,
       totalDutyDue = 0
+    )
+  )
+
+  val userAnswersWithDutySuspendedData = emptyUserAnswers.copy(data =
+    Json.obj(
+      DeclareDutySuspenseQuestionPage.toString -> true,
+      DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider"),
+      DutySuspendedQuantitiesPage.toString     -> Json.obj(
+        "Beer"  -> Json.obj(
+          "quantitiesByDutySuspendedCategory" -> Json.arr(
+            Json.obj(
+              "category"    -> "deliveredInsideUK",
+              "totalLitres" -> 100,
+              "pureAlcohol" -> 10
+            ),
+            Json.obj(
+              "category"    -> "deliveredOutsideUK",
+              "totalLitres" -> 0,
+              "pureAlcohol" -> 0
+            ),
+            Json.obj(
+              "category"    -> "received",
+              "totalLitres" -> 0,
+              "pureAlcohol" -> 0
+            )
+          )
+        ),
+        "Cider" -> Json.obj(
+          "quantitiesByDutySuspendedCategory" -> Json.arr(
+            Json.obj(
+              "category"    -> "deliveredInsideUK",
+              "totalLitres" -> 100,
+              "pureAlcohol" -> 10
+            ),
+            Json.obj(
+              "category"    -> "deliveredOutsideUK",
+              "totalLitres" -> 0,
+              "pureAlcohol" -> 0
+            ),
+            Json.obj(
+              "category"    -> "received",
+              "totalLitres" -> 0,
+              "pureAlcohol" -> 0
+            )
+          )
+        )
+      ),
+      DutySuspendedFinalVolumesPage.toString   -> Json.obj(
+        "Beer"  -> Json.obj(
+          "totalLitres" -> 100,
+          "pureAlcohol" -> 10
+        ),
+        "Cider" -> Json.obj(
+          "totalLitres" -> 100,
+          "pureAlcohol" -> 10
+        )
+      )
     )
   )
 

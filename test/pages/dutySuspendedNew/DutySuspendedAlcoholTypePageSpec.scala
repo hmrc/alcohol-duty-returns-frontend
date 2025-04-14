@@ -33,64 +33,8 @@ class DutySuspendedAlcoholTypePageSpec extends PageBehaviours {
     "for regimes removed from previous answers, clear data from subsequent pages" in {
       val alcoholRegimesSelected: Set[AlcoholRegime] = Set(Beer)
 
-      val userAnswers = emptyUserAnswers.copy(data =
-        Json.obj(
-          DeclareDutySuspenseQuestionPage.toString -> true,
-          DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider"),
-          DutySuspendedQuantitiesPage.toString     -> Json.obj(
-            "Beer"  -> Json.obj(
-              "quantitiesByDutySuspendedCategory" -> Json.arr(
-                Json.obj(
-                  "category"    -> "deliveredInsideUK",
-                  "totalLitres" -> 100,
-                  "pureAlcohol" -> 10
-                ),
-                Json.obj(
-                  "category"    -> "deliveredOutsideUK",
-                  "totalLitres" -> 0,
-                  "pureAlcohol" -> 0
-                ),
-                Json.obj(
-                  "category"    -> "received",
-                  "totalLitres" -> 0,
-                  "pureAlcohol" -> 0
-                )
-              )
-            ),
-            "Cider" -> Json.obj(
-              "quantitiesByDutySuspendedCategory" -> Json.arr(
-                Json.obj(
-                  "category"    -> "deliveredInsideUK",
-                  "totalLitres" -> 100,
-                  "pureAlcohol" -> 10
-                ),
-                Json.obj(
-                  "category"    -> "deliveredOutsideUK",
-                  "totalLitres" -> 0,
-                  "pureAlcohol" -> 0
-                ),
-                Json.obj(
-                  "category"    -> "received",
-                  "totalLitres" -> 0,
-                  "pureAlcohol" -> 0
-                )
-              )
-            )
-          ),
-          DutySuspendedFinalVolumesPage.toString   -> Json.obj(
-            "Beer"  -> Json.obj(
-              "totalLitres" -> 100,
-              "pureAlcohol" -> 10
-            ),
-            "Cider" -> Json.obj(
-              "totalLitres" -> 100,
-              "pureAlcohol" -> 10
-            )
-          )
-        )
-      )
-
-      val updatedAnswers = userAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSelected).success.value
+      val updatedAnswers =
+        userAnswersWithDutySuspendedData.set(DutySuspendedAlcoholTypePage, alcoholRegimesSelected).success.value
 
       updatedAnswers.getByKey(DutySuspendedQuantitiesPage, Beer)   mustNot be(empty)
       updatedAnswers.getByKey(DutySuspendedFinalVolumesPage, Beer) mustNot be(empty)
@@ -98,14 +42,5 @@ class DutySuspendedAlcoholTypePageSpec extends PageBehaviours {
       updatedAnswers.getByKey(DutySuspendedQuantitiesPage, Cider)   must be(empty)
       updatedAnswers.getByKey(DutySuspendedFinalVolumesPage, Cider) must be(empty)
     }
-
-//    "not cleanup subsequent answers from the journey when true is selected" in {
-//      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Beer, Cider, Wine)
-//
-//      val userAnswers    = emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSet).success.value
-//      val updatedAnswers = userAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value
-//
-//      updatedAnswers.get(DutySuspendedAlcoholTypePage) mustNot be(empty)
-//    }
   }
 }

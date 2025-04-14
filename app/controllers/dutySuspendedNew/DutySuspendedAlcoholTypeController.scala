@@ -66,8 +66,8 @@ class DutySuspendedAlcoholTypeController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.userAnswers.regimes))),
           value => {
             val alcoholRegimes: Set[AlcoholRegime] = value.flatMap(AlcoholRegime.fromString)
-//            val regimesToRemove: Set[AlcoholRegime] = request.userAnswers.regimes.regimes.diff(alcoholRegimes)
-            val regimesToAdd: Set[AlcoholRegime]   = alcoholRegimes.diff(request.userAnswers.regimes.regimes)
+            val regimesToAdd: Set[AlcoholRegime]   =
+              alcoholRegimes.diff(request.userAnswers.get(DutySuspendedAlcoholTypePage).getOrElse(Set.empty))
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimes))
               _              <- userAnswersConnector.set(updatedAnswers)
@@ -77,40 +77,4 @@ class DutySuspendedAlcoholTypeController @Inject() (
           }
         )
     }
-
-//  private def clearSubmittedQuantitiesForRemovedRegimes(
-//    userAnswers: UserAnswers,
-//    regimesToRemove: Set[AlcoholRegime]
-//  ): Try[UserAnswers] =
-//    regimesToRemove.foldLeft(Try(userAnswers)) { (currentUserAnswers, regime) =>
-//      currentUserAnswers.flatMap(currentAnswers => currentAnswers.removeByKey(DutySuspendedQuantitiesPage, regime))
-//    }
-//
-//  private def clearCalculatedQuantitiesForRemovedRegimes(
-//    userAnswers: UserAnswers,
-//    regimesToRemove: Set[AlcoholRegime]
-//  ): Try[UserAnswers] =
-//    for {
-//      removedBeer    <- removeCalculatedBeer(userAnswers, regimesToRemove)
-//      removedCider   <- removeCalculatedCider(removedBeer, regimesToRemove)
-//      removedWine    <- removeCalculatedWine(removedCider, regimesToRemove)
-//      removedSpirits <- removeCalculatedSpirits(removedWine, regimesToRemove)
-//      removedOFP     <- removeCalculatedOFP(removedSpirits, regimesToRemove)
-//    } yield removedOFP
-//
-//  private def removeCalculatedBeer(userAnswers: UserAnswers, regimesToRemove: Set[AlcoholRegime]): Try[UserAnswers] =
-//    if (regimesToRemove.contains(Beer)) userAnswers.remove(DutySuspendedBeerPage) else Success(userAnswers)
-//
-//  private def removeCalculatedCider(userAnswers: UserAnswers, regimesToRemove: Set[AlcoholRegime]): Try[UserAnswers] =
-//    if (regimesToRemove.contains(Cider)) userAnswers.remove(DutySuspendedCiderPage) else Success(userAnswers)
-//
-//  private def removeCalculatedWine(userAnswers: UserAnswers, regimesToRemove: Set[AlcoholRegime]): Try[UserAnswers] =
-//    if (regimesToRemove.contains(Wine)) userAnswers.remove(DutySuspendedWinePage) else Success(userAnswers)
-//
-//  private def removeCalculatedSpirits(userAnswers: UserAnswers, regimesToRemove: Set[AlcoholRegime]): Try[UserAnswers] =
-//    if (regimesToRemove.contains(Spirits)) userAnswers.remove(DutySuspendedSpiritsPage) else Success(userAnswers)
-//
-//  private def removeCalculatedOFP(userAnswers: UserAnswers, regimesToRemove: Set[AlcoholRegime]): Try[UserAnswers] =
-//    if (regimesToRemove.contains(OtherFermentedProduct)) userAnswers.remove(DutySuspendedOtherFermentedPage)
-//    else Success(userAnswers)
 }
