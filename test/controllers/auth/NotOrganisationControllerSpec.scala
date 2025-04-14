@@ -17,10 +17,9 @@
 package controllers.auth
 
 import base.SpecBase
-import play.api.inject.bind
+import controllers.actions.FakeIsSignedIn
 import play.api.test.Helpers._
 import views.html.NotOrganisationView
-import controllers.actions.{CheckSignedInAction, FakeCheckSignedInAction, FakeIsSignedIn}
 
 class NotOrganisationControllerSpec extends SpecBase {
 

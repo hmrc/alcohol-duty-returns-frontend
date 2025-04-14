@@ -127,4 +127,40 @@ class SignOutControllerSpec extends SpecBase {
       }
     }
   }
+
+  "signOutDuringEnrolment happy path" - {
+    "when user is authenticated and there is a period key in session, " - {
+      "must release the lock, and redirect the request access controller url" in {
+
+        val mockUserAnswersConnector = mock[UserAnswersConnector]
+        when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any()))
+          .thenReturn(Future.successful(HttpResponse(OK)))
+
+        val application =
+          applicationBuilder(None)
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+              bind[FakeAppaId].toInstance(FakeAppaId(Some(appaId))),
+              bind[SignOutAction].to[FakeSignOutAction]
+            )
+            .build()
+
+        running(application) {
+
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val request   = FakeRequest(GET, routes.SignOutController.signOutDuringEnrolment().url)
+
+          val result = route(application, request).value
+
+          val encodedContinueUrl  =
+            URLEncoder.encode(appConfig.loginUrl + "?continue=" + appConfig.loginContinueUrlRequestAccess, "UTF-8")
+          val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
+        }
+      }
+    }
+  }
 }
