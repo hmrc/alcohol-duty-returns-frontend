@@ -174,5 +174,3 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
     }
   }
 }
-
-object IdentifierWithoutEnrolmentActionSpec {}

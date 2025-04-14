@@ -61,6 +61,14 @@ unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
 unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
 
+unauthorised.not-org.title = NOT_FOUND
+unauthorised.not-org.heading = NOT_FOUND
+unauthorised.not-org.p1 = NOT_FOUND
+unauthorised.not-org.p2.first = NOT_FOUND
+unauthorised.not-org.p2.second = NOT_FOUND
+unauthorised.not-org.p2.third = NOT_FOUND
+unauthorised.not-org.button-text = NOT_FOUND
+
 doYouHaveAnAppaId.title = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
 doYouHaveAnAppaId.heading = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
 doYouHaveAnAppaId.hint = Mae hwn yn 15 o gymeriadau, er enghraifft XMADP0123456789

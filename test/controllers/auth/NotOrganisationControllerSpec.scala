@@ -21,6 +21,7 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import views.html.NotOrganisationView
 import controllers.actions.{CheckSignedInAction, FakeCheckSignedInAction, FakeIsSignedIn}
+
 class NotOrganisationControllerSpec extends SpecBase {
 
   lazy val notOrganisationRoute: String = controllers.auth.routes.NotOrganisationController.onPageLoad.url
