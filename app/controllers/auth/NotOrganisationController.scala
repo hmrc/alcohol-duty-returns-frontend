@@ -17,21 +17,27 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-
-import javax.inject.Inject
+import controllers.actions.CheckSignedInAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.auth.SignedOutView
+import views.html.NotOrganisationView
 
-class SignedOutController @Inject() (
+import javax.inject.Inject
+
+class NotOrganisationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  config: FrontendAppConfig,
-  view: SignedOutView
+  view: NotOrganisationView,
+  appConfig: FrontendAppConfig,
+  checkSignedIn: CheckSignedInAction
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(config.businessTaxAccountUrl))
+  def onPageLoad: Action[AnyContent] = checkSignedIn { implicit request =>
+    val unauthorisedUrl = appConfig.createOrganisationAccountUrl
+    val continueUrl     = controllers.auth.routes.SignOutController.signOutDuringEnrolment().url
+    val signedIn        = request.signedIn
+
+    Ok(view(unauthorisedUrl, continueUrl, signedIn))
   }
 }

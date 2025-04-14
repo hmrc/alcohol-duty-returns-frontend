@@ -30,35 +30,31 @@ trait Mappings extends Formatters with Constraints {
     of(stringFormatter(errorKey, args))
 
   protected def int(
-    requiredKey: String = "error.required",
-    wholeNumberKey: String = "error.wholeNumber",
-    nonNumericKey: String = "error.nonNumeric",
+    requiredKey: String,
+    wholeNumberKey: String,
+    nonNumericKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[Int] =
     of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey, args))
 
   protected def bigDecimal(
     decimalPlaces: Int = 2,
-    requiredKey: String = "error.required",
-    nonNumericKey: String = "error.nonNumeric",
-    decimalPlacesKey: String = "error.decimalPlaces",
+    requiredKey: String,
+    nonNumericKey: String,
+    decimalPlacesKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[BigDecimal] =
     of(bigDecimalFormatter(decimalPlaces, requiredKey, nonNumericKey, decimalPlacesKey, args))
 
   protected def boolean(
-    requiredKey: String = "error.required",
-    invalidKey: String = "error.boolean",
-    args: Seq[String] = Seq.empty
+    requiredKey: String
   ): FieldMapping[Boolean] =
-    of(booleanFormatter(requiredKey, invalidKey, args))
+    of(booleanFormatter(requiredKey))
 
   protected def enumerable[A](
-    requiredKey: String = "error.required",
-    invalidKey: String = "error.invalid",
-    args: Seq[String] = Seq.empty
+    requiredKey: String
   )(implicit ev: Enumerable[A]): FieldMapping[A] =
-    of(enumerableFormatter[A](requiredKey, invalidKey, args))
+    of(enumerableFormatter[A](requiredKey))
 
   protected def localDate(
     invalidKey: String,

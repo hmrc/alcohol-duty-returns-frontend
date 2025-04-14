@@ -16,14 +16,12 @@
 
 package forms.behaviours
 
-import play.api.data.{Form, FormError}
+import play.api.data.Form
 
-class OptionFieldBehaviours extends FieldBehaviours {
+class RadioFieldBehaviours extends FieldBehaviours {
 
-  def optionsField[T](form: Form[_], fieldName: String, validValues: Seq[T], invalidError: FormError): Unit = {
-
+  def radioField[T](form: Form[_], fieldName: String, validValues: Seq[T]): Unit = {
     "bind all valid values" in {
-
       for (value <- validValues) {
 
         val result = form.bind(Map(fieldName -> value.toString)).apply(fieldName)
@@ -33,12 +31,10 @@ class OptionFieldBehaviours extends FieldBehaviours {
     }
 
     "not bind invalid values" in {
-
       val generator = stringsExceptSpecificValues(validValues.map(_.toString))
 
       forAll(generator -> "invalidValue") { value =>
-        val result = form.bind(Map(fieldName -> value)).apply(fieldName)
-        result.errors must contain only invalidError
+        an[IllegalArgumentException] mustBe thrownBy(form.bind(Map(fieldName -> value)).apply(fieldName))
       }
     }
   }
