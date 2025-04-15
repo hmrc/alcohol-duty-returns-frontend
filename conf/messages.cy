@@ -586,7 +586,7 @@ dutyCalculation.table.action = Camau
 
 productList.caption = Toll sy’n ddyledus
 
-# Beginning of duty suspended deliveries sub-journey
+# Beginning of OLD duty suspended deliveries sub-journey
 
 declareDutySuspendedDeliveriesQuestion.title = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
 declareDutySuspendedDeliveriesQuestion.heading = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
@@ -701,7 +701,15 @@ dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces = Mae’n rh
 
 checkYourAnswersDutySuspendedDeliveries.heading = Dosbarthiadau y gohiriwyd tollau arnynt
 
-# End of of duty suspended deliveries sub-journey
+# End of OLD duty suspended deliveries sub-journey
+
+# Beginning of NEW duty suspended deliveries sub-journey
+
+declareDutySuspenseQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspenseQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspenseQuestion.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno
+
+# End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
 
