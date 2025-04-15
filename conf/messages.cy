@@ -691,6 +691,140 @@ dutySuspendedAlcoholType.title = Pa gynhyrchion alcoholaidd gorffenedig rydych c
 dutySuspendedAlcoholType.heading = Pa gynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau?
 dutySuspendedAlcoholType.error.required = Dewiswch y cynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau
 
+dutySuspendedQuantities.title.regime.beer = Rhoi gwybod i ni faint o cwrw sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.cider = Rhoi gwybod i ni faint o seidr sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.wine = Rhoi gwybod i ni faint o gwin sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.spirits = Rhoi gwybod i ni faint o gwirodydd sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.otherfermentedproduct = Rhoi gwybod i ni faint o cynhyrchion eplesedig eraill sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.beer = Rhoi gwybod i ni faint o cwrw sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.cider = Rhoi gwybod i ni faint o seidr sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.wine = Rhoi gwybod i ni faint o gwin sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.spirits = Rhoi gwybod i ni faint o gwirodydd sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.otherfermentedproduct = Rhoi gwybod i ni faint o cynhyrchion eplesedig eraill sydd o dan ohiriad tollau
+dutySuspendedQuantities.deliveredInsideUK = Dosbarthwyd y tu mewn i’r DU o dan ohiriad tollau
+dutySuspendedQuantities.deliveredOutsideUK = Dosbarthwyd y tu allan i’r DU o dan ohiriad tollau
+dutySuspendedQuantities.received = Derbyniwyd o dan ohiriad tollau
+
+dutySuspendedQuantities.totalLitres.heading.regime.beer = Cyfanswm y litrau o cwrw gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.cider = Cyfanswm y litrau o seidr gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.wine = Cyfanswm y litrau o gwin gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.spirits = Cyfanswm y litrau o gwirodydd gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.otherfermentedproduct = Cyfanswm y litrau o cynhyrchion eplesedig eraill gorffenedig
+dutySuspendedQuantities.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspendedQuantities.pureAlcohol.heading = Litrau o alcohol pur
+dutySuspendedQuantities.pureAlcohol.hint = Nodwch y litrau, hyd at 4 lle degol. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspendedQuantities.deliveredInsideUK.hidden = a ddosbarthwyd y tu mewn i’r DU o dan ohiriad tollau
+dutySuspendedQuantities.deliveredOutsideUK.hidden = a ddosbarthwyd y tu allan i’r DU o dan ohiriad tollau
+dutySuspendedQuantities.received.hidden = a dderbyniwyd o dan ohiriad tollau
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.beer = Nodwch gyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.cider = Nodwch gyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.wine = Nodwch gyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.spirits = Nodwch gyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.otherfermentedproduct = Nodwch gyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.beer = Nodwch gyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu allan i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.cider = Nodwch gyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu allan i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.wine = Nodwch gyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu allan i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.spirits = Nodwch gyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu allan i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.otherfermentedproduct = Nodwch gyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu allan i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.received.error.noValue.totalLitres.regime.beer = Nodwch gyfanswm y litrau o gwrw gorffenedig a dderbyniwyd o dan ohiriad tollau. Nodwch 0 os nad yw hyn yn berthnasol
+dutySuspended.received.error.invalid.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.received.error.maximumValue.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.received.error.minimumValue.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.beer = Cyfanswm y litrau o gwrw gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.received.error.noValue.totalLitres.regime.cider = Nodwch gyfanswm y litrau o seidr gorffenedig a dderbyniwyd o dan ohiriad tollau. Nodwch 0 os nad yw hyn yn berthnasol
+dutySuspended.received.error.invalid.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.received.error.maximumValue.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.received.error.minimumValue.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.cider = Cyfanswm y litrau o seidr gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.received.error.noValue.totalLitres.regime.wine = Nodwch gyfanswm y litrau o win gorffenedig a dderbyniwyd o dan ohiriad tollau. Nodwch 0 os nad yw hyn yn berthnasol
+dutySuspended.received.error.invalid.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.received.error.maximumValue.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.received.error.minimumValue.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.wine = Cyfanswm y litrau o win gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.received.error.noValue.totalLitres.regime.spirits = Nodwch gyfanswm y litrau o wirodydd gorffenedig a dderbyniwyd o dan ohiriad tollau. Nodwch 0 os nad yw hyn yn berthnasol
+dutySuspended.received.error.invalid.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.received.error.maximumValue.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.received.error.minimumValue.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.received.error.noValue.totalLitres.regime.otherfermentedproduct = Nodwch gyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau. Nodwch 0 os nad yw hyn yn berthnasol
+dutySuspended.received.error.invalid.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.received.error.maximumValue.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.received.error.minimumValue.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
+
+dutySuspended.deliveredInsideUK.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.deliveredInsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.maximumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredInsideUK.error.minimumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
+
+dutySuspended.deliveredOutsideUK.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU.
+dutySuspended.deliveredOutsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredOutsideUK.error.maximumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.deliveredOutsideUK.error.minimumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
+
+dutySuspended.received.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau. Nodwch 0 os nad yw hyn yn berthnasol.
+dutySuspended.received.error.invalid.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.received.error.maximumValue.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
+dutySuspended.received.error.minimumValue.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.received.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
+
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
