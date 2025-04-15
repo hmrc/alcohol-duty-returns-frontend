@@ -19,7 +19,7 @@ site.2DP = {0,number,#,##0.00}
 site.4DP = {0,number,#,##0.0000##}
 site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Nil
-site.returnToBusinessAccount = §
+site.returnToBusinessAccount = Return to your business tax account
 site.year = {0,number,####}
 site.warning = Warning
 
