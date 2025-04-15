@@ -113,7 +113,6 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockReturnsNavigator     = mock[ReturnsNavigator]
 
@@ -134,9 +133,10 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
           Seq(
-            s"volumes[$index].taxType"     -> value.taxType,
-            s"volumes[$index].totalLitres" -> value.totalLitres.toString,
-            s"volumes[$index].pureAlcohol" -> value.pureAlcohol.toString
+            s"volumes[$index].rateBandDescription" -> rateBandDescription,
+            s"volumes[$index].taxType"             -> value.taxType,
+            s"volumes[$index].totalLitres"         -> value.totalLitres.toString,
+            s"volumes[$index].pureAlcohol"         -> value.pureAlcohol.toString
           )
         }
 
@@ -163,17 +163,22 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val formData = Seq(
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "311",
+        "volumes[0].totalLitres"         -> "invalid value"
+      )
 
       running(application) {
         val request =
           FakeRequest(POST, howMuchDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+            .withFormUrlEncodedBody(formData: _*)
 
         val form = formProvider(regime)(getMessages(application))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(formData.toMap)
 
         val view = application.injector.instanceOf[HowMuchDoYouNeedToDeclareView]
 
@@ -270,7 +275,42 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         route(application, request).value
         the[Exception] thrownBy status(
           route(application, request).value
-        ) must have message "Failed to find rate band for tax type"
+        ) must have message "Expected volumes[0].rateBandDescription to be provided in the view"
+      }
+    }
+
+    "must throw an exception for a POST if missing taxType" in {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+
+        val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
+          Seq(
+            s"volumes[$index].rateBandDescription" -> rateBandDescription,
+            s"volumes[$index].totalLitres"         -> value.totalLitres.toString,
+            s"volumes[$index].pureAlcohol"         -> value.pureAlcohol.toString
+          )
+        }
+
+        val request =
+          FakeRequest(POST, howMuchDoYouNeedToDeclareRoute)
+            .withFormUrlEncodedBody(validValues: _*)
+
+        route(application, request).value
+        the[Exception] thrownBy status(
+          route(application, request).value
+        ) must have message "Expected volumes[0].taxType to be provided in the view"
       }
     }
   }

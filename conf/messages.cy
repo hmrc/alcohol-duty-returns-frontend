@@ -291,6 +291,28 @@ return.journey.error.maximumValue.dutyRate = {0} - Mae’n rhaid i’ch cyfradd 
 return.journey.error.minimumValue.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
 return.journey.error.tooManyDecimalPlaces.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
 
+return.journey.multipleSPR.error.noValue.taxType = Dewiswch y math o gynnyrch alcoholaidd
+
+return.journey.multipleSPR.error.lessThanExpected = Litrau o alcohol pur mae’n rhaid i hyn fod yr un peth â chyfanswm y litrau o gynnyrch alcoholaidd neu’n llai na hynny
+
+return.journey.multipleSPR.error.noValue.totalLitres = Nodwch gyfanswm y litrau o gynnyrch alcoholaidd
+return.journey.multipleSPR.error.invalid.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn rhif
+return.journey.multipleSPR.error.maximumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn llai nag 1 biliwn
+return.journey.multipleSPR.error.minimumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn fwy na 0.00
+return.journey.multipleSPR.error.tooManyDecimalPlaces.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn rhif hyd at 2 le degol
+
+return.journey.multipleSPR.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur
+return.journey.multipleSPR.error.invalid.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif
+return.journey.multipleSPR.error.maximumValue.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn llai nag 1 biliwn
+return.journey.multipleSPR.error.minimumValue.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn fwy na 0.0000
+return.journey.multipleSPR.error.tooManyDecimalPlaces.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
+
+return.journey.multipleSPR.error.noValue.dutyRate = Nodwch eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
+return.journey.multipleSPR.error.invalid.dutyRate = Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
+return.journey.multipleSPR.error.maximumValue.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
+return.journey.multipleSPR.error.minimumValue.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
+return.journey.multipleSPR.error.tooManyDecimalPlaces.dutyRate = Eich cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn gynnwys 2 le degol
+
 return.journey.abv.interval.label.Beer = cwrw
 return.journey.abv.interval.label.Cider = seidr
 return.journey.abv.interval.label.SparklingCider = seidr pefriog
@@ -824,21 +846,24 @@ spoiltVolumeWithDuty.totalLitresVolume.heading.regime.spirits = Cyfanswm y litra
 spoiltVolumeWithDuty.totalLitresVolume.heading.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill wedi’u difetha
 spoiltVolumeWithDuty.pureAlcoholVolume.heading = Litrau o alcohol pur
 spoiltVolumeWithDuty.spoiltDuty.heading = Faint o doll a dalwyd?
-spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Nodwch gyfanswm y litrau o {0} wedi’u difetha
-spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume = Nodwch y litrau o alcohol pur sydd yn y {0} wedi’i ddifetha
+
+spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Nodwch gyfanswm y litrau o gynnyrch alcoholaidd wedi’i ddifetha
+spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume = Nodwch y litrau o alcohol pur
 spoiltVolumeWithDuty.error.noValue.duty = Nodwch swm y doll a dalwyd
-spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Mae’n rhaid i’r litrau o {0} fod yn rhif
+spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn rhif
 spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif
 spoiltVolumeWithDuty.error.invalid.duty = Mae’n rhaid i swm y doll a dalwyd fod yn rhif
-spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Mae’n rhaid i’r litrau o {0} wedi’u difetha fod yn llai nag 1 biliwn
+spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn llai nag 1 biliwn
 spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn llai nag 1 biliwn
 spoiltVolumeWithDuty.error.maximumValue.duty = Mae’n rhaid i swm y doll a dalwyd fod yn llai na £100 biliwn
-spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Mae’n rhaid i’r litrau o {0} wedi’u difetha fod yn fwy na 0.00
+spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn fwy na 0.00
 spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn fwy na 0.0000
 spoiltVolumeWithDuty.error.minimumValue.duty = Mae’n rhaid i swm y doll a dalwyd fod yn fwy na £0.00
-spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Mae’n rhaid i’r litrau o {0} wedi’u difetha fod yn rhif sy’n cynnwys 2 le degol
+spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn rhif hyd at 2 lle degol
 spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
 spoiltVolumeWithDuty.error.decimalPlaces.duty = Mae’n rhaid i swm y doll a dalwyd gynnwys punnoedd a cheiniogau
+spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
+
 spoiltVolumeWithDuty.change.hidden = gwerth y doll
 spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â’r litrau o {0} neu’n llai na hynny
 
