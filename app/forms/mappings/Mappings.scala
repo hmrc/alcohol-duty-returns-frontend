@@ -158,22 +158,24 @@ trait Mappings extends Formatters with Constraints {
       )
     )
 
-  protected def multipleSPRVolumesWithRate(
+  protected def volumesWithRateMultipleSPRSelection(
     invalidKey: String,
     requiredKey: String,
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    lessOrEqualKey: String
+    lessOrEqualKey: String,
+    regimeName: String
   ): FieldMapping[VolumeAndRateByTaxType] =
     of(
-      new MultipleSPRVolumesAndRateFormatter(
+      new VolumesAndRateFormatterMultipleSPRSelect(
         invalidKey,
         requiredKey,
         decimalPlacesKey,
         minimumValueKey,
         maximumValueKey,
-        lessOrEqualKey
+        lessOrEqualKey,
+        regimeName
       )
     )
 
@@ -183,7 +185,8 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    inconsistentKey: String
+    inconsistentKey: String,
+    args: Seq[String] = Seq.empty
   ): FieldMapping[SpoiltVolumeWithDuty] =
     of(
       new SpoiltVolumesAndDutyFormatter(
@@ -192,7 +195,8 @@ trait Mappings extends Formatters with Constraints {
         decimalPlacesKey,
         minimumValueKey,
         maximumValueKey,
-        inconsistentKey
+        inconsistentKey,
+        args
       )
     )
 }

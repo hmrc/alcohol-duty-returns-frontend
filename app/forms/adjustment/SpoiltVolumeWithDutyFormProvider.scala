@@ -17,14 +17,16 @@
 package forms.adjustment
 
 import forms.mappings.Mappings
+import models.AlcoholRegime
 import models.adjustment.SpoiltVolumeWithDuty
 import play.api.data.Form
+import play.api.i18n.Messages
 
 import javax.inject.Inject
 
 class SpoiltVolumeWithDutyFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[SpoiltVolumeWithDuty] =
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[SpoiltVolumeWithDuty] =
     Form(
       "volumes" -> spoiltVolumesWithDuty(
         "spoiltVolumeWithDuty.error.invalid",
@@ -32,7 +34,8 @@ class SpoiltVolumeWithDutyFormProvider @Inject() extends Mappings {
         "spoiltVolumeWithDuty.error.decimalPlaces",
         "spoiltVolumeWithDuty.error.minimumValue",
         "spoiltVolumeWithDuty.error.maximumValue",
-        "spoiltVolumeWithDuty.error.lessThanExpected"
+        "spoiltVolumeWithDuty.error.lessThanExpected",
+        Seq(messages(regime.regimeMessageKey))
       )
     )
 }

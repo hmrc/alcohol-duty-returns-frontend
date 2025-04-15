@@ -28,7 +28,8 @@ class SpoiltVolumesAndDutyFormatter(
   decimalPlacesKey: String,
   minimumValueKey: String,
   maximumValueKey: String,
-  inconsistentKey: String
+  inconsistentKey: String,
+  args: Seq[String]
 ) extends Formatter[SpoiltVolumeWithDuty]
     with Formatters {
 
@@ -40,7 +41,8 @@ class SpoiltVolumesAndDutyFormatter(
     maximumValueKey,
     totalLitresVolumeField,
     maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeMinimumValue
+    minimumValue = Constants.volumeMinimumValue,
+    args = args
   )
 
   private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
@@ -53,7 +55,8 @@ class SpoiltVolumesAndDutyFormatter(
     decimalPlaces = Constants.lpaMaximumDecimalPlaces,
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
-    exactDecimalPlacesRequired = true
+    exactDecimalPlacesRequired = true,
+    args = args
   )
 
   private val dutyFormatter = new BigDecimalFieldFormatter(
@@ -64,11 +67,12 @@ class SpoiltVolumesAndDutyFormatter(
     maximumValueKey,
     dutyField,
     maximumValue = Constants.spoiltDutyMaximumValue,
-    minimumValue = Constants.spoiltDutyMinimumValue
+    minimumValue = Constants.spoiltDutyMinimumValue,
+    args = args
   )
 
   private def requiredFieldFormError(key: String, field: String): FormError =
-    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field")
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] = {
     val totalLitres = volumeFormatter.bind(s"$key.$totalLitresVolumeField", data)
@@ -92,7 +96,7 @@ class SpoiltVolumesAndDutyFormatter(
       errors => Left(errors),
       volumes =>
         if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
-          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholVolumeField"), inconsistentKey)))
+          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholVolumeField"), inconsistentKey, args)))
         } else {
           Right(volumes)
         }

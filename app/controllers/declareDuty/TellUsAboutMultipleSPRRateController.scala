@@ -23,7 +23,7 @@ import javax.inject.Inject
 import models.{AlcoholRegime, CheckMode, Mode, NormalMode, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.declareDuty.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
 import models.declareDuty.VolumeAndRateByTaxType
@@ -70,7 +70,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
           logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
-          formProvider()
+          formProvider(regime)
             .bindFromRequest()
             .fold(
               formWithErrors =>
@@ -129,22 +129,26 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     regime: AlcoholRegime,
     mode: Mode,
     index: Option[Int]
-  ): Option[Form[_]] =
+  )(implicit messages: Messages): Option[Form[_]] =
     (mode, index) match {
       case (NormalMode, Some(i)) => fillPreviousAnswersWithIndex(userAnswers, regime, i)
       case _                     => fillPreviousAnswers(userAnswers, regime)
     }
 
-  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int): Option[Form[_]] =
+  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int)(implicit
+    messages: Messages
+  ): Option[Form[_]] =
     answers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
-      case Some(value) => Some(formProvider().fill(value))
+      case Some(value) => Some(formProvider(regime).fill(value))
       case None        =>
         logger.warn(s"Failed to retrieve SPR list entry for regime $regime at index $i")
         None
     }
 
-  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegime): Option[Form[_]] = {
-    val form = formProvider()
+  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegime)(implicit
+    messages: Messages
+  ): Option[Form[_]] = {
+    val form = formProvider(regime)
     answers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
       case Some(value) => Some(form.fill(value))
       case None        => Some(form)

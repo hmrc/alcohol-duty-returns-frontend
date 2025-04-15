@@ -18,11 +18,12 @@ package forms.declareDuty
 
 import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
+import generators.ModelGenerators
 import models.declareDuty.VolumesByTaxType
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours with SpecBase {
+class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime = regimeGen.sample.value
 
@@ -33,31 +34,35 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
 
     "must bind valid data" in {
       val data = Map(
-        "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
-        "volumes[0].totalLitres"         -> "1",
-        "volumes[0].pureAlcohol"         -> "1.0000"
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1",
+        "volumes[0].pureAlcohol" -> "1.0000"
       )
       form.bind(data).value.value must contain theSameElementsAs Seq(
-        VolumesByTaxType("311", 1, 1)
+        VolumesByTaxType("taxType", 1, 1)
       )
     }
 
     "must unbind valid data" in {
       val data = Seq(
-        VolumesByTaxType("311", 1, 1)
+        VolumesByTaxType("taxType", 1, 1)
       )
       form.fill(data).data must contain theSameElementsAs Map(
-        "volumes[0].taxType"     -> "311",
+        "volumes[0].taxType"     -> "taxType",
         "volumes[0].totalLitres" -> "1",
         "volumes[0].pureAlcohol" -> "1.0000"
       )
     }
 
-    "must fail to bind when blank answers provided" in {
+    "fail to bind when no answers are selected" in {
+      val data = Map.empty[String, String]
+      form.bind(data).errors must contain(FormError("volumes", "return.journey.error.allRequired", Seq(Seq(""))))
+    }
+
+    "fail to bind when blank answer provided" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "",
         "volumes[0].pureAlcohol"         -> ""
       )
@@ -67,10 +72,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind when values with too many decimal places are provided" in {
+    "fail to bind when values with too many decimal places are provided" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "1.112",
         "volumes[0].pureAlcohol"         -> "1.11234"
       )
@@ -88,10 +93,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind when invalid values are provided" in {
+    "fail to bind when invalid values are provided" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "invalid",
         "volumes[0].pureAlcohol"         -> "invalid"
       )
@@ -101,10 +106,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind when values below minimums are provided" in {
+    "fail to bind when values below minimum are provided" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "0",
         "volumes[0].pureAlcohol"         -> "0.0000"
       )
@@ -122,10 +127,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind when values exceed maximums are provided" in {
+    "fail to bind when values exceed maximum are provided" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "100000000000",
         "volumes[0].pureAlcohol"         -> "100000000000.0000"
       )
@@ -143,10 +148,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind when pure alcohol volume is higher than total litres value" in {
+    "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "1",
         "volumes[0].pureAlcohol"         -> "2.0000"
       )
@@ -155,10 +160,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind when pure alcohol volume is empty and total litres value exceeds maximum" in {
+    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "99999999999",
         "volumes[0].pureAlcohol"         -> ""
       )
@@ -176,10 +181,10 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
     }
 
-    "must fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].taxType"             -> "311",
+        "volumes[0].taxType"             -> "taxType",
         "volumes[0].totalLitres"         -> "111111111111.234",
         "volumes[0].pureAlcohol"         -> "-2.45356"
       )
@@ -195,26 +200,6 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
           Seq(rateBandDescription, "")
         )
       )
-    }
-
-    "must throw an exception when rateBandDescription is not provided" in {
-      val data = Map(
-        "volumes[0].taxType"     -> "311",
-        "volumes[0].totalLitres" -> "111111111111.234",
-        "volumes[0].pureAlcohol" -> "-2.45356"
-      )
-
-      an[IllegalArgumentException] mustBe thrownBy(form.bind(data).errors)
-    }
-
-    "must throw an exception when taxType is not provided" in {
-      val data = Map(
-        "volumes[0].rateBandDescription" -> rateBandDescription,
-        "volumes[0].totalLitres"         -> "111111111111.234",
-        "volumes[0].pureAlcohol"         -> "-2.45356"
-      )
-
-      an[IllegalArgumentException] mustBe thrownBy(form.bind(data).errors)
     }
   }
 }

@@ -16,12 +16,12 @@
 
 package forms.declareDuty
 
-import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
+import org.mockito.MockitoSugar.mock
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours with SpecBase {
+class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
   val regime = regimeGen.sample.value
 
@@ -37,11 +37,10 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].rateBandDescription" -> rateBandDescription,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres"         -> volumeAndRateByTaxType.totalLitres.toString,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol"         -> volumeAndRateByTaxType.pureAlcohol.toString,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"             -> volumeAndRateByTaxType.taxType,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"            -> volumeAndRateByTaxType.dutyRate.toString
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
           )
       }
 
@@ -67,12 +66,17 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       }
     }
 
+    "must fail to bind when no data is provided" in {
+      val result = form.bind(Map.empty[String, String])
+      result.errors must contain(FormError("volumesWithRate", "return.journey.error.allRequired", Seq(Seq(""))))
+    }
+
     "must fail when empty data is provided" in {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
-            s"volumesWithRate[$index].taxType"             -> "311",
+            s"volumesWithRate[$index].rateBandDescription" -> "",
+            s"volumesWithRate[$index].taxType"             -> "",
             s"volumesWithRate[$index].totalLitres"         -> "",
             s"volumesWithRate[$index].pureAlcohol"         -> "",
             s"volumesWithRate[$index].dutyRate"            -> ""
@@ -83,19 +87,24 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
             FormError(
+              s"volumesWithRate_${index}_taxType",
+              "return.journey.error.noValue.taxType",
+              Seq("", "")
+            ),
+            FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.noValue.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq("", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.noValue.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq("", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.noValue.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq("", "")
             )
           )
       }.flatten
@@ -108,7 +117,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "invalid",
             s"volumesWithRate[$index].pureAlcohol"         -> "invalid",
@@ -122,17 +131,17 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.invalid.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.invalid.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.invalid.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
@@ -145,7 +154,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "1.123",
             s"volumesWithRate[$index].pureAlcohol"         -> "1.12345",
@@ -159,17 +168,17 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.tooManyDecimalPlaces.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.tooManyDecimalPlaces.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
@@ -182,7 +191,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "100000000000",
             s"volumesWithRate[$index].pureAlcohol"         -> "100000000000.0000",
@@ -196,17 +205,17 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.maximumValue.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.maximumValue.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.maximumValue.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
@@ -219,7 +228,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "0",
             s"volumesWithRate[$index].pureAlcohol"         -> "0.0000",
@@ -233,17 +242,17 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.minimumValue.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.minimumValue.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.minimumValue.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
@@ -256,7 +265,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "1.1",
             s"volumesWithRate[$index].pureAlcohol"         -> "100.1000",
@@ -270,7 +279,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.lessThanExpected",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
@@ -283,7 +292,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "999999999999",
             s"volumesWithRate[$index].pureAlcohol"         -> "",
@@ -297,17 +306,17 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.maximumValue.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.noValue.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.invalid.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
@@ -316,11 +325,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
       result.errors must contain allElementsOf expectedErrors
     }
 
-    "must fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
             s"volumesWithRate[$index].totalLitres"         -> "9999999999.123",
             s"volumesWithRate[$index].pureAlcohol"         -> "-671.12345",
@@ -334,45 +343,23 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
             FormError(
               s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.tooManyDecimalPlaces.totalLitres",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
               s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.tooManyDecimalPlaces.dutyRate",
-              Seq(s"${rateBandDescription}_$index", "")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
       }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
-    }
-
-    "must throw an exception when rateBandDescription is not provided" in {
-      val data = Map(
-        "volumesWithRate[0].taxType"     -> "311",
-        "volumesWithRate[0].totalLitres" -> "111111111111.234",
-        "volumesWithRate[0].pureAlcohol" -> "-2.45356",
-        "volumesWithRate[0].dutyRate"    -> "1.123"
-      )
-
-      an[IllegalArgumentException] mustBe thrownBy(form.bind(data).errors)
-    }
-
-    "must throw an exception when taxType is not provided" in {
-      val data = Map(
-        "volumesWithRate[0].rateBandDescription" -> rateBandDescription,
-        "volumesWithRate[0].totalLitres"         -> "111111111111.234",
-        "volumesWithRate[0].pureAlcohol"         -> "-2.45356",
-        "volumesWithRate[0].dutyRate"            -> "1.123"
-      )
-
-      an[IllegalArgumentException] mustBe thrownBy(form.bind(data).errors)
     }
   }
 }
