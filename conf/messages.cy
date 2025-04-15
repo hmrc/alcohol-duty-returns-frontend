@@ -54,20 +54,16 @@ returnLocked.heading = Mae’r Datganiad hwn wedi’i gloi dros dro
 returnLocked.p1 = Mae’r Datganiad hwn wedi cael ei gloi dros dro, oherwydd bod rhywun arall yn ei olygu.
 returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
 
+signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.guidance = Ni wnaethom gadw’ch atebion.
+
 unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.p1 = Mae’r gwasanaeth Rheoli’ch Toll Alcohol yn wasanaeth ar gyfer busnesau cymeradwy, megis cwmnïau cyfyngedig, partneriaethau ac unig fasnachwyr sy’n cynhyrchu cynhyrchion alcoholaidd.
 unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
 unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
-
-unauthorised.not-org.title = NOT_FOUND
-unauthorised.not-org.heading = NOT_FOUND
-unauthorised.not-org.p1 = NOT_FOUND
-unauthorised.not-org.p2.first = NOT_FOUND
-unauthorised.not-org.p2.second = NOT_FOUND
-unauthorised.not-org.p2.third = NOT_FOUND
-unauthorised.not-org.button-text = NOT_FOUND
 
 doYouHaveAnAppaId.title = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
 doYouHaveAnAppaId.heading = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
@@ -79,10 +75,10 @@ noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion A
 noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
 noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
 
-clearReturnAreYouSureQuestion.title = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
-clearReturnAreYouSureQuestion.heading = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
-clearReturnAreYouSureQuestion.warning = Bydd gwneud hyn yn dileu’r holl wybodaeth yr ydych wedi’u nodi yn y datganiad hwn.
-clearReturnAreYouSureQuestion.error.required = Dewiswch ‘Iawn’ os hoffech glirio’ch datganiad
+clearReturnAreYouSureQuestion.title = NOT_FOUND
+clearReturnAreYouSureQuestion.heading = NOT_FOUND
+clearReturnAreYouSureQuestion.warning = NOT_FOUND
+clearReturnAreYouSureQuestion.error.required = NOT_FOUND
 
 regime.beer = cwrw
 regime.cider = seidr
@@ -145,8 +141,8 @@ viewReturn.netDutySuspension.caption = Dosbarthiadau y gohiriwyd tollau arnynt
 viewReturn.netDutySuspension.noneDeclared = Dim byd wedi’i ddatgan
 viewReturn.spirits.caption = Gwirodydd a gynhyrchwyd yn ystod y 3 mis diwethaf
 viewReturn.spirits.totalVolume = Cyfanswm cyfaint y gwirodydd
-viewReturn.spirits.scotchWhisky = Scotch Whisky
-viewReturn.spirits.irishWhiskey = Irish Whiskey
+viewReturn.spirits.scotchWhisky = Wisgi Albanaidd
+viewReturn.spirits.irishWhiskey = Wisgi Gwyddelig
 viewReturn.spirits.type.malt = Gwirod brag
 viewReturn.spirits.type.grain = Gwirod grawn
 viewReturn.spirits.type.neutralAgricultural = Gwirod niwtral (tarddiad amaethyddol)
@@ -269,9 +265,6 @@ alcoholType.p2 = Bydd eich Datganiad yn dangos gwerthoedd ‘dim’ ar gyfer y m
 alcoholType.hint = Dewiswch bob un sy’n berthnasol
 
 return.journey.error.lessThanExpected = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
-
-return.journey.error.allRequired = Dewiswch y math o {0}
-return.journey.error.noValue.taxType = Dewiswch y math o {0}
 
 return.journey.error.noValue.totalLitres = {0} - Nodwch gyfanswm y litrau
 return.journey.error.invalid.totalLitres = {0} - Mae’n rhaid i gyfanswm y litrau fod yn rhif
@@ -457,19 +450,11 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 
 doYouHaveMultipleSPRDutyRates.title = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
 doYouHaveMultipleSPRDutyRates.heading = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
-doYouHaveMultipleSPRDutyRates.p1.regime.beer = Efallai y bydd angen i chi ddatgan cwrw sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gwrw – er enghraifft os yw un o’r canlynol yn wir:
-doYouHaveMultipleSPRDutyRates.p1.regime.cider = Efallai y bydd angen i chi ddatgan seidr sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o seidr – er enghraifft os yw un o’r canlynol yn wir:
-doYouHaveMultipleSPRDutyRates.p1.regime.wine = Efallai y bydd angen i chi ddatgan gwin sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o win – er enghraifft os yw un o’r canlynol yn wir:
-doYouHaveMultipleSPRDutyRates.p1.regime.spirits = Efallai y bydd angen i chi ddatgan gwirodydd sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o wirodydd – er enghraifft os yw un o’r canlynol yn wir:
-doYouHaveMultipleSPRDutyRates.p1.regime.otherfermentedproduct = Efallai y bydd angen i chi ddatgan cynhyrchion eplesedig eraill sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gynhyrchion eplesedig eraill – er enghraifft os yw un o’r canlynol yn wir:
+doYouHaveMultipleSPRDutyRates.p1 = Efallai y bydd angen i chi ddatgan {0} sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o {0} – er enghraifft os yw un o’r canlynol yn wir:
 doYouHaveMultipleSPRDutyRates.l1 = mae’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach wedi newid, ac mae angen i chi roi gwybod am waith cynhyrchu a wnaed pan oedd cyfradd wahanol yn berthnasol
 doYouHaveMultipleSPRDutyRates.l2 = rydych chi’n potelu ac yn talu tollau ar ran mwy nag un cynhyrchydd bach, ac mae gan bob un ohonynt ei gyfradd doll ei hun yn sgil Rhyddhad i Gynhyrchwyr Bach
 doYouHaveMultipleSPRDutyRates.l3 = gwnaethoch uno â chynhyrchydd arall, ac rydych chi’n rhoi gwybod am waith cynhyrchu cyn uno – a hynny gan ddefnyddio’r cyfraddau toll yn sgil Rhyddhad i Gynhyrchwyr Bach a oedd gan y cynhyrchydd ei hun cyn uno
-doYouHaveMultipleSPRDutyRates.p2.regime.beer = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gwrw, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
-doYouHaveMultipleSPRDutyRates.p2.regime.cider = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o seidr, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
-doYouHaveMultipleSPRDutyRates.p2.regime.wine = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o win, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
-doYouHaveMultipleSPRDutyRates.p2.regime.spirits = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o wirodydd, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
-doYouHaveMultipleSPRDutyRates.p2.regime.otherfermentedproduct = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gynhyrchion eplesedig eraill, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
+doYouHaveMultipleSPRDutyRates.p2 = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o {0}, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
 doYouHaveMultipleSPRDutyRates.h2 = A oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un cod ar gyfer math o dreth?
 doYouHaveMultipleSPRDutyRates.error.required = Dewiswch ‘Iawn’ os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
 
@@ -491,39 +476,13 @@ tellUsAboutSingleSPRRate.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi
 tellUsAboutSingleSPRRate.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Rhowch wybod i ni am y cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
+tellUsAboutSingleSPRRate.smallProducer.heading = Faint o {0} nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+tellUsAboutSingleSPRRate.draughtSmallProducer.heading = Faint o {0} o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
 
-tellUsAboutSingleSPRRate.smallProducer.heading.regime.beer = Faint o gwrw nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.smallProducer.heading.regime.cider = Faint o seidr nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.smallProducer.heading.regime.wine = Faint o win nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.smallProducer.heading.regime.spirits = Faint o wirodydd nad ydynt yn dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi eu datgan?
-tellUsAboutSingleSPRRate.smallProducer.heading.regime.otherfermentedproduct = Faint o gynnyrch eplesedig arall nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.draughtSmallProducer.heading.regime.beer = Faint o gwrw o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.draughtSmallProducer.heading.regime.cider = Faint o seidr o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.draughtSmallProducer.heading.regime.wine = Faint o win o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-tellUsAboutSingleSPRRate.draughtSmallProducer.heading.regime.spirits = Faint o wirodydd o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi eu datgan?
-tellUsAboutSingleSPRRate.draughtSmallProducer.heading.regime.otherfermentedproduct = Faint o gynnyrch eplesedig arall o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
-
-tellUsAboutMultipleSPRRate.title.regime.beer = Rhoi gwybod i ni am y cwrw sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.title.regime.cider = Rhoi gwybod i ni am y seidr sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.title.regime.wine = Rhoi gwybod i ni am y gwin sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.title.regime.spirits = Rhoi gwybod i ni am y gwirodydd sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.title.regime.otherfermentedproduct = Rhoi gwybod i ni am y cynnyrch eplesedig arall sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.heading.regime.beer = Rhoi gwybod i ni am y cwrw sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.heading.regime.cider = Rhoi gwybod i ni am y seidr sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.heading.regime.wine = Rhoi gwybod i ni am y gwin sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.heading.regime.spirits = Rhoi gwybod i ni am y gwirodydd sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-tellUsAboutMultipleSPRRate.heading.regime.otherfermentedproduct = Rhoi gwybod i ni am y cynnyrch eplesedig arall sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
-
-tellUsAboutMultipleSPRRate.radioHeading.regime.beer = Pa fath o gwrw y mae angen i chi ei ddatgan?
-tellUsAboutMultipleSPRRate.radioHeading.regime.cider = Pa fath o seidr y mae angen i chi ei ddatgan?
-tellUsAboutMultipleSPRRate.radioHeading.regime.wine = Pa fath o win y mae angen i chi ei ddatgan?
-tellUsAboutMultipleSPRRate.radioHeading.regime.spirits = Pa fath o wirodydd y mae angen i chi eu datgan?
-tellUsAboutMultipleSPRRate.radioHeading.regime.otherfermentedproduct = Pa fath o gynhyrchion eplesedig eraill y mae angen i chi eu datgan?
-tellUsAboutMultipleSPRRate.p1.regime.beer = Ar gyfer pob cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y cwrw hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.cider = Ar gyfer pob seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.wine = Ar gyfer pob gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.spirits = Ar gyfer pob gwirod y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y gwirod hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.otherfermentedproduct = Ar gyfer pob cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+tellUsAboutMultipleSPRRate.title = Rhoi gwybod i ni am y {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+tellUsAboutMultipleSPRRate.heading = Rhoi gwybod i ni am y {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+tellUsAboutMultipleSPRRate.radioHeading = Pa fath o {0} y mae angen i chi ei ddatgan?
+tellUsAboutMultipleSPRRate.p1 = Ar gyfer pob {0} y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y {0} hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutMultipleSPRRate.warning = Os oes gennych fwy nag un gyfradd doll ar gyfer {0} sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
 tellUsAboutMultipleSPRRate.h3.Beer = Faint o’r cwrw hwn y mae angen i chi ei ddatgan?
 tellUsAboutMultipleSPRRate.h3.Cider = Faint o’r seidr hwn y mae angen i chi ei ddatgan?
@@ -546,16 +505,8 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,
 checkYourAnswers.title = Gwirio’ch atebion
 checkYourAnswers.heading = Gwirio’ch atebion
 
-multipleSPRList.title.regime.beer = Cwrw i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.title.regime.cider = Seidr i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.title.regime.wine = Gwin i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.title.regime.spirits = Gwirodydd i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.title.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.heading.regime.beer = Cwrw i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.heading.regime.cider = Seidr i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.heading.regime.wine = Gwin i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.heading.regime.spirits = Gwirodydd i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
-multipleSPRList.heading.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+multipleSPRList.title = {0} i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+multipleSPRList.heading = {0} i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.question = A ydych chi eisiau ychwanegu un arall?
 multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
 
@@ -711,7 +662,7 @@ declareQuarterlySpirits.question = A ydych chi wedi gwneud unrhyw wirodydd o gyn
 declareQuarterlySpirits.paragraph1 = Nid oes angen i chi roi gwybod i ni am unrhyw gynhyrchion alcoholaidd a gynhyrchwyd o alcohol sylfaenol a wnaed rywle eraill (er enghraifft os ydych chi’n eu puro neu’n eu cymysgu).
 declareQuarterlySpirits.paragraph2 = Mae angen i chi roi gwybod i ni os ydych wedi gwneud:
 declareQuarterlySpirits.paragraph3 = Bydd angen i chi hefyd roi gwybod i ni beth oedd cyfanswm y gwirodydd a wnaethoch yn ystod y cyfnod hwn.
-declareQuarterlySpirits.paragraph4 = Os gwnaethoch Scotch Whisky neu Irish Whiskey, bydd angen i chi roi gwybod i ni faint a wnaethoch.
+declareQuarterlySpirits.paragraph4 = Os gwnaethoch wisgi Albanaidd neu wisgi Gwyddelig, bydd angen i chi roi gwybod i ni faint a wnaethoch.
 declareQuarterlySpirits.paragraph5 = Ni fydd eich atebion yn yr adran hon yn newid eich cyfrifiad tollau.
 declareQuarterlySpirits.paragraph2.bulletList.1 = gwirodydd brag neu wirodydd grawn
 declareQuarterlySpirits.paragraph2.bulletList.2 = gwirodydd niwtral o darddiad amaethyddol neu ddiwydiannol
@@ -738,25 +689,25 @@ declareSpiritsTotal.error.decimalPlaces = Mae’n rhaid i gyfanswm cyfaint y gwi
 declareSpiritsTotal.hint = Nodwch y litrau o alcohol pur, hyd at 2 le degol
 declareSpiritsTotal.inputSuffix = o litrau
 
-whisky.title = Faint o Scotch Whisky a Irish Whiskey rydych chi wedi’i gynhyrchu?
-whisky.heading = Faint o Scotch Whisky a Irish Whiskey rydych chi wedi’i gynhyrchu?
-whisky.scotchWhisky.subheading1 = Scotch Whisky
+whisky.title = Faint o wisgi Albanaidd a wisgi Gwyddelig rydych chi wedi’i gynhyrchu?
+whisky.heading = Faint o wisgi Albanaidd a wisgi Gwyddelig rydych chi wedi’i gynhyrchu?
+whisky.scotchWhisky.subheading1 = Wisgi Albanaidd
 whisky.hint = Nodwch y litrau o alcohol pur, hyd at 2 le degol. Nodwch 0 os nad yw hyn yn berthnasol.
-whisky.irishWhiskey.subheading2 = Irish Whiskey
-whisky.scotchWhisky.checkYourAnswersLabel = Scotch Whisky
-whisky.irishWhiskey.checkYourAnswersLabel = Irish Whiskey
-whisky.scotchWhisky.change.hidden = Scotch Whisky
-whisky.irishWhiskey.change.hidden = Irish Whiskey
-whisky.error.scotchWhisky.required = Nodwch gyfaint y Scotch Whisky a gynhyrchwyd
-whisky.error.scotchWhisky.nonNumeric = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn rhif
-whisky.error.scotchWhisky.maximumRequired = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn llai nag 1 biliwn o litrau
-whisky.error.scotchWhisky.minimumRequired = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn sero neu’n uwch
-whisky.error.scotchWhisky.decimalPlaces = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn rhif sy’n cynnwys hyd at 2 le degol
-whisky.error.irishWhiskey.required = Nodwch gyfaint y Irish Whiskey a gynhyrchwyd
-whisky.error.irishWhiskey.nonNumeric = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn rhif
-whisky.error.irishWhiskey.maximumRequired = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn llai nag 1 biliwn o litrau
-whisky.error.irishWhiskey.minimumRequired = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn sero neu’n uwch
-whisky.error.irishWhiskey.decimalPlaces = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn rhif sy’n cynnwys hyd at 2 le degol
+whisky.irishWhiskey.subheading2 = Wisgi Gwyddelig
+whisky.scotchWhisky.checkYourAnswersLabel = Wisgi Albanaidd
+whisky.irishWhiskey.checkYourAnswersLabel = Wisgi Gwyddelig
+whisky.scotchWhisky.change.hidden = wisgi Albanaidd
+whisky.irishWhiskey.change.hidden = wisgi Gwyddelig
+whisky.error.scotchWhisky.required = Nodwch gyfaint y wisgi Albanaidd a gynhyrchwyd
+whisky.error.scotchWhisky.nonNumeric = Mae’n rhaid i’r ateb ar gyfer Wisgi Albanaidd fod yn rhif
+whisky.error.scotchWhisky.maximumRequired = Mae’n rhaid i’r ateb ar gyfer Wisgi Albanaidd fod yn llai nag 1 biliwn o litrau
+whisky.error.scotchWhisky.minimumRequired = Mae’n rhaid i’r ateb ar gyfer Wisgi Albanaidd fod yn sero neu’n uwch
+whisky.error.scotchWhisky.decimalPlaces = Mae’n rhaid i’r ateb ar gyfer Wisgi Albanaidd fod yn rhif sy’n cynnwys hyd at 2 le degol
+whisky.error.irishWhiskey.required = Nodwch gyfaint y wisgi Gwyddelig a gynhyrchwyd
+whisky.error.irishWhiskey.nonNumeric = Mae’n rhaid i’r ateb ar gyfer Wisgi Gwyddelig fod yn rhif
+whisky.error.irishWhiskey.maximumRequired = Mae’n rhaid i’r ateb ar gyfer Wisgi Gwyddelig fod yn llai nag 1 biliwn o litrau
+whisky.error.irishWhiskey.minimumRequired = Mae’n rhaid i’r ateb ar gyfer Wisgi Gwyddelig fod yn sero neu’n uwch
+whisky.error.irishWhiskey.decimalPlaces = Mae’n rhaid i’r ateb ar gyfer Wisgi Gwyddelig fod yn rhif sy’n cynnwys hyd at 2 le degol
 
 spiritType.title = Pa rai o’r gwirodydd hyn rydych chi wedi’u cynhyrchu?
 spiritType.heading = Pa rai o’r gwirodydd hyn rydych chi wedi’u cynhyrchu?
@@ -829,21 +780,9 @@ alcoholicProductType.error.required = Dewiswch y math o gynnyrch alcoholaidd ryd
 alcoholicProductType.change.hidden = y math o gynnyrch alcoholaidd
 alcoholicProductType.paragraph = Dewiswch fath o gynnyrch alcoholaidd i’w ddatgan. Byddwch chi’n gallu datgan cynhyrchion eraill wedyn.
 
-spoiltVolumeWithDuty.title.regime.beer = Rhoi gwybod i ni am eich cwrw wedi’i ddifetha
-spoiltVolumeWithDuty.title.regime.cider = Rhoi gwybod i ni am eich seidr wedi’i ddifetha
-spoiltVolumeWithDuty.title.regime.wine = Rhoi gwybod i ni am eich gwin wedi’i ddifetha
-spoiltVolumeWithDuty.title.regime.spirits = Rhoi gwybod i ni am eich gwirodydd wedi’u difetha
-spoiltVolumeWithDuty.title.regime.otherfermentedproduct = Rhoi gwybod i ni am eich cynhyrchion eplesedig eraill wedi’u difetha
-spoiltVolumeWithDuty.heading.regime.beer = Rhoi gwybod i ni am eich cwrw wedi’i ddifetha
-spoiltVolumeWithDuty.heading.regime.cider = Rhoi gwybod i ni am eich seidr wedi’i ddifetha
-spoiltVolumeWithDuty.heading.regime.wine = Rhoi gwybod i ni am eich gwin wedi’i ddifetha
-spoiltVolumeWithDuty.heading.regime.spirits = Rhoi gwybod i ni am eich gwirodydd wedi’u difetha
-spoiltVolumeWithDuty.heading.regime.otherfermentedproduct = Rhoi gwybod i ni am eich cynhyrchion eplesedig eraill wedi’u difetha
-spoiltVolumeWithDuty.totalLitresVolume.heading.regime.beer = Rhoi gwybod i ni am eich cwrw wedi’i ddifetha
-spoiltVolumeWithDuty.totalLitresVolume.heading.regime.cider = Cyfanswm y litrau o seidr wedi’i ddifetha
-spoiltVolumeWithDuty.totalLitresVolume.heading.regime.wine = Cyfanswm y litrau o win wedi’i ddifetha
-spoiltVolumeWithDuty.totalLitresVolume.heading.regime.spirits = Cyfanswm y litrau o wirodydd wedi’u difetha
-spoiltVolumeWithDuty.totalLitresVolume.heading.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill wedi’u difetha
+spoiltVolumeWithDuty.title = Rhoi gwybod i ni am eich {0} wedi’i ddifetha
+spoiltVolumeWithDuty.heading = Rhoi gwybod i ni am eich {0} wedi’i ddifetha
+spoiltVolumeWithDuty.totalLitresVolume.heading = Cyfanswm y litrau o {0} wedi’i ddifetha
 spoiltVolumeWithDuty.pureAlcoholVolume.heading = Litrau o alcohol pur
 spoiltVolumeWithDuty.spoiltDuty.heading = Faint o doll a dalwyd?
 
@@ -865,7 +804,6 @@ spoiltVolumeWithDuty.error.decimalPlaces.duty = Mae’n rhaid i swm y doll a dal
 spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
 
 spoiltVolumeWithDuty.change.hidden = gwerth y doll
-spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â’r litrau o {0} neu’n llai na hynny
 
 whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
@@ -1051,12 +989,12 @@ returnSubmitted.negative.p1 = Gallwch hawlio toll sy’n ddyledus nawr neu’n h
 returnSubmitted.warningText = Mae ein manylion banc wedi newid. Dewiswch ‘Talu nawr’ ac yna ‘Trosglwyddiad banc (BACS/CHAPS)’ er mwyn gweld y manylion newydd.
 returnSubmitted.warningFallbackText = Rhybudd
 
-returnSubmitted.noDetails.p1 = Mae eich datganiad wedi dod i law, ond ni allwn ddangos y manylion llawn ar hyn o bryd. Gallai hyn fod o ganlyniad i broblem dros dro gyda’r gwasanaeth.
-returnSubmitted.noDetails.youCan = Gallwch wneud y canlynol:
-returnSubmitted.noDetails.viewReturn1 = bwrw golwg dros fanylion llawn
-returnSubmitted.noDetails.viewReturn2 = i gadarnhau’ch cyfeirnod
-returnSubmitted.noDetails.viewPayments = gwirio faint o doll sydd arnoch
-returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 diwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
-returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
+returnSubmitted.noDetails.p1 = NOT_FOUND
+returnSubmitted.noDetails.youCan = NOT_FOUND
+returnSubmitted.noDetails.viewReturn1 = NOT_FOUND
+returnSubmitted.noDetails.viewReturn2 = NOT_FOUND
+returnSubmitted.noDetails.viewPayments = NOT_FOUND
+returnSubmitted.noDetails.p2 = NOT_FOUND
+returnSubmitted.noDetails.p3 = NOT_FOUND
 
 # End of Check and submit sub-journey
