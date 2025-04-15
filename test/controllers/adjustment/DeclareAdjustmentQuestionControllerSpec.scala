@@ -19,19 +19,19 @@ package controllers.adjustment
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
-import models.{NormalMode, ReturnId, UserAnswers}
+import models.NormalMode
 import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.adjustment._
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.DeclareAdjustmentQuestionView
 
 import scala.concurrent.Future
-import scala.util.Success
 
 class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
 
@@ -125,29 +125,29 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
     "must redirect to the Task list and clear user answers when valid question is answered as No" in {
       val taskListRoute = controllers.routes.TaskListController.onPageLoad
 
-      val mockUserAnswersConnector     = mock[UserAnswersConnector]
-      val mockUserAnswers: UserAnswers = mock[UserAnswers]
-      val mockReturnId                 = mock[ReturnId]
-      val mockAdjustmentNavigator      = mock[AdjustmentNavigator]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
-      when(mockReturnId.periodKey) thenReturn "2025-01"
-      when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(
-        mockUserAnswers.set(eqTo(DeclareAdjustmentQuestionPage), eqTo(false))(any())
-      ) thenReturn Success(
-        mockUserAnswers
-      )
-      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
-        DeclareAdjustmentQuestionPage,
-        false
-      )
       when(
         mockAdjustmentNavigator.nextPage(eqTo(DeclareAdjustmentQuestionPage), any(), any(), any())
       ) thenReturn taskListRoute
 
+      val userAnswers = emptyUserAnswers.copy(data =
+        Json.obj(
+          DeclareAdjustmentQuestionPage.toString -> true,
+          AdjustmentTotalPage.toString           -> -515.67,
+          UnderDeclarationTotalPage.toString     -> 1019.7,
+          UnderDeclarationReasonPage.toString    -> "Reason for under declaration",
+          OverDeclarationTotalPage.toString      -> -1854,
+          OverDeclarationReasonPage.toString     -> "Reason for over declaration"
+        )
+      )
+
+      val expectedCachedUserAnswers = emptyUserAnswers.set(DeclareAdjustmentQuestionPage, false).success.value
+
       val application =
-        applicationBuilder(userAnswers = Some(mockUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -164,11 +164,14 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual taskListRoute.url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockUserAnswers, times(1)).set(eqTo(DeclareAdjustmentQuestionPage), eqTo(false))(any())
-        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
         verify(mockAdjustmentNavigator, times(1))
-          .nextPage(eqTo(DeclareAdjustmentQuestionPage), eqTo(NormalMode), any(), eqTo(Some(true)))
+          .nextPage(
+            eqTo(DeclareAdjustmentQuestionPage),
+            eqTo(NormalMode),
+            eqTo(expectedCachedUserAnswers),
+            eqTo(Some(true))
+          )
       }
     }
 
