@@ -39,9 +39,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
         }
         firstRegime match {
           case Some(regime) =>
-            // TODO: Go to new declare quantity page for the first regime
-            logger.info(s"Go to declare quantity page for regime: $regime")
-            routes.JourneyRecoveryController.onPageLoad()
+            controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
           case None         => routes.JourneyRecoveryController.onPageLoad()
         }
     case _                               =>
@@ -101,7 +99,8 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       case Some(true) if userAnswers.regimes.regimes.size > 1 =>
         controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(mode)
       case Some(true)                                         =>
-        // TODO: Go to new declare quantity page for the single regime (insert mode on page load)
+        controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+          .onPageLoad(mode, userAnswers.regimes.regimes.head)
         routes.JourneyRecoveryController.onPageLoad()
       case Some(false)                                        => routes.TaskListController.onPageLoad
       case _                                                  => routes.JourneyRecoveryController.onPageLoad()

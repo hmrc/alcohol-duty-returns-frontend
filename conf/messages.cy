@@ -835,7 +835,7 @@ dutySuspended.deliveredInsideUK.error.maximumValue.pureAlcohol = Litrau o alcoho
 dutySuspended.deliveredInsideUK.error.minimumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
 dutySuspended.deliveredInsideUK.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
 
-dutySuspended.deliveredOutsideUK.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU.
+dutySuspended.deliveredOutsideUK.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
 dutySuspended.deliveredOutsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn rhif
 dutySuspended.deliveredOutsideUK.error.maximumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
 dutySuspended.deliveredOutsideUK.error.minimumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu allan i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau

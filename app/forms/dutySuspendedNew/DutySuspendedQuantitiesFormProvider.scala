@@ -35,7 +35,7 @@ class DutySuspendedQuantitiesFormProvider @Inject() extends Mappings {
         s"dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.${regime.regimeMessageKey}"
       ).verifying(
         minimumValue(
-          Constants.dutySuspendedVolumeMinimumValue,
+          Constants.dutySuspendedVolumeNewMinimumValue,
           s"dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.${regime.regimeMessageKey}"
         )
       ).verifying(
@@ -51,7 +51,7 @@ class DutySuspendedQuantitiesFormProvider @Inject() extends Mappings {
         "dutySuspended.deliveredInsideUK.error.decimalPlaces.pureAlcohol"
       ).verifying(
         minimumValue(
-          Constants.dutySuspendedLpaMinimumValue,
+          Constants.dutySuspendedLpaNewMinimumValue,
           "dutySuspended.deliveredInsideUK.error.minimumValue.pureAlcohol"
         )
       ).verifying(
@@ -67,7 +67,7 @@ class DutySuspendedQuantitiesFormProvider @Inject() extends Mappings {
         s"dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.${regime.regimeMessageKey}"
       ).verifying(
         minimumValue(
-          Constants.dutySuspendedVolumeMinimumValue,
+          Constants.dutySuspendedVolumeNewMinimumValue,
           s"dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.${regime.regimeMessageKey}"
         )
       ).verifying(
@@ -83,7 +83,7 @@ class DutySuspendedQuantitiesFormProvider @Inject() extends Mappings {
         "dutySuspended.deliveredOutsideUK.error.decimalPlaces.pureAlcohol"
       ).verifying(
         minimumValue(
-          Constants.dutySuspendedLpaMinimumValue,
+          Constants.dutySuspendedLpaNewMinimumValue,
           "dutySuspended.deliveredOutsideUK.error.minimumValue.pureAlcohol"
         )
       ).verifying(
@@ -99,7 +99,7 @@ class DutySuspendedQuantitiesFormProvider @Inject() extends Mappings {
         s"dutySuspended.received.error.decimalPlaces.totalLitres.${regime.regimeMessageKey}"
       ).verifying(
         minimumValue(
-          Constants.dutySuspendedVolumeMinimumValue,
+          Constants.dutySuspendedVolumeNewMinimumValue,
           s"dutySuspended.received.error.minimumValue.totalLitres.${regime.regimeMessageKey}"
         )
       ).verifying(
@@ -115,7 +115,7 @@ class DutySuspendedQuantitiesFormProvider @Inject() extends Mappings {
         "dutySuspended.received.error.decimalPlaces.pureAlcohol"
       ).verifying(
         minimumValue(
-          Constants.dutySuspendedLpaMinimumValue,
+          Constants.dutySuspendedLpaNewMinimumValue,
           "dutySuspended.received.error.minimumValue.pureAlcohol"
         )
       ).verifying(

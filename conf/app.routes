@@ -220,6 +220,11 @@ GET        /complete-return/duty-suspended-deliveries/which-duty-suspended-alcoh
 POST       /complete-return/duty-suspended-deliveries/which-duty-suspended-alcohol                        controllers.dutySuspendedNew.DutySuspendedAlcoholTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /complete-return/duty-suspended-deliveries/change-which-duty-suspended-alcohol                  controllers.dutySuspendedNew.DutySuspendedAlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /complete-return/duty-suspended-deliveries/change-which-duty-suspended-alcohol                  controllers.dutySuspendedNew.DutySuspendedAlcoholTypeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /complete-return/duty-suspended-deliveries/:regime/report-duty-suspense                        controllers.dutySuspendedNew.DutySuspendedQuantitiesController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/duty-suspended-deliveries/:regime/report-duty-suspense                        controllers.dutySuspendedNew.DutySuspendedQuantitiesController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/duty-suspended-deliveries/:regime/change-duty-suspense                        controllers.dutySuspendedNew.DutySuspendedQuantitiesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/duty-suspended-deliveries/:regime/change-duty-suspense                        controllers.dutySuspendedNew.DutySuspendedQuantitiesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
