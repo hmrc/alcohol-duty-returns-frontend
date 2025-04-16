@@ -18,18 +18,13 @@ package models.dutySuspendedNew
 
 import play.api.libs.json.{Json, OFormat}
 
-case class QuantitiesByDutySuspendedCategory(
-  category: String,
-  totalLitres: BigDecimal,
-  pureAlcohol: BigDecimal
-)
-
-object QuantitiesByDutySuspendedCategory {
-  implicit val format: OFormat[QuantitiesByDutySuspendedCategory] = Json.format[QuantitiesByDutySuspendedCategory]
-}
-
 case class DutySuspendedQuantities(
-  quantitiesByDutySuspendedCategory: Seq[QuantitiesByDutySuspendedCategory]
+  totalLitresDeliveredInsideUK: BigDecimal,
+  pureAlcoholDeliveredInsideUK: BigDecimal,
+  totalLitresDeliveredOutsideUK: BigDecimal,
+  pureAlcoholDeliveredOutsideUK: BigDecimal,
+  totalLitresReceived: BigDecimal,
+  pureAlcoholReceived: BigDecimal
 )
 
 object DutySuspendedQuantities {
