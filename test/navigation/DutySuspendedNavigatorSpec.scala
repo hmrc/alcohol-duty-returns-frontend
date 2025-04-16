@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers._
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import pages._
 import pages.dutySuspendedNew._
 
@@ -27,6 +28,9 @@ class DutySuspendedNavigatorSpec extends SpecBase {
 
   val navigator = new DutySuspendedNavigator
   val regime    = regimeGen.sample.value
+
+  val dutySuspendedQuantities   = DutySuspendedQuantities(100, 10, 0, 0, 0, 0)
+  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 10)
 
   "DutySuspendedNavigator" - {
 
@@ -57,12 +61,12 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             DeclareDutySuspenseQuestionPage,
             NormalMode,
             emptyUserAnswers
-              .copy(regimes = AlcoholRegimes(Set(Beer)))
+              .copy(regimes = AlcoholRegimes(Set(regime)))
               .set(DeclareDutySuspenseQuestionPage, true)
               .success
               .value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Beer)
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the Declare duty suspense question page to task list page if the answer is No" in {
@@ -114,6 +118,24 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             regime
           ) mustBe routes.TaskListController.onPageLoad
         }
+
+        Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
+          s"must go from the Declare quantity page to the Display calculation page when the regime is ${regime.entryName}" in {
+            navigator.nextPageWithRegime(
+              DutySuspendedQuantitiesPage,
+              NormalMode,
+              emptyUserAnswers
+                .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
+                .success
+                .value
+                .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+                .success
+                .value,
+              regime
+            ) mustBe routes.JourneyRecoveryController.onPageLoad()
+            // TODO: update route when new page is created
+          }
+        }
       }
     }
 
@@ -143,12 +165,12 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             DeclareDutySuspenseQuestionPage,
             CheckMode,
             emptyUserAnswers
-              .copy(regimes = AlcoholRegimes(Set(Beer)))
+              .copy(regimes = AlcoholRegimes(Set(regime)))
               .set(DeclareDutySuspenseQuestionPage, true)
               .success
               .value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(CheckMode, Beer)
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(CheckMode, regime)
         }
 
         "must go from the Declare duty suspense question page to the task list page if the answer is No" in {
@@ -197,7 +219,19 @@ class DutySuspendedNavigatorSpec extends SpecBase {
 
         Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
           s"must go from the Declare quantity page to the CYA page when the regime is ${regime.entryName}" in {
-            // TODO
+            navigator.nextPageWithRegime(
+              DutySuspendedQuantitiesPage,
+              CheckMode,
+              emptyUserAnswers
+                .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
+                .success
+                .value
+                .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+                .success
+                .value,
+              regime
+            ) mustBe routes.JourneyRecoveryController.onPageLoad()
+            // TODO: update route when new page is created
           }
         }
       }

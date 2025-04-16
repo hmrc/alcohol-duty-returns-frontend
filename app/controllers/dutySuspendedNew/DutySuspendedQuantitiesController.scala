@@ -64,17 +64,23 @@ class DutySuspendedQuantitiesController @Inject() (
 
   def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle).async { implicit request =>
-      val form = formProvider(regime)
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.setByKey(DutySuspendedQuantitiesPage, regime, value))
-              _              <- userAnswersConnector.set(updatedAnswers)
-              // TODO: Call calculator
-            } yield Redirect(navigator.nextPageWithRegime(DutySuspendedQuantitiesPage, mode, updatedAnswers, regime))
-        )
+      if (request.userAnswers.get(DutySuspendedAlcoholTypePage).exists(_.contains(regime))) {
+        val form = formProvider(regime)
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, mode))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.setByKey(DutySuspendedQuantitiesPage, regime, value))
+                _              <- userAnswersConnector.set(updatedAnswers)
+                // TODO: Call calculator
+              } yield Redirect(navigator.nextPageWithRegime(DutySuspendedQuantitiesPage, mode, updatedAnswers, regime))
+          )
+      } else {
+        logger.warn(s"User has not selected regime $regime for duty suspense")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      }
     }
 }
