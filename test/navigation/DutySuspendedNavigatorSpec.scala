@@ -62,8 +62,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Beer)
         }
 
         "must go from the Declare duty suspense question page to task list page if the answer is No" in {
@@ -92,8 +91,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
         }
 
         "must go from the Duty suspended alcohol types page to journey recovery page if the answer is missing" in {
@@ -114,8 +112,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers,
             regime
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route to task list when nextPageWithRegime is implemented properly
+          ) mustBe routes.TaskListController.onPageLoad
         }
       }
     }
@@ -151,8 +148,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(CheckMode, Beer)
         }
 
         "must go from the Declare duty suspense question page to the task list page if the answer is No" in {
@@ -164,7 +160,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from the Duty suspended alcohol types page to Declare quantity page for the first regime if regimes were added" in {
+        "must go from the Duty suspended alcohol types page to Declare quantity page (normal mode) for the first regime if regimes were added" in {
           val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
 
           navigator.nextPage(
@@ -172,8 +168,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
             Some(true)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
         }
 
         "must go from the Duty suspended alcohol types page to the CYA page if no regimes were added" in {
@@ -197,8 +192,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route to task list when nextPageWithRegime is implemented properly
+          ) mustBe routes.TaskListController.onPageLoad
         }
 
         Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>

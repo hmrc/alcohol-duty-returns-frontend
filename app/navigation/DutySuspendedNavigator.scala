@@ -122,7 +122,6 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       case Some(true)                                         =>
         controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
           .onPageLoad(mode, userAnswers.regimes.regimes.head)
-        routes.JourneyRecoveryController.onPageLoad()
       case Some(false)                                        => routes.TaskListController.onPageLoad
       case _                                                  => routes.JourneyRecoveryController.onPageLoad()
     }

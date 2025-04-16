@@ -584,42 +584,20 @@ trait TestData extends ModelGenerators {
       DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider"),
       DutySuspendedQuantitiesPage.toString     -> Json.obj(
         "Beer"  -> Json.obj(
-          "quantitiesByDutySuspendedCategory" -> Json.arr(
-            Json.obj(
-              "category"    -> "deliveredInsideUK",
-              "totalLitres" -> 100,
-              "pureAlcohol" -> 10
-            ),
-            Json.obj(
-              "category"    -> "deliveredOutsideUK",
-              "totalLitres" -> 0,
-              "pureAlcohol" -> 0
-            ),
-            Json.obj(
-              "category"    -> "received",
-              "totalLitres" -> 0,
-              "pureAlcohol" -> 0
-            )
-          )
+          "totalLitresDeliveredInsideUK"  -> 100,
+          "pureAlcoholDeliveredInsideUK"  -> 10,
+          "totalLitresDeliveredOutsideUK" -> 0,
+          "pureAlcoholDeliveredOutsideUK" -> 0,
+          "totalLitresReceived"           -> 0,
+          "pureAlcoholReceived"           -> 0
         ),
         "Cider" -> Json.obj(
-          "quantitiesByDutySuspendedCategory" -> Json.arr(
-            Json.obj(
-              "category"    -> "deliveredInsideUK",
-              "totalLitres" -> 100,
-              "pureAlcohol" -> 10
-            ),
-            Json.obj(
-              "category"    -> "deliveredOutsideUK",
-              "totalLitres" -> 0,
-              "pureAlcohol" -> 0
-            ),
-            Json.obj(
-              "category"    -> "received",
-              "totalLitres" -> 0,
-              "pureAlcohol" -> 0
-            )
-          )
+          "totalLitresDeliveredInsideUK"  -> 100,
+          "pureAlcoholDeliveredInsideUK"  -> 10,
+          "totalLitresDeliveredOutsideUK" -> 0,
+          "pureAlcoholDeliveredOutsideUK" -> 0,
+          "totalLitresReceived"           -> 0,
+          "pureAlcoholReceived"           -> 0
         )
       ),
       DutySuspendedFinalVolumesPage.toString   -> Json.obj(
