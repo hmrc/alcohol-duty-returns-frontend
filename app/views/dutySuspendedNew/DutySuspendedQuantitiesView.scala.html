@@ -16,13 +16,11 @@
 
 @import viewmodels.InputWidth._
 @import components.{Caption, PageHeading, Paragraph, SubHeading}
-@import config.Constants.Css
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
-        govukFieldset: GovukFieldset,
         govukInput: GovukInput,
         govukButton: GovukButton,
         caption: Caption,
@@ -53,7 +51,10 @@
         @govukInput(
             InputViewModel(
                 field = form("totalLitresDeliveredInsideUK"),
-                label = LabelViewModel(messages(s"dutySuspendedQuantities.totalLitres.heading.${regime.regimeMessageKey}")).asSubheading,
+                label = LabelViewModel(
+                    visibleText = messages(s"dutySuspendedQuantities.totalLitres.heading.${regime.regimeMessageKey}"),
+                    hiddenText = messages("dutySuspendedQuantities.deliveredInsideUK.hidden")
+                ).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -64,7 +65,10 @@
         @govukInput(
             InputViewModel(
                 field = form("pureAlcoholDeliveredInsideUK"),
-                label = LabelViewModel(messages("dutySuspendedQuantities.pureAlcohol.heading")).asSubheading,
+                label = LabelViewModel(
+                    visibleText = messages("dutySuspendedQuantities.pureAlcohol.heading"),
+                    hiddenText = messages("dutySuspendedQuantities.deliveredInsideUK.hidden")
+                ).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -77,7 +81,10 @@
         @govukInput(
             InputViewModel(
                 field = form("totalLitresDeliveredOutsideUK"),
-                label = LabelViewModel(messages(s"dutySuspendedQuantities.totalLitres.heading.${regime.regimeMessageKey}")).asSubheading,
+                label = LabelViewModel(
+                    visibleText = messages(s"dutySuspendedQuantities.totalLitres.heading.${regime.regimeMessageKey}"),
+                    hiddenText = messages("dutySuspendedQuantities.deliveredOutsideUK.hidden")
+                ).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -88,7 +95,10 @@
         @govukInput(
             InputViewModel(
                 field = form("pureAlcoholDeliveredOutsideUK"),
-                label = LabelViewModel(messages("dutySuspendedQuantities.pureAlcohol.heading")).asSubheading,
+                label = LabelViewModel(
+                    visibleText = messages("dutySuspendedQuantities.pureAlcohol.heading"),
+                    hiddenText = messages("dutySuspendedQuantities.deliveredOutsideUK.hidden")
+                ).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -101,7 +111,10 @@
         @govukInput(
             InputViewModel(
                 field = form("totalLitresReceived"),
-                label = LabelViewModel(messages(s"dutySuspendedQuantities.totalLitres.heading.${regime.regimeMessageKey}")).asSubheading,
+                label = LabelViewModel(
+                    visibleText = messages(s"dutySuspendedQuantities.totalLitres.heading.${regime.regimeMessageKey}"),
+                    hiddenText = messages("dutySuspendedQuantities.received.hidden")
+                ).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -114,7 +127,7 @@
                 field = form("pureAlcoholReceived"),
                 label = LabelViewModel(
                     visibleText = messages("dutySuspendedQuantities.pureAlcohol.heading"),
-                    hiddenText = messages("dutySuspendedQuantities.deliveredInsideUK.hidden")
+                    hiddenText = messages("dutySuspendedQuantities.received.hidden")
                 ).asSubheading,
             )
             .asNumeric()

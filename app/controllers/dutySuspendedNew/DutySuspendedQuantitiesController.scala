@@ -21,7 +21,8 @@ import controllers.actions._
 import forms.dutySuspendedNew.DutySuspendedQuantitiesFormProvider
 import models.{AlcoholRegime, Mode}
 import navigation.DutySuspendedNavigator
-import pages.dutySuspendedNew.DutySuspendedQuantitiesPage
+import pages.dutySuspendedNew.{DutySuspendedAlcoholTypePage, DutySuspendedQuantitiesPage}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -43,17 +44,22 @@ class DutySuspendedQuantitiesController @Inject() (
   view: DutySuspendedQuantitiesView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
-      val form         = formProvider(regime)
-      val preparedForm = request.userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+      if (request.userAnswers.get(DutySuspendedAlcoholTypePage).exists(_.contains(regime))) {
+        val form         = formProvider(regime)
+        val preparedForm = request.userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
+        Ok(view(preparedForm, regime, mode))
+      } else {
+        logger.warn(s"User has not selected regime $regime for duty suspense")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
-
-      Ok(view(preparedForm, regime, mode))
     }
 
   def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
@@ -63,11 +69,12 @@ class DutySuspendedQuantitiesController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, mode))),
-          value => Future.successful(Ok("submitted"))
-//            for {
-//              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedBeerPage, value))
-//              _              <- userAnswersConnector.set(updatedAnswers)
-//            } yield Redirect(navigator.nextPage(DutySuspendedBeerPage, mode, updatedAnswers))
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.setByKey(DutySuspendedQuantitiesPage, regime, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+              // TODO: Call calculator
+            } yield Redirect(navigator.nextPageWithRegime(DutySuspendedQuantitiesPage, mode, updatedAnswers, regime))
         )
     }
 }

@@ -46,9 +46,20 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       _ => routes.TaskListController.onPageLoad
   }
 
-  private val normalRoutesWithRegime: Page => UserAnswers => AlcoholRegime => Call =
-    // TODO: Implement for new pages that depend on the regime
-    _ => _ => _ => routes.JourneyRecoveryController.onPageLoad()
+  private val normalRoutesWithRegime: Page => UserAnswers => AlcoholRegime => Call = {
+    case DutySuspendedQuantitiesPage =>
+      userAnswers =>
+        regime =>
+          userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
+            case Some(_) =>
+              // TODO: Go to display calculation page for current regime
+              logger.info("Go to display calculation page")
+              routes.JourneyRecoveryController.onPageLoad()
+            case None    => routes.JourneyRecoveryController.onPageLoad()
+          }
+      // TODO: Implement for new pages that depend on the regime
+    case _                           => _ => _ => routes.TaskListController.onPageLoad
+  }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
     case DeclareDutySuspenseQuestionPage =>
@@ -66,9 +77,19 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       _ => _ => routes.TaskListController.onPageLoad
   }
 
-  private val checkRouteMapWithRegime: Page => UserAnswers => AlcoholRegime => Call =
-    // TODO: Implement for new pages that depend on the regime (always go to Check Your Answers)
-    _ => _ => _ => routes.JourneyRecoveryController.onPageLoad()
+  private val checkRouteMapWithRegime: Page => UserAnswers => AlcoholRegime => Call = {
+    case DutySuspendedQuantitiesPage =>
+      userAnswers =>
+        regime =>
+          userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
+            case Some(_) =>
+              // TODO: Go to check your answers page
+              routes.JourneyRecoveryController.onPageLoad()
+            case None    => routes.JourneyRecoveryController.onPageLoad()
+          }
+      // TODO: Implement for new pages that depend on the regime (always go to Check Your Answers)
+    case _                           => _ => _ => routes.TaskListController.onPageLoad
+  }
 
   def nextPageWithRegime(
     page: Page,
