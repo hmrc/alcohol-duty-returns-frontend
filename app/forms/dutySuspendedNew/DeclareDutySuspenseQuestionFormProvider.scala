@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package navigation
+package forms.dutySuspendedNew
 
-import models.{Mode, UserAnswers}
-import pages._
-import play.api.mvc.Call
+import forms.mappings.Mappings
+import play.api.data.Form
 
-class FakeDeclareDutySuspendedDeliveriesNavigator(desiredRoute: Call) extends DeclareDutySuspendedDeliveriesNavigator {
+import javax.inject.Inject
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+class DeclareDutySuspenseQuestionFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "declare-duty-suspended-deliveries-input" -> boolean("declareDutySuspenseQuestion.error.required")
+    )
 }

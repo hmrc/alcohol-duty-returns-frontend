@@ -20,8 +20,9 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareSpiritsTotalFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.QuarterlySpiritsQuestionsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.spiritsQuestions.DeclareSpiritsTotalPage
 import play.api.Application
 import play.api.inject.bind
@@ -76,15 +77,18 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector               = mock[UserAnswersConnector]
+      val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(DeclareSpiritsTotalPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -98,6 +102,10 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(DeclareSpiritsTotalPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 

@@ -16,21 +16,19 @@
 
 package controllers.adjustment
 
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
-
-import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.AdjustmentNavigator
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
+import pages.adjustment.DeclareAdjustmentQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.DeclareAdjustmentQuestionView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class DeclareAdjustmentQuestionController @Inject() (
   override val messagesApi: MessagesApi,
@@ -65,28 +63,9 @@ class DeclareAdjustmentQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAdjustmentQuestionPage, value))
-              filterUserAnswer <- Future.fromTry(filterAdjustmentQuestionAnswer(updatedAnswers, value))
-              _                <- userAnswersConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareAdjustmentQuestionPage, mode, filterUserAnswer, Some(true)))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareAdjustmentQuestionPage, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DeclareAdjustmentQuestionPage, mode, updatedAnswers, Some(true)))
         )
   }
-
-  private def filterAdjustmentQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) {
-      Try(userAnswer)
-    } else {
-      userAnswer.remove(
-        List(
-          AdjustmentEntryListPage,
-          AdjustmentListPage,
-          CurrentAdjustmentEntryPage,
-          AdjustmentTotalPage,
-          UnderDeclarationTotalPage,
-          OverDeclarationTotalPage,
-          UnderDeclarationReasonPage,
-          OverDeclarationReasonPage
-        )
-      )
-    }
 }

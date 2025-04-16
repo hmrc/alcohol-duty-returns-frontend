@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package navigation
+package pages.dutySuspendedNew
 
-import play.api.mvc.Call
-import pages._
-import models.{Mode, UserAnswers}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import models.AlcoholRegime
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Option[Boolean]) extends AdjustmentNavigator {
+case object DutySuspendedAlcoholTypePage extends QuestionPage[Set[AlcoholRegime]] {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Option[Boolean]): Call = {
-    hasValueChanged mustBe hasChanged
-    desiredRoute
-  }
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "dutySuspendedAlcoholType"
 }

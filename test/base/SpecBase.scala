@@ -57,11 +57,14 @@ trait SpecBase
 
   val fakeIdentifierUserDetails = FakeIdentifierUserDetails(appaId, groupId, internalId)
 
+  def configOverrides: Map[String, Any] = Map()
+
   protected def applicationBuilder(
     userAnswers: Option[UserAnswers] = None,
     signedIn: Boolean = true
   ): GuiceApplicationBuilder                                 =
     new GuiceApplicationBuilder()
+      .configure(configOverrides)
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[FakeIsSignedIn].toInstance(FakeIsSignedIn(signedIn)),

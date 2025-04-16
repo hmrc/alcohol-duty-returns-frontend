@@ -17,14 +17,16 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.declareDuty.MultipleSPRListFormProvider
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import models.NormalMode
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
-import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.MultipleSPRListHelper
 import views.html.declareDuty.MultipleSPRListView
@@ -103,13 +105,18 @@ class MultipleSPRListControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator
+          .nextPageWithRegime(eqTo(DoYouWantToAddMultipleSPRToListPage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -123,6 +130,72 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(DoYouWantToAddMultipleSPRToListPage),
+            eqTo(NormalMode),
+            any(),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
+      }
+    }
+
+    "must clear TellUsAboutMultipleSPRRatePage in user answers when valid data is submitted" in {
+
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator
+          .nextPageWithRegime(eqTo(DoYouWantToAddMultipleSPRToListPage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
+
+      val userAnswersWithMultipleSPRPageData = userAnswers
+        .setByKey(TellUsAboutMultipleSPRRatePage, regime, volumeAndRateByTaxTypes.head)
+        .success
+        .value
+
+      val expectedSetUserAnswers = userAnswersWithMultipleSPRPageData
+        .setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true)
+        .success
+        .value
+        .removeByKey(TellUsAboutMultipleSPRRatePage, regime)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersWithMultipleSPRPageData))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, multipleSPRListRoute)
+            .withFormUrlEncodedBody(("multipleSPRList-yesNoValue", "true"))
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedSetUserAnswers))(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(DoYouWantToAddMultipleSPRToListPage),
+            eqTo(NormalMode),
+            eqTo(expectedSetUserAnswers),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
       }
     }
 

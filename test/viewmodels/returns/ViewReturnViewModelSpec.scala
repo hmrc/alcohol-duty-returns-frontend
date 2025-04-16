@@ -43,7 +43,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
         alcoholDeclaredViewModel.rows.head.cells.head.content      mustBe Text("311")
         alcoholDeclaredViewModel.rows(3).cells.head.content        mustBe Text(
-          "Non-draught beer between 1% and 2% ABV (tax type code 123)"
+          "Non-draught beer between 1% and 3% ABV (tax type code 123)"
         )
       }
 
@@ -76,7 +76,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("321")
 
         adjustmentsViewModel.rows(4).cells(1).content mustBe Text(
-          "Non-draught beer between 1% and 2% ABV (tax type code 125)"
+          "Non-draught beer between 1% and 3% ABV (tax type code 125)"
         )
         adjustmentsViewModel.rows(4).cells(3).content mustBe Text("£21.01")
       }

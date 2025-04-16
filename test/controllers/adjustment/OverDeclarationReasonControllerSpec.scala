@@ -17,15 +17,16 @@
 package controllers.adjustment
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.adjustment.OverDeclarationReasonFormProvider
 import models.NormalMode
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.adjustment.OverDeclarationReasonPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.OverDeclarationReasonView
 
@@ -83,13 +84,17 @@ class OverDeclarationReasonControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(OverDeclarationReasonPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -103,6 +108,10 @@ class OverDeclarationReasonControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(OverDeclarationReasonPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 

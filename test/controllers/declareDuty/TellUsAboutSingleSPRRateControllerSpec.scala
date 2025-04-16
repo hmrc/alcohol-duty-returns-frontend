@@ -17,16 +17,17 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.declareDuty.TellUsAboutSingleSPRRateFormProvider
+import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, NormalMode, RateBand}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import models.declareDuty.VolumeAndRateByTaxType
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.CategoriesByRateTypeHelper
 import views.html.declareDuty.TellUsAboutSingleSPRRateView
@@ -107,15 +108,18 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator.nextPageWithRegime(eqTo(TellUsAboutSingleSPRRatePage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -135,21 +139,37 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(TellUsAboutSingleSPRRatePage),
+            eqTo(NormalMode),
+            any(),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val formData = Seq(
+        "volumesWithRate[0].rateBandDescription" -> rateBandDescription,
+        "volumesWithRate[0].taxType"             -> "311",
+        "volumesWithRate[0].totalLitres"         -> "invalid value"
+      )
 
       running(application) {
         val request =
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+            .withFormUrlEncodedBody(formData: _*)
 
         val form = formProvider(regime)(getMessages(application))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(formData.toMap)
 
         val view = application.injector.instanceOf[TellUsAboutSingleSPRRateView]
 
@@ -181,7 +201,6 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -189,16 +208,79 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
             .withFormUrlEncodedBody(
               "volumesWithRate[0].rateBandDescription" -> rateBandDescription,
+              "volumesWithRate[0].taxType"             -> "371",
               "volumesWithRate[0].totalLitres"         -> "1000",
-              "volumesWithRate[0].pureAlcohol"         -> "500",
-              "volumesWithRate[0].dutyRate"            -> "10",
-              "volumesWithRate[0].taxType"             -> "371"
+              "volumesWithRate[0].pureAlcohol"         -> "500.0000",
+              "volumesWithRate[0].dutyRate"            -> "10"
             )
 
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must throw an exception for a POST if missing rateBandDescription" in {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+
+        val request =
+          FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
+            .withFormUrlEncodedBody(
+              "volumesWithRate[0].taxType"     -> "371",
+              "volumesWithRate[0].totalLitres" -> "1000",
+              "volumesWithRate[0].pureAlcohol" -> "500.0000",
+              "volumesWithRate[0].dutyRate"    -> "10"
+            )
+
+        route(application, request).value
+        the[Exception] thrownBy status(
+          route(application, request).value
+        ) must have message "Expected volumesWithRate[0].rateBandDescription to be provided in the view"
+      }
+    }
+
+    "must throw an exception for a POST if missing taxType" in {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
+            .withFormUrlEncodedBody(
+              "volumesWithRate[0].rateBandDescription" -> rateBandDescription,
+              "volumesWithRate[0].totalLitres"         -> "1000",
+              "volumesWithRate[0].pureAlcohol"         -> "500.0000",
+              "volumesWithRate[0].dutyRate"            -> "10"
+            )
+
+        route(application, request).value
+        the[Exception] thrownBy status(
+          route(application, request).value
+        ) must have message "Expected volumesWithRate[0].taxType to be provided in the view"
       }
     }
   }

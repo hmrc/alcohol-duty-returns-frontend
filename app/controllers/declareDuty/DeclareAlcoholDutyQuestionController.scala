@@ -22,7 +22,7 @@ import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.declareDuty.{AlcoholTypePage, DeclareAlcoholDutyQuestionPage, sectionPages}
+import pages.declareDuty.{AlcoholTypePage, DeclareAlcoholDutyQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -69,11 +69,10 @@ class DeclareAlcoholDutyQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, regimes.contains(Cider), mode))),
           value =>
             for {
-              updatedAnswers                <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
-              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
-              filterUserAnswer              <- Future.fromTry(filterAlcoholDutyQuestionAnswer(singleRegimeUpdatedUserAnswer, value))
-              _                             <- userAnswersConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer, Some(false)))
+              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(request.userAnswers))
+              updatedAnswers                <- Future.fromTry(singleRegimeUpdatedUserAnswer.set(DeclareAlcoholDutyQuestionPage, value))
+              _                             <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, updatedAnswers, Some(false)))
         )
   }
 
@@ -82,12 +81,5 @@ class DeclareAlcoholDutyQuestionController @Inject() (
       userAnswer.set(AlcoholTypePage, userAnswer.regimes.regimes)
     } else {
       Try(userAnswer)
-    }
-
-  private def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) {
-      Try(userAnswer)
-    } else {
-      userAnswer.remove(sectionPages.toList)
     }
 }

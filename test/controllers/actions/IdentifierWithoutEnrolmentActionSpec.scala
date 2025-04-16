@@ -18,7 +18,7 @@ package controllers.actions
 
 import base.SpecBase
 import config.FrontendAppConfig
-import controllers.routes
+import controllers.auth.routes
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.mvc.{BodyParsers, Request, Result}
@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.UnauthorizedException
 
 import scala.concurrent.Future
 
-class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
+class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
   val loginUrl         = "loginUrl"
   val loginContinueUrl = "continueUrl"
   val testContent      = "Test"
@@ -117,10 +117,8 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
 
     "redirect to the unauthorised page if not authorised" in {
       List(
-        InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
         UnsupportedAuthProvider(),
-        UnsupportedAffinityGroup(),
         UnsupportedCredentialRole(),
         IncorrectCredentialStrength(),
         new UnauthorizedException("")
@@ -132,6 +130,16 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
         status(result)                 mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad.url
       }
+    }
+
+    "redirect to the not an organisation custom no access page" in {
+      when(mockAuthConnector.authorise[Unit](any(), any())(any(), any()))
+        .thenReturn(Future.failed(UnsupportedAffinityGroup()))
+
+      val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
+
+      status(result)                 mustBe SEE_OTHER
+      redirectLocation(result).value mustBe routes.NotOrganisationController.onPageLoad.url
     }
 
     "redirect to the login page if no longer authorised or never logged in" in {

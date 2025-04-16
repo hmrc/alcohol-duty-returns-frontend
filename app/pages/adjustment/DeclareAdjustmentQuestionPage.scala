@@ -16,12 +16,33 @@
 
 package pages.adjustment
 
+import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object DeclareAdjustmentQuestionPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "declareAdjustmentQuestion"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(
+        List(
+          AdjustmentEntryListPage,
+          AdjustmentListPage,
+          CurrentAdjustmentEntryPage,
+          AdjustmentTotalPage,
+          UnderDeclarationTotalPage,
+          OverDeclarationTotalPage,
+          UnderDeclarationReasonPage,
+          OverDeclarationReasonPage
+        )
+      )
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }
