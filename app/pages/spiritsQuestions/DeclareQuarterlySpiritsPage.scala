@@ -16,12 +16,29 @@
 
 package pages.spiritsQuestions
 
+import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object DeclareQuarterlySpiritsPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "declareQuarterlySpirits"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(
+        List(
+          DeclareSpiritsTotalPage,
+          SpiritTypePage,
+          OtherSpiritsProducedPage,
+          WhiskyPage
+        )
+      )
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

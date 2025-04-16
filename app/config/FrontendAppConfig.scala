@@ -65,15 +65,17 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
-  val loginUrl: String                  = configuration.get[String]("urls.login")
-  val loginContinueUrl: String          = configuration.get[String]("urls.loginContinue")
-  val signOutUrl: String                = configuration.get[String]("urls.signOut")
-  val appaIdRegisterUrl: String         = configuration.get[String]("urls.appaIdRegister")
-  val businessTaxAccountUrl: String     = configuration.get[String]("urls.businessTaxAccount")
-  val requestAccessUrl: String          = configuration.get[String]("urls.requestAccess")
-  val exciseEnquiriesUrl: String        = configuration.get[String]("urls.exciseEnquiries")
-  val unauthorisedUrl: String           = configuration.get[String]("urls.unauthorisedLink")
-  val declareSpiritsGuidanceUrl: String = configuration.get[String]("urls.declareSpiritsGuidance")
+  val loginUrl: String                      = configuration.get[String]("urls.login")
+  val loginContinueUrl: String              = configuration.get[String]("urls.loginContinue")
+  val loginContinueUrlRequestAccess: String = configuration.get[String]("urls.loginContinueRequestAccess")
+  val signOutUrl: String                    = configuration.get[String]("urls.signOut")
+  val appaIdRegisterUrl: String             = configuration.get[String]("urls.appaIdRegister")
+  val businessTaxAccountUrl: String         = configuration.get[String]("urls.businessTaxAccount")
+  val requestAccessUrl: String              = configuration.get[String]("urls.requestAccess")
+  val exciseEnquiriesUrl: String            = configuration.get[String]("urls.exciseEnquiries")
+  val unauthorisedUrl: String               = configuration.get[String]("urls.unauthorisedLink")
+  val declareSpiritsGuidanceUrl: String     = configuration.get[String]("urls.declareSpiritsGuidance")
+  val createOrganisationAccountUrl: String  = configuration.get[String]("urls.createOrganisationAccountUrl")
 
   val fromBusinessAccountPath: String = configuration.get[String]("fromBusinessAccountPath")
 

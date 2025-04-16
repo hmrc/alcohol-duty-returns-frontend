@@ -12,10 +12,11 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /return-locked                               controllers.ReturnLockedController.onPageLoad()
 
-GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
-GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
+GET         /account/sign-out-survey                     controllers.auth.SignOutController.signOut()
+GET         /account/sign-out-log-in                     controllers.auth.SignOutController.signOutDuringEnrolment()
 
-GET         /no-access                                   controllers.UnauthorisedController.onPageLoad
+GET         /no-access                                   controllers.auth.UnauthorisedController.onPageLoad
+GET         /enrol-no-access                             controllers.auth.NotOrganisationController.onPageLoad
 
 GET         /business-tax-account-redirect               controllers.BusinessTaxAccountRedirect.onPageLoad()
 
@@ -24,7 +25,7 @@ POST        /enrol/approval-id                           controllers.auth.DoYouH
 GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad(wasReferredFromBTA: Boolean ?= false)
 POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)
 
-GET         /enrol/approval-id/claim                     controllers.auth.AppaIdAuthController.onPageLoad()
+GET         /enrol/approval-id/claim                     controllers.auth.RequestAccessController.onPageLoad()
 
 GET         /check-your-returns                          controllers.returns.ViewPastReturnsController.onPageLoad
 
@@ -171,7 +172,7 @@ GET        /complete-return/adjustments/adjustment/declare/remove-adjustment    
 POST       /complete-return/adjustments/adjustment/declare/remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey
 
-# Beginning of duty suspended deliveries sub-journey
+# Beginning of OLD duty suspended deliveries sub-journey
 
 GET        /complete-return/duty-suspended-deliveries/do-you-need-to-report                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/duty-suspended-deliveries/do-you-need-to-report                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
@@ -207,7 +208,14 @@ GET        /complete-return/duty-suspended-deliveries/OtherFermentedProducts/cha
 POST       /complete-return/duty-suspended-deliveries/OtherFermentedProducts/change                  controllers.dutySuspended.DutySuspendedOtherFermentedController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/duty-suspended-deliveries/check-your-answers                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
-# End of of duty suspended deliveries sub-journey
+# End of OLD duty suspended deliveries sub-journey
+
+# Beginning of NEW duty suspended deliveries sub-journey
+GET        /complete-return/duty-suspended-deliveries/do-you-need-to-report-duty-suspense                        controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/duty-suspended-deliveries/do-you-need-to-report-duty-suspense                        controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                  controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                  controllers.dutySuspendedNew.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = CheckMode)
+# End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
 
