@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package pages.dutySuspendedNew
+package forms.dutySuspendedNew
 
-import models.UserAnswers
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.behaviours.CheckboxFieldBehaviours
 
-import scala.util.Try
+class DutySuspendedAlcoholTypeFormProviderSpec extends CheckboxFieldBehaviours {
 
-case object DeclareDutySuspenseQuestionPage extends QuestionPage[Boolean] {
+  val form = new DutySuspendedAlcoholTypeFormProvider()()
 
-  override def path: JsPath = JsPath \ toString
+  ".value" - {
 
-  override def toString: String = "declareDutySuspenseQuestion"
+    val fieldName   = "value"
+    val requiredKey = "dutySuspendedAlcoholType.error.required"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(false)) {
-      userAnswers.remove(sectionPages)
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+    behave like mandatoryCheckboxField(
+      form,
+      fieldName,
+      requiredKey
+    )
+  }
 }

@@ -49,8 +49,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -79,6 +78,27 @@ class DutySuspendedNavigatorSpec extends SpecBase {
         "must go from the Declare duty suspense question page to journey recovery page if the answer is missing" in {
           navigator.nextPage(
             DeclareDutySuspenseQuestionPage,
+            NormalMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
+
+        "must go from the Duty suspended alcohol types page to Declare quantity page for the first regime" in {
+          val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
+
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            NormalMode,
+            emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          // TODO: update route when new page is created
+        }
+
+        "must go from the Duty suspended alcohol types page to journey recovery page if the answer is missing" in {
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
             NormalMode,
             emptyUserAnswers,
             Some(false)
@@ -118,8 +138,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(CheckMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -143,6 +162,30 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value,
             Some(false)
           ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the Duty suspended alcohol types page to Declare quantity page for the first regime if regimes were added" in {
+          val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
+
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
+            Some(true)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          // TODO: update route when new page is created
+        }
+
+        "must go from the Duty suspended alcohol types page to the CYA page if no regimes were added" in {
+          val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
+
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          // TODO: update route when new page is created
         }
       }
 
