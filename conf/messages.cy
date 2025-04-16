@@ -61,13 +61,13 @@ unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
 unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
 
-unauthorised.not-org.title = NOT_FOUND
-unauthorised.not-org.heading = NOT_FOUND
-unauthorised.not-org.p1 = NOT_FOUND
-unauthorised.not-org.p2.first = NOT_FOUND
-unauthorised.not-org.p2.second = NOT_FOUND
-unauthorised.not-org.p2.third = NOT_FOUND
-unauthorised.not-org.button-text = NOT_FOUND
+unauthorised.not-org.title = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
+unauthorised.not-org.heading = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
+unauthorised.not-org.p1 = I barhau, mae angen i chi allgofnodi a mewngofnodi eto gyda’r manylion ar gyfer cyfrif eich sefydliad.
+unauthorised.not-org.p2.first =
+unauthorised.not-org.p2.second = Gallwch greu cyfrif sefydliad
+unauthorised.not-org.p2.third = os nad oes gennych un eisoes.
+unauthorised.not-org.button-text = Mewngofnodwch fel sefydliad
 
 doYouHaveAnAppaId.title = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
 doYouHaveAnAppaId.heading = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
@@ -586,7 +586,7 @@ dutyCalculation.table.action = Camau
 
 productList.caption = Toll sy’n ddyledus
 
-# Beginning of duty suspended deliveries sub-journey
+# Beginning of OLD duty suspended deliveries sub-journey
 
 declareDutySuspendedDeliveriesQuestion.title = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
 declareDutySuspendedDeliveriesQuestion.heading = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
@@ -701,7 +701,15 @@ dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces = Mae’n rh
 
 checkYourAnswersDutySuspendedDeliveries.heading = Dosbarthiadau y gohiriwyd tollau arnynt
 
-# End of of duty suspended deliveries sub-journey
+# End of OLD duty suspended deliveries sub-journey
+
+# Beginning of NEW duty suspended deliveries sub-journey
+
+declareDutySuspenseQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspenseQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspenseQuestion.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno
+
+# End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
 
