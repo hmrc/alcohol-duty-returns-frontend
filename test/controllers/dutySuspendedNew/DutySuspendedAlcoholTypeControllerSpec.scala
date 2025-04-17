@@ -18,68 +18,78 @@ package controllers.dutySuspendedNew
 
 import base.SpecBase
 import connectors.UserAnswersConnector
-import forms.dutySuspendedNew.DeclareDutySuspenseQuestionFormProvider
-import models.AlcoholRegime.Beer
-import models.{AlcoholRegimes, NormalMode}
+import forms.dutySuspendedNew.DutySuspendedAlcoholTypeFormProvider
+import models.AlcoholRegime.{Beer, Cider, Wine}
+import models.{AlcoholRegime, NormalMode}
 import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.dutySuspendedNew.DeclareDutySuspenseQuestionPage
+import pages.dutySuspendedNew._
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.dutySuspendedNew.DeclareDutySuspenseQuestionView
+import views.html.dutySuspendedNew.DutySuspendedAlcoholTypeView
 
 import scala.concurrent.Future
 
-class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
+class DutySuspendedAlcoholTypeControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeclareDutySuspenseQuestionFormProvider()
-  val form         = formProvider()
+  lazy val dutySuspendedAlcoholTypeRoute = routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
 
-  lazy val declareDutySuspenseQuestionRoute =
-    routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+  val formProvider = new DutySuspendedAlcoholTypeFormProvider()
+  val form         = formProvider()
 
   override def configOverrides: Map[String, Any] = Map(
     "features.duty-suspended-new-journey" -> true
   )
 
-  "DeclareDutySuspenseQuestion Controller" - {
+  "DutySuspendedAlcoholType Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspenseQuestionRoute)
+        val request = FakeRequest(GET, dutySuspendedAlcoholTypeRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareDutySuspenseQuestionView]
+        val view = application.injector.instanceOf[DutySuspendedAlcoholTypeView]
 
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual view(form, NormalMode, emptyUserAnswers.regimes)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value
+      val alcoholRegimesValues: Set[AlcoholRegime] = Set(Beer, Cider, Wine)
+      val userAnswers                              = emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesValues).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspenseQuestionRoute)
+        val request = FakeRequest(GET, dutySuspendedAlcoholTypeRoute)
 
-        val view = application.injector.instanceOf[DeclareDutySuspenseQuestionView]
+        val view = application.injector.instanceOf[DutySuspendedAlcoholTypeView]
 
         val result = route(application, request).value
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(Set("Beer", "Cider", "Wine")),
+          NormalMode,
+          userAnswers.regimes
+        )(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -90,7 +100,7 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
-        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
+        mockDutySuspendedNavigator.nextPage(eqTo(DutySuspendedAlcoholTypePage), any(), any(), any())
       ) thenReturn onwardRoute
 
       val application =
@@ -103,8 +113,8 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspenseQuestionRoute)
-            .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-input", "true"))
+          FakeRequest(POST, dutySuspendedAlcoholTypeRoute)
+            .withFormUrlEncodedBody(("value[0]", "Beer"), ("value[1]", "Cider"), ("value[2]", "Wine"))
 
         val result = route(application, request).value
 
@@ -113,24 +123,31 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockDutySuspendedNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
+          .nextPage(eqTo(DutySuspendedAlcoholTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
-    "must redirect to the next page when valid data is submitted and user is approved for a single regime" in {
-
-      val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+    "must clear data for removed regimes and check if regimes were added when valid data is submitted" in {
 
       val mockUserAnswersConnector   = mock[UserAnswersConnector]
       val mockDutySuspendedNavigator = mock[DutySuspendedNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
-        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
+        mockDutySuspendedNavigator.nextPage(eqTo(DutySuspendedAlcoholTypePage), any(), any(), any())
       ) thenReturn onwardRoute
 
+      val expectedCachedUserAnswers = emptyUserAnswers.copy(data =
+        Json.obj(
+          DeclareDutySuspenseQuestionPage.toString -> true,
+          DutySuspendedAlcoholTypePage.toString    -> Json.arr("Spirits"),
+          DutySuspendedQuantitiesPage.toString     -> Json.obj(),
+          DutySuspendedFinalVolumesPage.toString   -> Json.obj()
+        )
+      )
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithDutySuspendedData))
           .overrides(
             bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -139,56 +156,21 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspenseQuestionRoute)
-            .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-input", "true"))
+          FakeRequest(POST, dutySuspendedAlcoholTypeRoute)
+            .withFormUrlEncodedBody(("value[0]", "Spirits"))
 
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockDutySuspendedNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspenseQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
-      }
-    }
-
-    "must redirect to the Task list and clear subsequent pages from user answers when declare duty suspense question is answered as No" in {
-      val taskListRoute = controllers.routes.TaskListController.onPageLoad
-
-      val mockUserAnswersConnector   = mock[UserAnswersConnector]
-      val mockDutySuspendedNavigator = mock[DutySuspendedNavigator]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(
-        mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
-      ) thenReturn taskListRoute
-
-      val expectedCachedUserAnswers = emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithDutySuspendedData))
-        .overrides(
-          bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, declareDutySuspenseQuestionRoute).withFormUrlEncodedBody(
-            ("declare-duty-suspended-deliveries-input", "false")
-          )
-        val result  = route(application, request).value
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual taskListRoute.url
-
         verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
         verify(mockDutySuspendedNavigator, times(1))
           .nextPage(
-            eqTo(DeclareDutySuspenseQuestionPage),
+            eqTo(DutySuspendedAlcoholTypePage),
             eqTo(NormalMode),
             eqTo(expectedCachedUserAnswers),
-            eqTo(Some(false))
+            eqTo(Some(true))
           )
       }
     }
@@ -199,17 +181,20 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspenseQuestionRoute)
-            .withFormUrlEncodedBody(("value", ""))
+          FakeRequest(POST, dutySuspendedAlcoholTypeRoute)
+            .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DeclareDutySuspenseQuestionView]
+        val view = application.injector.instanceOf[DutySuspendedAlcoholTypeView]
 
         val result = route(application, request).value
 
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, emptyUserAnswers.regimes)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -218,7 +203,7 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspenseQuestionRoute)
+        val request = FakeRequest(GET, dutySuspendedAlcoholTypeRoute)
 
         val result = route(application, request).value
 
@@ -233,8 +218,8 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspenseQuestionRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, dutySuspendedAlcoholTypeRoute)
+            .withFormUrlEncodedBody(("value[0]", "Beer"), ("value[1]", "Cider"), ("value[2]", "Wine"))
 
         val result = route(application, request).value
 

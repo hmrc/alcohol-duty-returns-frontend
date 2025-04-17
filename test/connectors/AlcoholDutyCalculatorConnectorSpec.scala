@@ -21,6 +21,7 @@ import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import models.{ABVRange, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -211,7 +212,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     }
 
     "calculateTotalAdjustment" - {
-      "successfully adjustment duty" in new SetUp {
+      "successfully retrieve adjustment duty" in new SetUp {
         val mockUrl = "http://alcohol-duty-calculator/calculate-total-adjustment"
         when(mockConfig.adrCalculatorCalculateTotalAdjustmentUrl()).thenReturn(mockUrl)
 
@@ -229,6 +230,34 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
         whenReady(connector.calculateTotalAdjustment(Seq(BigDecimal(8), BigDecimal(1), BigDecimal(1)))) { result =>
           result mustBe AdjustmentDuty(BigDecimal(10))
+          verify(connector.httpClient, atLeastOnce)
+            .post(eqTo(url"$mockUrl"))(any())
+        }
+      }
+    }
+
+    "calculateDutySuspendedVolumes" - {
+      val dutySuspendedQuantities   = DutySuspendedQuantities(100, 10, 0, 0, 0, 0)
+      val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 10)
+
+      "successfully retrieve duty suspended final volumes" in new SetUp {
+        val mockUrl = "http://alcohol-duty-calculator/calculate-duty-suspended-volumes"
+        when(mockConfig.adrCalculatorCalculateDutySuspendedVolumesUrl()).thenReturn(mockUrl)
+
+        when(requestBuilder.execute[DutySuspendedFinalVolumes](any(), any()))
+          .thenReturn(Future.successful(dutySuspendedFinalVolumes))
+
+        when(
+          requestBuilder.withBody(
+            eqTo(Json.toJson(dutySuspendedQuantities))
+          )(any(), any(), any())
+        )
+          .thenReturn(requestBuilder)
+
+        when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+        whenReady(connector.calculateDutySuspendedVolumes(dutySuspendedQuantities)) { result =>
+          result mustBe dutySuspendedFinalVolumes
           verify(connector.httpClient, atLeastOnce)
             .post(eqTo(url"$mockUrl"))(any())
         }

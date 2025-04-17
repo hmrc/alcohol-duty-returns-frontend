@@ -55,6 +55,9 @@ object Constants {
   val spoiltDutyMinimumValue: BigDecimal          = BigDecimal(0.01)
   val spoiltDutyMaximumValue: BigDecimal          = BigDecimal(99999999999.99)
 
+  val dutySuspendedVolumeNewMinimumValue: BigDecimal = BigDecimal(0.00)
+  val dutySuspendedLpaNewMinimumValue: BigDecimal    = BigDecimal(0.0000)
+
   val overUnderDeclarationThreshold: BigDecimal = BigDecimal(1000) // When a reason is required
   val overUnderDeclarationReasonLength: Int     = 250
 

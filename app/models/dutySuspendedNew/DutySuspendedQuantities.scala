@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package pages.dutySuspendedNew
+package models.dutySuspendedNew
 
-import models.UserAnswers
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{Json, OFormat}
 
-import scala.util.Try
+case class DutySuspendedQuantities(
+  totalLitresDeliveredInsideUK: BigDecimal,
+  pureAlcoholDeliveredInsideUK: BigDecimal,
+  totalLitresDeliveredOutsideUK: BigDecimal,
+  pureAlcoholDeliveredOutsideUK: BigDecimal,
+  totalLitresReceived: BigDecimal,
+  pureAlcoholReceived: BigDecimal
+)
 
-case object DeclareDutySuspenseQuestionPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "declareDutySuspenseQuestion"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(false)) {
-      userAnswers.remove(sectionPages)
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+object DutySuspendedQuantities {
+  implicit val format: OFormat[DutySuspendedQuantities] = Json.format[DutySuspendedQuantities]
 }

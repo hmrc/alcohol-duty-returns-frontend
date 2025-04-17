@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package pages.dutySuspendedNew
+package forms.dutySuspendedNew
 
-import models.UserAnswers
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms.set
 
-import scala.util.Try
+import javax.inject.Inject
 
-case object DeclareDutySuspenseQuestionPage extends QuestionPage[Boolean] {
+class DutySuspendedAlcoholTypeFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "declareDutySuspenseQuestion"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(false)) {
-      userAnswers.remove(sectionPages)
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+  def apply(): Form[Set[String]] =
+    Form(
+      "value" -> set(text("dutySuspendedAlcoholType.error.required")).verifying(
+        nonEmptySet("dutySuspendedAlcoholType.error.required")
+      )
+    )
 }

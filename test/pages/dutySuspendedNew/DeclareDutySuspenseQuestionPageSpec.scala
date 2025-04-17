@@ -16,8 +16,6 @@
 
 package pages.dutySuspendedNew
 
-import models.AlcoholRegime
-import models.AlcoholRegime.{Beer, Cider, Wine}
 import pages.behaviours.PageBehaviours
 
 class DeclareDutySuspenseQuestionPageSpec extends PageBehaviours {
@@ -30,21 +28,19 @@ class DeclareDutySuspenseQuestionPageSpec extends PageBehaviours {
     beRemovable[Boolean](DeclareDutySuspenseQuestionPage)
 
     "cleanup subsequent answers from the journey when false is selected" in {
-      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Beer, Cider, Wine)
+      val updatedAnswers = userAnswersWithDutySuspendedData.set(DeclareDutySuspenseQuestionPage, false).success.value
 
-      val userAnswers    = emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSet).success.value
-      val updatedAnswers = userAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value
-
-      updatedAnswers.get(DutySuspendedAlcoholTypePage) must be(empty)
+      updatedAnswers.get(DutySuspendedAlcoholTypePage)  must be(empty)
+      updatedAnswers.get(DutySuspendedQuantitiesPage)   must be(empty)
+      updatedAnswers.get(DutySuspendedFinalVolumesPage) must be(empty)
     }
 
     "not cleanup subsequent answers from the journey when true is selected" in {
-      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Beer, Cider, Wine)
+      val updatedAnswers = userAnswersWithDutySuspendedData.set(DeclareDutySuspenseQuestionPage, true).success.value
 
-      val userAnswers    = emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSet).success.value
-      val updatedAnswers = userAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value
-
-      updatedAnswers.get(DutySuspendedAlcoholTypePage) mustNot be(empty)
+      updatedAnswers.get(DutySuspendedAlcoholTypePage)  mustNot be(empty)
+      updatedAnswers.get(DutySuspendedQuantitiesPage)   mustNot be(empty)
+      updatedAnswers.get(DutySuspendedFinalVolumesPage) mustNot be(empty)
     }
   }
 }
