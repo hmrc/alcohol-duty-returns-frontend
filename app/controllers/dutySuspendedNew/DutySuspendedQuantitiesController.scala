@@ -16,12 +16,12 @@
 
 package controllers.dutySuspendedNew
 
-import connectors.UserAnswersConnector
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions._
 import forms.dutySuspendedNew.DutySuspendedQuantitiesFormProvider
 import models.{AlcoholRegime, Mode}
 import navigation.DutySuspendedNavigator
-import pages.dutySuspendedNew.{DutySuspendedAlcoholTypePage, DutySuspendedQuantitiesPage}
+import pages.dutySuspendedNew.{DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage, DutySuspendedQuantitiesPage}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,6 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DutySuspendedQuantitiesController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
+  calculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: DutySuspendedNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -70,13 +71,26 @@ class DutySuspendedQuantitiesController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, mode))),
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.setByKey(DutySuspendedQuantitiesPage, regime, value))
-                _              <- userAnswersConnector.set(updatedAnswers)
-                // TODO: Call calculator
-              } yield Redirect(navigator.nextPageWithRegime(DutySuspendedQuantitiesPage, mode, updatedAnswers, regime))
+            value => {
+              val result =
+                for {
+                  updatedAnswersWithQuantities   <-
+                    Future.fromTry(request.userAnswers.setByKey(DutySuspendedQuantitiesPage, regime, value))
+                  calculatedVolumes              <- calculatorConnector.calculateDutySuspendedVolumes(value)
+                  updatedAnswersWithFinalVolumes <-
+                    Future.fromTry(
+                      updatedAnswersWithQuantities.setByKey(DutySuspendedFinalVolumesPage, regime, calculatedVolumes)
+                    )
+                  _                              <- userAnswersConnector.set(updatedAnswersWithFinalVolumes)
+                } yield Redirect(
+                  navigator
+                    .nextPageWithRegime(DutySuspendedQuantitiesPage, mode, updatedAnswersWithFinalVolumes, regime)
+                )
+              result.recover { case e =>
+                logger.warn(s"Error: ${e.getMessage}")
+                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+              }
+            }
           )
       } else {
         logger.warn(s"User has not selected regime $regime for duty suspense")

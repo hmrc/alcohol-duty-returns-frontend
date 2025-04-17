@@ -17,14 +17,14 @@
 package controllers.dutySuspendedNew
 
 import base.SpecBase
-import connectors.UserAnswersConnector
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import forms.dutySuspendedNew.DutySuspendedQuantitiesFormProvider
 import models.NormalMode
-import models.dutySuspendedNew.DutySuspendedQuantities
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedQuantitiesPage}
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage, DutySuspendedQuantitiesPage}
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
@@ -36,6 +36,10 @@ import scala.concurrent.Future
 
 class DutySuspendedQuantitiesControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
+
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> true
+  )
 
   val regime = regimeGen.sample.value
 
@@ -58,6 +62,11 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
     validPureAlcoholDeliveredOutsideUK,
     validTotalLitresReceived,
     validPureAlcoholReceived
+  )
+
+  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(
+    totalLitres = validTotalLitresDeliveredInsideUK + validTotalLitresDeliveredOutsideUK - validTotalLitresReceived,
+    pureAlcohol = validPureAlcoholDeliveredInsideUK + validPureAlcoholDeliveredOutsideUK - validPureAlcoholReceived
   )
 
   val userAnswersAllRegimesSelected = emptyUserAnswers.copy(data =
@@ -107,10 +116,14 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
     }
 
     // TODO: add mock calculator
-    "must save user answers and redirect to the next page when valid data is submitted" in {
+    "must save user answers, calculate volumes and redirect to the next page when valid data is submitted" in {
+      val mockCalculatorConnector    = mock[AlcoholDutyCalculatorConnector]
       val mockUserAnswersConnector   = mock[UserAnswersConnector]
       val mockDutySuspendedNavigator = mock[DutySuspendedNavigator]
 
+      when(
+        mockCalculatorConnector.calculateDutySuspendedVolumes(eqTo(dutySuspendedQuantities))(any())
+      ) thenReturn Future.successful(dutySuspendedFinalVolumes)
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockDutySuspendedNavigator.nextPageWithRegime(eqTo(DutySuspendedQuantitiesPage), any(), any(), any())
@@ -120,12 +133,16 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
         .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
         .success
         .value
+        .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAllRegimesSelected))
           .overrides(
             bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector)
           )
           .build()
 
@@ -146,6 +163,7 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
+        verify(mockCalculatorConnector, times(1)).calculateDutySuspendedVolumes(eqTo(dutySuspendedQuantities))(any())
         verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
         verify(mockDutySuspendedNavigator, times(1))
           .nextPageWithRegime(
@@ -176,6 +194,40 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
           request,
           getMessages(application)
         ).toString
+      }
+    }
+
+    "must redirect to journey recovery when the calculator call fails" in {
+      val mockCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(
+        mockCalculatorConnector.calculateDutySuspendedVolumes(eqTo(dutySuspendedQuantities))(any())
+      ) thenReturn Future.failed(new Exception("Calculation failed"))
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAllRegimesSelected))
+          .overrides(
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, dutySuspendedQuantitiesRoute)
+            .withFormUrlEncodedBody(
+              ("totalLitresDeliveredInsideUK", validTotalLitresDeliveredInsideUK.toString),
+              ("pureAlcoholDeliveredInsideUK", validPureAlcoholDeliveredInsideUK.toString),
+              ("totalLitresDeliveredOutsideUK", validTotalLitresDeliveredOutsideUK.toString),
+              ("pureAlcoholDeliveredOutsideUK", validPureAlcoholDeliveredOutsideUK.toString),
+              ("totalLitresReceived", validTotalLitresReceived.toString),
+              ("pureAlcoholReceived", validPureAlcoholReceived.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockCalculatorConnector, times(1)).calculateDutySuspendedVolumes(eqTo(dutySuspendedQuantities))(any())
       }
     }
 
