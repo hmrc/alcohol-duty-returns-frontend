@@ -276,7 +276,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
 
     "calculateDutySuspendedVolumes" - {
       val dutySuspendedQuantities   = DutySuspendedQuantities(100, 10, 0, 0, 0, 0)
-      val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 10)
+      val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 100, 10, 10)
 
       "successfully retrieve duty suspended final volumes" in new SetUp {
         val requestJson  = Json.toJson(dutySuspendedQuantities).toString()

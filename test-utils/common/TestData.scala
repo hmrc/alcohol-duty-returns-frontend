@@ -602,12 +602,16 @@ trait TestData extends ModelGenerators {
       ),
       DutySuspendedFinalVolumesPage.toString   -> Json.obj(
         "Beer"  -> Json.obj(
-          "totalLitres" -> 100,
-          "pureAlcohol" -> 10
+          "totalLitresDelivered" -> 100,
+          "totalLitres"          -> 100,
+          "pureAlcoholDelivered" -> 10,
+          "pureAlcohol"          -> 10
         ),
         "Cider" -> Json.obj(
-          "totalLitres" -> 100,
-          "pureAlcohol" -> 10
+          "totalLitresDelivered" -> 100,
+          "totalLitres"          -> 100,
+          "pureAlcoholDelivered" -> 10,
+          "pureAlcohol"          -> 10
         )
       )
     )

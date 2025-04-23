@@ -847,6 +847,39 @@ dutySuspended.received.error.maximumValue.pureAlcohol = Litres of pure alcohol r
 dutySuspended.received.error.minimumValue.pureAlcohol = Litres of pure alcohol received under duty suspense must be greater than or equal to 0 litres
 dutySuspended.received.error.decimalPlaces.pureAlcohol = Litres of pure alcohol received under duty suspense must be a number up to 4 decimal places
 
+dutySuspendedCalculation.title = We’ve calculated your duty suspended alcohol
+dutySuspendedCalculation.heading = We’ve calculated your duty suspended alcohol
+dutySuspendedCalculation.p.regime.beer = We’ve calculated your total net volume of beer and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.cider = We’ve calculated your total net volume of cider and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.wine = We’ve calculated your total net volume of wine and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.spirits = We’ve calculated your total net volume of spirits and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.otherfermentedproduct = We’ve calculated your total net volume of other fermented products and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.howCalculated = Here’s how we calculated this:
+
+dutySuspendedCalculation.totalLitres.total.regime.beer = Your total net volume of beer is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.beer = Added the total litres of beer you delivered inside the UK ({0} litres) to the total litres of beer you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.beer = Subtracted the beer you received ({0} litres) from the sum of the beer you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.cider = Your total net volume of beer is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.cider = Added the total litres of cider you delivered inside the UK ({0} litres) to the total litres of cider you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.cider = Subtracted the cider you received ({0} litres) from the sum of the cider you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.wine = Your total net volume of wine is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.wine = Added the total litres of wine you delivered inside the UK ({0} litres) to the total litres of wine you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.wine = Subtracted the wine you received ({0} litres) from the sum of the wine you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.spirits = Your total net volume of spirits is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.spirits = Added the total litres of spirits you delivered inside the UK ({0} litres) to the total litres of spirits you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.spirits = Subtracted the spirits you received ({0} litres) from the sum of the spirits you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.otherfermentedproduct = Your total net volume of other fermented products is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.otherfermentedproduct = Added the total litres of other fermented products you delivered inside the UK ({0} litres) to the total litres of other fermented products you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.otherfermentedproduct = Subtracted the other fermented products you received ({0} litres) from the sum of the other fermented products you delivered ({1} litres).
+
+dutySuspendedCalculation.pureAlcohol.total = Your total net volume of pure alcohol is {0} litres
+dutySuspendedCalculation.pureAlcohol.add = We added the litres of pure alcohol you delivered inside the UK ({0} litres) to the litres of pure alcohol delivered outside the UK ({1} litres).
+dutySuspendedCalculation.pureAlcohol.subtract = We subtracted the litres of pure alcohol you received ({0} litres) from the sum of the pure alcohol you delivered ({1} litres).
+
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey

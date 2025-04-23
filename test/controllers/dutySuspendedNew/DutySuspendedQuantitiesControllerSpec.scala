@@ -65,7 +65,9 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
   )
 
   val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(
+    totalLitresDelivered = validTotalLitresDeliveredInsideUK + validTotalLitresDeliveredOutsideUK,
     totalLitres = validTotalLitresDeliveredInsideUK + validTotalLitresDeliveredOutsideUK - validTotalLitresReceived,
+    pureAlcoholDelivered = validPureAlcoholDeliveredInsideUK + validPureAlcoholDeliveredOutsideUK,
     pureAlcohol = validPureAlcoholDeliveredInsideUK + validPureAlcoholDeliveredOutsideUK - validPureAlcoholReceived
   )
 

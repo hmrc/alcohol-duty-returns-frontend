@@ -847,6 +847,39 @@ dutySuspended.received.error.maximumValue.pureAlcohol = Litrau o alcohol pur a d
 dutySuspended.received.error.minimumValue.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
 dutySuspended.received.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
 
+dutySuspendedCalculation.title = Rydym wedi cyfrifo’ch alcohol y gohiriwyd tollau arno
+dutySuspendedCalculation.heading = Rydym wedi cyfrifo’ch alcohol y gohiriwyd tollau arno
+dutySuspendedCalculation.p.regime.beer = Rydym wedi cyfrifo cyfanswm eich cyfaint net o gwrw ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi derbyn mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
+dutySuspendedCalculation.p.regime.cider = Rydym wedi cyfrifo cyfanswm eich cyfaint net o seidr ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi derbyn mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
+dutySuspendedCalculation.p.regime.wine = Rydym wedi cyfrifo cyfanswm eich cyfaint net o win ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi derbyn mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
+dutySuspendedCalculation.p.regime.spirits = Rydym wedi cyfrifo cyfanswm eich cyfaint net o wirodydd ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi derbyn mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
+dutySuspendedCalculation.p.regime.otherfermentedproduct = Rydym wedi cyfrifo cyfanswm eich cyfaint net o gynhyrchion eplesedig eraill ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi derbyn mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
+dutySuspendedCalculation.howCalculated = Dyma sut gwnaethom gyfrifo hyn:
+
+dutySuspendedCalculation.totalLitres.total.regime.beer = Cyfanswm eich cyfaint net o gwrw yw {0} o litrau
+dutySuspendedCalculation.totalLitres.add.regime.beer = Adio cyfanswm y litrau o gwrw y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at gyfanswm y litrau o gwrw y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.totalLitres.subtract.regime.beer = Tynnwch yr gwrw a ddaeth i law ({0} litr) o swm yr gwrw y gwnaethoch eu dosbarthu ({1} litr).
+
+dutySuspendedCalculation.totalLitres.total.regime.cider = Cyfanswm eich cyfaint net o seidr yw {0} o litrau
+dutySuspendedCalculation.totalLitres.add.regime.cider = Adio cyfanswm y litrau o seidr y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at gyfanswm y litrau o seidr y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.totalLitres.subtract.regime.cider = Tynnwch yr seidr a ddaeth i law ({0} litr) o swm yr seidr y gwnaethoch eu dosbarthu ({1} litr).
+
+dutySuspendedCalculation.totalLitres.total.regime.wine = Cyfanswm eich cyfaint net o win yw {0} o litrau
+dutySuspendedCalculation.totalLitres.add.regime.wine = Adio cyfanswm y litrau o win y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at gyfanswm y litrau o win y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.totalLitres.subtract.regime.wine = Tynnwch yr win a ddaeth i law ({0} litr) o swm yr win y gwnaethoch eu dosbarthu ({1} litr).
+
+dutySuspendedCalculation.totalLitres.total.regime.spirits = Cyfanswm eich cyfaint net o wirodydd yw {0} o litrau
+dutySuspendedCalculation.totalLitres.add.regime.spirits = Adio cyfanswm y litrau o wirodydd y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at gyfanswm y litrau o wirodydd y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.totalLitres.subtract.regime.spirits = Tynnwch yr wirodydd a ddaeth i law ({0} litr) o swm yr wirodydd y gwnaethoch eu dosbarthu ({1} litr).
+
+dutySuspendedCalculation.totalLitres.total.regime.otherfermentedproduct = Cyfanswm eich cyfaint net o gynhyrchion eplesedig eraill yw {0} o litrau
+dutySuspendedCalculation.totalLitres.add.regime.otherfermentedproduct = Adio cyfanswm y litrau o gynhyrchion eplesedig eraill y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at gyfanswm y litrau o gynhyrchion eplesedig eraill y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.totalLitres.subtract.regime.otherfermentedproduct = Tynnwch yr gynhyrchion eplesedig eraill a ddaeth i law ({0} litr) o swm yr gynhyrchion eplesedig eraill y gwnaethoch eu dosbarthu ({1} litr).
+
+dutySuspendedCalculation.pureAlcohol.total = Cyfanswm eich cyfaint net o alcohol pur yw {0} o litrau
+dutySuspendedCalculation.pureAlcohol.add = Gwnaethom adio’r litrau o alcohol pur y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at y litrau o alcohol pur y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.pureAlcohol.subtract = Fe wnaethom dynnu’r litrau o alcohol pur a gawsoch ({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({1} litr).
+
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey

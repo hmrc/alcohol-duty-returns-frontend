@@ -30,7 +30,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
   val regime    = regimeGen.sample.value
 
   val dutySuspendedQuantities   = DutySuspendedQuantities(100, 10, 0, 0, 0, 0)
-  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 10)
+  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 100, 10, 10)
 
   "DutySuspendedNavigator" - {
 
@@ -157,7 +157,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(CheckMode)
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -170,7 +170,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(CheckMode, regime)
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the Declare duty suspense question page to the task list page if the answer is No" in {

@@ -31,7 +31,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DeclareDutySuspenseQuestionPage =>
-      userAnswers => declareDutySuspenseQuestionPageRoute(userAnswers, NormalMode)
+      userAnswers => declareDutySuspenseQuestionPageRoute(userAnswers)
     case DutySuspendedAlcoholTypePage    =>
       userAnswers =>
         val firstRegime = userAnswers.get(DutySuspendedAlcoholTypePage).flatMap { dutySuspendedRegimes =>
@@ -51,19 +51,34 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       userAnswers =>
         regime =>
           userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
-            case Some(_) =>
-              // TODO: Go to display calculation page for current regime
-              logger.info("Go to display calculation page")
-              routes.JourneyRecoveryController.onPageLoad()
+            case Some(_) => controllers.dutySuspendedNew.routes.DisplayCalculationController.onPageLoad(regime)
             case None    => routes.JourneyRecoveryController.onPageLoad()
           }
-      // TODO: Implement for new pages that depend on the regime
+    case DisplayCalculationPage      =>
+      userAnswers =>
+        regime =>
+          userAnswers.get(DutySuspendedAlcoholTypePage) match {
+            case Some(dutySuspendedRegimes) =>
+              AlcoholRegimesViewOrder.nextViewRegime(
+                regimes = AlcoholRegimes(dutySuspendedRegimes),
+                current = Some(regime)
+              ) match {
+                case Some(nextRegime) =>
+                  controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+                    .onPageLoad(NormalMode, nextRegime)
+                case None             =>
+                  // TODO: Go to check your answers page
+                  logger.debug("Was on last regime, go to Check Your Answers")
+                  routes.JourneyRecoveryController.onPageLoad()
+              }
+            case None                       => routes.JourneyRecoveryController.onPageLoad()
+          }
     case _                           => _ => _ => routes.TaskListController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
     case DeclareDutySuspenseQuestionPage =>
-      userAnswers => _ => declareDutySuspenseQuestionPageRoute(userAnswers, CheckMode)
+      userAnswers => _ => declareDutySuspenseQuestionPageRoute(userAnswers)
     case DutySuspendedAlcoholTypePage    =>
       userAnswers =>
         hasRegimesToAdd =>
@@ -87,7 +102,6 @@ class DutySuspendedNavigator @Inject() () extends Logging {
               routes.JourneyRecoveryController.onPageLoad()
             case None    => routes.JourneyRecoveryController.onPageLoad()
           }
-      // TODO: Implement for new pages that depend on the regime (always go to Check Your Answers)
     case _                           => _ => _ => routes.TaskListController.onPageLoad
   }
 
@@ -115,13 +129,13 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       checkRouteMap(page)(userAnswers)(hasRegimesToAdd.getOrElse(false))
   }
 
-  private def declareDutySuspenseQuestionPageRoute(userAnswers: UserAnswers, mode: Mode): Call =
+  private def declareDutySuspenseQuestionPageRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(DeclareDutySuspenseQuestionPage) match {
       case Some(true) if userAnswers.regimes.regimes.size > 1 =>
-        controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(mode)
+        controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
       case Some(true)                                         =>
         controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
-          .onPageLoad(mode, userAnswers.regimes.regimes.head)
+          .onPageLoad(NormalMode, userAnswers.regimes.regimes.head)
       case Some(false)                                        => routes.TaskListController.onPageLoad
       case _                                                  => routes.JourneyRecoveryController.onPageLoad()
     }
