@@ -16,6 +16,7 @@
 
 package forms.mappings
 
+import cats.implicits.toBifunctorOps
 import config.Constants
 import config.Constants.MappingFields._
 import models.declareDuty.VolumeAndRateByTaxType
@@ -121,14 +122,16 @@ class VolumesAndRateFormatter(
     val rateBandDescription = data
       .getOrElse(
         s"$key.$rateBandDescriptionField",
-        regimeName
-      ) // This to support MultipleSPR for which we don't know the rateBand on view creation
-    val taxTypeResult       = validateField(taxTypeField, key, data, taxTypeFormatter, rateBandDescription)
+        throw new IllegalArgumentException(s"Expected $key.$rateBandDescriptionField to be provided in the view")
+      )
+    validateField(taxTypeField, key, data, taxTypeFormatter, rateBandDescription).leftMap(_ =>
+      throw new IllegalArgumentException(s"Expected $key.$taxTypeField to be provided in the view")
+    )
     val totalLitresResult   = validateField(totalLitresField, key, data, volumeFormatter, rateBandDescription)
     val pureAlcoholResult   = validateField(pureAlcoholField, key, data, pureAlcoholVolumeFormatter, rateBandDescription)
     val dutyRateResult      = validateField(dutyRateField, key, data, dutyRateFormatter, rateBandDescription)
     val allErrors           =
-      taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten
+      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {

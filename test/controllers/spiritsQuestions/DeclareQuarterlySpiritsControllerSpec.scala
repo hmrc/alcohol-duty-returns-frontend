@@ -19,20 +19,20 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.spiritsQuestions._
 import play.api.Application
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import scala.concurrent.Future
-import scala.util.Success
 
 class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
   val userAnswersPreviouslyAnswered = emptyUserAnswers.set(DeclareQuarterlySpiritsPage, true).success.value
@@ -107,36 +107,45 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     }
 
     "must redirect to the task list page and clear user answers when 'No' is submitted" in new SetUp(
-      Some(mockUserAnswers),
+      Some(emptyUserAnswers),
       true
     ) {
-      val pagesToDelete = List(DeclareSpiritsTotalPage, SpiritTypePage, OtherSpiritsProducedPage, WhiskyPage)
-
       val taskListRoute = controllers.routes.TaskListController.onPageLoad
 
       val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
-      val mockAlcoholRegimesSet: AlcoholRegimes          = mock[AlcoholRegimes]
-      val mockReturnId                                   = mock[ReturnId]
       val mockQuarterlySpiritsQuestionsNavigator         = mock[QuarterlySpiritsQuestionsNavigator]
 
-      when(mockReturnId.periodKey) thenReturn "2025-01"
-      when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(mockUserAnswers.set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())) thenReturn Success(
-        mockUserAnswers
-      )
-      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
-        DeclareQuarterlySpiritsPage,
-        false
-      )
-      when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
-      when(mockAlcoholRegimesSet.hasRegime(any())) thenReturn true
       when(
         mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(DeclareQuarterlySpiritsPage), any(), any(), any())
       ) thenReturn taskListRoute
 
+      val userAnswers = emptyUserAnswers.copy(data =
+        Json.obj(
+          DeclareQuarterlySpiritsPage.toString -> true,
+          DeclareSpiritsTotalPage.toString     -> 1234,
+          WhiskyPage.toString                  -> Json.obj(
+            "scotchWhisky" -> 111,
+            "irishWhiskey" -> 222
+          ),
+          SpiritTypePage.toString              -> Json.arr(
+            "neutralIndustrialOrigin",
+            "other",
+            "neutralAgriculturalOrigin",
+            "ciderOrPerry",
+            "wineOrMadeWine",
+            "beer",
+            "maltSpirits",
+            "grainSpirits"
+          ),
+          OtherSpiritsProducedPage.toString    -> "Other Type of Spirit"
+        )
+      )
+
+      val expectedCachedUserAnswers = emptyUserAnswers.set(DeclareQuarterlySpiritsPage, false).success.value
+
       override val application =
-        applicationBuilder(userAnswers = Some(mockUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -153,13 +162,14 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual taskListRoute.url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockUserAnswers, times(1)).set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())
-        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
-        verify(mockUserAnswers, times(1)).regimes
-        verify(mockAlcoholRegimesSet, times(1)).hasRegime(any())
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
         verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
-          .nextPage(eqTo(DeclareQuarterlySpiritsPage), eqTo(NormalMode), any(), eqTo(Some(true)))
+          .nextPage(
+            eqTo(DeclareQuarterlySpiritsPage),
+            eqTo(NormalMode),
+            eqTo(expectedCachedUserAnswers),
+            eqTo(Some(true))
+          )
       }
     }
 

@@ -37,7 +37,7 @@ trait CheckboxFieldBehaviours extends FormSpec {
       val data = Map(
         s"$fieldName[0]" -> "invalid value"
       )
-      form.bind(data).errors must contain(invalidError)
+      an[IllegalArgumentException] mustBe thrownBy(form.bind(data).errors)
     }
   }
 

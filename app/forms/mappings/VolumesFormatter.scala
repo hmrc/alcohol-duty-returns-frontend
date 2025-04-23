@@ -16,6 +16,7 @@
 
 package forms.mappings
 
+import cats.implicits.toBifunctorOps
 import config.Constants
 import config.Constants.MappingFields._
 import models.declareDuty.VolumesByTaxType
@@ -104,14 +105,19 @@ class VolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-    val rateBandDescription = data.getOrElse(s"$key.$rateBandDescriptionField", regimeName)
-    val taxTypeResult       = validateField(taxTypeField, key, data, taxTypeFormatter, rateBandDescription)
+    val rateBandDescription = data.getOrElse(
+      s"$key.$rateBandDescriptionField",
+      throw new IllegalArgumentException(s"Expected $key.$rateBandDescriptionField to be provided in the view")
+    )
+    validateField(taxTypeField, key, data, taxTypeFormatter, rateBandDescription).leftMap(_ =>
+      throw new IllegalArgumentException(s"Expected $key.$taxTypeField to be provided in the view")
+    )
     val totalLitresResult   = validateField(totalLitresField, key, data, volumeFormatter, rateBandDescription)
     val pureAlcoholResult   =
       validateField(pureAlcoholField, key, data, pureAlcoholBigDecimalFormatter, rateBandDescription)
 
     val allErrors =
-      taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
+      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {
