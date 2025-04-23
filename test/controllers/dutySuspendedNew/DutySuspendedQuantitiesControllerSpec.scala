@@ -20,13 +20,11 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import forms.dutySuspendedNew.DutySuspendedQuantitiesFormProvider
 import models.NormalMode
-import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage, DutySuspendedQuantitiesPage}
+import pages.dutySuspendedNew.{DutySuspendedFinalVolumesPage, DutySuspendedQuantitiesPage}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
@@ -48,39 +46,10 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
 
   lazy val dutySuspendedQuantitiesRoute = routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime).url
 
-  val validTotalLitresDeliveredInsideUK  = 100
-  val validPureAlcoholDeliveredInsideUK  = 10
-  val validTotalLitresDeliveredOutsideUK = 3.5
-  val validPureAlcoholDeliveredOutsideUK = 1.2345
-  val validTotalLitresReceived           = 0
-  val validPureAlcoholReceived           = 0
-
-  val dutySuspendedQuantities = DutySuspendedQuantities(
-    validTotalLitresDeliveredInsideUK,
-    validPureAlcoholDeliveredInsideUK,
-    validTotalLitresDeliveredOutsideUK,
-    validPureAlcoholDeliveredOutsideUK,
-    validTotalLitresReceived,
-    validPureAlcoholReceived
-  )
-
-  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(
-    totalLitresDelivered = validTotalLitresDeliveredInsideUK + validTotalLitresDeliveredOutsideUK,
-    totalLitres = validTotalLitresDeliveredInsideUK + validTotalLitresDeliveredOutsideUK - validTotalLitresReceived,
-    pureAlcoholDelivered = validPureAlcoholDeliveredInsideUK + validPureAlcoholDeliveredOutsideUK,
-    pureAlcohol = validPureAlcoholDeliveredInsideUK + validPureAlcoholDeliveredOutsideUK - validPureAlcoholReceived
-  )
-
-  val userAnswersAllRegimesSelected = emptyUserAnswers.copy(data =
-    Json.obj(
-      DeclareDutySuspenseQuestionPage.toString -> true,
-      DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider", "Wine", "Spirits", "OtherFermentedProduct")
-    )
-  )
-
   "DutySuspendedQuantities Controller" - {
+
     "must return OK and the correct view for a GET" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersAllRegimesSelected)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersAllDSDRegimesSelected)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedQuantitiesRoute)
@@ -95,7 +64,7 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = userAnswersAllRegimesSelected
+      val userAnswers = userAnswersAllDSDRegimesSelected
         .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
         .success
         .value
@@ -117,7 +86,6 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
       }
     }
 
-    // TODO: add mock calculator
     "must save user answers, calculate volumes and redirect to the next page when valid data is submitted" in {
       val mockCalculatorConnector    = mock[AlcoholDutyCalculatorConnector]
       val mockUserAnswersConnector   = mock[UserAnswersConnector]
@@ -131,7 +99,7 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
         mockDutySuspendedNavigator.nextPageWithRegime(eqTo(DutySuspendedQuantitiesPage), any(), any(), any())
       ) thenReturn onwardRoute
 
-      val expectedCachedUserAnswers = userAnswersAllRegimesSelected
+      val expectedCachedUserAnswers = userAnswersAllDSDRegimesSelected
         .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
         .success
         .value
@@ -140,7 +108,7 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
         .value
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAllRegimesSelected))
+        applicationBuilder(userAnswers = Some(userAnswersAllDSDRegimesSelected))
           .overrides(
             bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
@@ -178,7 +146,7 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersAllRegimesSelected)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersAllDSDRegimesSelected)).build()
 
       running(application) {
         val request =
@@ -206,7 +174,7 @@ class DutySuspendedQuantitiesControllerSpec extends SpecBase {
       ) thenReturn Future.failed(new Exception("Calculation failed"))
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAllRegimesSelected))
+        applicationBuilder(userAnswers = Some(userAnswersAllDSDRegimesSelected))
           .overrides(
             bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector)
           )

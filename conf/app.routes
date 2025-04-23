@@ -226,8 +226,8 @@ POST       /complete-return/duty-suspended-deliveries/:regime/report-duty-suspen
 GET        /complete-return/duty-suspended-deliveries/:regime/change-duty-suspense                        controllers.dutySuspendedNew.DutySuspendedQuantitiesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
 POST       /complete-return/duty-suspended-deliveries/:regime/change-duty-suspense                        controllers.dutySuspendedNew.DutySuspendedQuantitiesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /complete-return/duty-suspended-deliveries/calculation/:regime/report                        controllers.dutySuspendedNew.DisplayCalculationController.onPageLoad(regime: AlcoholRegime)
-POST       /complete-return/duty-suspended-deliveries/calculation/:regime/report                        controllers.dutySuspendedNew.DisplayCalculationController.onSubmit(regime: AlcoholRegime)
+GET        /complete-return/duty-suspended-deliveries/:regime/calculation/                        controllers.dutySuspendedNew.DisplayCalculationController.onPageLoad(regime: AlcoholRegime)
+POST       /complete-return/duty-suspended-deliveries/:regime/calculation/                        controllers.dutySuspendedNew.DisplayCalculationController.onSubmit(regime: AlcoholRegime)
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey

@@ -38,8 +38,7 @@ class DisplayCalculationController @Inject() (
   checkDSDNewJourneyToggle: CheckDSDNewJourneyToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: DisplayCalculationView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+) extends FrontendBaseController
     with I18nSupport
     with Logging {
 

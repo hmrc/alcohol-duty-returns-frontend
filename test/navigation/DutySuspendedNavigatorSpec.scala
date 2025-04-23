@@ -20,7 +20,6 @@ import base.SpecBase
 import controllers._
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
-import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import pages._
 import pages.dutySuspendedNew._
 
@@ -28,9 +27,6 @@ class DutySuspendedNavigatorSpec extends SpecBase {
 
   val navigator = new DutySuspendedNavigator
   val regime    = regimeGen.sample.value
-
-  val dutySuspendedQuantities   = DutySuspendedQuantities(100, 10, 0, 0, 0, 0)
-  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 100, 10, 10)
 
   "DutySuspendedNavigator" - {
 
@@ -132,8 +128,50 @@ class DutySuspendedNavigatorSpec extends SpecBase {
                 .success
                 .value,
               regime
-            ) mustBe routes.JourneyRecoveryController.onPageLoad()
-            // TODO: update route when new page is created
+            ) mustBe controllers.dutySuspendedNew.routes.DisplayCalculationController.onPageLoad(regime)
+          }
+        }
+
+        Seq(
+          (
+            Beer,
+            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+          ),
+          (
+            Cider,
+            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Wine)
+          ),
+          (
+            Wine,
+            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Spirits)
+          ),
+          (
+            Spirits,
+            () =>
+              controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+                .onPageLoad(NormalMode, OtherFermentedProduct)
+          ),
+          (OtherFermentedProduct, () => routes.JourneyRecoveryController.onPageLoad())
+          // TODO: update route when new page is created
+        ).foreach { case (regime, expectedPage) =>
+          s"must go from the Display calculation page to the correct next page (Declare quantity or CYA) when the regime is ${regime.entryName}" in {
+            val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+
+            navigator.nextPageWithRegime(
+              DisplayCalculationPage,
+              NormalMode,
+              emptyUserAnswers
+                .set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted)
+                .success
+                .value
+                .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
+                .success
+                .value
+                .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+                .success
+                .value,
+              regime
+            ) mustBe expectedPage()
           }
         }
       }

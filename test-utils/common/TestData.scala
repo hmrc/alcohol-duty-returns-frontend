@@ -27,6 +27,7 @@ import models.checkAndSubmit._
 import models.declareDuty._
 import models.returns._
 import models._
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
@@ -1249,6 +1250,36 @@ trait TestData extends ModelGenerators {
         Beer,
         NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(0), AlcoholByVolume(100)))
       )
+    )
+  )
+
+  val validTotalLitresDeliveredInsideUK  = 100
+  val validPureAlcoholDeliveredInsideUK  = 10
+  val validTotalLitresDeliveredOutsideUK = 3.5
+  val validPureAlcoholDeliveredOutsideUK = 1.2345
+  val validTotalLitresReceived           = 0
+  val validPureAlcoholReceived           = 0
+
+  val dutySuspendedQuantities = DutySuspendedQuantities(
+    validTotalLitresDeliveredInsideUK,
+    validPureAlcoholDeliveredInsideUK,
+    validTotalLitresDeliveredOutsideUK,
+    validPureAlcoholDeliveredOutsideUK,
+    validTotalLitresReceived,
+    validPureAlcoholReceived
+  )
+
+  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(
+    totalLitresDelivered = 103.5,
+    totalLitres = 103.5,
+    pureAlcoholDelivered = 11.2345,
+    pureAlcohol = 11.2345
+  )
+
+  val userAnswersAllDSDRegimesSelected = emptyUserAnswers.copy(data =
+    Json.obj(
+      DeclareDutySuspenseQuestionPage.toString -> true,
+      DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider", "Wine", "Spirits", "OtherFermentedProduct")
     )
   )
 }
