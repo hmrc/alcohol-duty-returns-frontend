@@ -43,11 +43,13 @@
             href = appConfig.appaIdRegisterUrl,
             newTab = true
             )
+            @messages("noAppaId.p2")
         </p>
 
         @if(wasReferredFromBTA) {
             @govukButton(
                 ButtonViewModel("return-to-business-account",messages("site.returnToBusinessAccount"))
+                .withCssClass(Css.secondaryButtonCssClass)
             )
         }
     }
