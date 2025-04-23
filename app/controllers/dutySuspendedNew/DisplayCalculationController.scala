@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspendedNew.DisplayCalculationView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
 class DisplayCalculationController @Inject() (
   override val messagesApi: MessagesApi,

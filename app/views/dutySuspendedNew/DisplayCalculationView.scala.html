@@ -41,22 +41,22 @@
 
         @paragraph(messages(s"dutySuspendedCalculation.p.${regime.regimeMessageKey}"))
 
-        @subHeading(messages(s"dutySuspendedCalculation.totalLitres.total.${regime.regimeMessageKey}", calculatedVolumes.totalLitres))
+        @subHeading(messages(s"dutySuspendedCalculation.totalLitres.total.${regime.regimeMessageKey}", messages("site.2DP", calculatedVolumes.totalLitres)))
 
         @paragraph(messages("dutySuspendedCalculation.howCalculated"))
 
         @numberedList(Seq(
-            messages(s"dutySuspendedCalculation.totalLitres.add.${regime.regimeMessageKey}", enteredQuantities.totalLitresDeliveredInsideUK.toString, enteredQuantities.totalLitresDeliveredOutsideUK.toString),
-            messages(s"dutySuspendedCalculation.totalLitres.subtract.${regime.regimeMessageKey}", enteredQuantities.totalLitresReceived, calculatedVolumes.totalLitresDelivered)
+            messages(s"dutySuspendedCalculation.totalLitres.add.${regime.regimeMessageKey}", messages("site.2DP", enteredQuantities.totalLitresDeliveredInsideUK), messages("site.2DP", enteredQuantities.totalLitresDeliveredOutsideUK)),
+            messages(s"dutySuspendedCalculation.totalLitres.subtract.${regime.regimeMessageKey}", messages("site.2DP", enteredQuantities.totalLitresReceived), messages("site.2DP", calculatedVolumes.totalLitresDelivered))
         ))
 
-        @subHeading(messages("dutySuspendedCalculation.pureAlcohol.total", calculatedVolumes.pureAlcohol))
+        @subHeading(messages("dutySuspendedCalculation.pureAlcohol.total", messages("site.4DP", calculatedVolumes.pureAlcohol)))
 
         @paragraph(messages("dutySuspendedCalculation.howCalculated"))
 
         @numberedList(Seq(
-            messages("dutySuspendedCalculation.pureAlcohol.add", enteredQuantities.pureAlcoholDeliveredInsideUK, enteredQuantities.pureAlcoholDeliveredOutsideUK),
-            messages("dutySuspendedCalculation.pureAlcohol.subtract", enteredQuantities.pureAlcoholReceived, calculatedVolumes.pureAlcoholDelivered)
+            messages("dutySuspendedCalculation.pureAlcohol.add", messages("site.4DP", enteredQuantities.pureAlcoholDeliveredInsideUK), messages("site.4DP", enteredQuantities.pureAlcoholDeliveredOutsideUK)),
+            messages("dutySuspendedCalculation.pureAlcohol.subtract", messages("site.4DP", enteredQuantities.pureAlcoholReceived), messages("site.4DP", calculatedVolumes.pureAlcoholDelivered))
         ))
 
         @govukButton(
