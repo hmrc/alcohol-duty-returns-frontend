@@ -17,12 +17,12 @@
 package controllers.dutySuspendedNew
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import controllers.actions.{CheckDSDNewJourneyToggleAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.dutySuspendedNew.CheckYourAnswersHelper
+import viewmodels.checkAnswers.dutySuspendedNew.CheckYourAnswersSummaryListHelper
 import views.html.dutySuspendedNew.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
@@ -30,19 +30,28 @@ class CheckYourAnswersController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  checkDSDNewJourneyToggle: CheckDSDNewJourneyToggleAction,
   val controllerComponents: MessagesControllerComponents,
-  checkYourAnswersHelper: CheckYourAnswersHelper,
+  checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    checkYourAnswersHelper.summaryList(request.userAnswers) match {
-      case summaryList if summaryList.rows.nonEmpty => Ok(view(summaryList))
-      case _                                        =>
-        logger.warn("No duty suspended summary list items found")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
+      val maybeAlcoholTypeSummary = checkYourAnswersSummaryListHelper.alcoholTypeSummaryList(request.userAnswers)
+      val maybeAmountSummary      = checkYourAnswersSummaryListHelper.dutySuspendedAmountsSummaryList(request.userAnswers)
+      (maybeAlcoholTypeSummary, maybeAmountSummary) match {
+        case (Some(alcoholTypeSummary), Some(amountSummary)) =>
+          if (request.userAnswers.regimes.regimes.size > 1) {
+            Ok(view(Some(alcoholTypeSummary), amountSummary))
+          } else {
+            Ok(view(None, amountSummary))
+          }
+        case _                                               =>
+          logger.warn("Alcohol types or duty suspended volumes missing from user answers")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
     }
-  }
 }

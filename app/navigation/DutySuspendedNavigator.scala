@@ -67,10 +67,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
                   controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
                     .onPageLoad(NormalMode, nextRegime)
                 case None             =>
-                  // TODO: Go to check your answers page
-                  //controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
-                  logger.debug("Was on last regime, go to Check Your Answers")
-                  routes.JourneyRecoveryController.onPageLoad()
+                  controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
               }
             case None                       => routes.JourneyRecoveryController.onPageLoad()
           }
@@ -86,8 +83,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
           if (hasRegimesToAdd) {
             normalRoutes(DutySuspendedAlcoholTypePage)(userAnswers)
           } else {
-            // TODO: Nothing new to declare, go to check your answers
-            routes.JourneyRecoveryController.onPageLoad()
+            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
           }
     case _                               =>
       _ => _ => routes.TaskListController.onPageLoad
@@ -98,9 +94,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       userAnswers =>
         regime =>
           userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
-            case Some(_) =>
-              // TODO: Go to check your answers page
-              routes.JourneyRecoveryController.onPageLoad()
+            case Some(_) => controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
             case None    => routes.JourneyRecoveryController.onPageLoad()
           }
     case _                           => _ => _ => routes.TaskListController.onPageLoad

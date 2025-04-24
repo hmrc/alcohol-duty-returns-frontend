@@ -880,11 +880,13 @@ dutySuspendedCalculation.pureAlcohol.total = Your total net volume of pure alcoh
 dutySuspendedCalculation.pureAlcohol.add = We added the litres of pure alcohol you delivered inside the UK ({0} litres) to the litres of pure alcohol delivered outside the UK ({1} litres).
 dutySuspendedCalculation.pureAlcohol.subtract = We subtracted the litres of pure alcohol you received ({0} litres) from the sum of the pure alcohol you delivered ({1} litres).
 
-checkYourAnswersDutySuspendedType.heading = Type of duty suspended alcohol
-checkYourAnswersDutySuspended.heading = Amount of duty suspended alcohol
-checkYourAnswersDutySuspendedType.hidden = type of duty suspended alcohol
-checkYourAnswersDutySuspended.hidden = amount of duty suspended alcohol
-checkYourAnswersDutySuspended.type = Type of alcohol
+dutySuspended.checkYourAnswers.alcoholType.heading = Type of duty suspended alcohol
+dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Type of alcohol
+dutySuspended.checkYourAnswers.amount.heading = Amount of duty suspended alcohol
+dutySuspended.checkYourAnswers.totalLitres = {0} litres of total product
+dutySuspended.checkYourAnswers.pureAlcohol = {0} litres of pure alcohol
+dutySuspended.checkYourAnswers.alcoholType.change.hidden = type of duty suspended alcohol
+dutySuspended.checkYourAnswers.amount.change.hidden = amount of duty suspended alcohol
 
 # End of NEW duty suspended deliveries sub-journey
 

@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,34 +18,36 @@
 @import config.Constants.Css
 
 @this(
-layout: templates.Layout,
-govukSummaryList: GovukSummaryList,
-govukButton: GovukButton,
-caption: Caption,
-pageHeading: PageHeading,
-subHeading: SubHeading
+        layout: templates.Layout,
+        govukSummaryList: GovukSummaryList,
+        govukButton: GovukButton,
+        caption: Caption,
+        pageHeading: PageHeading,
+        subHeading: SubHeading
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(alcoholTypeSummaryList: Option[SummaryList], amountsSummaryList: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-@caption(
-id = "alcohol-by-volume-question-section",
-text = messages("section.dutySuspended"),
-)
+    @caption(
+        id = "check-your-answers-section",
+        text = messages("section.dutySuspended"),
+    )
 
-@pageHeading(messages("checkYourAnswers.heading"))
+    @pageHeading(messages("checkYourAnswers.heading"))
 
-@subHeading(messages("checkYourAnswersDutySuspendedType.heading"), classes = Css.headingMCssClass)
-@govukSummaryList(list)
+    @if(alcoholTypeSummaryList.nonEmpty) {
+        @subHeading(messages("dutySuspended.checkYourAnswers.alcoholType.heading"), classes = Css.headingMCssClass)
+        @govukSummaryList(alcoholTypeSummaryList.get)
+    }
 
-@subHeading(messages("checkYourAnswersDutySuspended.heading"), classes = Css.headingMCssClass)
+    @subHeading(messages("dutySuspended.checkYourAnswers.amount.heading"), classes = Css.headingMCssClass)
+    @govukSummaryList(amountsSummaryList)
 
-
-@govukButton(
-ButtonViewModel("continueButton", messages("site.continue"))
-.asLink(routes.TaskListController.onPageLoad.url)
-)
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(routes.TaskListController.onPageLoad.url)
+    )
 }
 

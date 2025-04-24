@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,31 @@ import pages.dutySuspendedNew.{DutySuspendedAlcoholTypePage, DutySuspendedFinalV
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.AlcoholRegimesViewOrder
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlcoholTypeSummary {
+class CheckYourAnswersSummaryListHelper {
+  def alcoholTypeSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] =
+    alcoholTypeRow(userAnswers).map(row => SummaryListViewModel(rows = Seq(row)))
 
-  def alcoholTypeRow(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def dutySuspendedAmountsSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
+    val maybeSelectedRegimes = userAnswers.get(DutySuspendedAlcoholTypePage)
+
+    maybeSelectedRegimes.flatMap { selectedRegimes =>
+      val orderedRegimes     = AlcoholRegimesViewOrder.regimesInViewOrder(AlcoholRegimes(selectedRegimes))
+      val selectedRegimeRows = orderedRegimes.map(regime => amountsRow(userAnswers, regime))
+
+      if (selectedRegimeRows.contains(None)) {
+        None
+      } else {
+        Some(SummaryListViewModel(rows = selectedRegimeRows.flatten))
+      }
+    }
+  }
+
+  private def alcoholTypeRow(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     userAnswers.get(DutySuspendedAlcoholTypePage).map { alcoholTypes =>
       val orderedRegimes = AlcoholRegimesViewOrder.regimesInViewOrder(AlcoholRegimes(alcoholTypes))
       val rowValue       =
@@ -47,14 +64,18 @@ object AlcoholTypeSummary {
       )
     }
 
-  def amountsRow(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit messages: Messages): Option[SummaryListRow] =
+  private def amountsRow(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
     userAnswers.getByKey(DutySuspendedFinalVolumesPage, regime).map { volumes =>
       SummaryListRowViewModel(
-        key = s"${regime.regimeMessageKey}".capitalize,
+        key = KeyViewModel(HtmlContent(messages(s"${regime.regimeMessageKey}").capitalize)),
         value = ValueViewModel(
-          s"""${messages("dutySuspended.checkYourAnswers.totalLitres", messages("site.2DP", volumes.totalLitres))}
-          <br>
-          ${messages("dutySuspended.checkYourAnswers.pureAlcohol", messages("site.4DP", volumes.pureAlcohol))}"""
+          HtmlContent(
+            s"""${messages("dutySuspended.checkYourAnswers.totalLitres", messages("site.2DP", volumes.totalLitres))}
+            <br>
+            ${messages("dutySuspended.checkYourAnswers.pureAlcohol", messages("site.4DP", volumes.pureAlcohol))}"""
+          )
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedQuantitiesController.onPageLoad(CheckMode, regime).url)
