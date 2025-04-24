@@ -880,6 +880,12 @@ dutySuspendedCalculation.pureAlcohol.total = Cyfanswm eich cyfaint net o alcohol
 dutySuspendedCalculation.pureAlcohol.add = Gwnaethom adio’r litrau o alcohol pur y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at y litrau o alcohol pur y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
 dutySuspendedCalculation.pureAlcohol.subtract = Fe wnaethom dynnu’r litrau o alcohol pur a gawsoch ({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({1} litr).
 
+checkYourAnswersDutySuspendedType.heading = Math o alcohol y gohiriwyd tollau arno
+checkYourAnswersDutySuspended.heading = Swm yr alcohol y gohiriwyd tollau arno
+checkYourAnswersDutySuspendedType.hidden = math o alcohol y gohiriwyd tollau arno
+checkYourAnswersDutySuspended.hidden = swm yr alcohol y gohiriwyd tollau arno
+
+
 # End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey

@@ -68,6 +68,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
                     .onPageLoad(NormalMode, nextRegime)
                 case None             =>
                   // TODO: Go to check your answers page
+                  //controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
                   logger.debug("Was on last regime, go to Check Your Answers")
                   routes.JourneyRecoveryController.onPageLoad()
               }
