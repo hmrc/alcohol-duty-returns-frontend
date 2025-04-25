@@ -618,6 +618,87 @@ trait TestData extends ModelGenerators {
     )
   )
 
+  val userAnswersWithDutySuspendedDataAllRegimes = emptyUserAnswers.copy(data =
+    Json.obj(
+      DeclareDutySuspenseQuestionPage.toString -> true,
+      DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider", "Wine", "Spirits", "OtherFermentedProduct"),
+      DutySuspendedQuantitiesPage.toString     -> Json.obj(
+        "Beer"                  -> Json.obj(
+          "totalLitresDeliveredInsideUK"  -> 100,
+          "pureAlcoholDeliveredInsideUK"  -> 10,
+          "totalLitresDeliveredOutsideUK" -> 0,
+          "pureAlcoholDeliveredOutsideUK" -> 0,
+          "totalLitresReceived"           -> 0,
+          "pureAlcoholReceived"           -> 0
+        ),
+        "Cider"                 -> Json.obj(
+          "totalLitresDeliveredInsideUK"  -> 100,
+          "pureAlcoholDeliveredInsideUK"  -> 10,
+          "totalLitresDeliveredOutsideUK" -> 0,
+          "pureAlcoholDeliveredOutsideUK" -> 0,
+          "totalLitresReceived"           -> 0,
+          "pureAlcoholReceived"           -> 0
+        ),
+        "Wine"                  -> Json.obj(
+          "totalLitresDeliveredInsideUK"  -> 100,
+          "pureAlcoholDeliveredInsideUK"  -> 10,
+          "totalLitresDeliveredOutsideUK" -> 100,
+          "pureAlcoholDeliveredOutsideUK" -> 10,
+          "totalLitresReceived"           -> 200,
+          "pureAlcoholReceived"           -> 20
+        ),
+        "Spirits"               -> Json.obj(
+          "totalLitresDeliveredInsideUK"  -> 1.5,
+          "pureAlcoholDeliveredInsideUK"  -> 0.15,
+          "totalLitresDeliveredOutsideUK" -> 2,
+          "pureAlcoholDeliveredOutsideUK" -> 0.2,
+          "totalLitresReceived"           -> 0.1,
+          "pureAlcoholReceived"           -> 0.01
+        ),
+        "OtherFermentedProduct" -> Json.obj(
+          "totalLitresDeliveredInsideUK"  -> 0,
+          "pureAlcoholDeliveredInsideUK"  -> 0,
+          "totalLitresDeliveredOutsideUK" -> 10,
+          "pureAlcoholDeliveredOutsideUK" -> 1,
+          "totalLitresReceived"           -> 15.5,
+          "pureAlcoholReceived"           -> 1.82
+        )
+      ),
+      DutySuspendedFinalVolumesPage.toString   -> Json.obj(
+        "Beer"                  -> Json.obj(
+          "totalLitresDelivered" -> 100,
+          "totalLitres"          -> 100,
+          "pureAlcoholDelivered" -> 10,
+          "pureAlcohol"          -> 10
+        ),
+        "Cider"                 -> Json.obj(
+          "totalLitresDelivered" -> 100,
+          "totalLitres"          -> 100,
+          "pureAlcoholDelivered" -> 10,
+          "pureAlcohol"          -> 10
+        ),
+        "Wine"                  -> Json.obj(
+          "totalLitresDelivered" -> 200,
+          "totalLitres"          -> 0,
+          "pureAlcoholDelivered" -> 20,
+          "pureAlcohol"          -> 0
+        ),
+        "Spirits"               -> Json.obj(
+          "totalLitresDelivered" -> 3.5,
+          "totalLitres"          -> 3.4,
+          "pureAlcoholDelivered" -> 0.35,
+          "pureAlcohol"          -> 0.34
+        ),
+        "OtherFermentedProduct" -> Json.obj(
+          "totalLitresDelivered" -> 10,
+          "totalLitres"          -> -5.5,
+          "pureAlcoholDelivered" -> 1,
+          "pureAlcohol"          -> -0.82
+        )
+      )
+    )
+  )
+
   val fullUserAnswers: UserAnswers = UserAnswers(
     ReturnId(appaId, quarterReturnPeriodGen.sample.get.toPeriodKey),
     groupId,

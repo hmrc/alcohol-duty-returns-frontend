@@ -52,11 +52,9 @@ class CheckYourAnswersSummaryListHelper {
       val rowValue       =
         orderedRegimes.map(regime => HtmlFormat.escape(messages(s"${regime.regimeMessageKey}")).toString.capitalize)
 
-      val value = ValueViewModel(HtmlContent(s"${rowValue.mkString("<br>")}"))
-
       SummaryListRowViewModel(
         key = messages("dutySuspended.checkYourAnswers.alcoholType.summaryListKey"),
-        value = value,
+        value = ValueViewModel(HtmlContent(s"${rowValue.mkString("<br>")}")),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedAlcoholTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspended.checkYourAnswers.alcoholType.change.hidden"))
@@ -72,9 +70,9 @@ class CheckYourAnswersSummaryListHelper {
         key = KeyViewModel(HtmlContent(messages(s"${regime.regimeMessageKey}").capitalize)),
         value = ValueViewModel(
           HtmlContent(
-            s"""${messages("dutySuspended.checkYourAnswers.totalLitres", messages("site.2DP", volumes.totalLitres))}
-            <br>
-            ${messages("dutySuspended.checkYourAnswers.pureAlcohol", messages("site.4DP", volumes.pureAlcohol))}"""
+            s"${messages("dutySuspended.checkYourAnswers.totalLitres", messages("site.2DP", volumes.totalLitres))}"
+              + "<br>"
+              + s"${messages("dutySuspended.checkYourAnswers.pureAlcohol", messages("site.4DP", volumes.pureAlcohol))}"
           )
         ),
         actions = Seq(
