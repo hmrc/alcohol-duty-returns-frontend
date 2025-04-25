@@ -860,7 +860,7 @@ dutySuspendedCalculation.totalLitres.total.regime.beer = Your total net volume o
 dutySuspendedCalculation.totalLitres.add.regime.beer = Added the total litres of beer you delivered inside the UK ({0} litres) to the total litres of beer you delivered outside the UK ({1} litres).
 dutySuspendedCalculation.totalLitres.subtract.regime.beer = Subtracted the beer you received ({0} litres) from the sum of the beer you delivered ({1} litres).
 
-dutySuspendedCalculation.totalLitres.total.regime.cider = Your total net volume of beer is {0} litres
+dutySuspendedCalculation.totalLitres.total.regime.cider = Your total net volume of cider is {0} litres
 dutySuspendedCalculation.totalLitres.add.regime.cider = Added the total litres of cider you delivered inside the UK ({0} litres) to the total litres of cider you delivered outside the UK ({1} litres).
 dutySuspendedCalculation.totalLitres.subtract.regime.cider = Subtracted the cider you received ({0} litres) from the sum of the cider you delivered ({1} litres).
 
