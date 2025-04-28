@@ -18,6 +18,7 @@ package services.checkAndSubmit
 
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
+import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
@@ -29,8 +30,10 @@ import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, UnderDeclarationReasonPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions._
 import play.api.libs.json.Reads
+import queries.Gettable
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.tasklist.TaskListViewModel
 
@@ -39,7 +42,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdrReturnSubmissionServiceImpl @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  taskListViewModel: TaskListViewModel
+  taskListViewModel: TaskListViewModel,
+  appConfig: FrontendAppConfig
 )(implicit
   ec: ExecutionContext
 ) extends AdrReturnSubmissionService {
@@ -230,16 +234,31 @@ class AdrReturnSubmissionServiceImpl @Inject() (
   }.toRight(s"Impossible to create a Repackaged Adjustment item for values: $adjustmentEntry")
 
   def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended] =
-    getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>
-      if (hasDeclaredDutySuspended) {
-        getDutySuspendedProducts(userAnswers).map { dutySuspendedProducts =>
-          AdrDutySuspended(
-            declared = true,
-            dutySuspendedProducts
-          )
+    if (appConfig.dutySuspendedNewJourneyEnabled) {
+      getValue(userAnswers, DeclareDutySuspenseQuestionPage).flatMap { hasDeclaredDutySuspended =>
+        if (hasDeclaredDutySuspended) {
+          getDutySuspendedProductsNew(userAnswers).map { dutySuspendedProducts =>
+            AdrDutySuspended(
+              declared = true,
+              dutySuspendedProducts
+            )
+          }
+        } else {
+          EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
         }
-      } else {
-        EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
+      }
+    } else {
+      getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>
+        if (hasDeclaredDutySuspended) {
+          getDutySuspendedProducts(userAnswers).map { dutySuspendedProducts =>
+            AdrDutySuspended(
+              declared = true,
+              dutySuspendedProducts
+            )
+          }
+        } else {
+          EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
+        }
       }
     }
 
@@ -322,6 +341,93 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       ciderDutySuspended,
       spiritsDutySuspended,
       wineDutySuspended,
+      otherFermentedDutySuspended
+    ).flatten
+
+  private def getDutySuspendedProductsNew(
+    userAnswers: UserAnswers
+  ): EitherT[Future, String, Seq[AdrDutySuspendedProduct]] =
+    for {
+      selectedRegimes             <- getValue(userAnswers, DutySuspendedAlcoholTypePage)
+      beerDutySuspended           <- if (selectedRegimes.contains(AlcoholRegime.Beer)) {
+                                       getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Beer)
+                                         .map(volumes =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Beer,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 volumes.totalLitres,
+                                                 volumes.pureAlcohol
+                                               )
+                                             )
+                                           )
+                                         )
+                                     } else EitherT.rightT[Future, String](None)
+      ciderDutySuspended          <- if (selectedRegimes.contains(AlcoholRegime.Cider)) {
+                                       getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Cider)
+                                         .map(volumes =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Cider,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 volumes.totalLitres,
+                                                 volumes.pureAlcohol
+                                               )
+                                             )
+                                           )
+                                         )
+                                     } else EitherT.rightT[Future, String](None)
+      wineDutySuspended           <- if (selectedRegimes.contains(AlcoholRegime.Wine)) {
+                                       getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Wine)
+                                         .map(volumes =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Wine,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 volumes.totalLitres,
+                                                 volumes.pureAlcohol
+                                               )
+                                             )
+                                           )
+                                         )
+                                     } else EitherT.rightT[Future, String](None)
+      spiritsDutySuspended        <- if (selectedRegimes.contains(AlcoholRegime.Spirits)) {
+                                       getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Spirits)
+                                         .map(volumes =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Spirits,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 volumes.totalLitres,
+                                                 volumes.pureAlcohol
+                                               )
+                                             )
+                                           )
+                                         )
+                                     } else EitherT.rightT[Future, String](None)
+      otherFermentedDutySuspended <- if (selectedRegimes.contains(AlcoholRegime.OtherFermentedProduct)) {
+                                       getValueByKey(
+                                         userAnswers,
+                                         DutySuspendedFinalVolumesPage,
+                                         AlcoholRegime.OtherFermentedProduct
+                                       )
+                                         .map(volumes =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.OtherFermentedProduct,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 volumes.totalLitres,
+                                                 volumes.pureAlcohol
+                                               )
+                                             )
+                                           )
+                                         )
+                                     } else EitherT.rightT[Future, String](None)
+    } yield Seq(
+      beerDutySuspended,
+      ciderDutySuspended,
+      wineDutySuspended,
+      spiritsDutySuspended,
       otherFermentedDutySuspended
     ).flatten
 
@@ -439,6 +545,14 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     userAnswers.get(page) match {
       case Some(value) => EitherT.rightT(value)
       case None        => EitherT.leftT(s"Value not found for page: $page")
+    }
+
+  private def getValueByKey[A, B](userAnswers: UserAnswers, page: QuestionPage[Map[A, B]], key: A)(implicit
+    reads: Reads[B]
+  ): EitherT[Future, String, B] =
+    userAnswers.getByKey(page, key) match {
+      case Some(value) => EitherT.rightT(value)
+      case None        => EitherT.leftT(s"Value not found for page $page and key $key")
     }
 
   private def calculateTotalDuties(

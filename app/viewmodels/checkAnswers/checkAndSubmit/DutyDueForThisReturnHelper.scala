@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
 import config.Constants.Css
+import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.{AdrDutySuspended, AdrSpirits}
@@ -33,6 +34,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryList, SummaryListRow}
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.Money
+import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,7 +48,8 @@ case class DutyDueForThisReturnViewModel(
 
 class DutyDueForThisReturnHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  adrReturnSubmissionService: AdrReturnSubmissionService
+  adrReturnSubmissionService: AdrReturnSubmissionService,
+  appConfig: FrontendAppConfig
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 
@@ -177,53 +181,37 @@ class DutyDueForThisReturnHelper @Inject() (
   )(implicit messages: Messages): Seq[SummaryListRow] =
     if (hasDutySuspendedDeclaration) {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.declared")),
-            classes = Css.summaryListValueCssClass
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController
-                    .onPageLoad()
-                    .url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.dutySuspended.alcohol"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.dutySuspended.declared")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = "site.change",
+              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
+                controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+              } else {
+                controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+              }
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )
       )
     } else {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
-            classes = Css.summaryListValueCssClass
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
-                    .onPageLoad(NormalMode)
-                    .url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.dutySuspended.alcohol"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = "site.change",
+              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
+                controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+              } else {
+                controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                  .onPageLoad(NormalMode)
+                  .url
+              }
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )
       )
