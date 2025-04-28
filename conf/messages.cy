@@ -881,7 +881,7 @@ dutySuspendedCalculation.pureAlcohol.add = Gwnaethom adio’r litrau o alcohol p
 dutySuspendedCalculation.pureAlcohol.subtract = Fe wnaethom dynnu’r litrau o alcohol pur a gawsoch ({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({1} litr).
 
 dutySuspended.checkYourAnswers.alcoholType.heading = Math o alcohol y gohiriwyd tollau arno
-dutySuspended.checkYourAnswers.alcoholType.summaryListKey = NOT_FOUND
+dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Math o alcohol
 dutySuspended.checkYourAnswers.amount.heading = Swm yr alcohol y gohiriwyd tollau arno
 dutySuspended.checkYourAnswers.totalLitres = {0} o litrau o gynnyrch yn ei gyfanrwydd
 dutySuspended.checkYourAnswers.pureAlcohol = {0} o litrau o alcohol pur
