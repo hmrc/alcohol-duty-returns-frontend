@@ -274,11 +274,19 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
       }
     }
 
+    val incompleteSubTaskUrl = if (userAnswers.regimes.regimes.size > 1) {
+      controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
+    } else {
+      controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+        .onPageLoad(NormalMode, userAnswers.regimes.regimes.head)
+        .url
+    }
+
     createDeclarationTask(
       getDeclarationState,
       DutySuspendedSection,
-      controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url,
-      controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url,
+      incompleteSubTaskUrl,
+      incompleteSubTaskUrl,
       controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
     )
   }
