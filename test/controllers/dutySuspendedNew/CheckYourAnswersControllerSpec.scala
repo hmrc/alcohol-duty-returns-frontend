@@ -1,12 +1,27 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers.dutySuspendedNew
 
 import base.SpecBase
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.AlcoholRegimes
-import play.api.inject.bind
 import org.mockito.ArgumentMatchers.any
+import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryList, SummaryListRow, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}
 import viewmodels.checkAnswers.dutySuspendedNew.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
@@ -16,48 +31,53 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
   lazy val displayCYARoute = controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
 
-  val expectedAlcoholTypeSummary = SummaryList(
-    Seq(
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Beer"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Cider"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Wine"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Other fermented products"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Spirits")))
-    )
-  )
-  val expectedAmountSummary      = SummaryList(
-    Seq(
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Beer"))),
-      SummaryListRow(key = Key(Text("Total litres of alcohol")), value = Value(Text("112 litres of total product"))),
-      SummaryListRow(key = Key(Text("Litres of pure alcohol")), value = Value(Text("10 litres of pure alcohol"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Cider"))),
-      SummaryListRow(key = Key(Text("Total litres of alcohol")), value = Value(Text("112 litres of total product"))),
-      SummaryListRow(key = Key(Text("Litres of pure alcohol")), value = Value(Text("10 litres of pure alcohol"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Wine"))),
-      SummaryListRow(key = Key(Text("Total litres of alcohol")), value = Value(Text("112 litres of total product"))),
-      SummaryListRow(key = Key(Text("Litres of pure alcohol")), value = Value(Text("10 litres of pure alcohol"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Other fermented products"))),
-      SummaryListRow(key = Key(Text("Total litres of alcohol")), value = Value(Text("112 litres of total product"))),
-      SummaryListRow(key = Key(Text("Litres of pure alcohol")), value = Value(Text("10 litres of pure alcohol"))),
-      SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(Text("Spirits"))),
-      SummaryListRow(key = Key(Text("Total litres of alcohol")), value = Value(Text("112 litres of total product"))),
-      SummaryListRow(key = Key(Text("Litres of pure alcohol")), value = Value(Text("10 litres of pure alcohol")))
-    )
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> true
   )
 
-  "Display CheckYourAnswers Controller" - {
+  "CheckYourAnswers Controller" - {
     "must return OK and render the CheckYourAnswersView when all required data is present" in {
+      val expectedAlcoholTypeSummary = SummaryList(
+        Seq(
+          SummaryListRow(
+            key = Key(Text("Type of alcohol")),
+            value = Value(HtmlContent("Beer<br>Cider<br>Wine<br>Spirits<br>Other fermented products"))
+          )
+        )
+      )
+
+      val expectedAmountSummary = SummaryList(
+        Seq(
+          SummaryListRow(
+            key = Key(Text("Beer")),
+            value = Value(HtmlContent("112 litres of total product<br>10 litres of pure alcohol"))
+          ),
+          SummaryListRow(
+            key = Key(Text("Cider")),
+            value = Value(HtmlContent("112 litres of total product<br>10 litres of pure alcohol"))
+          ),
+          SummaryListRow(
+            key = Key(Text("Wine")),
+            value = Value(HtmlContent("112 litres of total product<br>10 litres of pure alcohol"))
+          ),
+          SummaryListRow(
+            key = Key(Text("Spirits")),
+            value = Value(HtmlContent("112 litres of total product<br>10 litres of pure alcohol"))
+          ),
+          SummaryListRow(
+            key = Key(Text("Other fermented products")),
+            value = Value(HtmlContent("112 litres of total product<br>10 litres of pure alcohol"))
+          )
+        )
+      )
+
       val mockHelper = mock[CheckYourAnswersSummaryListHelper]
       when(mockHelper.alcoholTypeSummaryList(any())(any()))
         .thenReturn(Some(expectedAlcoholTypeSummary))
       when(mockHelper.dutySuspendedAmountsSummaryList(any())(any()))
         .thenReturn(Some(expectedAmountSummary))
 
-      val allRegimeUserAnswers = emptyUserAnswers.copy(
-        regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
-      )
-
-      val application = applicationBuilder(userAnswers = Some(allRegimeUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAllDSDRegimesSelected))
         .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockHelper))
         .build()
 
@@ -68,11 +88,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val expectedRenderedView =
-          if (allRegimeUserAnswers.regimes.regimes.size > 4) {
-            view(Some(expectedAlcoholTypeSummary), expectedAmountSummary)(request, getMessages(application))
-          } else {
-            view(None, expectedAmountSummary)(request, getMessages(application))
-          }
+          view(Some(expectedAlcoholTypeSummary), expectedAmountSummary)(request, getMessages(application))
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual expectedRenderedView.toString
@@ -81,17 +97,28 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
   }
 
   "must render the view with None for alcoholTypeSummary when there is only one regime" in {
+    val expectedAlcoholTypeSummary = SummaryList(
+      Seq(
+        SummaryListRow(key = Key(Text("Type of alcohol")), value = Value(HtmlContent("Beer")))
+      )
+    )
+
+    val expectedAmountSummary = SummaryList(
+      Seq(
+        SummaryListRow(
+          key = Key(Text("Beer")),
+          value = Value(HtmlContent("112 litres of total product<br>10 litres of pure alcohol"))
+        )
+      )
+    )
+
     val mockHelper = mock[CheckYourAnswersSummaryListHelper]
     when(mockHelper.alcoholTypeSummaryList(any())(any()))
       .thenReturn(Some(expectedAlcoholTypeSummary))
     when(mockHelper.dutySuspendedAmountsSummaryList(any())(any()))
       .thenReturn(Some(expectedAmountSummary))
 
-    val oneRegimeUserAnswers = emptyUserAnswers.copy(
-      regimes = AlcoholRegimes(Set(Beer))
-    )
-
-    val application = applicationBuilder(userAnswers = Some(oneRegimeUserAnswers))
+    val application = applicationBuilder(userAnswers = Some(userAnswersWithBeer))
       .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockHelper))
       .build()
 
@@ -109,10 +136,18 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
   }
 
   "must redirect to Journey Recovery when alcohol types or duty suspended volumes are missing" in {
-    val application = applicationBuilder(Some(userAnswersWithAllRegimes)).build()
+    val mockHelper = mock[CheckYourAnswersSummaryListHelper]
+    when(mockHelper.alcoholTypeSummaryList(any())(any()))
+      .thenReturn(None)
+    when(mockHelper.dutySuspendedAmountsSummaryList(any())(any()))
+      .thenReturn(None)
+
+    val application = applicationBuilder(Some(userAnswersWithAllRegimes))
+      .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockHelper))
+      .build()
+
     running(application) {
-      val request =
-        FakeRequest(GET, displayCYARoute)
+      val request = FakeRequest(GET, displayCYARoute)
 
       val result = route(application, request).value
 
