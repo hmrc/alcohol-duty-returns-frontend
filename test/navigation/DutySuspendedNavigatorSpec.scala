@@ -151,8 +151,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
               controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
                 .onPageLoad(NormalMode, OtherFermentedProduct)
           ),
-          (OtherFermentedProduct, () => routes.JourneyRecoveryController.onPageLoad())
-          // TODO: update route when new page is created
+          (OtherFermentedProduct, () => controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad())
         ).foreach { case (regime, expectedPage) =>
           s"must go from the Display calculation page to the correct next page (Declare quantity or CYA) when the regime is ${regime.entryName}" in {
             val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
@@ -239,8 +238,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
         }
       }
 
@@ -268,8 +266,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
                 .success
                 .value,
               regime
-            ) mustBe routes.JourneyRecoveryController.onPageLoad()
-            // TODO: update route when new page is created
+            ) mustBe controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
           }
         }
       }

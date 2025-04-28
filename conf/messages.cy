@@ -74,10 +74,11 @@ doYouHaveAnAppaId.heading = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr 
 doYouHaveAnAppaId.hint = Mae hwn yn 15 o gymeriadau, er enghraifft XMADP0123456789
 doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd
 
-noAppaId.title = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd arnoch, er mwyn cael mynediad at y gwasanaeth Toll Alcohol
-noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd arnoch, er mwyn cael mynediad at y gwasanaeth Toll Alcohol
-noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
-noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
+noAppaId.title = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
+noAppaId.heading = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
+noAppaId.p = Gallwch ddod o hyd i’ch ID APPA ar lythyrau oddi wrth CThEF ynghylch y gwasanaeth ar-lein ar gyfer Toll Alcohol.
+noAppaId.link.text = Dysgwch sut i wneud cais am ID APPA (yn agor mewn tab newydd)
+noAppaId.p2 = os nad oes gennych un.
 
 clearReturnAreYouSureQuestion.title = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
 clearReturnAreYouSureQuestion.heading = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
@@ -557,7 +558,7 @@ multipleSPRList.heading.regime.wine = Gwin i’w ddatgan, sydd â tholl yn sgil 
 multipleSPRList.heading.regime.spirits = Gwirodydd i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.heading.regime.otherfermentedproduct = Cynhyrchion eplesedig eraill i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.question = A ydych chi eisiau ychwanegu un arall?
-multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
+multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych gyfradd doll arall yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
 
 multipleSPRList.description.label = Disgrifiad
 multipleSPRList.totalLitres.label = Cyfanswm y cyfaint wedi’i ddatgan (litrau)
@@ -881,7 +882,7 @@ dutySuspendedCalculation.pureAlcohol.add = Gwnaethom adio’r litrau o alcohol p
 dutySuspendedCalculation.pureAlcohol.subtract = Fe wnaethom dynnu’r litrau o alcohol pur a gawsoch ({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({1} litr).
 
 dutySuspended.checkYourAnswers.alcoholType.heading = Math o alcohol y gohiriwyd tollau arno
-dutySuspended.checkYourAnswers.alcoholType.summaryListKey = NOT_FOUND
+dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Math o alcohol
 dutySuspended.checkYourAnswers.amount.heading = Swm yr alcohol y gohiriwyd tollau arno
 dutySuspended.checkYourAnswers.totalLitres = {0} o litrau o gynnyrch yn ei gyfanrwydd
 dutySuspended.checkYourAnswers.pureAlcohol = {0} o litrau o alcohol pur
