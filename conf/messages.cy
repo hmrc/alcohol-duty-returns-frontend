@@ -226,7 +226,7 @@ taskList.section.adjustment.under-declaration = Rhoi gwybod i ni pam y cafodd cy
 taskList.section.adjustment.over-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu gorddatgan
 
 taskList.section.dutySuspended.heading = Rhoi gwybod am ddosbarthiadau o alcohol y gohiriwyd tollau arno
-taskList.section.dutySuspended.needToDeclare = Rhoi gwybod i ni am eich dosbarthiadau y gohiriwyd tollau arnynt
+taskList.section.dutySuspended.needToDeclare = Rhoi gwybod i ni a ydych wedi dosbarthu neu dderbyn cynhyrchion gorffenedig o dan ohiriad tollau
 taskList.section.dutySuspended = Newid y cofnodion rydych chi wedi rhoi gwybod i ni amdanynt
 
 taskList.section.spirits.heading = Rhoi gwybod am waith cynhyrchu gwirodydd

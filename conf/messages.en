@@ -226,7 +226,7 @@ taskList.section.adjustment.under-declaration = Tell us why products were under-
 taskList.section.adjustment.over-declaration = Tell us why products were over-declared
 
 taskList.section.dutySuspended.heading = Report duty suspended alcohol deliveries
-taskList.section.dutySuspended.needToDeclare = Tell us about your duty suspended deliveries
+taskList.section.dutySuspended.needToDeclare = Tell us if you have delivered or received finished products in duty suspense
 taskList.section.dutySuspended = Change the entries you’ve told us about
 
 taskList.section.spirits.heading = Report spirits production
