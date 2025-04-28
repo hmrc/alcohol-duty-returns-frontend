@@ -22,9 +22,9 @@ import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Underdeclaration
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
-import pages.dutySuspended._
+import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
+import pages.dutySuspendedNew._
 import pages.spiritsQuestions._
 import play.api.Application
 import play.api.i18n.Messages
@@ -34,7 +34,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 class ReturnTaskListCreatorSpec extends SpecBase {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
-  val returnTaskListCreator       = new ReturnTaskListCreator()
+  val returnTaskListCreator       = new ReturnTaskListCreator(appConfig)
   val pageNumber                  = 1
 
   "on calling returnSection" - {
@@ -2032,9 +2032,9 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.notStarted
       }
 
-      "the subtask must link to the declare alcohol duty question" in {
+      "the subtask must link to the declare duty suspense question" in {
         result.taskList.items.head.href mustBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+          controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
         )
       }
 
@@ -2045,7 +2045,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
     "when the user answers no to the DSD question" - {
       val userAnswers = emptyUserAnswers
-        .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
+        .set(DeclareDutySuspenseQuestionPage, false)
         .success
         .value
       val result      = returnTaskListCreator.returnDSDSection(userAnswers)
@@ -2074,7 +2074,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "the subtask must link to the declare alcohol duty question in CheckMode" in {
         result.taskList.items.head.href mustBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+          controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
         )
       }
 
@@ -2087,10 +2087,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
     }
 
-    "when the user answers yes to the DeclareDutySuspendedDeliveriesQuestionPage question" - {
+    "when the user answers yes to the DSD question" - {
       "but has not started the declaration task" - {
         val userAnswers = emptyUserAnswers
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+          .set(DeclareDutySuspenseQuestionPage, true)
           .success
           .value
         val result      = returnTaskListCreator.returnDSDSection(userAnswers)
@@ -2117,9 +2117,9 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
-        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+        "the subtask must link to the declare duty suspense question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2129,18 +2129,14 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
 
       "and has started the declaration task and answered for the only regime" - {
-        val validTotal                                 = 42.34
-        val validPureAlcohol                           = 34.23
         val completeDutySuspendedDeliveriesUserAnswers = userAnswersWithOtherFermentedProduct
-          .copy(data =
-            Json.obj(
-              DutySuspendedOtherFermentedPage.toString -> Json.obj(
-                "totalOtherFermented"         -> validTotal,
-                "pureAlcoholInOtherFermented" -> validPureAlcohol
-              )
-            )
-          )
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+          .set(DeclareDutySuspenseQuestionPage, true)
+          .success
+          .value
+          .set(DutySuspendedAlcoholTypePage, Set(OtherFermentedProduct): Set[AlcoholRegime])
+          .success
+          .value
+          .setByKey(DutySuspendedFinalVolumesPage, OtherFermentedProduct, dutySuspendedFinalVolumes)
           .success
           .value
 
@@ -2170,7 +2166,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2189,7 +2185,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
           )
         }
 
@@ -2203,30 +2199,11 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
 
       "and has started the declaration task but not answered for all the regimes" - {
-        val validTotal                                   = 42.34
-        val validPureAlcohol                             = 34.23
-        val incompleteDutySuspendedDeliveriesUserAnswers = userAnswersWithAllRegimes
-          .copy(data =
-            Json.obj(
-              DutySuspendedBeerPage.toString    -> Json.obj(
-                "totalBeer"         -> validTotal,
-                "pureAlcoholInBeer" -> validPureAlcohol
-              ),
-              DutySuspendedCiderPage.toString   -> Json.obj(
-                "totalCider"         -> validTotal,
-                "pureAlcoholInCider" -> validPureAlcohol
-              ),
-              DutySuspendedSpiritsPage.toString -> Json.obj(
-                "totalSpirits"         -> validTotal,
-                "pureAlcoholInSpirits" -> validPureAlcohol
-              ),
-              DutySuspendedWinePage.toString    -> Json.obj(
-                "totalWine"         -> validTotal,
-                "pureAlcoholInWine" -> validPureAlcohol
-              )
-            )
-          )
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+        val incompleteDutySuspendedDeliveriesUserAnswers = userAnswersWithDutySuspendedDataAllRegimes
+          .removeByKey(DutySuspendedQuantitiesPage, OtherFermentedProduct)
+          .success
+          .value
+          .removeByKey(DutySuspendedFinalVolumesPage, OtherFermentedProduct)
           .success
           .value
 
@@ -2256,7 +2233,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2269,13 +2246,13 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
-        "the sub task must link to the duty suspended guidance controller" in {
+        "the sub task must link to the duty suspended alcohol type question" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
+            controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
           )
         }
 
@@ -2289,36 +2266,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
 
       "and has started the declaration task and answered for all the regimes" - {
-        val validTotal                                 = 42.34
-        val validPureAlcohol                           = 34.23
-        val completeDutySuspendedDeliveriesUserAnswers = userAnswersWithAllRegimes
-          .copy(data =
-            Json.obj(
-              DutySuspendedBeerPage.toString           -> Json.obj(
-                "totalBeer"         -> validTotal,
-                "pureAlcoholInBeer" -> validPureAlcohol
-              ),
-              DutySuspendedCiderPage.toString          -> Json.obj(
-                "totalCider"         -> validTotal,
-                "pureAlcoholInCider" -> validPureAlcohol
-              ),
-              DutySuspendedWinePage.toString           -> Json.obj(
-                "totalWine"         -> validTotal,
-                "pureAlcoholInWine" -> validPureAlcohol
-              ),
-              DutySuspendedSpiritsPage.toString        -> Json.obj(
-                "totalSpirits"         -> validTotal,
-                "pureAlcoholInSpirits" -> validPureAlcohol
-              ),
-              DutySuspendedOtherFermentedPage.toString -> Json.obj(
-                "totalOtherFermented"         -> validTotal,
-                "pureAlcoholInOtherFermented" -> validPureAlcohol
-              )
-            )
-          )
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
-          .success
-          .value
+        val completeDutySuspendedDeliveriesUserAnswers = userAnswersWithDutySuspendedDataAllRegimes
 
         val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
 
@@ -2346,7 +2294,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2359,13 +2307,13 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
-        "the sub task must link to the CYA duty suspended guidance controller" in {
+        "the sub task must link to the duty suspended CYA controller" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
           )
         }
 

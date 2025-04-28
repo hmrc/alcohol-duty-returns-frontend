@@ -33,7 +33,6 @@ import pages.dutySuspended._
 import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions._
 import play.api.libs.json.Reads
-import queries.Gettable
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.tasklist.TaskListViewModel
 

@@ -22,17 +22,16 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
 import models.TransactionType.{LPI, RPI, Return}
+import models._
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.checkAndSubmit._
 import models.declareDuty._
-import models.returns._
-import models._
 import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
+import models.returns._
 import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.dutySuspended._
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage, DutySuspendedQuantitiesPage}
+import pages.dutySuspendedNew._
 import pages.spiritsQuestions._
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -705,8 +704,8 @@ trait TestData extends ModelGenerators {
     internalId,
     regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
     data = Json.obj(
-      DeclareAlcoholDutyQuestionPage.toString             -> true,
-      AlcoholDutyPage.toString                            -> Json.obj(
+      DeclareAlcoholDutyQuestionPage.toString  -> true,
+      AlcoholDutyPage.toString                 -> Json.obj(
         "Beer"                  -> Json.obj(
           "dutiesByTaxType" -> Json.arr(
             Json.obj(
@@ -789,8 +788,8 @@ trait TestData extends ModelGenerators {
           "totalDuty"       -> 92.7
         )
       ),
-      DeclareAdjustmentQuestionPage.toString              -> true,
-      AdjustmentEntryListPage.toString                    -> Json.arr(
+      DeclareAdjustmentQuestionPage.toString   -> true,
+      AdjustmentEntryListPage.toString         -> Json.arr(
         Json.obj(
           "adjustmentType"     -> "under-declaration",
           "period"             -> "2023-12",
@@ -962,39 +961,52 @@ trait TestData extends ModelGenerators {
           "duty"               -> -194.67
         )
       ),
-      AdjustmentTotalPage.toString                        -> -515.67,
-      UnderDeclarationTotalPage.toString                  -> 1019.7,
-      UnderDeclarationReasonPage.toString                 -> "Reason for under declaration",
-      OverDeclarationTotalPage.toString                   -> -1854,
-      OverDeclarationReasonPage.toString                  -> "Reason for over declaration",
-      DeclareDutySuspendedDeliveriesQuestionPage.toString -> true,
-      DutySuspendedBeerPage.toString                      -> Json.obj(
-        "totalBeer"         -> 1000,
-        "pureAlcoholInBeer" -> 100
+      AdjustmentTotalPage.toString             -> -515.67,
+      UnderDeclarationTotalPage.toString       -> 1019.7,
+      UnderDeclarationReasonPage.toString      -> "Reason for under declaration",
+      OverDeclarationTotalPage.toString        -> -1854,
+      OverDeclarationReasonPage.toString       -> "Reason for over declaration",
+      DeclareDutySuspenseQuestionPage.toString -> true,
+      DutySuspendedAlcoholTypePage.toString    -> Json.arr("Beer", "Cider", "Wine", "Spirits", "OtherFermentedProduct"),
+      DutySuspendedFinalVolumesPage.toString   -> Json.obj(
+        "Beer"                  -> Json.obj(
+          "totalLitresDelivered" -> 100,
+          "totalLitres"          -> 100,
+          "pureAlcoholDelivered" -> 10,
+          "pureAlcohol"          -> 10
+        ),
+        "Cider"                 -> Json.obj(
+          "totalLitresDelivered" -> 100,
+          "totalLitres"          -> 100,
+          "pureAlcoholDelivered" -> 10,
+          "pureAlcohol"          -> 10
+        ),
+        "Wine"                  -> Json.obj(
+          "totalLitresDelivered" -> 200,
+          "totalLitres"          -> 0,
+          "pureAlcoholDelivered" -> 20,
+          "pureAlcohol"          -> 0
+        ),
+        "Spirits"               -> Json.obj(
+          "totalLitresDelivered" -> 3.5,
+          "totalLitres"          -> 3.4,
+          "pureAlcoholDelivered" -> 0.35,
+          "pureAlcohol"          -> 0.34
+        ),
+        "OtherFermentedProduct" -> Json.obj(
+          "totalLitresDelivered" -> 10,
+          "totalLitres"          -> -5.5,
+          "pureAlcoholDelivered" -> 1,
+          "pureAlcohol"          -> -0.82
+        )
       ),
-      DutySuspendedCiderPage.toString                     -> Json.obj(
-        "totalCider"         -> 2000,
-        "pureAlcoholInCider" -> 200
-      ),
-      DutySuspendedSpiritsPage.toString                   -> Json.obj(
-        "totalSpirits"         -> 1000,
-        "pureAlcoholInSpirits" -> 100
-      ),
-      DutySuspendedWinePage.toString                      -> Json.obj(
-        "totalWine"         -> 1000,
-        "pureAlcoholInWine" -> 100
-      ),
-      DutySuspendedOtherFermentedPage.toString            -> Json.obj(
-        "totalOtherFermented"         -> 1000,
-        "pureAlcoholInOtherFermented" -> 100
-      ),
-      DeclareQuarterlySpiritsPage.toString                -> true,
-      DeclareSpiritsTotalPage.toString                    -> 1234,
-      WhiskyPage.toString                                 -> Json.obj(
+      DeclareQuarterlySpiritsPage.toString     -> true,
+      DeclareSpiritsTotalPage.toString         -> 1234,
+      WhiskyPage.toString                      -> Json.obj(
         "scotchWhisky" -> 111,
         "irishWhiskey" -> 222
       ),
-      SpiritTypePage.toString                             -> Json.arr(
+      SpiritTypePage.toString                  -> Json.arr(
         "neutralIndustrialOrigin",
         "other",
         "neutralAgriculturalOrigin",
@@ -1004,7 +1016,7 @@ trait TestData extends ModelGenerators {
         "maltSpirits",
         "grainSpirits"
       ),
-      OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit"
+      OtherSpiritsProducedPage.toString        -> "Other Type of Spirit"
     ),
     startedTime = Instant.now(clock),
     lastUpdated = Instant.now(clock)
@@ -1047,11 +1059,11 @@ trait TestData extends ModelGenerators {
       dutySuspended = AdrDutySuspended(
         declared = true,
         dutySuspendedProducts = List(
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(1000, 100)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(2000, 200)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(1000, 100)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Wine, AdrAlcoholQuantity(1000, 100)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(1000, 100))
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(100, 10)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(100, 10)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Wine, AdrAlcoholQuantity(0, 0)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(3.4, 0.34)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(-5.5, -0.82))
         )
       ),
       spirits = Some(
