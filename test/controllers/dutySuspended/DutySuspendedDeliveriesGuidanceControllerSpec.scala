@@ -22,6 +22,10 @@ import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
 
 class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
 
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> false
+  )
+
   "DutySuspendedDeliveriesGuidance Controller" - {
     "must return OK and the correct view for a GET" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()

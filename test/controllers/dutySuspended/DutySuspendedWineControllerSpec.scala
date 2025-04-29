@@ -41,8 +41,13 @@ class DutySuspendedWineControllerSpec extends SpecBase {
   val form         = formProvider()
 
   lazy val dutySuspendedWineRoute = routes.DutySuspendedWineController.onPageLoad(NormalMode).url
-  val validTotalWine              = 23.45
-  val validPureAlcoholInWine      = 16.46
+
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> false
+  )
+
+  val validTotalWine         = 23.45
+  val validPureAlcoholInWine = 16.46
 
   val userAnswers = userAnswersWithWine.copy(data =
     Json.obj(

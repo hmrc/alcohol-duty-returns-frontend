@@ -33,16 +33,19 @@ class DutySuspendedDeliveriesGuidanceController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  checkDSDOldJourneyToggle: CheckDSDOldJourneyToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedDeliveriesGuidanceView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view())
-  }
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle) { implicit request =>
+      Ok(view())
+    }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData) { request =>
-    Redirect(navigator.nextPage(DutySuspendedGuidancePage, NormalMode, request.userAnswers))
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle) {
+    request =>
+      Redirect(navigator.nextPage(DutySuspendedGuidancePage, NormalMode, request.userAnswers))
   }
 }

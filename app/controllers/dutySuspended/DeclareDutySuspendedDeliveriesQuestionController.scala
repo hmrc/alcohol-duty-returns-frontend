@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{Mode, UserAnswers}
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.dutySuspended._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -38,6 +38,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  checkDSDOldJourneyToggle: CheckDSDOldJourneyToggleAction,
   formProvider: DeclareDutySuspendedDeliveriesQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeclareDutySuspendedDeliveriesQuestionView
@@ -47,17 +48,18 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle) { implicit request =>
+      val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, mode))
     }
 
-    Ok(view(preparedForm, mode))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -72,7 +74,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
               _                <- userAnswersConnector.set(filterUserAnswer)
             } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, filterUserAnswer))
         )
-  }
+    }
 
   def filterDSDQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
     if (value) {

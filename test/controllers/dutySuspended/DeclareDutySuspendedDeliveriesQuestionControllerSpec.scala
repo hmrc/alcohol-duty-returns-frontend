@@ -51,6 +51,10 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
   lazy val declareDutySuspendedDeliveriesQuestionRoute =
     routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
 
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> false
+  )
+
   "DeclareDutySuspendedDeliveriesQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
