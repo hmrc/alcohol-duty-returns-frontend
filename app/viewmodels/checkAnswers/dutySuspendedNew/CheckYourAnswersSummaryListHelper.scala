@@ -50,11 +50,11 @@ class CheckYourAnswersSummaryListHelper {
     userAnswers.get(DutySuspendedAlcoholTypePage).map { alcoholTypes =>
       val orderedRegimes = AlcoholRegimesViewOrder.regimesInViewOrder(AlcoholRegimes(alcoholTypes))
       val rowValue       =
-        orderedRegimes.map(regime => HtmlFormat.escape(messages(s"${regime.regimeMessageKey}")).toString.capitalize)
+        orderedRegimes.map(regime => HtmlFormat.escape(messages(regime.regimeMessageKey)).toString.capitalize)
 
       SummaryListRowViewModel(
         key = messages("dutySuspended.checkYourAnswers.alcoholType.summaryListKey"),
-        value = ValueViewModel(HtmlContent(s"${rowValue.mkString("<br>")}")),
+        value = ValueViewModel(HtmlContent(rowValue.mkString("<br>"))),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedAlcoholTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspended.checkYourAnswers.alcoholType.change.hidden"))
@@ -67,7 +67,7 @@ class CheckYourAnswersSummaryListHelper {
   ): Option[SummaryListRow] =
     userAnswers.getByKey(DutySuspendedFinalVolumesPage, regime).map { volumes =>
       SummaryListRowViewModel(
-        key = KeyViewModel(HtmlContent(messages(s"${regime.regimeMessageKey}").capitalize)),
+        key = KeyViewModel(HtmlContent(messages(regime.regimeMessageKey).capitalize)),
         value = ValueViewModel(
           HtmlContent(
             s"${messages("dutySuspended.checkYourAnswers.totalLitres", messages("site.2DP", volumes.totalLitres))}"
