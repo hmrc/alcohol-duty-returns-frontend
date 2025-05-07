@@ -52,11 +52,6 @@ class MultipleSPRListController @Inject() (
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-
       MultipleSPRListHelper
         .sprTableViewModel(request.userAnswers, regime)
         .fold(
@@ -64,7 +59,7 @@ class MultipleSPRListController @Inject() (
             logger.warn(s"Failed to create SPR table: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           },
-          sprTable => Ok(view(preparedForm, regime, sprTable))
+          sprTable => Ok(view(form, regime, sprTable))
         )
     }
 
