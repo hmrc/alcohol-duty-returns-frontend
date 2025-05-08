@@ -82,7 +82,7 @@ noAppaId.p2 = os nad oes gennych un.
 
 clearReturnAreYouSureQuestion.title = A ydych yn siŵr eich bod am ddileu cynnwys eich Datganiad?
 clearReturnAreYouSureQuestion.heading = A ydych yn siŵr eich bod am ddileu cynnwys eich Datganiad?
-clearReturnAreYouSureQuestion.warning = Bydd gwneud hyn yn dileu’r holl wybodaeth yr ydych wedi’i nodi yn y datganiad hwn.
+clearReturnAreYouSureQuestion.warning = Bydd gwneud hyn yn dileu’r holl wybodaeth yr ydych wedi’i nodi yn y Datganiad hwn.
 clearReturnAreYouSureQuestion.error.required = Dewiswch ‘Iawn’ os hoffech glirio’ch Datganiad
 
 regime.beer = cwrw
@@ -182,7 +182,7 @@ viewPastPayments.youOwe = Mae arnoch
 viewPastPayments.duty.value = {0}
 viewPastPayments.credit.paragraph = Does gennych chi ddim byd i’w dalu. Gallwch chi ofyn am ad-daliad, neu byddwn ni’n defnyddio’r credyd tuag at daliadau yn y dyfodol.
 viewPastPayments.zeroBalance.paragraph = Does gennych chi ddim byd i’w dalu.
-viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd ar 2 ddiwrnod i ymddangos
+viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd ar 2 ddiwrnod i ymddangos.
 viewPastPayments.Return.description = Taliad ar gyfer Datganiad Toll Alcohol
 viewPastPayments.RPI.description = Llog ar ad-daliad
 viewPastPayments.LPI.description = Llog am dalu’n hwyr
@@ -312,7 +312,7 @@ return.journey.multipleSPR.error.noValue.dutyRate = Nodwch eich cyfradd doll yn 
 return.journey.multipleSPR.error.invalid.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
 return.journey.multipleSPR.error.maximumValue.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
 return.journey.multipleSPR.error.minimumValue.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
-return.journey.multipleSPR.error.tooManyDecimalPlaces.dutyRate = Eich cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn gynnwys 2 le degol
+return.journey.multipleSPR.error.tooManyDecimalPlaces.dutyRate = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn gynnwys 2 le degol
 
 return.journey.abv.interval.label.Beer = cwrw
 return.journey.abv.interval.label.Cider = seidr
@@ -1065,7 +1065,7 @@ returnSubmitted.noDetails.youCan = Gallwch wneud y canlynol:
 returnSubmitted.noDetails.viewReturn1 = bwrw golwg dros fanylion llawn eich datganiad
 returnSubmitted.noDetails.viewReturn2 = i gadarnhau’ch cyfeirnod
 returnSubmitted.noDetails.viewPayments = gwirio faint o doll sydd arnoch
-returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 ddiwrnod gwaithi gael eu diweddaru yn ein gwasanaeth.
+returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 ddiwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
 returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
 
 # End of Check and submit sub-journey
