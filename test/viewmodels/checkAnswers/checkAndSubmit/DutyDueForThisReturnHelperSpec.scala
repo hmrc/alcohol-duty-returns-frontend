@@ -19,9 +19,9 @@ package viewmodels.checkAnswers.checkAndSubmit
 import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyCalculatorConnector
-import models.{NormalMode, UserAnswers}
 import models.adjustment.AdjustmentDuty
 import models.checkAndSubmit.{AdrDutySuspended, AdrDutySuspendedProduct, AdrSpirits}
+import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
@@ -121,7 +121,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -152,7 +152,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -185,7 +185,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
@@ -220,7 +220,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
@@ -257,7 +257,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
@@ -292,7 +292,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
@@ -357,8 +357,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           .futureValue
       result mustBe Left(s"Failed to calculate total duty due: $errorMessage")
     }
+
     "when everything is declared" - {
-      "the duties must be shown in the correct order (Beer, Cider, Wine, Spirits, OTP, Adjustments)" in new SetUp {
+      "the duties must be shown in the correct order (Beer, Cider, Wine, Spirits, OFP, Adjustments)" in new SetUp {
         val userAnswers: UserAnswers = declareAdjustmentTotalPage(
           declareAdjustmentQuestionPage(
             declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -429,6 +430,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
     val mockCalculatorConnector        = mock[AlcoholDutyCalculatorConnector]
     val mockAdrReturnSubmissionService = mock[AdrReturnSubmissionService]
     val dutyDueForThisReturnHelper     =
-      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService)
+      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService, appConfig)
   }
 }

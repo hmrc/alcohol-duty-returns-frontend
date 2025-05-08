@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
 import config.Constants.Css
+import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.{AdrDutySuspended, AdrSpirits}
@@ -28,11 +29,13 @@ import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
 import services.checkAndSubmit.AdrReturnSubmissionService
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Actions, Key, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryList, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.Money
+import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,7 +48,8 @@ case class DutyDueForThisReturnViewModel(
 
 class DutyDueForThisReturnHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  adrReturnSubmissionService: AdrReturnSubmissionService
+  adrReturnSubmissionService: AdrReturnSubmissionService,
+  appConfig: FrontendAppConfig
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 
@@ -126,47 +130,30 @@ class DutyDueForThisReturnHelper @Inject() (
   ): Seq[SummaryListRow] =
     if (dutiesByRegime.isEmpty) {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.table.nil.label"))
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.table.nil.value"))
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.table.nil.label"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.table.nil.label"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.table.nil.value")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = Text(messages("site.change")),
+              href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.table.nil.label"))
           )
         )
       )
     } else {
       dutiesByRegime.map { case (alcoholRegime, alcoholDuty) =>
-        SummaryListRow(
-          key = Key(
-            content = Text(messages(s"dutyDueForThisReturn.table.dutyDue.${alcoholRegime.regimeMessageKey}")),
-            classes = Css.boldFontCssClass
-          ),
+        SummaryListRowViewModel(
+          key = messages(s"dutyDueForThisReturn.table.dutyDue.${alcoholRegime.regimeMessageKey}"),
           value = Value(
-            content = Text(Money.format(alcoholDuty.totalDuty))
+            content = Text(Money.format(alcoholDuty.totalDuty)),
+            classes = s"${Css.noWrap}"
           ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime).url,
-                  visuallyHiddenText =
-                    Some(messages(s"dutyDueForThisReturn.table.dutyDue.${alcoholRegime.regimeMessageKey}"))
-                )
-              )
-            )
+          actions = Seq(
+            ActionItemViewModel(
+              content = Text(messages("site.change")),
+              href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime).url
+            ).withVisuallyHiddenText(messages(s"dutyDueForThisReturn.table.dutyDue.${alcoholRegime.regimeMessageKey}"))
           )
         )
       }
@@ -177,53 +164,37 @@ class DutyDueForThisReturnHelper @Inject() (
   )(implicit messages: Messages): Seq[SummaryListRow] =
     if (hasDutySuspendedDeclaration) {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.declared")),
-            classes = Css.summaryListValueCssClass
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController
-                    .onPageLoad()
-                    .url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.dutySuspended.alcohol"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.dutySuspended.declared")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = Text(messages("site.change")),
+              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
+                controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+              } else {
+                controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+              }
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )
       )
     } else {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
-            classes = Css.summaryListValueCssClass
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
-                    .onPageLoad(NormalMode)
-                    .url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.dutySuspended.alcohol"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = Text(messages("site.change")),
+              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
+                controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+              } else {
+                controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                  .onPageLoad(NormalMode)
+                  .url
+              }
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )
       )
@@ -232,50 +203,27 @@ class DutyDueForThisReturnHelper @Inject() (
   private def createSpiritsSummaryListRow(hasSpirits: Boolean)(implicit messages: Messages): Seq[SummaryListRow] =
     if (hasSpirits) {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.spirits.production")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.spirits.declared")),
-            classes = Css.summaryListValueCssClass
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href = controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.spirits.production"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.spirits.production"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.spirits.declared")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = Text(messages("site.change")),
+              href = controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.spirits.production"))
           )
         )
       )
     } else {
       Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("dutyDueForThisReturn.spirits.production")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare")),
-            classes = Css.summaryListValueCssClass
-          ),
-          actions = Some(
-            Actions(
-              items = Seq(
-                ActionItem(
-                  content = Text(messages("site.change")),
-                  href =
-                    controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url,
-                  visuallyHiddenText = Some(messages("dutyDueForThisReturn.spirits.production"))
-                )
-              )
-            )
+        SummaryListRowViewModel(
+          key = messages("dutyDueForThisReturn.spirits.production"),
+          value = ValueViewModel(messages("dutyDueForThisReturn.spirits.nothingToDeclare")),
+          actions = Seq(
+            ActionItemViewModel(
+              content = Text(messages("site.change")),
+              href = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
+            ).withVisuallyHiddenText(messages("dutyDueForThisReturn.spirits.production"))
           )
         )
       )
@@ -283,47 +231,28 @@ class DutyDueForThisReturnHelper @Inject() (
 
   private def createSummaryListAdjustmentRow(totalAdjustment: BigDecimal)(implicit messages: Messages): SummaryListRow =
     if (totalAdjustment == 0) {
-      SummaryListRow(
-        key = Key(
-          content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-          classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-        ),
-        value = Value(
-          content = Text(messages("dutyDueForThisReturn.table.nil.value")),
-          classes = Css.summaryListValueCssClass
-        ),
-        actions = Some(
-          Actions(
-            items = Seq(
-              ActionItem(
-                content = Text(messages("site.change")),
-                href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url,
-                visuallyHiddenText = Some(messages("dutyDueForThisReturn.table.adjustmentDue"))
-              )
-            )
-          )
+      SummaryListRowViewModel(
+        key = messages("dutyDueForThisReturn.table.adjustmentDue"),
+        value = ValueViewModel(messages("dutyDueForThisReturn.table.nil.value")),
+        actions = Seq(
+          ActionItemViewModel(
+            content = Text(messages("site.change")),
+            href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
+          ).withVisuallyHiddenText(messages("dutyDueForThisReturn.table.adjustmentDue"))
         )
       )
     } else {
-      SummaryListRow(
-        key = Key(
-          content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-          classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-        ),
+      SummaryListRowViewModel(
+        key = messages("dutyDueForThisReturn.table.adjustmentDue"),
         value = Value(
           content = Text(Money.format(totalAdjustment)),
-          classes = s"${Css.summaryListValueCssClass} ${Css.noWrap}"
+          classes = s"${Css.noWrap}"
         ),
-        actions = Some(
-          Actions(
-            items = Seq(
-              ActionItem(
-                content = Text(messages("site.change")),
-                href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url,
-                visuallyHiddenText = Some(messages("dutyDueForThisReturn.table.adjustmentDue"))
-              )
-            )
-          )
+        actions = Seq(
+          ActionItemViewModel(
+            content = Text(messages("site.change")),
+            href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
+          ).withVisuallyHiddenText(messages("dutyDueForThisReturn.table.adjustmentDue"))
         )
       )
     }

@@ -16,15 +16,16 @@
 
 package viewmodels.tasklist
 
-import config.Constants
+import config.{Constants, FrontendAppConfig}
 import models.TaskListSection.{AdjustmentSection, DutySuspendedSection, SpiritsSection}
 import models.adjustment.AdjustmentType
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, TaskListSection, UserAnswers}
 import pages.QuestionPage
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import pages.dutySuspended._
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
+import pages.spiritsQuestions._
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -34,7 +35,7 @@ import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
 import javax.inject.Inject
 
-class ReturnTaskListCreator @Inject() () {
+class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
 
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
@@ -253,6 +254,43 @@ class ReturnTaskListCreator @Inject() () {
     )
   }
 
+  private def returnDSDNewJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
+    val getDeclarationState = () => {
+      val dutySuspendedAlcoholTypes = userAnswers.get(DutySuspendedAlcoholTypePage).isDefined
+      val dutySuspendedVolumes      = userAnswers
+        .get(DutySuspendedAlcoholTypePage)
+        .fold(false) { alcoholTypes =>
+          alcoholTypes.forall(regime => userAnswers.getByKey(DutySuspendedFinalVolumesPage, regime).isDefined)
+        }
+
+      val pagesCompleted = Seq(dutySuspendedAlcoholTypes, dutySuspendedVolumes)
+
+      if (pagesCompleted.forall(_ == false)) {
+        NotStarted
+      } else if (pagesCompleted.forall(_ == true)) {
+        Completed
+      } else {
+        InProgress
+      }
+    }
+
+    val incompleteSubTaskUrl = if (userAnswers.regimes.regimes.size > 1) {
+      controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
+    } else {
+      controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+        .onPageLoad(NormalMode, userAnswers.regimes.regimes.head)
+        .url
+    }
+
+    createDeclarationTask(
+      getDeclarationState,
+      DutySuspendedSection,
+      incompleteSubTaskUrl,
+      incompleteSubTaskUrl,
+      controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+    )
+  }
+
   private def returnQSJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       val declareSpiritsTotal = userAnswers.get(DeclareSpiritsTotalPage).isDefined
@@ -400,12 +438,21 @@ class ReturnTaskListCreator @Inject() () {
   }
 
   def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
-    createSection(
-      userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
-      Seq(returnDSDJourneyTaskListItem(userAnswers)),
-      controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
-      section = DutySuspendedSection
-    )
+    if (appConfig.dutySuspendedNewJourneyEnabled) {
+      createSection(
+        userAnswers.get(DeclareDutySuspenseQuestionPage),
+        Seq(returnDSDNewJourneyTaskListItem(userAnswers)),
+        controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(_).url,
+        section = DutySuspendedSection
+      )
+    } else {
+      createSection(
+        userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
+        Seq(returnDSDJourneyTaskListItem(userAnswers)),
+        controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
+        section = DutySuspendedSection
+      )
+    }
 
   def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
