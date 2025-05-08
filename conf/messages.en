@@ -1002,7 +1002,7 @@ underDeclarationReason.error.length = The reason must be {0} characters or less
 
 overDeclarationReason.title = Why were alcoholic products over-declared?
 overDeclarationReason.heading = Why were alcoholic products over-declared?
-overDeclarationReason.error.required = Enter the reason why alcoholic products were over-declared?
+overDeclarationReason.error.required = Enter the reason why alcoholic products were over-declared
 overDeclarationReason.error.length = The reason must be {0} characters or less
 
 # End of adjustments sub-journey
