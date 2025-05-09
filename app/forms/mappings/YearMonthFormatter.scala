@@ -88,7 +88,7 @@ class YearMonthFormatter(
       case 2 =>
         formatDate(key, data)
       case 1 =>
-        Left(missingFields.map(field => FormError(s"$key.$field", requiredKey, missingFields ++ args)))
+        Left(missingFields.map(field => FormError(s"$key.$field", s"$requiredKey.$field", args)))
       case _ =>
         Left(List(FormError(key, allRequiredKey, args)))
     }

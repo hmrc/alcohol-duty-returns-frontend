@@ -45,13 +45,13 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
     behave like yearMonthMandatoryMonthField(
       form,
       inputKey,
-      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.required", Seq("month"))
+      FormError("when-did-you-pay-duty-input.month", "whenDidYouPayDuty.date.error.required.month")
     )
 
     behave like yearMonthMandatoryYearField(
       form,
       inputKey,
-      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.required", Seq("year"))
+      FormError("when-did-you-pay-duty-input.year", "whenDidYouPayDuty.date.error.required.year")
     )
 
     behave like yearMonthFieldInFuture(
