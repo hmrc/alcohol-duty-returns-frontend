@@ -17,7 +17,6 @@
 package services.checkAndSubmit
 
 import base.SpecBase
-import common.TestData
 import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
@@ -28,6 +27,7 @@ import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import queries.Settable
@@ -37,7 +37,7 @@ import viewmodels.tasklist.TaskListViewModel
 
 import scala.concurrent.Future
 
-class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
+class AdrReturnSubmissionServiceSpec extends SpecBase {
 
   "AdrReturnSubmissionService" - {
     "Nil return" - {
@@ -49,7 +49,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           .set(DeclareAdjustmentQuestionPage, false)
           .success
           .value
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
+          .set(DeclareDutySuspenseQuestionPage, false)
           .success
           .value
 
@@ -70,7 +70,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           .set(DeclareAdjustmentQuestionPage, false)
           .success
           .value
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
+          .set(DeclareDutySuspenseQuestionPage, false)
           .success
           .value
           .set(DeclareQuarterlySpiritsPage, false)
@@ -258,7 +258,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "Duty Suspended section" - {
+      "Duty Suspended section (old journey)" - {
         Seq(
           DeclareDutySuspendedDeliveriesQuestionPage,
           DutySuspendedBeerPage,
@@ -267,8 +267,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
         ).foreach { (page: Settable[_]) =>
-          s"must return Left if $page is not present" in new SetUp {
-            val userAnswers = fullUserAnswers.remove(page).success.value
+          s"must return Left if $page is not present" in new SetUp(true, false) {
+            val userAnswers = fullUserAnswersOldDSDFormat.remove(page).success.value
 
             when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -289,11 +289,72 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         )
 
         dutySuspendedPages.foreach { case (regime, page) =>
-          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp {
+          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp(
+            true,
+            false
+          ) {
             val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
-            val userAnswers     = fullUserAnswers
+            val userAnswers     = fullUserAnswersOldDSDFormat
               .copy(regimes = AlcoholRegimes(filteredRegimes))
               .remove(page)
+              .success
+              .value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
+            whenReady(
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
+            ) { result =>
+              result.isRight mustBe true
+              result.map { res =>
+                res.dutySuspended.declared                   mustBe true
+                res.dutySuspended.dutySuspendedProducts.size mustBe 4
+              }
+            }
+          }
+        }
+      }
+
+      "Duty Suspended section" - {
+        Seq(
+          DeclareDutySuspenseQuestionPage,
+          DutySuspendedAlcoholTypePage
+        ).foreach { (page: Settable[_]) =>
+          s"must return Left if $page is not present" in new SetUp {
+            val userAnswers = fullUserAnswers.remove(page).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
+            whenReady(
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
+            ) { result =>
+              result mustBe Left(s"Value not found for page: $page")
+            }
+          }
+        }
+
+        Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
+          s"must return Left if $regime is selected but key is not present in DutySuspendedFinalVolumesPage" in new SetUp {
+            val userAnswers = fullUserAnswers.removeByKey(DutySuspendedFinalVolumesPage, regime).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
+            whenReady(
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
+            ) { result =>
+              result mustBe Left(s"Value not found for page dutySuspendedFinalVolumes and key $regime")
+            }
+          }
+        }
+
+        Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
+          s"must return Right if $regime is not selected and key is not present in DutySuspendedFinalVolumesPage" in new SetUp {
+            val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
+            val userAnswers     = fullUserAnswers
+              .set(DutySuspendedAlcoholTypePage, filteredRegimes)
+              .success
+              .value
+              .removeByKey(DutySuspendedFinalVolumesPage, regime)
               .success
               .value
 
@@ -365,7 +426,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           Future.failed(new Exception(errorMessage))
         )
 
-        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock)
+        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock, appConfig)
 
         when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -378,8 +439,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       }
     }
 
-    class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
-      val additionalConfig             = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true, newDSDJourneyFeatureToggle: Boolean = true) {
+      val additionalConfig             = Map(
+        "features.spirits-and-ingredients"    -> spiritsAndIngredientsEnabledFeatureToggle,
+        "features.duty-suspended-new-journey" -> newDSDJourneyFeatureToggle
+      )
       val application: Application     = applicationBuilder().configure(additionalConfig).build()
       val taskListViewModelMock        = mock[TaskListViewModel]
       val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
@@ -392,7 +456,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       }
 
       val adrReturnSubmissionService =
-        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock)
+        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock, appConfig)
     }
   }
 }

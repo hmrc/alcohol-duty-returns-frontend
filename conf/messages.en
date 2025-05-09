@@ -227,7 +227,7 @@ taskList.section.adjustment.under-declaration = Tell us why products were under-
 taskList.section.adjustment.over-declaration = Tell us why products were over-declared
 
 taskList.section.dutySuspended.heading = Report duty suspended alcohol deliveries
-taskList.section.dutySuspended.needToDeclare = Tell us about your duty suspended deliveries
+taskList.section.dutySuspended.needToDeclare = Tell us if you have delivered or received finished products in duty suspense
 taskList.section.dutySuspended = Change the entries you’ve told us about
 
 taskList.section.spirits.heading = Report spirits production
@@ -709,6 +709,185 @@ checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
 declareDutySuspenseQuestion.title = Have you delivered or received finished alcoholic products under duty suspense?
 declareDutySuspenseQuestion.heading = Have you delivered or received finished alcoholic products under duty suspense?
 declareDutySuspenseQuestion.error.required = Select yes if you have delivered or received finished alcoholic products under duty suspense
+
+dutySuspendedAlcoholType.title = Which finished alcoholic products have you delivered or received under duty suspense?
+dutySuspendedAlcoholType.heading = Which finished alcoholic products have you delivered or received under duty suspense?
+dutySuspendedAlcoholType.error.required = Select the finished alcoholic products you delivered or received under duty suspense
+
+dutySuspendedQuantities.title.regime.beer = Tell us the quantities of your duty suspended beer
+dutySuspendedQuantities.title.regime.cider = Tell us the quantities of your duty suspended cider
+dutySuspendedQuantities.title.regime.wine = Tell us the quantities of your duty suspended wine
+dutySuspendedQuantities.title.regime.spirits = Tell us the quantities of your duty suspended spirits
+dutySuspendedQuantities.title.regime.otherfermentedproduct = Tell us the quantities of your duty suspended other fermented products
+dutySuspendedQuantities.heading.regime.beer = Tell us the quantities of your duty suspended beer
+dutySuspendedQuantities.heading.regime.cider = Tell us the quantities of your duty suspended cider
+dutySuspendedQuantities.heading.regime.wine = Tell us the quantities of your duty suspended wine
+dutySuspendedQuantities.heading.regime.spirits = Tell us the quantities of your duty suspended spirits
+dutySuspendedQuantities.heading.regime.otherfermentedproduct = Tell us the quantities of your duty suspended other fermented products
+dutySuspendedQuantities.deliveredInsideUK = Delivered inside the UK under duty suspense
+dutySuspendedQuantities.deliveredOutsideUK = Delivered outside the UK under duty suspense
+dutySuspendedQuantities.received = Received under duty suspense
+
+dutySuspendedQuantities.totalLitres.heading.regime.beer = Total litres of finished beer
+dutySuspendedQuantities.totalLitres.heading.regime.cider = Total litres of finished cider
+dutySuspendedQuantities.totalLitres.heading.regime.wine = Total litres of finished wine
+dutySuspendedQuantities.totalLitres.heading.regime.spirits = Total litres of finished spirits
+dutySuspendedQuantities.totalLitres.heading.regime.otherfermentedproduct = Total litres of finished other fermented products
+dutySuspendedQuantities.totalLitres.hint = In litres, up to 2 decimal places. Enter 0 if none.
+dutySuspendedQuantities.pureAlcohol.heading = Litres of pure alcohol
+dutySuspendedQuantities.pureAlcohol.hint = In litres, up to 4 decimal places. Enter 0 if none.
+dutySuspendedQuantities.deliveredInsideUK.hidden = delivered inside the UK under duty suspense
+dutySuspendedQuantities.deliveredOutsideUK.hidden = delivered outside the UK under duty suspense
+dutySuspendedQuantities.received.hidden = received under duty suspense
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.beer = Enter the total litres of finished beer delivered inside the UK. Enter 0 if none.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.beer = Total litres of finished beer delivered inside the UK must be a number
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.beer = Total litres of finished beer delivered inside the UK must be less than 1 billion litres
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.beer = Total litres of finished beer delivered inside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.beer = Total litres of finished beer delivered inside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.cider = Enter the total litres of finished cider delivered inside the UK. Enter 0 if none.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.cider = Total litres of finished cider delivered inside the UK must be a number
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.cider = Total litres of finished cider delivered inside the UK must be less than 1 billion litres
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.cider = Total litres of finished cider delivered inside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.cider = Total litres of finished cider delivered inside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.wine = Enter the total litres of finished wine delivered inside the UK. Enter 0 if none.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.wine = Total litres of finished wine delivered inside the UK must be a number
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.wine = Total litres of finished wine delivered inside the UK must be less than 1 billion litres
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.wine = Total litres of finished wine delivered inside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.wine = Total litres of finished wine delivered inside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.spirits = Enter the total litres of finished spirits delivered inside the UK. Enter 0 if none.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.spirits = Total litres of finished spirits delivered inside the UK must be a number
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.spirits = Total litres of finished spirits delivered inside the UK must be less than 1 billion litres
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.spirits = Total litres of finished spirits delivered inside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.spirits = Total litres of finished spirits delivered inside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredInsideUK.error.noValue.totalLitres.regime.otherfermentedproduct = Enter the total litres of finished other fermented products delivered inside the UK. Enter 0 if none.
+dutySuspended.deliveredInsideUK.error.invalid.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered inside the UK must be a number
+dutySuspended.deliveredInsideUK.error.maximumValue.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered inside the UK must be less than 1 billion litres
+dutySuspended.deliveredInsideUK.error.minimumValue.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered inside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredInsideUK.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered inside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.beer = Enter the total litres of finished beer delivered outside the UK. Enter 0 if none.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.beer = Total litres of finished beer delivered outside the UK must be a number
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.beer = Total litres of finished beer delivered outside the UK must be less than 1 billion litres
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.beer = Total litres of finished beer delivered outside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.beer = Total litres of finished beer delivered outside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.cider = Enter the total litres of finished cider delivered outside the UK. Enter 0 if none.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.cider = Total litres of finished cider delivered outside the UK must be a number
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.cider = Total litres of finished cider delivered outside the UK must be less than 1 billion litres
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.cider = Total litres of finished cider delivered outside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.cider = Total litres of finished cider delivered outside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.wine = Enter the total litres of finished wine delivered outside the UK. Enter 0 if none.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.wine = Total litres of finished wine delivered outside the UK must be a number
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.wine = Total litres of finished wine delivered outside the UK must be less than 1 billion litres
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.wine = Total litres of finished wine delivered outside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.wine = Total litres of finished wine delivered outside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.spirits = Enter the total litres of finished spirits delivered outside the UK. Enter 0 if none.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.spirits = Total litres of finished spirits delivered outside the UK must be a number
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.spirits = Total litres of finished spirits delivered outside the UK must be less than 1 billion litres
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.spirits = Total litres of finished spirits delivered outside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.spirits = Total litres of finished spirits delivered outside the UK must be a number up to 2 decimal places
+
+dutySuspended.deliveredOutsideUK.error.noValue.totalLitres.regime.otherfermentedproduct = Enter the total litres of finished other fermented products delivered outside the UK. Enter 0 if none.
+dutySuspended.deliveredOutsideUK.error.invalid.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered outside the UK must be a number
+dutySuspended.deliveredOutsideUK.error.maximumValue.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered outside the UK must be less than 1 billion litres
+dutySuspended.deliveredOutsideUK.error.minimumValue.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered outside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products delivered outside the UK must be a number up to 2 decimal places
+
+dutySuspended.received.error.noValue.totalLitres.regime.beer = Enter the total litres of finished beer received under duty suspense. Enter 0 if none.
+dutySuspended.received.error.invalid.totalLitres.regime.beer = Total litres of finished beer received under duty suspense must be a number
+dutySuspended.received.error.maximumValue.totalLitres.regime.beer = Total litres of finished beer received under duty suspense must be less than 1 billion litres
+dutySuspended.received.error.minimumValue.totalLitres.regime.beer = Total litres of finished beer received under duty suspense must be greater than or equal to 0 litres
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.beer = Total litres of finished beer received under duty suspense must be a number up to 2 decimal places
+
+dutySuspended.received.error.noValue.totalLitres.regime.cider = Enter the total litres of finished cider received under duty suspense. Enter 0 if none.
+dutySuspended.received.error.invalid.totalLitres.regime.cider = Total litres of finished cider received under duty suspense must be a number
+dutySuspended.received.error.maximumValue.totalLitres.regime.cider = Total litres of finished cider received under duty suspense must be less than 1 billion litres
+dutySuspended.received.error.minimumValue.totalLitres.regime.cider = Total litres of finished cider received under duty suspense must be greater than or equal to 0 litres
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.cider = Total litres of finished cider received under duty suspense must be a number up to 2 decimal places
+
+dutySuspended.received.error.noValue.totalLitres.regime.wine = Enter the total litres of finished wine received under duty suspense. Enter 0 if none.
+dutySuspended.received.error.invalid.totalLitres.regime.wine = Total litres of finished wine received under duty suspense must be a number
+dutySuspended.received.error.maximumValue.totalLitres.regime.wine = Total litres of finished wine received under duty suspense must be less than 1 billion litres
+dutySuspended.received.error.minimumValue.totalLitres.regime.wine = Total litres of finished wine received under duty suspense must be greater than or equal to 0 litres
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.wine = Total litres of finished wine received under duty suspense must be a number up to 2 decimal places
+
+dutySuspended.received.error.noValue.totalLitres.regime.spirits = Enter the total litres of finished spirits received under duty suspense. Enter 0 if none.
+dutySuspended.received.error.invalid.totalLitres.regime.spirits = Total litres of finished spirits received under duty suspense must be a number
+dutySuspended.received.error.maximumValue.totalLitres.regime.spirits = Total litres of finished spirits received under duty suspense must be less than 1 billion litres
+dutySuspended.received.error.minimumValue.totalLitres.regime.spirits = Total litres of finished spirits received under duty suspense must be greater than or equal to 0 litres
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.spirits = Total litres of finished spirits received under duty suspense must be a number up to 2 decimal places
+
+dutySuspended.received.error.noValue.totalLitres.regime.otherfermentedproduct = Enter the total litres of finished other fermented products received under duty suspense. Enter 0 if none.
+dutySuspended.received.error.invalid.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products received under duty suspense must be a number
+dutySuspended.received.error.maximumValue.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products received under duty suspense must be less than 1 billion litres
+dutySuspended.received.error.minimumValue.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products received under duty suspense must be greater than or equal to 0 litres
+dutySuspended.received.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Total litres of finished other fermented products received under duty suspense must be a number up to 2 decimal places
+
+dutySuspended.deliveredInsideUK.error.noValue.pureAlcohol = Enter the litres of pure alcohol delivered inside the UK. Enter 0 if none.
+dutySuspended.deliveredInsideUK.error.invalid.pureAlcohol = Litres of pure alcohol delivered inside the UK must be a number
+dutySuspended.deliveredInsideUK.error.maximumValue.pureAlcohol = Litres of pure alcohol delivered inside the UK must be less than 1 billion litres
+dutySuspended.deliveredInsideUK.error.minimumValue.pureAlcohol = Litres of pure alcohol delivered inside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredInsideUK.error.decimalPlaces.pureAlcohol = Litres of pure alcohol delivered inside the UK must be a number up to 4 decimal places
+
+dutySuspended.deliveredOutsideUK.error.noValue.pureAlcohol = Enter the litres of pure alcohol delivered outside the UK. Enter 0 if none.
+dutySuspended.deliveredOutsideUK.error.invalid.pureAlcohol = Litres of pure alcohol delivered outside the UK must be a number
+dutySuspended.deliveredOutsideUK.error.maximumValue.pureAlcohol = Litres of pure alcohol delivered outside the UK must be less than 1 billion litres
+dutySuspended.deliveredOutsideUK.error.minimumValue.pureAlcohol = Litres of pure alcohol delivered outside the UK must be greater than or equal to 0 litres
+dutySuspended.deliveredOutsideUK.error.decimalPlaces.pureAlcohol = Litres of pure alcohol delivered outside the UK must be a number up to 4 decimal places
+
+dutySuspended.received.error.noValue.pureAlcohol = Enter the litres of pure alcohol received under duty suspense. Enter 0 if none.
+dutySuspended.received.error.invalid.pureAlcohol = Litres of pure alcohol received under duty suspense must be a number
+dutySuspended.received.error.maximumValue.pureAlcohol = Litres of pure alcohol received under duty suspense must be less than 1 billion litres
+dutySuspended.received.error.minimumValue.pureAlcohol = Litres of pure alcohol received under duty suspense must be greater than or equal to 0 litres
+dutySuspended.received.error.decimalPlaces.pureAlcohol = Litres of pure alcohol received under duty suspense must be a number up to 4 decimal places
+
+dutySuspendedCalculation.title = We’ve calculated your duty suspended alcohol
+dutySuspendedCalculation.heading = We’ve calculated your duty suspended alcohol
+dutySuspendedCalculation.p.regime.beer = We’ve calculated your total net volume of beer and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.cider = We’ve calculated your total net volume of cider and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.wine = We’ve calculated your total net volume of wine and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.spirits = We’ve calculated your total net volume of spirits and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.p.regime.otherfermentedproduct = We’ve calculated your total net volume of other fermented products and pure alcohol using the information you provided. If the net volume is negative, it means you have received more duty suspended alcohol than you have delivered.
+dutySuspendedCalculation.howCalculated = Here’s how we calculated this:
+
+dutySuspendedCalculation.totalLitres.total.regime.beer = Your total net volume of beer is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.beer = Added the total litres of beer you delivered inside the UK ({0} litres) to the total litres of beer you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.beer = Subtracted the beer you received ({0} litres) from the sum of the beer you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.cider = Your total net volume of cider is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.cider = Added the total litres of cider you delivered inside the UK ({0} litres) to the total litres of cider you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.cider = Subtracted the cider you received ({0} litres) from the sum of the cider you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.wine = Your total net volume of wine is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.wine = Added the total litres of wine you delivered inside the UK ({0} litres) to the total litres of wine you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.wine = Subtracted the wine you received ({0} litres) from the sum of the wine you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.spirits = Your total net volume of spirits is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.spirits = Added the total litres of spirits you delivered inside the UK ({0} litres) to the total litres of spirits you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.spirits = Subtracted the spirits you received ({0} litres) from the sum of the spirits you delivered ({1} litres).
+
+dutySuspendedCalculation.totalLitres.total.regime.otherfermentedproduct = Your total net volume of other fermented products is {0} litres
+dutySuspendedCalculation.totalLitres.add.regime.otherfermentedproduct = Added the total litres of other fermented products you delivered inside the UK ({0} litres) to the total litres of other fermented products you delivered outside the UK ({1} litres).
+dutySuspendedCalculation.totalLitres.subtract.regime.otherfermentedproduct = Subtracted the other fermented products you received ({0} litres) from the sum of the other fermented products you delivered ({1} litres).
+
+dutySuspendedCalculation.pureAlcohol.total = Your total net volume of pure alcohol is {0} litres
+dutySuspendedCalculation.pureAlcohol.add = We added the litres of pure alcohol you delivered inside the UK ({0} litres) to the litres of pure alcohol delivered outside the UK ({1} litres).
+dutySuspendedCalculation.pureAlcohol.subtract = We subtracted the litres of pure alcohol you received ({0} litres) from the sum of the pure alcohol you delivered ({1} litres).
+
+dutySuspended.checkYourAnswers.alcoholType.heading = Type of duty suspended alcohol
+dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Type of alcohol
+dutySuspended.checkYourAnswers.amount.heading = Amount of duty suspended alcohol
+dutySuspended.checkYourAnswers.totalLitres = {0} litres of total product
+dutySuspended.checkYourAnswers.pureAlcohol = {0} litres of pure alcohol
+dutySuspended.checkYourAnswers.alcoholType.change.hidden = type of duty suspended alcohol
+dutySuspended.checkYourAnswers.amount.change.hidden = amount of duty suspended alcohol
 
 # End of NEW duty suspended deliveries sub-journey
 

@@ -17,12 +17,10 @@
 package common
 
 import models.AlcoholRegime._
-import models.dutySuspended.{DutySuspendedBeer, DutySuspendedCider, DutySuspendedOtherFermented, DutySuspendedSpirits, DutySuspendedWine}
-import models.{AlcoholRegime, RateBand, UserAnswers}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
+import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
-import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty._
 
 import scala.collection.immutable.SortedMap
 
@@ -220,22 +218,4 @@ trait TestPages extends TestData {
 
   def specifyWhatDoYouNeedToDeclare(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
     whatDoYouNeedToDeclarePage(userAnswers, regime, allRateBands)
-
-  def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedBeer): UserAnswers =
-    userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer).get
-
-  def dutySuspendedCiderPage(userAnswers: UserAnswers, dutySuspendedCider: DutySuspendedCider): UserAnswers =
-    userAnswers.set(DutySuspendedCiderPage, dutySuspendedCider).get
-
-  def dutySuspendedWinePage(userAnswers: UserAnswers, dutySuspendedWine: DutySuspendedWine): UserAnswers =
-    userAnswers.set(DutySuspendedWinePage, dutySuspendedWine).get
-
-  def dutySuspendedSpiritsPage(userAnswers: UserAnswers, dutySuspendedSpirits: DutySuspendedSpirits): UserAnswers =
-    userAnswers.set(DutySuspendedSpiritsPage, dutySuspendedSpirits).get
-
-  def dutySuspendedOtherFermentedPage(
-    userAnswers: UserAnswers,
-    dutySuspendedOtherFermented: DutySuspendedOtherFermented
-  ): UserAnswers =
-    userAnswers.set(DutySuspendedOtherFermentedPage, dutySuspendedOtherFermented).get
 }

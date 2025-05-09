@@ -16,13 +16,25 @@
 
 package pages.dutySuspendedNew
 
-import models.AlcoholRegime
+import models.{AlcoholRegime, UserAnswers}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object DutySuspendedAlcoholTypePage extends QuestionPage[Set[AlcoholRegime]] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "dutySuspendedAlcoholType"
+
+  override def cleanup(value: Option[Set[AlcoholRegime]], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case Some(alcoholRegimes) =>
+        val regimesToRemove = userAnswers.regimes.regimes.diff(alcoholRegimes)
+        regimesToRemove.foldLeft(Try(userAnswers)) { (currentUserAnswers, regime) =>
+          currentUserAnswers.flatMap(_.removePagesByKey(sectionPagesWithRegime, regime))
+        }
+      case None                 => super.cleanup(value, userAnswers)
+    }
 }

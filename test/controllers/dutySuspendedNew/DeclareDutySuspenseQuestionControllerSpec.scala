@@ -19,12 +19,12 @@ package controllers.dutySuspendedNew
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspendedNew.DeclareDutySuspenseQuestionFormProvider
-import models.AlcoholRegime.{Beer, Cider, Wine}
-import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
+import models.AlcoholRegime.Beer
+import models.{AlcoholRegimes, NormalMode}
 import navigation.DutySuspendedNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage}
+import pages.dutySuspendedNew.DeclareDutySuspenseQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -164,24 +164,9 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
         mockDutySuspendedNavigator.nextPage(eqTo(DeclareDutySuspenseQuestionPage), any(), any(), any())
       ) thenReturn taskListRoute
 
-      val alcoholRegimesSet: Set[AlcoholRegime] = Set(Wine)
+      val expectedCachedUserAnswers = emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value
 
-      val userAnswers = emptyUserAnswers
-        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
-        .set(DeclareDutySuspenseQuestionPage, true)
-        .success
-        .value
-        .set(DutySuspendedAlcoholTypePage, alcoholRegimesSet)
-        .success
-        .value
-
-      val expectedCachedUserAnswers = emptyUserAnswers
-        .copy(regimes = AlcoholRegimes(Set(Cider, Wine)))
-        .set(DeclareDutySuspenseQuestionPage, false)
-        .success
-        .value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithDutySuspendedData))
         .overrides(
           bind[DutySuspendedNavigator].toInstance(mockDutySuspendedNavigator),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)

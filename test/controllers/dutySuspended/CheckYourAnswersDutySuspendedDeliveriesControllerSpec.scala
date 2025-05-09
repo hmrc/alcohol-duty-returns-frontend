@@ -56,6 +56,10 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
     )
   )
 
+  override def configOverrides: Map[String, Any] = Map(
+    "features.duty-suspended-new-journey" -> false
+  )
+
   "Check Your Answers Duty Suspended Deliveries Controller" - {
     "must return OK and the correct view for a GET if all necessary questions are answered" in {
       val application = applicationBuilder(userAnswers = Some(completeDutySuspendedDeliveriesUserAnswers)).build()
