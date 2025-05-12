@@ -70,7 +70,6 @@
                 )
                 .asNumeric()
                 .withWidth(Fixed10)
-                .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               ),
               govukInput(
@@ -81,7 +80,6 @@
                   errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
                   value = form(s"volumesWithRate[$index].pureAlcohol").value
                 )
-                .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
                 .asNumeric()
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
@@ -96,6 +94,7 @@
                 )
                 .asNumeric()
                 .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
               ),
@@ -140,7 +139,6 @@
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
                 )
                 .asNumeric()
-                .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               ),
@@ -153,7 +151,6 @@
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
                 )
                 .asNumeric()
-                .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               ),
@@ -167,6 +164,7 @@
                 )
                 .asNumeric()
                 .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
               ),
