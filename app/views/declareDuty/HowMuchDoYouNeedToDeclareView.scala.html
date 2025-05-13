@@ -151,6 +151,7 @@
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
+                  .withAttribute("step", "any")
                 ),
                 govukInput(
                   InputViewModel(
