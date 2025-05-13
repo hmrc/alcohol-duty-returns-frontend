@@ -91,8 +91,9 @@
               )
               .asNumeric()
               .withWidth(Fixed10)
-              .withPoundPrefix
               .withHint(HintViewModel(messages("adjustmentSmallProducerReliefDutyRate.hint")))
+              .withPoundPrefix
+              .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
             )
           ))
         ))
