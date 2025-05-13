@@ -134,7 +134,6 @@
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_totalLitres"),
                     value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
                   )
-                  .asNumeric()
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.hint")))
@@ -147,7 +146,6 @@
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_pureAlcohol"),
                     value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].pureAlcohol").value
                   )
-                  .asNumeric()
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
