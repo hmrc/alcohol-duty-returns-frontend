@@ -346,7 +346,12 @@ return.journey.abv.taxTypeCode = cod y math o dreth: {0}
 return.journey.abv.taxTypeCode.SPR = cod y math o dreth: {0} SPR
 
 return.journey.abv.single.interval = {0} {1} ABV ({2})
-return.journey.abv.multi.interval = {0} {1} ABV a {2} {3} ABV ({4})
+return.journey.abv.multi.interval.Beer = {0} {1} ABV a chwrw {2} ABV ({3})
+return.journey.abv.multi.interval.Cider = {0} {1} ABV a seidr {2} ABV ({3})
+return.journey.abv.multi.interval.SparklingCider = {0} {1} ABV a seidr pefriog {2} ABV ({3})
+return.journey.abv.multi.interval.Wine = {0} {1} ABV a gwin {2} ABV ({3})
+return.journey.abv.multi.interval.Spirits = {0} {1} ABV a gwirodydd {2} ABV ({3})
+return.journey.abv.multi.interval.OtherFermentedProduct = {0} {1} ABV a chynhyrchion eplesedig eraill {2} ABV ({3})
 
 return.journey.totalLitres.regime.beer = Cyfanswm y litrau o gwrw
 return.journey.totalLitres.regime.cider = Cyfanswm y litrau o seidr

@@ -112,10 +112,9 @@ object RateBandDescription {
     messages: Messages
   ): String =
     messages(
-      s"return.journey.abv.multi.interval",
+      s"return.journey.abv.multi.interval.${abvRange2.alcoholType}",
       getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus),
       getAbvRange(abvRange1.minABV.value, abvRange1.maxABV.value),
-      messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
       getAbvRange(abvRange2.minABV.value, abvRange2.maxABV.value),
       getTaxType(taxTypeCode, rateType)
     )
