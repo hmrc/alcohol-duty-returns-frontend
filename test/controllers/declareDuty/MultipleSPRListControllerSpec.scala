@@ -77,7 +77,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must not populate the view on a GET even when the question has previously been answered" in {
 
       val filledUserAnswers = userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true).success.value
 
@@ -95,10 +95,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
           .getOrElse(fail())
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), regime, sprTable)(
-          request,
-          getMessages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form, regime, sprTable)(request, getMessages(application)).toString
       }
     }
 
