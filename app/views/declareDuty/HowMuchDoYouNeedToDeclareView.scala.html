@@ -137,6 +137,7 @@
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.hint")))
+                  .withAttribute("inputmode", "decimal")
                 ),
                 govukInput(
                   InputViewModel(
@@ -149,6 +150,7 @@
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
+                  .withAttribute("inputmode", "decimal")
                 ),
                 govukInput(
                   InputViewModel(
