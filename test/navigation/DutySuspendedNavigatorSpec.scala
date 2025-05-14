@@ -49,8 +49,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -58,13 +57,12 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             DeclareDutySuspenseQuestionPage,
             NormalMode,
             emptyUserAnswers
-              .copy(regimes = AlcoholRegimes(Set(Beer)))
+              .copy(regimes = AlcoholRegimes(Set(regime)))
               .set(DeclareDutySuspenseQuestionPage, true)
               .success
               .value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the Declare duty suspense question page to task list page if the answer is No" in {
@@ -84,6 +82,26 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             Some(false)
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
+
+        "must go from the Duty suspended alcohol types page to Declare quantity page for the first regime" in {
+          val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
+
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            NormalMode,
+            emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
+            Some(false)
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+        }
+
+        "must go from the Duty suspended alcohol types page to journey recovery page if the answer is missing" in {
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            NormalMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
       }
 
       "nextPageWithRegime" - {
@@ -94,8 +112,66 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers,
             regime
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route to task list when nextPageWithRegime is implemented properly
+          ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
+          s"must go from the Declare quantity page to the Display calculation page when the regime is ${regime.entryName}" in {
+            navigator.nextPageWithRegime(
+              DutySuspendedQuantitiesPage,
+              NormalMode,
+              emptyUserAnswers
+                .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
+                .success
+                .value
+                .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+                .success
+                .value,
+              regime
+            ) mustBe controllers.dutySuspendedNew.routes.DisplayCalculationController.onPageLoad(regime)
+          }
+        }
+
+        Seq(
+          (
+            Beer,
+            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+          ),
+          (
+            Cider,
+            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Wine)
+          ),
+          (
+            Wine,
+            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Spirits)
+          ),
+          (
+            Spirits,
+            () =>
+              controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+                .onPageLoad(NormalMode, OtherFermentedProduct)
+          ),
+          (OtherFermentedProduct, () => controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad())
+        ).foreach { case (regime, expectedPage) =>
+          s"must go from the Display calculation page to the correct next page (Declare quantity or CYA) when the regime is ${regime.entryName}" in {
+            val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+
+            navigator.nextPageWithRegime(
+              DisplayCalculationPage,
+              NormalMode,
+              emptyUserAnswers
+                .set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted)
+                .success
+                .value
+                .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
+                .success
+                .value
+                .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+                .success
+                .value,
+              regime
+            ) mustBe expectedPage()
+          }
         }
       }
     }
@@ -118,8 +194,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -127,13 +202,12 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             DeclareDutySuspenseQuestionPage,
             CheckMode,
             emptyUserAnswers
-              .copy(regimes = AlcoholRegimes(Set(Beer)))
+              .copy(regimes = AlcoholRegimes(Set(regime)))
               .set(DeclareDutySuspenseQuestionPage, true)
               .success
               .value,
             Some(false)
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route when new page is created
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the Declare duty suspense question page to the task list page if the answer is No" in {
@@ -143,6 +217,28 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, false).success.value,
             Some(false)
           ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the Duty suspended alcohol types page to Declare quantity page (normal mode) for the first regime if regimes were added" in {
+          val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
+
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
+            Some(true)
+          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+        }
+
+        "must go from the Duty suspended alcohol types page to the CYA page if no regimes were added" in {
+          val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Cider, Spirits)
+
+          navigator.nextPage(
+            DutySuspendedAlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
+            Some(false)
+          ) mustBe controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
         }
       }
 
@@ -154,13 +250,23 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe routes.JourneyRecoveryController.onPageLoad()
-          // TODO: update route to task list when nextPageWithRegime is implemented properly
+          ) mustBe routes.TaskListController.onPageLoad
         }
 
         Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
           s"must go from the Declare quantity page to the CYA page when the regime is ${regime.entryName}" in {
-            // TODO
+            navigator.nextPageWithRegime(
+              DutySuspendedQuantitiesPage,
+              CheckMode,
+              emptyUserAnswers
+                .setByKey(DutySuspendedQuantitiesPage, regime, dutySuspendedQuantities)
+                .success
+                .value
+                .setByKey(DutySuspendedFinalVolumesPage, regime, dutySuspendedFinalVolumes)
+                .success
+                .value,
+              regime
+            ) mustBe controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
           }
         }
       }

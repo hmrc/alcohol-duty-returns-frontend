@@ -30,12 +30,7 @@ case object DeclareDutySuspenseQuestionPage extends QuestionPage[Boolean] {
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
-      // TODO: add other pages from new DSD journey to be removed if user submits 'No' to first question
-      userAnswers.remove(
-        List(
-          DutySuspendedAlcoholTypePage
-        )
-      )
+      userAnswers.remove(sectionPages)
     } else {
       super.cleanup(value, userAnswers)
     }

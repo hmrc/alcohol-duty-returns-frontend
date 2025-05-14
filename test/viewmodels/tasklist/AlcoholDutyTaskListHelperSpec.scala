@@ -17,16 +17,16 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import TaskListStatus.Incomplete
 import config.FrontendAppConfig
 import models.ReturnPeriod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
-import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.declareDuty.DeclareAlcoholDutyQuestionPage
+import pages.dutySuspendedNew.DeclareDutySuspenseQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages
+import viewmodels.tasklist.TaskListStatus.Incomplete
 
 import java.time.Instant
 
@@ -65,7 +65,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         .set(DeclareAdjustmentQuestionPage, false)
         .success
         .value
-        .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
+        .set(DeclareDutySuspenseQuestionPage, false)
         .success
         .value
         .set(DeclareQuarterlySpiritsPage, false)
@@ -150,7 +150,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     val toDateString                 = dateTimeHelper.formatDateMonthYear(toDate)
     val dueDateString                = dateTimeHelper.formatDateMonthYear(dueDate)
     val validUntilString             = dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
-    val returnTaskListCreator        = new ReturnTaskListCreator()
+    val returnTaskListCreator        = new ReturnTaskListCreator(appConfig)
     val taskListViewModel            = new TaskListViewModel(createDateTimeHelper(), returnTaskListCreator, appConfig)
   }
 }

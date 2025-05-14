@@ -21,6 +21,7 @@ import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.AlcoholDuty
 import models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholRegime, RateBand, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import models.RatePeriod._
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -118,4 +119,12 @@ class AlcoholDutyCalculatorConnector @Inject() (
       .withBody(Json.toJson(body))
       .execute[AdjustmentDuty]
   }
+
+  def calculateDutySuspendedVolumes(
+    dutySuspendedQuantities: DutySuspendedQuantities
+  )(implicit hc: HeaderCarrier): Future[DutySuspendedFinalVolumes] =
+    httpClient
+      .post(url"${config.adrCalculatorCalculateDutySuspendedVolumesUrl()}")
+      .withBody(Json.toJson(dutySuspendedQuantities))
+      .execute[DutySuspendedFinalVolumes]
 }
