@@ -1,43 +1,42 @@
 @*
- * Copyright 2024 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
-
+* Copyright 2024 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 @import components.{Link, PageHeading, Paragraph, Caption, FormGroupWithError}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukDateInput: GovukDateInput,
-    govukButton: GovukButton,
-    paragraph: Paragraph,
-    caption: Caption,
-    pageHeading: PageHeading,
-    link: Link,
-    formGroupWithError: FormGroupWithError
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukDateInput: GovukDateInput,
+        govukButton: GovukButton,
+        paragraph: Paragraph,
+        caption: Caption,
+        pageHeading: PageHeading,
+        link: Link,
+        formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
 
 @heading = @{
-    if (adjustmentType == Underdeclaration) {
+    if(adjustmentType == Underdeclaration) {
         messages("whenDidYouPayDuty.under-declaration.title")
-    } else if (adjustmentType == Spoilt) {
+    } else if(adjustmentType == Spoilt) {
         throw new IllegalArgumentException("Not expecting WhenDidYouPayDuty to be asked for Spoilt")
     } else {
         messages("whenDidYouPayDuty.default.title")
@@ -57,33 +56,33 @@
             messages(s"section.adjustment.$adjustmentType"),
         )
 
-        @formGroupWithError(form.errors.nonEmpty){
-                @pageHeading(
-                            if (adjustmentType == Underdeclaration){
-                                messages("whenDidYouPayDuty.under-declaration.heading")
-                            } else {
-                                messages("whenDidYouPayDuty.default.heading")
-                            }
-                            )
-
-        <p class="@Css.bodyCssClass">
-            @link(
-                id = "excise-enquiries-link",
-                text = messages("whenDidYouPayDuty.exciseEnquiries.link"),
-                href = exciseEnquiriesUrl,
-                newTab = true
+        @formGroupWithError(form.errors.nonEmpty) {
+            @pageHeading(
+                if(adjustmentType == Underdeclaration) {
+                    messages("whenDidYouPayDuty.under-declaration.heading")
+                } else {
+                    messages("whenDidYouPayDuty.default.heading")
+                }
             )
-            @messages("whenDidYouPayDuty.paragraph")
-        </p>
 
-        @govukDateInput(
-            YearMonthDateViewModel(
-                form = form,
-                id = "when-did-you-pay-duty-input",
-                legend = LegendViewModel(messages(heading)).asVisuallyHidden(),
-            ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
-        )
-    }
+            <p class="@Css.bodyCssClass">
+                @link(
+                    id = "excise-enquiries-link",
+                    text = messages("whenDidYouPayDuty.exciseEnquiries.link"),
+                    href = exciseEnquiriesUrl,
+                    newTab = true
+                )
+                @messages("whenDidYouPayDuty.paragraph")
+            </p>
+
+            @govukDateInput(
+                YearMonthDateViewModel(
+                    form = form,
+                    id = "when-did-you-pay-duty-input",
+                    legend = LegendViewModel(messages(heading)).asVisuallyHidden(),
+                ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
+            )
+        }
         @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
