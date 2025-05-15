@@ -22,6 +22,8 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
+import scala.collection.immutable.Seq
+
 sealed trait AdjustmentType
 
 object AdjustmentType extends Enumerable.Implicits {
@@ -48,6 +50,9 @@ object AdjustmentType extends Enumerable.Implicits {
       hint = Some(Hint(content = Text(messages(s"adjustmentType.${value.toString}.hint"))))
     )
   }
+
+  def getErrorLinkOverride(implicit messages: Messages): String =
+    adjustmentTypeOptions.headOption.flatMap(_.id).getOrElse("")
 
   implicit val enumerable: Enumerable[AdjustmentType] =
     Enumerable(values.map(v => v.toString -> v): _*)
