@@ -60,6 +60,7 @@
               .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
               .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               .withWidth(Fixed10)
+              .withAttribute("inputmode", "text")
             ),
 
             govukInput(
@@ -70,6 +71,7 @@
               .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
               .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               .withWidth(Fixed10)
+              .withAttribute("inputmode", "text")
             )
           ))
         ))
