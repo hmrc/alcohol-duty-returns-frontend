@@ -34,7 +34,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.TableViewModel
+import viewmodels.{PaginationViewModel, TableViewModel}
 import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
 import views.html.adjustment.AdjustmentListView
 
@@ -43,7 +43,7 @@ import scala.concurrent.Future
 
 class AdjustmentListControllerSpec extends SpecBase {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
   val formProvider                              = new AdjustmentListFormProvider()
   val form: Form[Boolean]                       = formProvider()
@@ -132,8 +132,14 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
+        val paginationViewModel: PaginationViewModel = PaginationViewModel(
+          pageNumber,
+          totalPages,
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+        )
+
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, adjustmentTable, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(form, adjustmentTable, paginationViewModel)(
           request,
           getMessages(app)
         ).toString
@@ -168,8 +174,14 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
+        val paginationViewModel: PaginationViewModel = PaginationViewModel(
+          pageNumber,
+          totalPages,
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+        )
+
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, paginationViewModel)(
           request,
           getMessages(app)
         ).toString
@@ -259,8 +271,14 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
+        val paginationViewModel: PaginationViewModel = PaginationViewModel(
+          pageNumber,
+          totalPages,
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+        )
+
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, adjustmentTable, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(boundForm, adjustmentTable, paginationViewModel)(
           request,
           getMessages(app)
         ).toString
