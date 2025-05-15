@@ -37,6 +37,8 @@ class RichJsValueSpec
   val max                           = 10
   val nonEmptyAlphaStr: Gen[String] = Gen.alphaStr.suchThat(_.nonEmpty)
 
+  val nonEmptyAlphaStrRetryUntil: Gen[String] = Gen.alphaStr.retryUntil(_.nonEmpty)
+
   def buildJsObj[B](keys: Seq[String], values: Seq[B])(implicit writes: Writes[B]): JsObject =
     keys.zip(values).foldLeft(JsObject.empty) { case (acc, (key, value)) =>
       acc + (key -> Json.toJson[B](value))
@@ -288,9 +290,9 @@ class RichJsValueSpec
     "must remove a value given a keyPathNode and return the new object" in {
 
       val gen = for {
-        keys          <- Gen.listOf(nonEmptyAlphaStr)
+        keys          <- Gen.listOf(nonEmptyAlphaStr).map(_.distinct)
         values        <- Gen.listOf(nonEmptyAlphaStr)
-        keyToRemove   <- nonEmptyAlphaStr
+        keyToRemove   <- nonEmptyAlphaStr.suchThat(k => !keys.contains(k))
         valueToRemove <- nonEmptyAlphaStr
       } yield (keys, values, keyToRemove, valueToRemove)
 
@@ -311,7 +313,7 @@ class RichJsValueSpec
     "must return an error given a keyPathNode for an array" in {
       val testObject = Json.arr(Json.obj("n" -> "n"))
 
-      val pathToRemove = JsPath \ nonEmptyAlphaStr.sample.value
+      val pathToRemove = JsPath \ nonEmptyAlphaStrRetryUntil.sample.value
 
       testObject.remove(pathToRemove) mustEqual JsError(s"cannot remove a key on $testObject")
 
