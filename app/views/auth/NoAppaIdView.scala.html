@@ -1,55 +1,56 @@
 @*
- * Copyright 2024 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
-
+* Copyright 2024 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 @import components.{Link, PageHeading, Paragraph}
 @import config.Constants.Css
 @import config.FrontendAppConfig
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukButton: GovukButton,
-    link: Link,
-    pageHeading: PageHeading,
-    paragraph: Paragraph
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukButton: GovukButton,
+        link: Link,
+        pageHeading: PageHeading,
+        paragraph: Paragraph
 )
 
 @(appConfig: FrontendAppConfig, wasReferredFromBTA: Boolean, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("noAppaId.title")), timeout = signedIn, showSignOut = signedIn) {
+
     @formHelper(action = controllers.auth.routes.NoAppaIdController.onSubmit(wasReferredFromBTA), Symbol("autoComplete") -> "off") {
+
         @pageHeading(messages("noAppaId.heading"))
 
         @paragraph(messages("noAppaId.p"))
 
         <p class="@Css.bodyCssClass">
             @link(
-            id = "register-for-alcohol-duty",
-            text = messages("noAppaId.link.text"),
-            href = appConfig.appaIdRegisterUrl,
-            newTab = true
+                id = "register-for-alcohol-duty",
+                text = messages("noAppaId.link.text"),
+                href = appConfig.appaIdRegisterUrl,
+                newTab = true
             )
             @messages("noAppaId.p2")
         </p>
 
         @if(wasReferredFromBTA) {
             @govukButton(
-                ButtonViewModel("return-to-business-account",messages("site.returnToBusinessAccount"))
-                .withCssClass(Css.secondaryButtonCssClass)
+                ButtonViewModel("return-to-business-account", messages("site.returnToBusinessAccount"))
+                        .withCssClass(Css.secondaryButtonCssClass)
             )
         }
     }
