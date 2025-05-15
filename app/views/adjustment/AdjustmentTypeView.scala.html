@@ -34,7 +34,6 @@
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("adjustment-type-value" -> AdjustmentType.adjustmentTypeOptions.headOption.flatMap(_.id).getOrElse(""))))
-
         }
 
         @caption(

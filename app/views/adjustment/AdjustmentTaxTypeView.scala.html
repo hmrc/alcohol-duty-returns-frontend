@@ -1,39 +1,38 @@
 @*
- * Copyright 2024 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
-
+* Copyright 2024 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 @import viewmodels.InputWidth._
 @import components.{Caption, PageHeading, FormGroupWithError}
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration, RepackagedDraughtProducts}
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    caption: Caption,
-    pageHeading: PageHeading,
-    formGroupWithError: FormGroupWithError
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        caption: Caption,
+        pageHeading: PageHeading,
+        formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @titleContent = @{
-    if(adjustmentType == RepackagedDraughtProducts){
+    if(adjustmentType == RepackagedDraughtProducts) {
         messages("adjustmentTaxType.repackaged.title")
     } else {
         messages("adjustmentTaxType.title")
@@ -52,29 +51,29 @@
             id = "adjustment-tax-type-section",
             text = messages(s"section.adjustment.$adjustmentType")
         )
-        @formGroupWithError(form.errors.nonEmpty){
-                @pageHeading(titleContent)
+        @formGroupWithError(form.errors.nonEmpty) {
+            @pageHeading(titleContent)
 
-                @govukInput(
-                    InputViewModel(
-                        field = form("adjustment-tax-type-input"),
-                        label = if (adjustmentType == RepackagedDraughtProducts)
+            @govukInput(
+                InputViewModel(
+                    field = form("adjustment-tax-type-input"),
+                    label = if(adjustmentType == RepackagedDraughtProducts)
                         LabelViewModel(messages("adjustmentTaxType.repackaged.heading")).asVisuallyHidden()
-                        else
+                    else
                         LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
-                    )
-                    .asNumeric()
-                    .withWidth(Fixed10)
-                    .withHint(HintViewModel(
-                    if(adjustmentType == Underdeclaration){
-                    messages("adjustmentTaxType.underDeclaration.hint")
+                )
+                        .asNumeric()
+                        .withWidth(Fixed10)
+                        .withHint(HintViewModel(
+                    if(adjustmentType == Underdeclaration) {
+                        messages("adjustmentTaxType.underDeclaration.hint")
                     } else {
-                    messages("adjustmentTaxType.default.hint")
+                        messages("adjustmentTaxType.default.hint")
                     }
-                    )))
+                )))
         }
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }
