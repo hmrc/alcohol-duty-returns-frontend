@@ -24,6 +24,7 @@ import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholRegimes, Alcohol
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.adjustment.SpoiltAlcoholicProductTypeViewModel
 import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
 
 class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
@@ -55,12 +56,12 @@ class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
       }
     }
 
-    "radioOptions" - {
-      "create radio options in view order for a set of regimes" in new SetUp {
-        val radioOptions =
-          spoiltAlcoholicProductTypeHelper.radioOptions(AlcoholRegimes(Set(Cider, OtherFermentedProduct, Beer)))
+    "getViewModel" - {
+      "create a view model containing radio options in view order for a set of regimes" in new SetUp {
+        val viewModel: SpoiltAlcoholicProductTypeViewModel =
+          spoiltAlcoholicProductTypeHelper.getViewModel(AlcoholRegimes(Set(Cider, OtherFermentedProduct, Beer)))
 
-        radioOptions mustBe Seq(
+        viewModel.radioOptions mustBe Seq(
           RadioItem(Text("Beer"), Some("Beer"), Some("Beer")),
           RadioItem(Text("Cider"), Some("Cider"), Some("Cider")),
           RadioItem(
@@ -79,9 +80,9 @@ class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
     val expectedRegimeToTaxType: Map[AlcoholRegime, String] =
       Map(Beer -> "356", Wine -> "333", Cider -> "357", Spirits -> "345", OtherFermentedProduct -> "324")
 
-    val expectedSpoiltRate                                  = BigDecimal(0.01)
-    val expectedRangeMinABV                                 = BigDecimal(0)
-    val expectedRangeMaxABV                                 = BigDecimal(100)
+    val expectedSpoiltRate: BigDecimal                      = BigDecimal(0.01)
+    val expectedRangeMinABV: BigDecimal                     = BigDecimal(0)
+    val expectedRangeMaxABV: BigDecimal                     = BigDecimal(100)
 
     val spoiltAlcoholicProductTypeHelper = new SpoiltAlcoholicProductTypeHelper(appConfig)
   }
