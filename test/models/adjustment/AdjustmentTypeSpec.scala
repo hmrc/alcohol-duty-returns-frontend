@@ -57,11 +57,11 @@ class AdjustmentTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckProper
       }
     }
 
-    "getErrorLinkOverride must" - {
+    "getTopRadioId must" - {
       "get the override link when a value in the list is present" in {
         val mockMessages = mock[Messages]
 
-        AdjustmentType.getErrorLinkOverride(mockMessages) mustBe "spoilt"
+        AdjustmentType.getTopRadioId(mockMessages) mustBe "spoilt"
       }
     }
   }

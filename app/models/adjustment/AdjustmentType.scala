@@ -51,7 +51,7 @@ object AdjustmentType extends Enumerable.Implicits {
     )
   }
 
-  def getErrorLinkOverride(implicit messages: Messages): String =
+  def getTopRadioId(implicit messages: Messages): String =
     adjustmentTypeOptions.headOption.flatMap(_.id).getOrElse("")
 
   implicit val enumerable: Enumerable[AdjustmentType] =
