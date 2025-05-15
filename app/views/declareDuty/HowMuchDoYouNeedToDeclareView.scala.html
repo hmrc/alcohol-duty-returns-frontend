@@ -76,10 +76,10 @@
                     errorMessageField = form(s"volumes_${index}_totalLitres"),
                     value = form(s"volumes[$index].totalLitres").value
                   )
-                  .asNumeric()
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.hint")))
+                  .withAttribute("inputmode", "text")
                 ),
                 govukInput(
                   InputViewModel(
@@ -89,10 +89,10 @@
                     errorMessageField = form(s"volumes_${index}_pureAlcohol"),
                     value = form(s"volumes[$index].pureAlcohol").value
                   )
-                  .asNumeric()
                   .withWidth(Fixed10)
                   .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                   .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
+                  .withAttribute("inputmode", "text")
                 ),
                 govukInput(
                   InputViewModel(
