@@ -18,10 +18,12 @@ package models.adjustment
 
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
+import org.scalatestplus.mockito.MockitoSugar.mock
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.i18n.Messages
 import play.api.libs.json.{JsError, JsString, Json}
 
 class AdjustmentTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
@@ -30,7 +32,7 @@ class AdjustmentTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckProper
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(AdjustmentType.values.toSeq)
+      val gen = Gen.oneOf(AdjustmentType.values)
 
       forAll(gen) { adjustmentType =>
         JsString(adjustmentType.toString).validate[AdjustmentType].asOpt.value mustEqual adjustmentType
@@ -48,10 +50,18 @@ class AdjustmentTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckProper
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(AdjustmentType.values.toSeq)
+      val gen = Gen.oneOf(AdjustmentType.values)
 
       forAll(gen) { adjustmentType =>
         Json.toJson(adjustmentType) mustEqual JsString(adjustmentType.toString)
+      }
+    }
+
+    "getErrorLinkOverride must" - {
+      "get the override link when a value in the list is present" in {
+        val mockMessages = mock[Messages]
+
+        AdjustmentType.getErrorLinkOverride(mockMessages) mustBe "spoilt"
       }
     }
   }

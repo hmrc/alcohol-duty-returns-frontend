@@ -20,20 +20,20 @@
 @import models.adjustment.AdjustmentType.{Underdeclaration, RepackagedDraughtProducts}
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    caption: Caption,
-    pageHeading: PageHeading,
-    formGroupWithError: FormGroupWithError
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        caption: Caption,
+        pageHeading: PageHeading,
+        formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @titleContent = @{
-    if(adjustmentType == RepackagedDraughtProducts){
+    if(adjustmentType == RepackagedDraughtProducts) {
         messages("adjustmentTaxType.repackaged.title")
     } else {
         messages("adjustmentTaxType.title")
@@ -52,29 +52,29 @@
             id = "adjustment-tax-type-section",
             text = messages(s"section.adjustment.$adjustmentType")
         )
-        @formGroupWithError(form.errors.nonEmpty){
-                @pageHeading(titleContent)
+        @formGroupWithError(form.errors.nonEmpty) {
+            @pageHeading(titleContent)
 
-                @govukInput(
-                    InputViewModel(
-                        field = form("adjustment-tax-type-input"),
-                        label = if (adjustmentType == RepackagedDraughtProducts)
+            @govukInput(
+                InputViewModel(
+                    field = form("adjustment-tax-type-input"),
+                    label = if(adjustmentType == RepackagedDraughtProducts)
                         LabelViewModel(messages("adjustmentTaxType.repackaged.heading")).asVisuallyHidden()
-                        else
+                    else
                         LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
-                    )
-                    .asNumeric()
-                    .withWidth(Fixed10)
-                    .withHint(HintViewModel(
-                    if(adjustmentType == Underdeclaration){
-                    messages("adjustmentTaxType.underDeclaration.hint")
+                )
+                        .asNumeric()
+                        .withWidth(Fixed10)
+                        .withHint(HintViewModel(
+                    if(adjustmentType == Underdeclaration) {
+                        messages("adjustmentTaxType.underDeclaration.hint")
                     } else {
-                    messages("adjustmentTaxType.default.hint")
+                        messages("adjustmentTaxType.default.hint")
                     }
-                    )))
+                )))
         }
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }
