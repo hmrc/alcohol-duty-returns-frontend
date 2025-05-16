@@ -549,9 +549,6 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} LPA
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Duty rate
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} per litre
 
-checkYourAnswers.title = Check your answers
-checkYourAnswers.heading = Check your answers
-
 multipleSPRList.title.regime.beer = Beer with Small Producer Relief duty to declare
 multipleSPRList.title.regime.cider = Cider with Small Producer Relief duty to declare
 multipleSPRList.title.regime.wine = Wine with Small Producer Relief duty to declare
