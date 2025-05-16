@@ -16,8 +16,8 @@
 
 @import components.{Link, PageHeading, Paragraph, Caption, FormGroupWithError}
 @import config.Constants.Css
-@import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
+@import viewmodels.adjustment.WhenDidYouPayDutyViewModel
 
 @this(
         layout: templates.Layout,
@@ -32,19 +32,9 @@
         formGroupWithError: FormGroupWithError
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, viewModel: WhenDidYouPayDutyViewModel)(implicit request: Request[_], messages: Messages)
 
-@heading = @{
-    if(adjustmentType == Underdeclaration) {
-        messages("whenDidYouPayDuty.under-declaration.title")
-    } else if(adjustmentType == Spoilt) {
-        throw new IllegalArgumentException("Not expecting WhenDidYouPayDuty to be asked for Spoilt")
-    } else {
-        messages("whenDidYouPayDuty.default.title")
-    }
-}
-
-@layout(pageTitle = title(form, heading)) {
+@layout(pageTitle = title(form, viewModel.getHeading)) {
 
     @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -54,23 +44,17 @@
 
         @caption(
             id = "when-did-you-pay-duty-section",
-            messages(s"section.adjustment.$adjustmentType"),
+            messages(s"section.adjustment.${viewModel.adjustmentType}"),
         )
 
         @formGroupWithError(form.errors.nonEmpty) {
-            @pageHeading(
-                if(adjustmentType == Underdeclaration) {
-                    messages("whenDidYouPayDuty.under-declaration.heading")
-                } else {
-                    messages("whenDidYouPayDuty.default.heading")
-                }
-            )
+            @pageHeading(viewModel.getHeading)
 
             <p class="@Css.bodyCssClass">
                 @link(
                     id = "excise-enquiries-link",
                     text = messages("whenDidYouPayDuty.exciseEnquiries.link"),
-                    href = exciseEnquiriesUrl,
+                    href = viewModel.exciseEnquiriesUrl,
                     newTab = true
                 )
                 @messages("whenDidYouPayDuty.paragraph")
@@ -80,7 +64,7 @@
                 YearMonthDateViewModel(
                     form = form,
                     id = "when-did-you-pay-duty-input",
-                    legend = LegendViewModel(messages(heading)).asVisuallyHidden(),
+                    legend = LegendViewModel(viewModel.getHeading).asVisuallyHidden(),
                 ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
             )
         }
