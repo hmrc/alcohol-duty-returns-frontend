@@ -61,10 +61,10 @@
                 errorMessageField = form(s"volumes_totalLitresVolume"),
                 value = form(s"volumes.totalLitresVolume").value
               )
-              .asNumeric()
               .withWidth(Fixed10)
               .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               .withHint(Hint(content = messages("adjustmentVolume.totalLitresVolume.hint")))
+              .withAttribute("inputmode", "text")
             ),
 
             govukInput(
@@ -75,10 +75,10 @@
                 errorMessageField = form(s"volumes_pureAlcoholVolume"),
                 value = form(s"volumes.pureAlcoholVolume").value
               )
-              .asNumeric()
               .withWidth(Fixed10)
               .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
               .withHint(Hint(content = messages("adjustmentVolume.pureAlcoholVolume.hint")))
+              .withAttribute("inputmode", "text")
             ),
 
             govukInput(
@@ -89,10 +89,10 @@
                 errorMessageField = form(s"volumes_duty"),
                 value = form(s"volumes.duty").value
               )
-              .asNumeric()
               .withWidth(Fixed10)
               .withPoundPrefix
               .withHint(HintViewModel(messages("adjustmentSmallProducerReliefDutyRate.hint")))
+              .withAttribute("inputmode", "text")
             )
           ))
         ))
