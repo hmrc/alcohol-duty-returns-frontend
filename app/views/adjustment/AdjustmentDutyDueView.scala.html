@@ -14,9 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList}
+@import components.{BulletList, Caption, PageHeading, PageHeadingWithMonetaryValue, Paragraph}
 @import models.adjustment.AdjustmentType
-@import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 @import viewmodels.Money
 @import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModel
 
@@ -51,7 +50,7 @@
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
-        .asLink(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+                .asLink(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
-}@import views.html.components.PageHeadingWithMonetaryValue
+}

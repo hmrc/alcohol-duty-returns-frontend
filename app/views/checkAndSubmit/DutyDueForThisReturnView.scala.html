@@ -28,78 +28,72 @@
         paragraph: Paragraph,
         subHeading: SubHeading,
         bulletList: BulletList,
-        govukSummaryList : GovukSummaryList
+        govukSummaryList: GovukSummaryList
 )
 
 @(dutyDueViewModel: DutyDueForThisReturnViewModel)(implicit request: Request[_], messages: Messages)
 
-@titleMessage = @{
-  if (dutyDueViewModel.totalDue == 0) {
-    messages("dutyDueForThisReturn.nil.title")
-  } else {
-    messages("dutyDueForThisReturn.title", messages("site.currency.2DP", dutyDueViewModel.totalDue))
-  }
-}
-
 @heading = @{
-    if (dutyDueViewModel.totalDue == 0) {
+    if(dutyDueViewModel.isTotalDueZero) {
         pageHeading(messages("dutyDueForThisReturn.nil.heading"))
     } else {
         pageHeadingWithMonetaryValue(messages("dutyDueForThisReturn.heading"), dutyDueViewModel.totalDue)
     }
 }
 
-@layout(pageTitle = titleNoForm(titleMessage)) {
-  @formHelper(action = controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
-      @caption(
-      id = "dutyDueForThisReturn-section",
-      text = messages("section.checkAndSubmit"),
-    )
+@layout(pageTitle = titleNoForm(dutyDueViewModel.getTitle)) {
 
-      @heading
+    @formHelper(action = controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
 
-    @if(dutyDueViewModel.totalDue == 0) {
-      @paragraph(messages("dutyDueForThisReturn.nil.p1"))
+        @caption(
+            id = "dutyDueForThisReturn-section",
+            text = messages("section.checkAndSubmit"),
+        )
 
-      @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
+        @heading
 
-      @bulletList(Seq(messages("dutyDueForThisReturn.bulletList.3")))
+        @if(dutyDueViewModel.isTotalDueZero) {
+            @paragraph(messages("dutyDueForThisReturn.nil.p1"))
+
+            @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
+
+            @bulletList(Seq(messages("dutyDueForThisReturn.bulletList.3")))
+        }
+
+        @if(dutyDueViewModel.isTotalDueAboveZero) {
+            @paragraph(messages("dutyDueForThisReturn.positive.p1"))
+
+            @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
+
+            @bulletList(Seq(
+                messages("dutyDueForThisReturn.bulletList.1")
+            ))
+        }
+
+        @if(dutyDueViewModel.isTotalDueBelowZero) {
+            @paragraph(messages("dutyDueForThisReturn.negative.p1"))
+
+            @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
+
+            @bulletList(Seq(
+                messages("dutyDueForThisReturn.bulletList.1")
+            ))
+        }
+
+        @paragraph(messages("dutyDueForThisReturn.p2"))
+
+        @subHeading(messages("dutyDueForThisReturn.h3"), classes = Css.headingMCssClass)
+        @govukSummaryList(dutyDueViewModel.dutiesBreakdownSummaryList)
+
+        @subHeading(messages("dutyDueForThisReturn.youveAlsoAnswered"), classes = Css.headingMCssClass)
+        @paragraph(messages("dutyDueForThisReturn.youveAlsoAnswered.p"))
+        @govukSummaryList(dutyDueViewModel.youveAlsoDeclaredSummaryList)
+
+        @subHeading(messages("dutyDueForThisReturn.h4"), classes = Css.headingMCssClass)
+        @paragraph(messages("dutyDueForThisReturn.p3"))
+
+        @govukButton(
+            ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
+        )
     }
-
-    @if(dutyDueViewModel.totalDue > 0) {
-      @paragraph(messages("dutyDueForThisReturn.positive.p1"))
-
-      @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
-
-      @bulletList(Seq(
-        messages("dutyDueForThisReturn.bulletList.1")
-      ))
-    }
-
-    @if(dutyDueViewModel.totalDue < 0) {
-      @paragraph(messages("dutyDueForThisReturn.negative.p1"))
-
-      @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
-
-      @bulletList(Seq(
-        messages("dutyDueForThisReturn.bulletList.1")
-      ))
-    }
-
-    @paragraph(messages("dutyDueForThisReturn.p2"))
-
-    @subHeading(messages("dutyDueForThisReturn.h3"), classes = Css.headingMCssClass)
-    @govukSummaryList(dutyDueViewModel.dutiesBreakdownSummaryList)
-
-    @subHeading(messages("dutyDueForThisReturn.youveAlsoAnswered"), classes = Css.headingMCssClass)
-    @paragraph(messages("dutyDueForThisReturn.youveAlsoAnswered.p"))
-    @govukSummaryList(dutyDueViewModel.youveAlsoDeclaredSummaryList)
-
-    @subHeading(messages("dutyDueForThisReturn.h4"), classes = Css.headingMCssClass)
-    @paragraph(messages("dutyDueForThisReturn.p3"))
-
-    @govukButton(
-      ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
-    )
-  }
 }
