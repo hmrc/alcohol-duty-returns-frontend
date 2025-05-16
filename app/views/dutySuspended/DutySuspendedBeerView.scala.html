@@ -53,10 +53,10 @@
                 field = form("totalBeer"),
                 label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asSubheading,
             )
-            .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
             .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.1"))))
+            .withAttribute("inputmode", "text")
         )
 
         @govukInput(
@@ -64,10 +64,10 @@
                 field = form("pureAlcoholInBeer"),
                 label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asSubheading,
             )
-            .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
             .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.2"))))
+            .withAttribute("inputmode", "text")
         )
 
         @govukButton(
