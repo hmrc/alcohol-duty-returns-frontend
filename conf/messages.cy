@@ -549,6 +549,9 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} o litra
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Cyfradd doll
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} y litr
 
+checkYourAnswers.title = Gwiriwch eich atebion
+checkYourAnswers.heading = Gwiriwch eich atebion
+
 multipleSPRList.title.regime.beer = Cwrw i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.title.regime.cider = Seidr i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.title.regime.wine = Gwin i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
