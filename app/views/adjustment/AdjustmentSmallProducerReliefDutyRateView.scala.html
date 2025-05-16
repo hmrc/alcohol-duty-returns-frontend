@@ -54,10 +54,10 @@
                         field = form("adjustment-small-producer-relief-duty-rate-input"),
                         label = LabelViewModel(messages("adjustmentSmallProducerReliefDutyRate.heading")).asVisuallyHidden()
                     )
-                    .asNumeric()
                     .withWidth(Fixed10)
                     .withPoundPrefix
                     .withHint(HintViewModel(messages("adjustmentSmallProducerReliefDutyRate.hint")))
+                    .withAttribute("inputmode", "text")
                 )
         }
 

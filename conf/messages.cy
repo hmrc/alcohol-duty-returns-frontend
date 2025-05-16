@@ -36,8 +36,8 @@ error.prefix = Gwall
 error.title.prefix = Gwall:
 error.summary.title = Mae problem.
 
-checkYourAnswers.title = Gwirio’ch atebion
-checkYourAnswers.heading = Gwirio’ch atebion
+checkYourAnswers.title = Gwiriwch eich atebion
+checkYourAnswers.heading = Gwiriwch eich atebion
 
 journeyRecovery.continue.title = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 journeyRecovery.continue.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
@@ -80,10 +80,10 @@ noAppaId.p = Gallwch ddod o hyd i’ch ID APPA ar lythyrau oddi wrth CThEF ynghy
 noAppaId.link.text = Dysgwch sut i wneud cais am ID APPA (yn agor mewn tab newydd)
 noAppaId.p2 = os nad oes gennych un.
 
-clearReturnAreYouSureQuestion.title = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
-clearReturnAreYouSureQuestion.heading = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
-clearReturnAreYouSureQuestion.warning = Bydd gwneud hyn yn dileu’r holl wybodaeth yr ydych wedi’u nodi yn y datganiad hwn.
-clearReturnAreYouSureQuestion.error.required = Dewiswch ‘Iawn’ os hoffech glirio’ch datganiad
+clearReturnAreYouSureQuestion.title = A ydych yn siŵr eich bod am ddileu cynnwys eich Datganiad?
+clearReturnAreYouSureQuestion.heading = A ydych yn siŵr eich bod am ddileu cynnwys eich Datganiad?
+clearReturnAreYouSureQuestion.warning = Bydd gwneud hyn yn dileu’r holl wybodaeth yr ydych wedi’i nodi yn y Datganiad hwn.
+clearReturnAreYouSureQuestion.error.required = Dewiswch ‘Iawn’ os hoffech glirio’ch Datganiad
 
 regime.beer = cwrw
 regime.cider = seidr
@@ -120,7 +120,7 @@ viewPastReturns.submitReturn = Cyflwyno Datganiad
 viewPastReturns.submitReturn.hidden = Cyflwyno Datganiad {0}
 viewPastReturns.viewReturn = Gweld Datganiad
 viewPastReturns.viewReturn.hidden = Gweld Datganiad {0}
-viewPastReturns.status.due = Yn ddyledus
+viewPastReturns.status.due = I’w gyflwyno
 viewPastReturns.status.overdue = Yn hwyr
 viewPastReturns.status.completed = Wedi cwblhau
 viewPastReturns.noReturns = Does dim Datganiadau sydd heb eu cyflwyno
@@ -182,7 +182,7 @@ viewPastPayments.youOwe = Mae arnoch
 viewPastPayments.duty.value = {0}
 viewPastPayments.credit.paragraph = Does gennych chi ddim byd i’w dalu. Gallwch chi ofyn am ad-daliad, neu byddwn ni’n defnyddio’r credyd tuag at daliadau yn y dyfodol.
 viewPastPayments.zeroBalance.paragraph = Does gennych chi ddim byd i’w dalu.
-viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd at 2 ddiwrnod.
+viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd ar 2 ddiwrnod i ymddangos.
 viewPastPayments.Return.description = Taliad ar gyfer Datganiad Toll Alcohol
 viewPastPayments.RPI.description = Llog ar ad-daliad
 viewPastPayments.LPI.description = Llog am dalu’n hwyr
@@ -193,7 +193,7 @@ viewPastPayments.payNow.linkText = Talu nawr
 viewPastPayments.unallocatedPayments.caption = Taliadau heb eu dyrannu
 viewPastPayments.unallocated.payments.paymentDate = Dyddiad talu
 viewPastPayments.unallocatedPayments.description = Taliad
-viewPastPayments.unallocatedPayments.paragraph = Os byddwch yn gordalu neu’n gwneud taliad heb gyfeirnod, ni ellir dyrannu’r taliad i Ddatganiad penodol. Yr enw ar hyn yw ‘Taliad heb ei ddyrannu’, felly. Bydd taliadau heb eu dyrannu yn cael eu defnyddio i dalu unrhyw daliadau sy’n ddyledus neu’n hwyr.
+viewPastPayments.unallocatedPayments.paragraph = Os byddwch yn gordalu neu’n gwneud taliad heb gyfeirnod, ni ellir dyrannu’r taliad i Ddatganiad penodol. Yr enw ar hyn yw ‘Taliad heb ei ddyrannu’. Bydd taliadau heb eu dyrannu yn cael eu defnyddio i dalu unrhyw daliadau sy’n ddyledus neu’n hwyr.
 viewPastPayments.claimRefund.linkText = Hawlio ad-daliad
 viewPastPayments.historic.payments.paymentDate = Cyfnod y datganiad
 viewPastPayments.historic.caption = Taliadau wedi’u clirio yn ystod {0}
@@ -287,19 +287,19 @@ return.journey.error.minimumValue.pureAlcohol = {0} - Mae’n rhaid i’r litrau
 return.journey.error.tooManyDecimalPlaces.pureAlcohol = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
 
 return.journey.error.noValue.dutyRate = {0} - Nodwch eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
-return.journey.error.invalid.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
-return.journey.error.maximumValue.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
-return.journey.error.minimumValue.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
-return.journey.error.tooManyDecimalPlaces.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
+return.journey.error.invalid.dutyRate = {0} - Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn fod yn rhif
+return.journey.error.maximumValue.dutyRate = {0} - Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn fod yn llai nag £1 biliwn
+return.journey.error.minimumValue.dutyRate = {0} - Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn fod yn £0.00 neu fwy
+return.journey.error.tooManyDecimalPlaces.dutyRate = {0} - Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn gynnwys 2 le degol
 
 return.journey.multipleSPR.error.noValue.taxType = Dewiswch y math o gynnyrch alcoholaidd
 
 return.journey.multipleSPR.error.lessThanExpected = Litrau o alcohol pur mae’n rhaid i hyn fod yr un peth â chyfanswm y litrau o gynnyrch alcoholaidd neu’n llai na hynny
 
 return.journey.multipleSPR.error.noValue.totalLitres = Nodwch gyfanswm y litrau o gynnyrch alcoholaidd
-return.journey.multipleSPR.error.invalid.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn rhif
-return.journey.multipleSPR.error.maximumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn llai nag 1 biliwn
-return.journey.multipleSPR.error.minimumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau fod yn fwy na 0.00
+return.journey.multipleSPR.error.invalid.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn rhif
+return.journey.multipleSPR.error.maximumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn llai nag 1 biliwn
+return.journey.multipleSPR.error.minimumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn fwy na 0.00
 return.journey.multipleSPR.error.tooManyDecimalPlaces.totalLitres = Cyfanswm y litrau o gynnyrch alcoholaidd: Mae’n rhaid i hyn fod yn rhif sy’n cynnwys 2 le degol
 
 return.journey.multipleSPR.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur
@@ -309,10 +309,10 @@ return.journey.multipleSPR.error.minimumValue.pureAlcohol = Mae’n rhaid i’r 
 return.journey.multipleSPR.error.tooManyDecimalPlaces.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
 
 return.journey.multipleSPR.error.noValue.dutyRate = Nodwch eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
-return.journey.multipleSPR.error.invalid.dutyRate = Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
+return.journey.multipleSPR.error.invalid.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
 return.journey.multipleSPR.error.maximumValue.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
 return.journey.multipleSPR.error.minimumValue.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
-return.journey.multipleSPR.error.tooManyDecimalPlaces.dutyRate = Eich cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn gynnwys 2 le degol
+return.journey.multipleSPR.error.tooManyDecimalPlaces.dutyRate = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach: Mae’n rhaid i hyn gynnwys 2 le degol
 
 return.journey.abv.interval.label.Beer = cwrw
 return.journey.abv.interval.label.Cider = seidr
@@ -337,7 +337,7 @@ return.journey.abv.interval.label.OtherFermentedProduct.nondraught = cynhyrchion
 
 return.journey.abv.rangeKey.3 = rhwng {0}% a {1}%
 return.journey.abv.rangeKey.4 = rhwng {0}% ac {1}%
-return.journey.abv.rangeKey.5 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.5 = rhwng {0}% a {1}%
 return.journey.abv.rangeKey.8 = rhwng {0}% ac {1}%
 return.journey.abv.rangeKey.22 = rhwng {0}% a {1}%
 return.journey.abv.rangeKey.100 = {0}% neu’n uwch
@@ -346,7 +346,12 @@ return.journey.abv.taxTypeCode = cod y math o dreth: {0}
 return.journey.abv.taxTypeCode.SPR = cod y math o dreth: {0} SPR
 
 return.journey.abv.single.interval = {0} {1} ABV ({2})
-return.journey.abv.multi.interval = {0} {1} ABV and {2} {3} ABV ({4})
+return.journey.abv.multi.interval.Beer = {0} {1} ABV a chwrw {2} ABV ({3})
+return.journey.abv.multi.interval.Cider = {0} {1} ABV a seidr {2} ABV ({3})
+return.journey.abv.multi.interval.SparklingCider = {0} {1} ABV a seidr pefriog {2} ABV ({3})
+return.journey.abv.multi.interval.Wine = {0} {1} ABV a gwin {2} ABV ({3})
+return.journey.abv.multi.interval.Spirits = {0} {1} ABV a gwirodydd {2} ABV ({3})
+return.journey.abv.multi.interval.OtherFermentedProduct = {0} {1} ABV a chynhyrchion eplesedig eraill {2} ABV ({3})
 
 return.journey.totalLitres.regime.beer = Cyfanswm y litrau o gwrw (i 2 le degol)
 return.journey.totalLitres.regime.cider = Cyfanswm y litrau o seidr (i 2 le degol)
@@ -433,7 +438,7 @@ howMuchDoYouNeedToDeclare.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i ch
 howMuchDoYouNeedToDeclare.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan a’r alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan a’r alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan a’r alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyrchion eplesedig eraill y mae angen i chi eu datgan a’r alcohol pur ynddyn nhw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyrchion eplesedig eraill y mae angen i chi eu datgan a’r alcohol pur yn y cynhyrchion eplesedig eraill hynny, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 
 howMuchDoYouNeedToDeclare.core.heading.regime.beer = Faint o gwrw nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
@@ -537,9 +542,6 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label = Cyfanswm yr
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} o litrau o alcohol pur
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Cyfradd doll
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} y litr
-
-checkYourAnswers.title = Gwirio’ch atebion
-checkYourAnswers.heading = Gwirio’ch atebion
 
 multipleSPRList.title.regime.beer = Cwrw i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
 multipleSPRList.title.regime.cider = Seidr i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
@@ -890,7 +892,7 @@ dutySuspended.checkYourAnswers.amount.change.hidden = swm yr alcohol y gohiriwyd
 declareQuarterlySpirits.title = Rhoi gwybod i ni am y gwirodydd rydych wedi’u cynhyrchu o gynhwysion amrwd
 declareQuarterlySpirits.heading = Rhoi gwybod i ni am y gwirodydd rydych wedi’u cynhyrchu o gynhwysion amrwd
 declareQuarterlySpirits.question = A ydych chi wedi gwneud unrhyw wirodydd o gynhwysion amrwd yn ystod y 3 mis diwethaf?
-declareQuarterlySpirits.paragraph1 = Nid oes angen i chi roi gwybod i ni am unrhyw gynhyrchion alcoholaidd a gynhyrchwyd o alcohol sylfaenol a wnaed rywle eraill (er enghraifft os ydych chi’n eu puro neu’n eu cymysgu).
+declareQuarterlySpirits.paragraph1 = Nid oes angen i chi roi gwybod i ni am unrhyw gynhyrchion alcoholaidd a gynhyrchwyd o alcohol sylfaenol a wnaed rywle arall (er enghraifft os ydych chi’n eu puro neu’n eu cymysgu).
 declareQuarterlySpirits.paragraph2 = Mae angen i chi roi gwybod i ni os ydych wedi gwneud:
 declareQuarterlySpirits.paragraph3 = Bydd angen i chi hefyd roi gwybod i ni beth oedd cyfanswm y gwirodydd a wnaethoch yn ystod y cyfnod hwn.
 declareQuarterlySpirits.paragraph4 = Os gwnaethoch Scotch Whisky neu Irish Whiskey, bydd angen i chi roi gwybod i ni faint a wnaethoch.
@@ -934,7 +936,7 @@ whisky.error.scotchWhisky.nonNumeric = Mae’n rhaid i’r ateb ar gyfer Scotch 
 whisky.error.scotchWhisky.maximumRequired = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn llai nag 1 biliwn o litrau
 whisky.error.scotchWhisky.minimumRequired = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn sero neu’n uwch
 whisky.error.scotchWhisky.decimalPlaces = Mae’n rhaid i’r ateb ar gyfer Scotch Whisky fod yn rhif sy’n cynnwys hyd at 2 le degol
-whisky.error.irishWhiskey.required = Nodwch gyfaint y Irish Whiskey a gynhyrchwyd
+whisky.error.irishWhiskey.required = Nodwch gyfaint yr Irish Whiskey a gynhyrchwyd
 whisky.error.irishWhiskey.nonNumeric = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn rhif
 whisky.error.irishWhiskey.maximumRequired = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn llai nag 1 biliwn o litrau
 whisky.error.irishWhiskey.minimumRequired = Mae’n rhaid i’r ateb ar gyfer Irish Whiskey fod yn sero neu’n uwch
@@ -1032,13 +1034,13 @@ spoiltVolumeWithDuty.spoiltDuty.heading = Faint o doll a dalwyd?
 spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Nodwch gyfanswm y litrau o gynnyrch alcoholaidd wedi’i ddifetha
 spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume = Nodwch y litrau o alcohol pur
 spoiltVolumeWithDuty.error.noValue.duty = Nodwch swm y doll a dalwyd
-spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn rhif
+spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Mae’n rhaid i’r litrau o alcohol wedi’i ddifetha fod yn rhif
 spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif
 spoiltVolumeWithDuty.error.invalid.duty = Mae’n rhaid i swm y doll a dalwyd fod yn rhif
-spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn llai nag 1 biliwn
+spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Mae’n rhaid i’r litrau o alcohol wedi’i ddifetha fod yn llai nag 1 biliwn
 spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn llai nag 1 biliwn
 spoiltVolumeWithDuty.error.maximumValue.duty = Mae’n rhaid i swm y doll a dalwyd fod yn llai na £100 biliwn
-spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litrau o alcohol wedi’i ddifetha: Mae’n rhaid i hyn fod yn fwy na 0.00
+spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Mae’n rhaid i’r litrau o alcohol wedi’i ddifetha fod yn fwy na 0.00
 spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume = Mae’n rhaid i’r litrau o alcohol pur fod yn fwy na 0.0000
 spoiltVolumeWithDuty.error.minimumValue.duty = Mae’n rhaid i swm y doll a dalwyd fod yn fwy na £0.00
 spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Mae’n rhaid i’r litrau o alcohol wedi’i ddifetha fod yn rhif sy’n cynnwys 2 le degol
@@ -1055,7 +1057,8 @@ whenDidYouPayDuty.exciseEnquiries.link = Ffoniwch CThEF neu cysylltwch â CThEF 
 whenDidYouPayDuty.paragraph = os cyhoeddwyd hyn yn wreiddiol cyn mis Awst 2023.
 whenDidYouPayDuty.hint = Er enghraifft, 10 2024
 whenDidYouPayDuty.date.error.required.all = Nodwch y dyddiad y gwnaethoch dalu toll
-whenDidYouPayDuty.date.error.required = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll gynnwys a {0}
+whenDidYouPayDuty.date.error.required.month = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll gynnwys mis
+whenDidYouPayDuty.date.error.required.year = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll gynnwys blwyddyn
 whenDidYouPayDuty.date.error.invalid.future = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod yn y gorffennol
 whenDidYouPayDuty.date.error.invalid.month = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod yn ddyddiad go iawn gan ddefnyddio rhifau
 whenDidYouPayDuty.date.error.invalid.year = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod yn ddyddiad go iawn gan ddefnyddio rhifau
@@ -1231,10 +1234,10 @@ returnSubmitted.warningFallbackText = Rhybudd
 
 returnSubmitted.noDetails.p1 = Mae eich datganiad wedi dod i law, ond ni allwn ddangos y manylion llawn ar hyn o bryd. Gallai hyn fod o ganlyniad i broblem dros dro gyda’r gwasanaeth.
 returnSubmitted.noDetails.youCan = Gallwch wneud y canlynol:
-returnSubmitted.noDetails.viewReturn1 = bwrw golwg dros fanylion llawn
+returnSubmitted.noDetails.viewReturn1 = bwrw golwg dros fanylion llawn eich datganiad
 returnSubmitted.noDetails.viewReturn2 = i gadarnhau’ch cyfeirnod
 returnSubmitted.noDetails.viewPayments = gwirio faint o doll sydd arnoch
-returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 diwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
+returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 ddiwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
 returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
 
 # End of Check and submit sub-journey

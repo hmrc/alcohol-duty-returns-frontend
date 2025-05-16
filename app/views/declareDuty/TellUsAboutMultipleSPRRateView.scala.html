@@ -88,6 +88,7 @@
                 )
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                .withAttribute("inputmode", "text")
             )),
 
             Some(govukInput(
@@ -100,6 +101,7 @@
                 )
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                .withAttribute("inputmode", "text")
             )),
 
             Some(govukInput(
@@ -114,6 +116,7 @@
                 .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
+                .withAttribute("inputmode", "text")
             )),
 
             rateBandRadioItems match {

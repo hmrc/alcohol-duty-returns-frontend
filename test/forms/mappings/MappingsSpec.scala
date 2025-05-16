@@ -248,12 +248,12 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind an empty" - {
       "month" in {
         val result = testForm.bind(Map("value.month" -> "", "value.year" -> "2024"))
-        result.errors mustBe Seq(FormError("value.month", "error.required", Seq("month")))
+        result.errors mustBe Seq(FormError("value.month", "error.required.month"))
       }
 
       "year" in {
         val result = testForm.bind(Map("value.month" -> "1", "value.year" -> ""))
-        result.errors mustBe Seq(FormError("value.year", "error.required", Seq("year")))
+        result.errors mustBe Seq(FormError("value.year", "error.required.year"))
       }
 
       "month and year" in {

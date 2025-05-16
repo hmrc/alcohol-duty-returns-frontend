@@ -68,9 +68,9 @@
                   errorMessageField = form(s"volumesWithRate_${index}_totalLitres"),
                   value = form(s"volumesWithRate[$index].totalLitres").value
                 )
-                .asNumeric()
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                .withAttribute("inputmode", "text")
               ),
               govukInput(
                 InputViewModel(
@@ -80,9 +80,9 @@
                   errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
                   value = form(s"volumesWithRate[$index].pureAlcohol").value
                 )
-                .asNumeric()
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                .withAttribute("inputmode", "text")
               ),
               govukInput(
                 InputViewModel(
@@ -92,11 +92,11 @@
                   errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
                   value = form(s"volumesWithRate[$index].dutyRate").value
                 )
-                .asNumeric()
                 .withWidth(Fixed10)
                 .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
+                .withAttribute("inputmode", "text")
               ),
               govukInput(
                 InputViewModel(
@@ -138,9 +138,9 @@
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
                 )
-                .asNumeric()
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                .withAttribute("inputmode", "text")
               ),
               govukInput(
                 InputViewModel(
@@ -150,9 +150,9 @@
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_pureAlcohol"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
                 )
-                .asNumeric()
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                .withAttribute("inputmode", "text")
               ),
               govukInput(
                 InputViewModel(
@@ -162,11 +162,11 @@
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
                 )
-                .asNumeric()
                 .withWidth(Fixed10)
                 .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
+                .withAttribute("inputmode", "text")
               ),
               govukInput(
                 InputViewModel(

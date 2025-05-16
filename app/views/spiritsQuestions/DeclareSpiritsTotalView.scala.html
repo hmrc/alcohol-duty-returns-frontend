@@ -74,10 +74,10 @@
                 field = form("declare-spirits-total-input"),
                 label = LabelViewModel(messages("declareSpiritsTotal.subheading2")).withCssClass(Css.labelMCssClass)
             )
-            .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("declareSpiritsTotal.inputSuffix")))
             .withHint(Hint(content =  messages("declareSpiritsTotal.hint")))
+            .withAttribute("inputmode", "text")
         )
 
         @govukButton(
