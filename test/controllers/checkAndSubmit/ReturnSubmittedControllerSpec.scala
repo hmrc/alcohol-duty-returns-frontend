@@ -64,7 +64,6 @@ class ReturnSubmittedControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        // TODO: add test for the view with correct period key
       }
     }
 
