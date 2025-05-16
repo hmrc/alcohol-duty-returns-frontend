@@ -44,7 +44,20 @@ case class DutyDueForThisReturnViewModel(
   dutiesBreakdownSummaryList: SummaryList,
   youveAlsoDeclaredSummaryList: SummaryList,
   totalDue: BigDecimal
-)
+) {
+  def getTitle(implicit messages: Messages): String =
+    if (isTotalDueZero) {
+      messages("dutyDueForThisReturn.nil.title")
+    } else {
+      messages("dutyDueForThisReturn.title", messages("site.currency.2DP", totalDue))
+    }
+
+  val isTotalDueZero: Boolean = totalDue == 0
+
+  val isTotalDueAboveZero: Boolean = totalDue > 0
+
+  val isTotalDueBelowZero: Boolean = totalDue < 0
+}
 
 class DutyDueForThisReturnHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
