@@ -14,9 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, Caption, FormGroupWithError}
+@import components.{Caption, FormGroupWithError, Link, PageHeading, Paragraph}
 @import config.Constants.Css
-@import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
 @import viewmodels.adjustment.WhenDidYouPayDutyViewModel
 
 @this(
@@ -34,17 +33,7 @@
 
 @(form: Form[_], mode: Mode, viewModel: WhenDidYouPayDutyViewModel)(implicit request: Request[_], messages: Messages)
 
-@heading = @{
-    if(adjustmentType == Underdeclaration) {
-        messages("whenDidYouPayDuty.under-declaration.title")
-    } else if(adjustmentType == Spoilt) {
-        throw new IllegalArgumentException("Not expecting WhenDidYouPayDuty to be asked for Spoilt")
-    } else {
-        messages("whenDidYouPayDuty.default.title")
-    }
-}
-
-@layout(pageTitle = title(form, heading)) {
+@layout(pageTitle = title(form, viewModel.getHeading)) {
 
     @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
