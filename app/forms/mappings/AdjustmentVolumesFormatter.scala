@@ -42,6 +42,7 @@ class AdjustmentVolumesFormatter(
     totalLitresVolumeField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
+    exactDecimalPlacesRequired = true,
     args = args
   )
 

@@ -108,7 +108,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
 
     "fail to bind when values below minimum are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "0",
+        "volumes.totalLitresVolume" -> "0.00",
         "volumes.pureAlcoholVolume" -> "0.0000",
         "volumes.sprDutyRate"       -> "-21"
       )
@@ -121,7 +121,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
 
     "fail to bind when values exceed maximum are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "100000000000",
+        "volumes.totalLitresVolume" -> "100000000000.00",
         "volumes.pureAlcoholVolume" -> "100000000000.0000",
         "volumes.sprDutyRate"       -> "100000000000"
       )
@@ -134,7 +134,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
 
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "1",
+        "volumes.totalLitresVolume" -> "1.00",
         "volumes.pureAlcoholVolume" -> "2.0000",
         "volumes.sprDutyRate"       -> "0"
       )
@@ -145,7 +145,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
 
     "fail to bind when pure alcohol volume is empty, total litres value exceeds maximum and sprDutyRate is invalid" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "9999999999999999",
+        "volumes.totalLitresVolume" -> "9999999999999999.00",
         "volumes.pureAlcoholVolume" -> "",
         "volumes.sprDutyRate"       -> "abc"
       )

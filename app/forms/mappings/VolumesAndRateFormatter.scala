@@ -45,6 +45,7 @@ class VolumesAndRateFormatter(
     totalLitresField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
+    exactDecimalPlacesRequired = true,
     args = Seq(regimeName)
   )
 

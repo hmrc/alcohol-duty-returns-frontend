@@ -35,7 +35,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
         "volumes[0].taxType"             -> "311",
-        "volumes[0].totalLitres"         -> "1",
+        "volumes[0].totalLitres"         -> "1.00",
         "volumes[0].pureAlcohol"         -> "1.0000"
       )
       form.bind(data).value.value must contain theSameElementsAs Seq(
@@ -49,7 +49,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       )
       form.fill(data).data must contain theSameElementsAs Map(
         "volumes[0].taxType"     -> "311",
-        "volumes[0].totalLitres" -> "1",
+        "volumes[0].totalLitres" -> "1.00",
         "volumes[0].pureAlcohol" -> "1.0000"
       )
     }
@@ -105,7 +105,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
         "volumes[0].taxType"             -> "311",
-        "volumes[0].totalLitres"         -> "0",
+        "volumes[0].totalLitres"         -> "0.00",
         "volumes[0].pureAlcohol"         -> "0.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
@@ -126,7 +126,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
         "volumes[0].taxType"             -> "311",
-        "volumes[0].totalLitres"         -> "100000000000",
+        "volumes[0].totalLitres"         -> "100000000000.00",
         "volumes[0].pureAlcohol"         -> "100000000000.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
@@ -147,7 +147,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
         "volumes[0].taxType"             -> "311",
-        "volumes[0].totalLitres"         -> "1",
+        "volumes[0].totalLitres"         -> "1.00",
         "volumes[0].pureAlcohol"         -> "2.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
@@ -159,7 +159,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].rateBandDescription" -> rateBandDescription,
         "volumes[0].taxType"             -> "311",
-        "volumes[0].totalLitres"         -> "99999999999",
+        "volumes[0].totalLitres"         -> "99999999999.00",
         "volumes[0].pureAlcohol"         -> ""
       )
       form.bind(data).errors must contain allElementsOf Seq(
