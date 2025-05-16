@@ -30,6 +30,7 @@ import connectors.UserAnswersConnector
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.adjustment.WhenDidYouPayDutyHelper
 import views.html.adjustment.WhenDidYouPayDutyView
 
 import java.time.YearMonth
@@ -43,6 +44,7 @@ class WhenDidYouPayDutyController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: WhenDidYouPayDutyFormProvider,
+  helper: WhenDidYouPayDutyHelper,
   appConfig: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   view: WhenDidYouPayDutyView
@@ -57,23 +59,11 @@ class WhenDidYouPayDutyController @Inject() (
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), Some(period), _, _, _, _, _, _, _, _, _, _)) =>
         Ok(
-          view(
-            form.fill(
-              period
-            ),
-            mode,
-            adjustmentType,
-            appConfig.exciseEnquiriesUrl
-          )
+          view(form.fill(period), mode, helper.createViewModel(adjustmentType))
         )
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))            =>
         Ok(
-          view(
-            form,
-            mode,
-            adjustmentType,
-            appConfig.exciseEnquiriesUrl
-          )
+          view(form, mode, helper.createViewModel(adjustmentType))
         )
       case _                                                                                          =>
         logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
@@ -92,14 +82,7 @@ class WhenDidYouPayDutyController @Inject() (
             request.userAnswers.get(CurrentAdjustmentEntryPage) match {
               case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _)) =>
                 Future.successful(
-                  BadRequest(
-                    view(
-                      formWithErrors,
-                      mode,
-                      adjustmentType,
-                      appConfig.exciseEnquiriesUrl
-                    )
-                  )
+                  BadRequest(view(formWithErrors, mode, helper.createViewModel(adjustmentType)))
                 )
               case _                                                                               =>
                 logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
