@@ -31,7 +31,7 @@ class WhenDidYouPayDutyViewModelSpec extends SpecBase {
 
       viewModel.getHeading mustBe messages("whenDidYouPayDuty.under-declaration.title")
     }
-    "return the default heading for adjustment types that are not Spoilt ot Under Declaration" in {
+    "return the default heading for adjustment types that are not Spoilt or Under Declaration" in {
       val viewModel = WhenDidYouPayDutyViewModel(RepackagedDraughtProducts, url)
 
       viewModel.getHeading mustBe messages("whenDidYouPayDuty.default.title")

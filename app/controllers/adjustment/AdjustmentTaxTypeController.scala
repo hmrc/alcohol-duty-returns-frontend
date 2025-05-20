@@ -33,6 +33,7 @@ import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.adjustment.AdjustmentTaxTypeHelper
 import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
@@ -43,6 +44,7 @@ class AdjustmentTaxTypeController @Inject() (
   userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
+  helper: AdjustmentTaxTypeHelper,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: AdjustmentTaxTypeFormProvider,
@@ -61,11 +63,9 @@ class AdjustmentTaxTypeController @Inject() (
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
         Ok(
           view(
-            form.fill(
-              rateBand.taxTypeCode.toInt
-            ),
+            form.fill(rateBand.taxTypeCode.toInt),
             mode,
-            adjustmentType
+            helper.createViewModel(adjustmentType)
           )
         )
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))              =>
@@ -73,7 +73,7 @@ class AdjustmentTaxTypeController @Inject() (
           view(
             form,
             mode,
-            adjustmentType
+            helper.createViewModel(adjustmentType)
           )
         )
       case _                                                                                            =>
@@ -139,7 +139,7 @@ class AdjustmentTaxTypeController @Inject() (
             view(
               formWithErrors,
               mode,
-              adjustmentType
+              helper.createViewModel(adjustmentType)
             )
           )
         )
@@ -158,7 +158,7 @@ class AdjustmentTaxTypeController @Inject() (
             .withError("adjustment-tax-type-input", errorMessage)
             .fill(value),
           mode,
-          adjustmentType
+          helper.createViewModel(adjustmentType)
         )
       )
     )
