@@ -39,10 +39,14 @@
 
     @govukSummaryList(summaryList.whatDoYouNeedToDeclareSummary)
 
-    @(summaryList.howMuchDoYouNeedToDeclareSummary.map(summary => govukSummaryList(summary)))
+    @summaryList.howMuchDoYouNeedToDeclareSummary.map { summary =>
+        @govukSummaryList(summary)
+    }
 
-    @(summaryList.smallProducerReliefSummary.map(summary => govukSummaryList(summary)))
-  
+    @summaryList.smallProducerReliefSummary.map { summary =>
+        @govukSummaryList(summary)
+    }
+
     @govukButton(
       ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         .asLink(controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
