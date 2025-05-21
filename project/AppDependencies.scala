@@ -16,7 +16,6 @@ object AppDependencies {
     "com.beachape"      %% "enumeratum"                     % "1.7.4",
     "com.beachape"      %% "enumeratum-play"                % "1.8.1",
     "com.beachape"      %% "enumeratum-cats"                % "1.7.4"
-
   )
 
   val test = Seq(
@@ -29,7 +28,6 @@ object AppDependencies {
     "org.scalatestplus"       %% "mockito-3-4"             % "3.2.10.0",
     "org.mockito"             %% "mockito-scala"           % mockitoScalaVersion,
     "org.scalacheck"          %% "scalacheck"              % "1.18.0",
-    "org.pegdown"             %  "pegdown"                 % "1.6.0",
     "org.jsoup"               %  "jsoup"                   % "1.18.1",
     "com.vladsch.flexmark"    %  "flexmark-all"            % "0.64.8"
   ).map(_ % Test)
