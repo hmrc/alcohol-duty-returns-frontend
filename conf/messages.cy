@@ -494,7 +494,7 @@ tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Rhoi gwybod i ni am y c
 tellUsAboutSingleSPRRate.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cwrw hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+tellUsAboutSingleSPRRate.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan a’r alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Rhowch wybod i ni am y cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
 
