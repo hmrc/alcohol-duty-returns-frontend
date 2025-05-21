@@ -17,18 +17,18 @@
 package controllers.adjustment
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.adjustment.AlcoholicProductTypeFormProvider
+import models.AlcoholRegime.{Beer, Cider}
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.{NormalMode, ReturnPeriod}
 import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import models.AlcoholRegime.{Beer, Cider}
-import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import org.mockito.ArgumentMatchersSugar.eqTo
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
 import views.html.adjustment.SpoiltAlcoholicProductTypeView
@@ -52,8 +52,11 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[SpoiltAlcoholicProductTypeView]
 
+        val helper        = application.injector.instanceOf[SpoiltAlcoholicProductTypeHelper]
+        val testViewModel = helper.getViewModel(userAnswers.regimes)(getMessages(application))
+
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, userAnswers.regimes)(
+        contentAsString(result) mustEqual view(form, NormalMode, testViewModel)(
           request,
           getMessages(application)
         ).toString
@@ -78,8 +81,11 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
+        val helper        = application.injector.instanceOf[SpoiltAlcoholicProductTypeHelper]
+        val testViewModel = helper.getViewModel(userAnswers.regimes)(getMessages(application))
+
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(alcoholType), NormalMode, userAnswers.regimes)(
+        contentAsString(result) mustEqual view(form.fill(alcoholType), NormalMode, testViewModel)(
           request,
           getMessages(application)
         ).toString
@@ -300,8 +306,11 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
+        val helper        = application.injector.instanceOf[SpoiltAlcoholicProductTypeHelper]
+        val testViewModel = helper.getViewModel(emptyUserAnswers.regimes)(getMessages(application))
+
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, emptyUserAnswers.regimes)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, testViewModel)(
           request,
           getMessages(application)
         ).toString

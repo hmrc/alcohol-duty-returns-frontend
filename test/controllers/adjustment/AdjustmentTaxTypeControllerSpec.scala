@@ -33,6 +33,7 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentTaxTypeView
+import viewmodels.adjustment.AdjustmentTaxTypeViewModel
 
 import java.time.YearMonth
 import scala.concurrent.Future
@@ -96,7 +97,10 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val view    = application.injector.instanceOf[AdjustmentTaxTypeView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, AdjustmentTaxTypeViewModel(Spoilt))(
+          request,
+          getMessages(app)
+        ).toString
       }
     }
 
@@ -113,7 +117,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         val view = application.injector.instanceOf[AdjustmentTaxTypeView]
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, AdjustmentTaxTypeViewModel(Spoilt))(
           request,
           getMessages(app)
         ).toString
@@ -209,7 +213,10 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val view   = application.injector.instanceOf[AdjustmentTaxTypeView]
 
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, AdjustmentTaxTypeViewModel(Spoilt))(
+          request,
+          getMessages(app)
+        ).toString
       }
     }
 
@@ -238,7 +245,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
             .withError("adjustment-tax-type-input", "adjustmentTaxType.error.invalid")
             .fill(validAnswer),
           NormalMode,
-          Spoilt
+          AdjustmentTaxTypeViewModel(Spoilt)
         )(request, getMessages(app)).toString
 
         verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
@@ -278,7 +285,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
             .withError("adjustment-tax-type-input", "adjustmentTaxType.error.notDraught")
             .fill(validAnswer),
           NormalMode,
-          RepackagedDraughtProducts
+          AdjustmentTaxTypeViewModel(RepackagedDraughtProducts)
         )(request, getMessages(app)).toString
 
         verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())

@@ -179,7 +179,7 @@ class RateBandDescriptionSpec extends SpecBase {
       }
     }
 
-    "getABVRange should throw an exception if the appropriate range message is not found" in new SetUp {
+    "getABVRange must throw an exception if the appropriate range message is not found" in new SetUp {
       val lowerLimit     = BigDecimal(1.3)
       val upperLimit     = BigDecimal(2.4)
       val rateType       = RateType.Core

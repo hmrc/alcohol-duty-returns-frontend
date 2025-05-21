@@ -35,6 +35,8 @@ case class PaginationViewModel(
         )
       })
     )
+
+  val isMoreThanOnePage: Boolean = totalPages > 1
 }
 
 case class PaginatedViewModel(totalPages: Int, tableViewModel: TableViewModel)

@@ -24,6 +24,7 @@ import play.api.Configuration
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import viewmodels.payments.ViewPastPaymentsHelper
 import viewmodels.payments.ViewPastPaymentsViewModel
 import views.html.payments.ViewPastPaymentsView
 
@@ -41,7 +42,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = false
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
+      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
@@ -71,15 +72,15 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
+        val viewModel                     =
+          ViewPastPaymentsViewModel(openPaymentsData.totalOpenPaymentsAmount, 2024, claimARefundGformEnabled = false)
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
           unallocatedPaymentsTable,
-          openPaymentsData.totalOpenPaymentsAmount,
           historicPaymentsTable,
-          2024,
-          claimARefundGformEnabled = false
+          viewModel
         )(
           request,
           getMessages(application)
@@ -95,7 +96,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = true
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
+      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
@@ -124,14 +125,15 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
+        val viewModel                     =
+          ViewPastPaymentsViewModel(openPaymentsData.totalOpenPaymentsAmount, 2024, claimARefundGformEnabled = true)
+
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
           unallocatedPaymentsTable,
-          openPaymentsData.totalOpenPaymentsAmount,
           historicPaymentsTable,
-          2024,
-          claimARefundGformEnabled = true
+          viewModel
         )(
           request,
           getMessages(application)
