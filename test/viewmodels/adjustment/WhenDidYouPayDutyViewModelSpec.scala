@@ -25,7 +25,7 @@ class WhenDidYouPayDutyViewModelSpec extends SpecBase {
   val url: String                 = appConfig.exciseEnquiriesUrl
   implicit val messages: Messages = getMessages(app)
 
-  "WhenDidYouPayDutyViewModel getHeading method should" - {
+  "WhenDidYouPayDutyViewModel getHeading method must" - {
     "return the correct heading for an Under Declaration" in {
       val viewModel = WhenDidYouPayDutyViewModel(Underdeclaration, url)
 

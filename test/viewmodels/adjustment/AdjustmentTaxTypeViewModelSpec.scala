@@ -25,7 +25,7 @@ class AdjustmentTaxTypeViewModelSpec extends SpecBase {
   implicit val messages: Messages = getMessages(app)
 
   "AdjustmentTaxTypeViewModel" - {
-    "getTitleContent method should" - {
+    "getTitleContent method must" - {
       "return the correct title for a user on the repackaged draught journey" in {
         val viewModel = AdjustmentTaxTypeViewModel(RepackagedDraughtProducts)
 
@@ -38,7 +38,7 @@ class AdjustmentTaxTypeViewModelSpec extends SpecBase {
       }
     }
 
-    "getLabel method should" - {
+    "getLabel method must" - {
       "return the correct label for a user on the repackaged draught journey" in {
         val viewModel = AdjustmentTaxTypeViewModel(RepackagedDraughtProducts)
 
@@ -51,7 +51,7 @@ class AdjustmentTaxTypeViewModelSpec extends SpecBase {
       }
     }
 
-    "getHint method should" - {
+    "getHint method must" - {
       "return the correct hint for a user on the under declaration journey" in {
         val viewModel = AdjustmentTaxTypeViewModel(Underdeclaration)
 

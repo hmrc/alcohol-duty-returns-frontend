@@ -23,7 +23,7 @@ import models.adjustment.AdjustmentType.Overdeclaration
 class AdjustmentTaxTypeHelperSpec extends SpecBase {
 
   "AdjustmentTaxTypeHelper" - {
-    "createViewModel method should create a view model with the declared adjustment type and correct url" in new Setup {
+    "createViewModel method must create a view model with the declared adjustment type and correct url" in new Setup {
       val testAdjustmentType: AdjustmentType = Overdeclaration
 
       testHelper.createViewModel(testAdjustmentType) mustBe AdjustmentTaxTypeViewModel(Overdeclaration)

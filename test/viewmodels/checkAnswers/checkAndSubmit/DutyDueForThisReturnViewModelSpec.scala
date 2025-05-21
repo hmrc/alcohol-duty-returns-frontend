@@ -26,19 +26,19 @@ class DutyDueForThisReturnViewModelSpec extends SpecBase {
   implicit val messages: Messages = getMessages(app)
 
   "DutyDueForThisReturnViewModel" - {
-    "getTitle should get the nil version of the title when total is zero" in {
+    "getTitle must get the nil version of the title when total is zero" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 0)
 
       testViewModel.getTitle mustBe messages("dutyDueForThisReturn.nil.title")
     }
 
-    "getTitle should get the normal version of the title when total is above zero" in {
+    "getTitle must get the normal version of the title when total is above zero" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 1)
 
       testViewModel.getTitle mustBe messages("dutyDueForThisReturn.title", messages("site.currency.2DP", 1))
     }
 
-    "getTitle should get the normal version of the title when total is below zero" in {
+    "getTitle must get the normal version of the title when total is below zero" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = -1)
 
       testViewModel.getTitle mustBe messages("dutyDueForThisReturn.title", messages("site.currency.2DP", -1))
@@ -46,13 +46,13 @@ class DutyDueForThisReturnViewModelSpec extends SpecBase {
   }
 
   "isTotalDueZero" - {
-    "should return true when the total due is 0" in {
+    "must return true when the total due is 0" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 0)
 
       testViewModel.isTotalDueZero mustBe true
     }
 
-    "should return false when the total due is not zero" in {
+    "must return false when the total due is not zero" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 3)
 
       testViewModel.isTotalDueZero mustBe false
@@ -60,13 +60,13 @@ class DutyDueForThisReturnViewModelSpec extends SpecBase {
   }
 
   "isTotalDueAboveZero" - {
-    "should return true when the total due is above zero" in {
+    "must return true when the total due is above zero" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 1)
 
       testViewModel.isTotalDueAboveZero mustBe true
     }
 
-    "should return false when the total due is zero or less" in {
+    "must return false when the total due is zero or less" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 0)
 
       testViewModel.isTotalDueAboveZero mustBe false
@@ -74,13 +74,13 @@ class DutyDueForThisReturnViewModelSpec extends SpecBase {
   }
 
   "isTotalDueBelowZero" - {
-    "should return true when the total due is below zero" in {
+    "must return true when the total due is below zero" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = -1)
 
       testViewModel.isTotalDueBelowZero mustBe true
     }
 
-    "should return false when the total due is zero or more" in {
+    "must return false when the total due is zero or more" in {
       val testViewModel = DutyDueForThisReturnViewModel(emptySummaryList, emptySummaryList, totalDue = 0)
 
       testViewModel.isTotalDueBelowZero mustBe false

@@ -124,7 +124,7 @@ class PaginationViewModelSpec extends SpecBase {
       )
     }
 
-    ".isMoreThanOnePage should" - {
+    ".isMoreThanOnePage must" - {
       "return true when the PaginationViewModel has more than one page" in {
         val paginationViewModel = PaginationViewModel(2, 2, createUrl)
 

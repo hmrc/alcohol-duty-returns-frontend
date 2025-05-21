@@ -25,17 +25,17 @@ class ViewPastPaymentsViewModelSpec extends SpecBase {
 
   "ViewPastPaymentsViewModel" - {
     "isDutyBalancePositive" - {
-      "should return true if the balance is above zero in the view model" in {
+      "must return true if the balance is above zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(0.4, currentYear, gFormState)
 
         viewModel.isDutyBalancePositive mustBe true
       }
-      "should return false if the balance is below zero in the view model" in {
+      "must return false if the balance is below zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(-0.4, currentYear, gFormState)
 
         viewModel.isDutyBalancePositive mustBe false
       }
-      "should return false if the balance is zero in the view model" in {
+      "must return false if the balance is zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(0.0, currentYear, gFormState)
 
         viewModel.isDutyBalancePositive mustBe false
@@ -43,17 +43,17 @@ class ViewPastPaymentsViewModelSpec extends SpecBase {
     }
 
     "isDutyBalanceNegative" - {
-      "should return true if the balance is below zero in the view model" in {
+      "must return true if the balance is below zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(-1.0, currentYear, gFormState)
 
         viewModel.isDutyBalanceNegative mustBe true
       }
-      "should return false if the balance is above zero in the view model" in {
+      "must return false if the balance is above zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(1.0, currentYear, gFormState)
 
         viewModel.isDutyBalanceNegative mustBe false
       }
-      "should return false if the balance is zero in the view model" in {
+      "must return false if the balance is zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(0.0, currentYear, gFormState)
 
         viewModel.isDutyBalanceNegative mustBe false
@@ -61,17 +61,17 @@ class ViewPastPaymentsViewModelSpec extends SpecBase {
     }
 
     "isDutyBalanceZero" - {
-      "should return false if the balance is above zero in the view model" in {
+      "must return false if the balance is above zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(0.6, currentYear, gFormState)
 
         viewModel.isDutyBalanceZero mustBe false
       }
-      "should return false if the balance is below zero in the view model" in {
+      "must return false if the balance is below zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(-0.6, currentYear, gFormState)
 
         viewModel.isDutyBalanceZero mustBe false
       }
-      "should return true if the balance is zero in the view model" in {
+      "must return true if the balance is zero in the view model" in {
         val viewModel = ViewPastPaymentsViewModel(0.0, currentYear, gFormState)
 
         viewModel.isDutyBalanceZero mustBe true
