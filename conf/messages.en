@@ -494,7 +494,7 @@ tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Tell us about the other
 tellUsAboutSingleSPRRate.p1.Beer = Tell us about the beer you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutSingleSPRRate.p1.Cider = Tell us about the cider you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutSingleSPRRate.p1.Wine = Tell us about the wine you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
-tellUsAboutSingleSPRRate.p1.Spirits = Tell us about the spirits you need to declare and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.p1.Spirits = Tell us about the spirits you need to declare that are eligible for Small Producer Relief, and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that other fermented product at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
 
