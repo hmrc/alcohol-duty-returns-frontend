@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
+@import components.{Caption, FormGroupWithError, PageHeading}
 @import viewmodels.InputWidth._
-@import components.{Caption, PageHeading, FormGroupWithError}
-@import models.adjustment.AdjustmentType
-@import models.adjustment.AdjustmentType.{Underdeclaration, RepackagedDraughtProducts}
+@import viewmodels.adjustment.AdjustmentTaxTypeViewModel
 
 @this(
     layout: templates.Layout,
@@ -30,17 +29,9 @@
     formGroupWithError: FormGroupWithError
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, viewModel: AdjustmentTaxTypeViewModel)(implicit request: Request[_], messages: Messages)
 
-@titleContent = @{
-    if(adjustmentType == RepackagedDraughtProducts){
-        messages("adjustmentTaxType.repackaged.title")
-    } else {
-        messages("adjustmentTaxType.title")
-    }
-}
-
-@layout(pageTitle = title(form, titleContent)) {
+@layout(pageTitle = title(form, viewModel.getTitleContent)) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -50,27 +41,20 @@
 
         @caption(
             id = "adjustment-tax-type-section",
-            text = messages(s"section.adjustment.$adjustmentType")
+            text = messages(s"section.adjustment.${viewModel.adjustmentType}")
         )
         @formGroupWithError(form.errors.nonEmpty){
-                @pageHeading(titleContent)
+                @pageHeading(viewModel.getTitleContent)
 
                 @govukInput(
                     InputViewModel(
                         field = form("adjustment-tax-type-input"),
-                        label = if (adjustmentType == RepackagedDraughtProducts)
-                        LabelViewModel(messages("adjustmentTaxType.repackaged.heading")).asVisuallyHidden()
-                        else
-                        LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
+                        label = LabelViewModel(viewModel.getLabel).asVisuallyHidden()
                     )
                     .asNumeric()
                     .withWidth(Fixed10)
                     .withHint(HintViewModel(
-                    if(adjustmentType == Underdeclaration){
-                    messages("adjustmentTaxType.underDeclaration.hint")
-                    } else {
-                    messages("adjustmentTaxType.default.hint")
-                    }
+                        viewModel.getHint
                     )))
         }
         @govukButton(

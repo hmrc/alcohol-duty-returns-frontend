@@ -32,7 +32,16 @@ import play.api.mvc.Call
 import java.time.{Clock, LocalDate, YearMonth}
 import javax.inject.Inject
 
-class ViewPastPaymentsViewModel @Inject() (
+case class ViewPastPaymentsViewModel(dutyBalance: BigDecimal, year: Int, claimARefundGformEnabled: Boolean) {
+
+  val isDutyBalancePositive: Boolean = dutyBalance > 0
+
+  val isDutyBalanceZero: Boolean = dutyBalance == 0
+
+  val isDutyBalanceNegative: Boolean = dutyBalance < 0
+}
+
+class ViewPastPaymentsHelper @Inject() (
   dateTimeHelper: DateTimeHelper,
   frontendAppConfig: FrontendAppConfig,
   clock: Clock
@@ -298,4 +307,11 @@ class ViewPastPaymentsViewModel @Inject() (
     }
     new GovukTag()(tag)
   }
+
+  def getViewPastPaymentsViewModel(dutyBalance: BigDecimal, year: Int): ViewPastPaymentsViewModel =
+    ViewPastPaymentsViewModel(
+      dutyBalance = dutyBalance,
+      year = year,
+      claimARefundGformEnabled = frontendAppConfig.claimARefundGformEnabled
+    )
 }

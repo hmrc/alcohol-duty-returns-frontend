@@ -15,8 +15,7 @@
  *@
 
 @import components.{Caption, PageHeading, Paragraph, FormGroupWithError}
-@import models.AlcoholRegimes
-@import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
+@import viewmodels.adjustment.SpoiltAlcoholicProductTypeViewModel
 
 @this(
     layout: templates.Layout,
@@ -27,18 +26,17 @@
     caption: Caption,
     paragraph: Paragraph,
     pageHeading: PageHeading,
-    helper: SpoiltAlcoholicProductTypeHelper,
     formGroupWithError: FormGroupWithError
 )
 
-@(form: Form[_], mode: Mode, regimes: AlcoholRegimes)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, viewModel: SpoiltAlcoholicProductTypeViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("alcoholicProductType.title"))) {
 
     @formHelper(action = controllers.adjustment.routes.SpoiltAlcoholicProductTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("alcoholic-product-type-value" -> helper.radioOptions(regimes).headOption.flatMap(_.id).getOrElse(""))))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("alcoholic-product-type-value" -> viewModel.getTopRadioId)))
         }
 
         @caption(
@@ -55,7 +53,7 @@
                     RadiosViewModel(
                         field  = form("alcoholic-product-type-value"),
                         legend = LegendViewModel(messages("alcoholicProductType.heading")).asVisuallyHidden(),
-                        items  = helper.radioOptions(regimes)
+                        items  = viewModel.radioOptions
                     )
                 )
         }

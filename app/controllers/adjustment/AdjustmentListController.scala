@@ -29,7 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.{AdjustmentListSummaryHelper, AdjustmentOverUnderDeclarationCalculationHelper}
 import play.api.Logging
-import viewmodels.PaginatedViewModel
+import viewmodels.{PaginatedViewModel, PaginationViewModel}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -72,7 +72,17 @@ class AdjustmentListController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Ok(view(preparedForm, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber))
+            } yield Ok(
+              view(
+                preparedForm,
+                paginatedViewModel.tableViewModel,
+                PaginationViewModel(
+                  paginatedViewModel.totalPages,
+                  pageNumber,
+                  controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+                )
+              )
+            )
           }
         }
         .recover { case _ =>
@@ -92,7 +102,15 @@ class AdjustmentListController @Inject() (
           formWithErrors =>
             Future.successful(
               BadRequest(
-                view(formWithErrors, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber)
+                view(
+                  formWithErrors,
+                  paginatedViewModel.tableViewModel,
+                  PaginationViewModel(
+                    paginatedViewModel.totalPages,
+                    pageNumber,
+                    controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+                  )
+                )
               )
             ),
           value =>
