@@ -87,9 +87,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
-  val spiritsAndIngredientsEnabled: Boolean =
-    configuration.get[Boolean]("features.spirits-and-ingredients")
-
   val claimARefundGformEnabled: Boolean =
     configuration.get[Boolean]("features.claim-a-refund-gform")
 

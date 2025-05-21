@@ -16,7 +16,6 @@
 
 package viewmodels.tasklist
 
-import config.FrontendAppConfig
 import models.{ReturnPeriod, UserAnswers}
 import play.api.i18n.Messages
 import viewmodels.DateTimeHelper
@@ -26,8 +25,7 @@ import javax.inject.Inject
 
 class TaskListViewModel @Inject() (
   dateTimeHelper: DateTimeHelper,
-  returnTaskListCreator: ReturnTaskListCreator,
-  appConfig: FrontendAppConfig
+  returnTaskListCreator: ReturnTaskListCreator
 ) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, returnPeriod: ReturnPeriod)(implicit
     messages: Messages
@@ -41,7 +39,7 @@ class TaskListViewModel @Inject() (
     )
 
   def hasSpiritsTask(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): Boolean =
-    appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
+    userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
 
   private def getDeclarationSections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
     message: Messages

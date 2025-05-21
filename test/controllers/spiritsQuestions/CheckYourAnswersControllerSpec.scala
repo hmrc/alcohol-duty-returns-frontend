@@ -50,13 +50,12 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       .success
       .value
 
-    "must return OK and the correct view for a GET if all necessary questions are answered (Other spirits is selected)" in new SetUp {
+    "must return OK and the correct view for a GET if all necessary questions are answered (Other spirits is selected)" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(completedUserAnswers))
-        .configure(additionalConfig)
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -80,7 +79,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
-    "must return OK and the correct view for a GET if any optional questions are not required (Other spirits is not selected)" in new SetUp {
+    "must return OK and the correct view for a GET if any optional questions are not required (Other spirits is not selected)" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -97,7 +96,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .configure(additionalConfig)
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -121,7 +119,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
-    "must return OK and the correct view for a GET if multiple Spirit types including Other are checked" in new SetUp {
+    "must return OK and the correct view for a GET if multiple Spirit types including Other are checked" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -141,7 +139,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .configure(additionalConfig)
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -166,22 +163,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must redirect to Journey Recovery for a GET" - {
-      "if the feature toggle is off" in new SetUp(false) {
-        val application = applicationBuilder(Some(completedUserAnswers)).configure(additionalConfig).build()
-
-        running(application) {
-          val request =
-            FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
-
-          val result = route(application, request).value
-
-          status(result)                 mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
-
-      "if no existing data is found" in new SetUp {
-        val application = applicationBuilder(Some(emptyUserAnswers)).configure(additionalConfig).build()
+      "if no existing data is found" in {
+        val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
         running(application) {
           val request =
@@ -195,7 +178,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
 
       "if one of the necessary pages has not been populated" - {
-        "whisky page is not populated" in new SetUp {
+        "whisky page is not populated" in {
           val mockUserAnswersConnector = mock[UserAnswersConnector]
 
           when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -212,7 +195,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
             .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .configure(additionalConfig)
             .overrides(
               bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
             )
@@ -229,15 +211,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           }
         }
 
-        "spirit type page is not populated" in new SetUp {
+        "spirit type page is not populated" in {
           val userAnswers = completedUserAnswers
             .remove(List(OtherSpiritsProducedPage, SpiritTypePage))
             .success
             .value
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .configure(additionalConfig)
-            .build()
+          val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
           running(application) {
             val request =
@@ -250,15 +230,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           }
         }
 
-        "Other spirits is selected but other spirits produced page is not populated" in new SetUp {
+        "Other spirits is selected but other spirits produced page is not populated" in {
           val userAnswers = completedUserAnswers
             .remove(List(OtherSpiritsProducedPage))
             .success
             .value
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .configure(additionalConfig)
-            .build()
+          val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
           running(application) {
             val request =
@@ -272,9 +250,5 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         }
       }
     }
-  }
-
-  class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
-    val additionalConfig = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
   }
 }
