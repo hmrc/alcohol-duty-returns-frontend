@@ -99,12 +99,6 @@ class TaskListViewModelSpec extends SpecBase {
   }
 
   "hasSpiritsTask" - {
-    "must return false if the the QS section when not expected" in new SetUp(
-      spiritsAndIngredientsEnabledFeatureToggle = false
-    ) {
-      taskListViewModel.hasSpiritsTask(userAnswersWithSpirits, quarterReturnPeriods.head) mustBe false
-    }
-
     nonQuarterReturnPeriods.foreach { returnPeriodUnderTest =>
       val periodKeyUnderTest = returnPeriodUnderTest.toPeriodKey
       s"must return false as the period key $periodKeyUnderTest doesn't falls a quarter" in new SetUp {
@@ -187,9 +181,8 @@ class TaskListViewModelSpec extends SpecBase {
     }
   }
 
-  class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
-    val additionalConfig             = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
-    val application: Application     = applicationBuilder().configure(additionalConfig).build()
+  class SetUp {
+    val application: Application     = applicationBuilder().build()
     val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
     implicit val messages: Messages  = getMessages(application)
 
@@ -221,6 +214,6 @@ class TaskListViewModelSpec extends SpecBase {
     val cannotStartSection = Section("title", cannotStartTaskList, AlcoholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
-    val taskListViewModel         = new TaskListViewModel(dateTimeHelper, mockReturnTaskListCreator, appConfig)
+    val taskListViewModel         = new TaskListViewModel(dateTimeHelper, mockReturnTaskListCreator)
   }
 }

@@ -267,7 +267,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
         ).foreach { (page: Settable[_]) =>
-          s"must return Left if $page is not present" in new SetUp(true, false) {
+          s"must return Left if $page is not present" in new SetUp(false) {
             val userAnswers = fullUserAnswersOldDSDFormat.remove(page).success.value
 
             when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
@@ -290,7 +290,6 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
 
         dutySuspendedPages.foreach { case (regime, page) =>
           s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp(
-            true,
             false
           ) {
             val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
@@ -439,9 +438,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
       }
     }
 
-    class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true, newDSDJourneyFeatureToggle: Boolean = true) {
+    class SetUp(newDSDJourneyFeatureToggle: Boolean = true) {
       val additionalConfig             = Map(
-        "features.spirits-and-ingredients"    -> spiritsAndIngredientsEnabledFeatureToggle,
         "features.duty-suspended-new-journey" -> newDSDJourneyFeatureToggle
       )
       val application: Application     = applicationBuilder().configure(additionalConfig).build()
