@@ -25,6 +25,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
+import viewmodels.adjustment.SpoiltAlcoholicProductTypeViewModel
 
 import javax.inject.Inject
 
@@ -53,7 +54,7 @@ class SpoiltAlcoholicProductTypeHelper @Inject() (
     )
   }
 
-  def radioOptions(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[RadioItem] =
+  private def radioOptions(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[RadioItem] =
     regimesInViewOrder(regimes).map { regime =>
       val regimeName = regime.entryName
 
@@ -63,4 +64,7 @@ class SpoiltAlcoholicProductTypeHelper @Inject() (
         id = Some(regimeName)
       )
     }
+
+  def getViewModel(regimes: AlcoholRegimes)(implicit messages: Messages): SpoiltAlcoholicProductTypeViewModel =
+    SpoiltAlcoholicProductTypeViewModel(radioOptions(regimes))
 }

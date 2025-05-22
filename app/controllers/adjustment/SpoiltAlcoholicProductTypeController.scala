@@ -59,7 +59,7 @@ class SpoiltAlcoholicProductTypeController @Inject() (
       case Some(regime) => form.fill(regime.entryName)
     }
 
-    Ok(view(preparedForm, mode, request.userAnswers.regimes))
+    Ok(view(preparedForm, mode, helper.getViewModel(request.userAnswers.regimes)))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -67,7 +67,8 @@ class SpoiltAlcoholicProductTypeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.userAnswers.regimes))),
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, mode, helper.getViewModel(request.userAnswers.regimes)))),
           value =>
             AlcoholRegime.fromString(value) match {
               case Some(regime) =>
@@ -95,7 +96,7 @@ class SpoiltAlcoholicProductTypeController @Inject() (
         )
   }
 
-  def updateAlcoholicProductType(
+  private def updateAlcoholicProductType(
     adjustmentEntry: AdjustmentEntry,
     currentValue: AlcoholRegime
   ): (AdjustmentEntry, Boolean) =

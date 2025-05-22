@@ -17,6 +17,7 @@
 @import components.{Link, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.{Money, TableViewModel}
+@import viewmodels.payments.ViewPastPaymentsViewModel
 
 @this(
         layout: templates.Layout,
@@ -32,29 +33,28 @@
         link: Link
 )
 
-
-@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal, historicPaymentsTable: TableViewModel, year: Int, claimARefundGformEnabled: Boolean)(implicit request: Request[_], messages: Messages)
+@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, historicPaymentsTable: TableViewModel, viewModel: ViewPastPaymentsViewModel)(implicit request: Request[_], messages: Messages)
 
     @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true) {
 
         @pageHeading(messages("viewPastPayments.heading"))
 
-        @if(dutyBalance > 0) {
+        @if(viewModel.isDutyBalancePositive) {
             <p class=@{
                 Css.headingMCssClass
             }>@messages("viewPastPayments.youOwe")
                 <br>
                 <span class=@{
                     Css.headingLCssClass
-                }>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
+                }>@messages("viewPastPayments.duty.value", Money.format(viewModel.dutyBalance))</span>
             </p>
             @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
         }
-        @if(dutyBalance < 0) {
+        @if(viewModel.isDutyBalanceNegative) {
             @paragraph(messages("viewPastPayments.credit.paragraph"))
             @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
         }
-        @if(dutyBalance == 0) {
+        @if(viewModel.isDutyBalanceZero) {
             @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Css.headingLCssClass)
         }
 
@@ -81,7 +81,7 @@
         }
 
         @if(unallocatedPaymentsTable.rows.nonEmpty) {
-            @if(claimARefundGformEnabled) {
+            @if(viewModel.claimARefundGformEnabled) {
                 @govukTable(Table(
                     caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
                     captionClasses = Css.tableCaptionMCssClass,
@@ -112,7 +112,7 @@
 
         @if(historicPaymentsTable.rows.nonEmpty) {
             @govukTable(Table(
-                caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", year))),
+                caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", viewModel.year))),
                 captionClasses = Css.tableCaptionMCssClass,
                 head = Some(historicPaymentsTable.head),
                 rows = historicPaymentsTable.rows.map(_.cells),
@@ -120,8 +120,8 @@
             @paragraph(messages("viewPastPayments.historic.paragraph"))
         }
 
-        @if(historicPaymentsTable.rows.size == 0) {
-            @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Css.headingMCssClass)
+        @if(historicPaymentsTable.rows.isEmpty) {
+            @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", viewModel.year)), Css.headingMCssClass)
             @paragraph(messages("viewPastPayments.historic.noPayments"))
         }
 

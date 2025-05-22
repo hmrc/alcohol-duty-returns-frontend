@@ -17,7 +17,6 @@
 package controllers.payments
 
 import config.Constants.pastPaymentsSessionKey
-import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
 import models.payments.OutstandingPayments
@@ -26,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.payments.ViewPastPaymentsViewModel
+import viewmodels.payments.ViewPastPaymentsHelper
 import views.html.payments.ViewPastPaymentsView
 
 import java.time.{Clock, LocalDate, Year}
@@ -37,10 +36,9 @@ class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
-  viewPastPaymentsModel: ViewPastPaymentsViewModel,
+  helper: ViewPastPaymentsHelper,
   view: ViewPastPaymentsView,
   alcoholDutyAccountConnector: AlcoholDutyAccountConnector,
-  frontendAppConfig: FrontendAppConfig,
   clock: Clock
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -56,8 +54,8 @@ class ViewPastPaymentsController @Inject() (
         val updatedSession                =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
         val outstandingPaymentsTable =
-          viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
-        val unallocatedPaymentsTable = viewPastPaymentsModel
+          helper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
+        val unallocatedPaymentsTable = helper
           .getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
 
         OutstandingPayments(
@@ -70,7 +68,7 @@ class ViewPastPaymentsController @Inject() (
 
     val historicPaymentsFuture =
       alcoholDutyAccountConnector.historicPayments(appaId, Year.now(clock).getValue).map { historicPaymentsData =>
-        val historicPaymentsTable = viewPastPaymentsModel.getHistoricPaymentsTable(historicPaymentsData.payments)
+        val historicPaymentsTable = helper.getHistoricPaymentsTable(historicPaymentsData.payments)
         (historicPaymentsTable, historicPaymentsData.year)
       }
 
@@ -81,10 +79,8 @@ class ViewPastPaymentsController @Inject() (
       view(
         pastPaymentsData.outstandingPaymentsTable,
         pastPaymentsData.unallocatedPaymentsTable,
-        pastPaymentsData.totalOpenPaymentsAmount,
         historicPaymentsTable,
-        year,
-        frontendAppConfig.claimARefundGformEnabled
+        helper.getViewPastPaymentsViewModel(pastPaymentsData.totalOpenPaymentsAmount, year)
       )
     ).withSession(pastPaymentsData.session)
 

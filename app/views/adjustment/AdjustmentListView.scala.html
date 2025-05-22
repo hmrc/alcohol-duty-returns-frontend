@@ -19,78 +19,76 @@
 @import viewmodels.{TableViewModel, PaginationViewModel}
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    caption: Caption,
-    pageHeading: PageHeading,
-    govukTable: GovukTable,
-    tableRowActionList: components.TableRowActionList,
-    tableRowAction: components.TableRowAction,
-    govukPagination: GovukPagination,
-    govukSummaryList : GovukSummaryList
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        caption: Caption,
+        pageHeading: PageHeading,
+        govukTable: GovukTable,
+        tableRowActionList: components.TableRowActionList,
+        tableRowAction: components.TableRowAction,
+        govukPagination: GovukPagination,
+        govukSummaryList: GovukSummaryList
 )
 
 
-@(form: Form[_], adjustmentTable:TableViewModel, totalPages: Int, currentPage: Int)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], adjustmentTable: TableViewModel, paginationViewModel: PaginationViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false, fullWidth = true) {
 
-    @formHelper(action = controllers.adjustment.routes.AdjustmentListController.onSubmit(currentPage), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.adjustment.routes.AdjustmentListController.onSubmit(paginationViewModel.currentPage), Symbol("autoComplete") -> "off") {
 
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
-
-    @caption(
-        id = "adjustment-list-section",
-        text = messages("section.alcoholDutyReturn"),
-    )
-
-    @pageHeading(messages("adjustmentList.heading"))
-
-    @govukTable(Table(
-        head = Some(adjustmentTable.head),
-        rows = adjustmentTable.rows.map(row => {
-            val actions = TableRow(content = HtmlContent(tableRowActionList(
-            id = "adjustmentList",
-            actions = row.actions.map(action => tableRowAction(
-            id = "",
-            text = action.label,
-            href = action.href,
-            visuallyHiddenContent = action.visuallyHiddenText
-            )
-            ))))
-            row.cells :+ actions
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        ))
-    )
 
-    @if(totalPages > 1) {
-        @govukPagination(
-            PaginationViewModel(
-                currentPage = currentPage,
-                totalPages = totalPages,
-                baseUrl = controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
-                    ).paginate
-                )
-    }
-
-    @{adjustmentTable.total.map { totalSummaryList =>
-        govukSummaryList(totalSummaryList)
-    }}
-
-    @govukRadios(
-        RadiosViewModel.yesNo(
-        field = form("adjustment-list-yes-no-value"),
-        legend = LegendViewModel(messages("adjustmentList.question")).withCssClass(Css.fieldsetLegendLCssClass)
+        @caption(
+            id = "adjustment-list-section",
+            text = messages("section.alcoholDutyReturn"),
         )
-    )
 
-    @govukButton(
-        ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
-    )
+        @pageHeading(messages("adjustmentList.heading"))
+
+        @govukTable(Table(
+            head = Some(adjustmentTable.head),
+            rows = adjustmentTable.rows.map(row => {
+                val actions = TableRow(content = HtmlContent(tableRowActionList(
+                    id = "adjustmentList",
+                    actions = row.actions.map(action => tableRowAction(
+                        id = "",
+                        text = action.label,
+                        href = action.href,
+                        visuallyHiddenContent = action.visuallyHiddenText
+                    )
+                    ))))
+                row.cells :+ actions
+            }
+            ))
+        )
+
+        @if(paginationViewModel.isMoreThanOnePage) {
+            @govukPagination(
+                paginationViewModel.paginate
+            )
+        }
+
+        @{
+            adjustmentTable.total.map { totalSummaryList =>
+                govukSummaryList(totalSummaryList)
+            }
+        }
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("adjustment-list-yes-no-value"),
+                legend = LegendViewModel(messages("adjustmentList.question")).withCssClass(Css.fieldsetLegendLCssClass)
+            )
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+        )
     }
 }

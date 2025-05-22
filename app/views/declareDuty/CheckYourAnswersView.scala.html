@@ -38,14 +38,15 @@
     @pageHeading(messages("checkYourAnswers.heading"))
 
     @govukSummaryList(summaryList.whatDoYouNeedToDeclareSummary)
-    @if(summaryList.howMuchDoYouNeedToDeclareSummary.isDefined) {
-      @govukSummaryList(summaryList.howMuchDoYouNeedToDeclareSummary.getOrElse(throw new RuntimeException("Expected a summary list - this shouldn't happen")))
+
+    @summaryList.howMuchDoYouNeedToDeclareSummary.map { summary =>
+        @govukSummaryList(summary)
     }
 
-    @if(summaryList.smallProducerReliefSummary.isDefined) {
-      @govukSummaryList(summaryList.smallProducerReliefSummary.getOrElse(throw new RuntimeException("Expected a summary list - this shouldn't happen")))
+    @summaryList.smallProducerReliefSummary.map { summary =>
+        @govukSummaryList(summary)
     }
-  
+
     @govukButton(
       ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         .asLink(controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
