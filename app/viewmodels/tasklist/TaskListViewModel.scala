@@ -41,7 +41,7 @@ class TaskListViewModel @Inject() (
     )
 
   def hasSpiritsTask(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): Boolean =
-    appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
+    appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits && returnPeriod.hasQuarterlySpirits
 
   private def getDeclarationSections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
     message: Messages
