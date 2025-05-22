@@ -36,6 +36,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
+
     @formGroupWithError(form.errors.nonEmpty){
         @pageHeading(messages("deleteAdjustment.heading"))
 
@@ -48,6 +49,7 @@
             )
         )
     }
+
     @govukButton(
         ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
     )
