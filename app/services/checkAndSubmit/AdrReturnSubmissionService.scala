@@ -265,7 +265,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     userAnswers: UserAnswers
   ): EitherT[Future, String, Seq[AdrDutySuspendedProduct]] =
     for {
-      beerDutySuspended           <- if (userAnswers.regimes.hasBeer()) {
+      beerDutySuspended           <- if (userAnswers.regimes.hasBeer) {
                                        getValue(userAnswers, DutySuspendedBeerPage)
                                          .map(dutySuspendedBeer =>
                                            Some(
@@ -279,7 +279,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                            )
                                          )
                                      } else EitherT.rightT[Future, String](None)
-      ciderDutySuspended          <- if (userAnswers.regimes.hasCider())
+      ciderDutySuspended          <- if (userAnswers.regimes.hasCider)
                                        getValue(userAnswers, DutySuspendedCiderPage)
                                          .map(dutySuspendedCider =>
                                            Some(
@@ -293,7 +293,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                            )
                                          )
                                      else EitherT.rightT[Future, String](None)
-      spiritsDutySuspended        <- if (userAnswers.regimes.hasSpirits())
+      spiritsDutySuspended        <- if (userAnswers.regimes.hasSpirits)
                                        getValue(userAnswers, DutySuspendedSpiritsPage)
                                          .map(dutySuspendedSpirits =>
                                            Some(
@@ -307,7 +307,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                            )
                                          )
                                      else EitherT.rightT[Future, String](None)
-      wineDutySuspended           <- if (userAnswers.regimes.hasWine())
+      wineDutySuspended           <- if (userAnswers.regimes.hasWine)
                                        getValue(userAnswers, DutySuspendedWinePage)
                                          .map(dutySuspendedWine =>
                                            Some(
@@ -321,7 +321,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                            )
                                          )
                                      else EitherT.rightT[Future, String](None)
-      otherFermentedDutySuspended <- if (userAnswers.regimes.hasOtherFermentedProduct())
+      otherFermentedDutySuspended <- if (userAnswers.regimes.hasOtherFermentedProduct)
                                        getValue(userAnswers, DutySuspendedOtherFermentedPage)
                                          .map(dutySuspendedOtherFermentedProducts =>
                                            Some(

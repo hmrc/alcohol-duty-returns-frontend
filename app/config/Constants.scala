@@ -67,6 +67,8 @@ object Constants {
   val minTaxType = 100 // Although the boundaries will not be valid codes
   val maxTaxType = 999
 
+  val maxABV: Int = 100
+
   val otherSpiritsProducedMaxLength = 150
 
   val rowsPerPage = 15

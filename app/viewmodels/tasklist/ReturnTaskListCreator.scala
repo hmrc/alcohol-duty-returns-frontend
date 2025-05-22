@@ -225,13 +225,13 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       val regimes             = userAnswers.regimes
-      val maybeBeer           = if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
-      val maybeCider          = if (regimes.hasCider()) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
-      val maybeWine           = if (regimes.hasWine()) Some(userAnswers.get(DutySuspendedWinePage).isDefined) else None
+      val maybeBeer           = if (regimes.hasBeer) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
+      val maybeCider          = if (regimes.hasCider) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
+      val maybeWine           = if (regimes.hasWine) Some(userAnswers.get(DutySuspendedWinePage).isDefined) else None
       val maybeSpirits        =
-        if (regimes.hasSpirits()) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
+        if (regimes.hasSpirits) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
       val maybeOtherFermented =
-        if (regimes.hasOtherFermentedProduct()) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
+        if (regimes.hasOtherFermentedProduct) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
         else None
 
       val pagesCompleted = Seq(maybeBeer, maybeCider, maybeWine, maybeSpirits, maybeOtherFermented).flatten

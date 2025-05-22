@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.dutySuspended
 
-import models.UserAnswers
+import models.{AlcoholRegimes, UserAnswers}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist.SummaryListViewModel
@@ -28,39 +28,20 @@ class CheckYourAnswersSummaryListHelper @Inject() () {
   def dutySuspendedDeliveriesSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): SummaryList = {
     val regimes = userAnswers.regimes
 
-    val hasBeer              = regimes.hasBeer()
-    val hasCider             = regimes.hasCider()
-    val hasWine              = regimes.hasWine()
-    val hasSpirits           = regimes.hasSpirits()
-    val hasFermentedProducts = regimes.hasOtherFermentedProduct()
+    val (maybeTotalBeer, maybePureAlcoholInBeer) =
+      getBeerRows(userAnswers, regimes)
 
-    val maybeTotalBeer                          =
-      if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))) else None
-    val maybePureAlcoholInBeer                  =
-      if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers))) else None
-    val maybeTotalCider                         =
-      if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))) else None
-    val maybePureAlcoholInCider                 =
-      if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers))) else None
-    val maybeTotalWine                          =
-      if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))) else None
-    val maybePureAlcoholInWine                  =
-      if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))) else None
-    val maybeTotalSpirits                       =
-      if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))) else None
-    val maybePureAlcoholInSpirits               =
-      if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))) else None
-    val maybeTotalOtherFermentedSummary         =
-      if (hasFermentedProducts) Some(getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers)))
-      else None
-    val maybePureAlcoholInOtherFermentedSummary =
-      if (hasFermentedProducts)
-        Some(
-          getOptionalRow(
-            DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)
-          )
-        )
-      else None
+    val (maybeTotalCider, maybePureAlcoholInCider) =
+      getWineRows(userAnswers, regimes)
+
+    val (maybeTotalWine, maybePureAlcoholInWine) =
+      getCiderRows(userAnswers, regimes)
+
+    val (maybeTotalSpirits, maybePureAlcoholInSpirits) =
+      getSpiritsRows(userAnswers, regimes)
+
+    val (maybeTotalOtherFermentedSummary, maybePureAlcoholInOtherFermentedSummary) =
+      getOFPRows(userAnswers, regimes)
 
     val rows = Seq(
       maybeTotalBeer,
@@ -77,6 +58,46 @@ class CheckYourAnswersSummaryListHelper @Inject() () {
 
     SummaryListViewModel(rows = rows)
   }
+
+  private def getOFPRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
+    if (regimes.hasOtherFermentedProduct) {
+      (
+        Some(getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers))),
+        Some(getOptionalRow(DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)))
+      )
+    } else { (None, None) }
+
+  private def getSpiritsRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
+    if (regimes.hasSpirits) {
+      (
+        Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))),
+        Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers)))
+      )
+    } else { (None, None) }
+
+  private def getCiderRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
+    if (regimes.hasWine) {
+      (
+        Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))),
+        Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers)))
+      )
+    } else { (None, None) }
+
+  private def getWineRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
+    if (regimes.hasCider) {
+      (
+        Some(getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))),
+        Some(getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers)))
+      )
+    } else { (None, None) }
+
+  private def getBeerRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
+    if (regimes.hasBeer) {
+      (
+        Some(getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))),
+        Some(getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers)))
+      )
+    } else { (None, None) }
 
   private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
     row match {

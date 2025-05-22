@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.AlcoholDuty
-import models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholRegime, RateBand, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
+import models._
 import models.RatePeriod._
 import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import play.api.http.Status.OK
