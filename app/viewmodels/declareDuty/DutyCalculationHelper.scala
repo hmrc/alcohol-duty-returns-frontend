@@ -23,7 +23,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
 import RateBandDescription.toDescription
-import config.Constants.Format
+import config.Constants.{Css, Format}
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyCalculationHelper {
@@ -36,10 +36,10 @@ object DutyCalculationHelper {
     createRows(totalDutyCalculationResponse.dutiesByTaxType, userAnswers, regime).map { rows =>
       TableViewModel(
         head = Seq(
-          HeadCell(Text(messages("dutyCalculation.table.description"))),
-          HeadCell(Text(messages("dutyCalculation.table.litresOfPureAlcohol")), format = Some(Format.numeric)),
-          HeadCell(Text(messages("dutyCalculation.table.dutyRate")), format = Some(Format.numeric)),
-          HeadCell(Text(messages("dutyCalculation.table.dutyDue")), format = Some(Format.numeric)),
+          HeadCell(Text(messages("dutyCalculation.table.description")), classes = Css.oneHalfCssClass),
+          HeadCell(Text(messages("dutyCalculation.table.litresOfPureAlcohol")), classes = Css.numericHeaderClass),
+          HeadCell(Text(messages("dutyCalculation.table.dutyRate")), classes = Css.numericHeaderClass),
+          HeadCell(Text(messages("dutyCalculation.table.dutyDue")), classes = Css.numericHeaderClass),
           HeadCell(Text(messages("dutyCalculation.table.action")))
         ),
         rows = rows
@@ -80,9 +80,9 @@ object DutyCalculationHelper {
     TableRowViewModel(
       cells = Seq(
         TableRow(Text(toDescription(rateBand, Some(regime)).capitalize)),
-        TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), format = Some(Format.numeric)),
-        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), format = Some(Format.numeric)),
-        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), format = Some(Format.numeric))
+        TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), classes = Css.numericCellClass),
+        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), classes = Css.numericCellClass),
+        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), classes = Css.numericCellClass)
       ),
       actions = Seq(
         TableRowActionViewModel(

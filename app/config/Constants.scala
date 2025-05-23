@@ -92,6 +92,7 @@ object Constants {
 
     val fullWidthCssClass     = "govuk-!-width-full"
     val oneQuarterCssClass    = "govuk-!-width-one-quarter"
+    val oneFifthCssClass      = "govuk-!-width-one-fifth"
     val oneHalfCssClass       = "govuk-!-width-one-half"
     val threeQuartersCssClass = "govuk-!-width-three-quarters"
     val oneThirdCssClass      = "govuk-!-width-one-third"
@@ -139,7 +140,8 @@ object Constants {
     val gridColumnTwoThirds    = "govuk-grid-column-two-thirds"
     val gridColumnFullCssClass = "govuk-grid-column-full"
 
-    val numericCellClass = "govuk-table__cell--numeric"
+    val numericCellClass   = "govuk-table__cell--numeric"
+    val numericHeaderClass = "govuk-table__header--numeric"
 
     val summaryListNoBorderCssClass        = "govuk-summary-list--no-border"
     val summaryListRowNoBorderCssClass     = "govuk-summary-list__row--no-border"

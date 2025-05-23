@@ -38,15 +38,14 @@ object AdjustmentListSummaryHelper {
     val adjustmentEntries: Seq[AdjustmentEntry] = getPaginatedAdjustmentEntries(userAnswers, pageNumber)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneQuarterCssClass),
-        HeadCell(content = Text(messages("adjustmentEntryList.description"))),
+        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneFifthCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Css.oneHalfCssClass),
         HeadCell(
           content = Text(messages("adjustmentEntryList.duty")),
-          classes = s"${Css.textAlignRightCssClass}"
+          classes = s"${Css.numericHeaderClass}"
         ),
         HeadCell(
-          content = Text(messages("adjustmentEntryList.action")),
-          classes = Css.oneQuarterCssClass
+          content = Text(messages("adjustmentEntryList.action"))
         )
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries, pageNumber),
