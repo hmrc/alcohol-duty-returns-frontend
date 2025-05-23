@@ -92,7 +92,6 @@ object Constants {
 
     val fullWidthCssClass     = "govuk-!-width-full"
     val oneQuarterCssClass    = "govuk-!-width-one-quarter"
-    val oneFifthCssClass      = "govuk-!-width-one-fifth"
     val oneHalfCssClass       = "govuk-!-width-one-half"
     val threeQuartersCssClass = "govuk-!-width-three-quarters"
     val oneThirdCssClass      = "govuk-!-width-one-third"
@@ -118,7 +117,6 @@ object Constants {
     val headingXLCssClass = "govuk-heading-xl"
     val headingLCssClass  = "govuk-heading-l"
     val headingMCssClass  = "govuk-heading-m"
-    val headingSCssClass  = "govuk-heading-s"
 
     val labelXLCssClass = "govuk-label--xl"
     val labelLCssClass  = "govuk-label--l"
@@ -145,9 +143,6 @@ object Constants {
 
     val summaryListNoBorderCssClass        = "govuk-summary-list--no-border"
     val summaryListRowNoBorderCssClass     = "govuk-summary-list__row--no-border"
-    val summaryListKeyCssClass             = "govuk-summary-list__key"
-    val summaryListValueCssClass           = "govuk-summary-list__value"
-    val summaryListActionsCssClass         = "govuk-summary-list__actions"
     val summaryListActionsListCssClass     = "govuk-summary-list__actions-list"
     val summaryListActionsListItemCssClass = "govuk-summary-list__actions-list-item"
 

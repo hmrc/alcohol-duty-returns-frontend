@@ -16,14 +16,14 @@
 
 package viewmodels.declareDuty
 
+import config.Constants.Css
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.declareDuty.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
-import RateBandDescription.toDescription
-import config.Constants.{Css, Format}
+import viewmodels.declareDuty.RateBandDescription.toDescription
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyCalculationHelper {

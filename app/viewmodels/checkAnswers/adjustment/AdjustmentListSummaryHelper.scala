@@ -38,15 +38,10 @@ object AdjustmentListSummaryHelper {
     val adjustmentEntries: Seq[AdjustmentEntry] = getPaginatedAdjustmentEntries(userAnswers, pageNumber)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneFifthCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneQuarterCssClass),
         HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Css.oneThirdCssClass),
-        HeadCell(
-          content = Text(messages("adjustmentEntryList.duty")),
-          classes = s"${Css.numericHeaderClass}"
-        ),
-        HeadCell(
-          content = Text(messages("adjustmentEntryList.action"))
-        )
+        HeadCell(content = Text(messages("adjustmentEntryList.duty")), classes = s"${Css.numericHeaderClass}"),
+        HeadCell(content = Text(messages("adjustmentEntryList.action")))
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries, pageNumber),
       total = Some(adjustmentsTotal(total))
@@ -96,7 +91,7 @@ object AdjustmentListSummaryHelper {
           TableRow(description),
           TableRow(
             content = Text(formattedDutyValue),
-            classes = Css.textAlignRightCssClass
+            classes = Css.numericCellClass
           )
         ),
         actions = Seq(
