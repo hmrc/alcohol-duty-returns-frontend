@@ -97,7 +97,7 @@ object AdjustmentListSummaryHelper {
           TableRow(description),
           TableRow(
             content = Text(formattedDutyValue),
-            classes = Css.textAlignRightCssClass
+            classes = Css.numericCellClass
           )
         ),
         actions = Seq(
