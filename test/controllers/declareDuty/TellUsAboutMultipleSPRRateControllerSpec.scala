@@ -203,7 +203,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
             .withFormUrlEncodedBody(
-              "volumesWithRate.totalLitres" -> "1000",
+              "volumesWithRate.totalLitres" -> "1000.00",
               "volumesWithRate.pureAlcohol" -> "500.0000",
               "volumesWithRate.dutyRate"    -> "10",
               "volumesWithRate.taxType"     -> "371"
@@ -264,7 +264,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
             .withFormUrlEncodedBody(
-              "volumesWithRate.totalLitres" -> "10000",
+              "volumesWithRate.totalLitres" -> "10000.00",
               "volumesWithRate.pureAlcohol" -> "5000.0000",
               "volumesWithRate.dutyRate"    -> "100",
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
@@ -325,7 +325,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
             .withFormUrlEncodedBody(
-              "volumesWithRate.totalLitres" -> "10000",
+              "volumesWithRate.totalLitres" -> "10000.00",
               "volumesWithRate.pureAlcohol" -> "5000.0000",
               "volumesWithRate.dutyRate"    -> "100",
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
@@ -357,7 +357,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime, Some(index)).url
 
       val volumeAndRateByTaxType = VolumeAndRateByTaxType(
-        totalLitres = 1000,
+        totalLitres = 1000.12,
         pureAlcohol = 500.1234,
         dutyRate = 10,
         taxType = rateBands.head.taxTypeCode
@@ -418,7 +418,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime, Some(index)).url
 
       val volumeAndRateByTaxType = VolumeAndRateByTaxType(
-        totalLitres = 1000,
+        totalLitres = 1000.12,
         pureAlcohol = 500.1234,
         dutyRate = 10,
         taxType = rateBands.head.taxTypeCode

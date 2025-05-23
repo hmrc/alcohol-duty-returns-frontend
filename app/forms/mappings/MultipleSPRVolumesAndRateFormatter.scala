@@ -42,7 +42,8 @@ class MultipleSPRVolumesAndRateFormatter(
     maximumValueKey,
     totalLitresField,
     maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeMinimumValue
+    minimumValue = Constants.volumeMinimumValue,
+    exactDecimalPlacesRequired = true
   )
 
   private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
