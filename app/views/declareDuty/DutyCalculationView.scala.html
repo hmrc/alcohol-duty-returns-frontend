@@ -51,7 +51,7 @@
       head = Some(dutyDueViewModel.head),
       classes = "",
       rows = dutyDueViewModel.rows.map(row => {
-        val actions = TableRow(format = None, content = HtmlContent(tableRowActionList(
+        val actions = TableRow(classes = Css.linkNoVisitedStateCssClass, content = HtmlContent(tableRowActionList(
           id = "productList",
           actions = row.actions.map(action => tableRowAction(
             id = "",
