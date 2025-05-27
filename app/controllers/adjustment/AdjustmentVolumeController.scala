@@ -100,9 +100,7 @@ class AdjustmentVolumeController @Inject() (
               )
             )
           case _                                                                                            =>
-            logger.warn(
-              "Couldn't fetch the adjustmentType, rateBand, totalLitresVolume and pureAlcoholVolume in AdjustmentEntry from user answers"
-            )
+            logger.warn("Couldn't fetch values in AdjustmentEntry from user answers")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       case _            =>

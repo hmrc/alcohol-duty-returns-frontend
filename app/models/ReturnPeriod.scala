@@ -26,7 +26,7 @@ case class ReturnPeriod(period: YearMonth) {
   def toPeriodKey                 = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
   def periodFromDate(): LocalDate = period.atDay(1)
   def periodToDate(): LocalDate   = period.atEndOfMonth()
-  def periodDueDate(): LocalDate  = period.plusMonths(1).atDay(15)
+  def periodDueDate(): LocalDate  = period.plusMonths(1).atDay(Constants.dayOfSubmissionDeadline)
 
   def hasQuarterlySpirits: Boolean =
     Constants.quarterlySpiritsMonths.contains(period.getMonth)

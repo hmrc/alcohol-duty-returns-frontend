@@ -17,12 +17,13 @@
 package viewmodels.declareDuty
 
 import controllers.declareDuty.routes
-import models.{AlcoholRegime, CheckMode, UserAnswers}
+import models.{AlcoholRegime, CheckMode, RateBand, UserAnswers}
 import pages.declareDuty.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import RateBandDescription.toDescription
+import models.declareDuty.VolumeAndRateByTaxType
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -39,85 +40,101 @@ object TellUsAboutMultipleSPRRateSummary {
         rateBands
           .find(_.taxTypeCode == answer.taxType)
           .map { rateBand =>
-            val taxTypeRowViewModel =
-              SummaryListRowViewModel(
-                key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
-                value = ValueViewModel(content = toDescription(rateBand, Some(regime)).capitalize),
-                actions = actions(
-                  "taxType",
-                  regime,
-                  messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType"),
-                  index
-                )
-              )
+            val taxTypeRowViewModel = getTaxTypeRowViewModel(regime, index, rateBand)
 
-            val totalLitresRowViewModel =
-              SummaryListRowViewModel(
-                key = KeyViewModel(
-                  messages(
-                    "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
-                    messages(regime.regimeMessageKey)
-                  )
-                ),
-                value = ValueViewModel(
-                  HtmlContent(
-                    messages(
-                      "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value",
-                      messages("site.2DP", answer.totalLitres)
-                    )
-                  )
-                ),
-                actions = actions(
-                  "totalLitres",
-                  regime,
-                  messages(
-                    "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
-                    messages(regime.regimeMessageKey)
-                  ),
-                  index
-                )
-              )
+            val totalLitresRowViewModel = getTotalLitresRowViewModel(regime, index, answer)
 
-            val pureAlcoholRowViewModel =
-              SummaryListRowViewModel(
-                key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label",
-                value = ValueViewModel(
-                  HtmlContent(
-                    messages(
-                      "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value",
-                      messages("site.4DP", answer.pureAlcohol)
-                    )
-                  )
-                ),
-                actions = actions(
-                  "pureAlcohol",
-                  regime,
-                  messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label"),
-                  index
-                )
-              )
+            val pureAlcoholRowViewModel = getPureAlcoholRowViewModel(regime, index, answer)
 
-            val dutyRateRowViewModel =
-              SummaryListRowViewModel(
-                key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label",
-                value = ValueViewModel(
-                  HtmlContent(
-                    messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value", answer.dutyRate)
-                  )
-                ),
-                actions = actions(
-                  "dutyRate",
-                  regime,
-                  messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"),
-                  index
-                )
-              )
+            val dutyRateRowViewModel = getDutyRateRowViewModel(regime, index, answer)
 
             Seq(taxTypeRowViewModel, totalLitresRowViewModel, pureAlcoholRowViewModel, dutyRateRowViewModel)
           }
           .getOrElse(Seq.empty)
       case _                               => Seq.empty
     }
+
+  private def getTaxTypeRowViewModel(regime: AlcoholRegime, index: Option[Int], rateBand: RateBand)(implicit
+    messages: Messages
+  ) =
+    SummaryListRowViewModel(
+      key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
+      value = ValueViewModel(content = toDescription(rateBand, Some(regime)).capitalize),
+      actions = actions(
+        "taxType",
+        regime,
+        messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType"),
+        index
+      )
+    )
+
+  private def getTotalLitresRowViewModel(regime: AlcoholRegime, index: Option[Int], answer: VolumeAndRateByTaxType)(
+    implicit messages: Messages
+  ) =
+    SummaryListRowViewModel(
+      key = KeyViewModel(
+        messages(
+          "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
+          messages(regime.regimeMessageKey)
+        )
+      ),
+      value = ValueViewModel(
+        HtmlContent(
+          messages(
+            "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value",
+            messages("site.2DP", answer.totalLitres)
+          )
+        )
+      ),
+      actions = actions(
+        "totalLitres",
+        regime,
+        messages(
+          "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
+          messages(regime.regimeMessageKey)
+        ),
+        index
+      )
+    )
+
+  private def getPureAlcoholRowViewModel(regime: AlcoholRegime, index: Option[Int], answer: VolumeAndRateByTaxType)(
+    implicit messages: Messages
+  ) =
+    SummaryListRowViewModel(
+      key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label",
+      value = ValueViewModel(
+        HtmlContent(
+          messages(
+            "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value",
+            messages("site.4DP", answer.pureAlcohol)
+          )
+        )
+      ),
+      actions = actions(
+        "pureAlcohol",
+        regime,
+        messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label"),
+        index
+      )
+    )
+
+  private def getDutyRateRowViewModel(regime: AlcoholRegime, index: Option[Int], answer: VolumeAndRateByTaxType)(
+    implicit messages: Messages
+  ) =
+    SummaryListRowViewModel(
+      key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label",
+      value = ValueViewModel(
+        HtmlContent(
+          messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value", answer.dutyRate)
+        )
+      ),
+      actions = actions(
+        "dutyRate",
+        regime,
+        messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"),
+        index
+      )
+    )
 
   private def actions(elementId: String, regime: AlcoholRegime, hiddenMessage: String, index: Option[Int])(implicit
     messages: Messages

@@ -16,7 +16,7 @@
 
 package controllers.spiritsQuestions
 import com.google.inject.Inject
-import controllers.actions.{CheckSpiritsAndIngredientsToggleAction, CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import controllers.actions._
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}

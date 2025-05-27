@@ -231,18 +231,12 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
       val maybeSpirits        =
         if (regimes.hasSpirits) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
       val maybeOtherFermented =
-        if (regimes.hasOtherFermentedProduct) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
-        else None
+        if (regimes.hasOtherFermentedProduct) { Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined) }
+        else { None }
 
       val pagesCompleted = Seq(maybeBeer, maybeCider, maybeWine, maybeSpirits, maybeOtherFermented).flatten
 
-      if (pagesCompleted.forall(_ == false)) {
-        NotStarted
-      } else if (pagesCompleted.forall(_ == true)) {
-        Completed
-      } else {
-        InProgress
-      }
+      getCompletionStatus(pagesCompleted)
     }
 
     createDeclarationTask(
@@ -265,13 +259,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
 
       val pagesCompleted = Seq(dutySuspendedAlcoholTypes, dutySuspendedVolumes)
 
-      if (pagesCompleted.forall(_ == false)) {
-        NotStarted
-      } else if (pagesCompleted.forall(_ == true)) {
-        Completed
-      } else {
-        InProgress
-      }
+      getCompletionStatus(pagesCompleted)
     }
 
     val incompleteSubTaskUrl = if (userAnswers.regimes.regimes.size > 1) {
@@ -302,13 +290,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
         )
       val pagesCompleted      = Seq(declareSpiritsTotal, whisky, spiritsType)
 
-      if (pagesCompleted.forall(!_)) {
-        NotStarted
-      } else if (pagesCompleted.forall(_ == true)) {
-        Completed
-      } else {
-        InProgress
-      }
+      getCompletionStatus(pagesCompleted)
     }
 
     createDeclarationTask(
@@ -364,9 +346,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(
-              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
-                .onPageLoad(CheckMode)
-                .url
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
             )
           )
         declareAlcoholQuestionTask +: returnsAlcoholByRegimesTask(userAnswers, alcoholType)
@@ -376,9 +356,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.inProgress,
             href = Some(
-              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
-                .onPageLoad(CheckMode)
-                .url
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
             )
           )
         )
@@ -388,22 +366,17 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(
-              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
-                .onPageLoad(CheckMode)
-                .url
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
             )
           )
         )
-
-      case (_, _) =>
+      case (_, _)                          =>
         Seq(
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.notStarted,
             href = Some(
-              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
-                .onPageLoad(NormalMode)
-                .url
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
             )
           )
         )
@@ -461,4 +434,13 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
       controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(_).url,
       section = SpiritsSection
     )
+
+  private def getCompletionStatus(pagesCompleted: Seq[Boolean]): DeclarationState =
+    if (pagesCompleted.forall(!_)) {
+      NotStarted
+    } else if (pagesCompleted.forall(identity)) {
+      Completed
+    } else {
+      InProgress
+    }
 }

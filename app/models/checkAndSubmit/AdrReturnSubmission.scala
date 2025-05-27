@@ -16,8 +16,6 @@
 
 package models.checkAndSubmit
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
-import models.SpiritType
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.{Instant, LocalDate}
@@ -102,20 +100,6 @@ object AdrAdjustments {
   implicit val format: OFormat[AdrAdjustments] = Json.format[AdrAdjustments]
 }
 
-sealed trait AdrDutySuspendedAlcoholRegime extends EnumEntry
-
-object AdrDutySuspendedAlcoholRegime
-    extends Enum[AdrDutySuspendedAlcoholRegime]
-    with PlayJsonEnum[AdrDutySuspendedAlcoholRegime] {
-  val values = findValues
-
-  case object Beer extends AdrDutySuspendedAlcoholRegime
-  case object Cider extends AdrDutySuspendedAlcoholRegime
-  case object Wine extends AdrDutySuspendedAlcoholRegime
-  case object Spirits extends AdrDutySuspendedAlcoholRegime
-  case object OtherFermentedProduct extends AdrDutySuspendedAlcoholRegime
-}
-
 case class AdrDutySuspendedProduct(
   regime: AdrDutySuspendedAlcoholRegime,
   suspendedQuantity: AdrAlcoholQuantity
@@ -142,32 +126,6 @@ case class AdrSpiritsVolumes(
 
 object AdrSpiritsVolumes {
   implicit val format: OFormat[AdrSpiritsVolumes] = Json.format[AdrSpiritsVolumes]
-}
-
-sealed trait AdrTypeOfSpirit extends EnumEntry
-
-object AdrTypeOfSpirit extends Enum[AdrTypeOfSpirit] with PlayJsonEnum[AdrTypeOfSpirit] {
-  val values = findValues
-
-  case object Malt extends AdrTypeOfSpirit
-  case object Grain extends AdrTypeOfSpirit
-  case object NeutralAgricultural extends AdrTypeOfSpirit
-  case object NeutralIndustrial extends AdrTypeOfSpirit
-  case object Beer extends AdrTypeOfSpirit
-  case object CiderOrPerry extends AdrTypeOfSpirit
-  case object WineOrMadeWine extends AdrTypeOfSpirit
-  case object Other extends AdrTypeOfSpirit
-
-  def fromSpiritsType(spiritsType: SpiritType): AdrTypeOfSpirit = spiritsType match {
-    case SpiritType.Maltspirits               => Malt
-    case SpiritType.Grainspirits              => Grain
-    case SpiritType.NeutralAgriculturalOrigin => NeutralAgricultural
-    case SpiritType.NeutralIndustrialOrigin   => NeutralIndustrial
-    case SpiritType.Beer                      => Beer
-    case SpiritType.CiderOrPerry              => CiderOrPerry
-    case SpiritType.WineOrMadeWine            => WineOrMadeWine
-    case SpiritType.Other                     => Other
-  }
 }
 
 case class AdrSpiritsProduced(
