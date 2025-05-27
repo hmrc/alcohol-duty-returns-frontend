@@ -21,6 +21,7 @@ import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.requests.IdentifierRequest
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
@@ -47,28 +48,86 @@ class ReturnSubmittedHelperSpec extends SpecBase {
       internalId
     )
 
-  val testReturnDetails: AdrReturnCreatedDetails = AdrReturnCreatedDetails(
+  val testReturnDetailsNotOverdue: AdrReturnCreatedDetails     = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = 999.99d,
     chargeReference = Some("Test string"),
-    paymentDueDate = Some(LocalDate.now(clock).plusYears(1))
+    paymentDueDate = Some(LocalDate.of(2024, 6, 25))
   )
-  val btaUrl: String                             = "http://localhost:9020/business-account/"
-  val formattedDate: String                      = "27 August 2019"
+  val testReturnDetailsOverdue: AdrReturnCreatedDetails        = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = 999.99d,
+    chargeReference = Some("Test string"),
+    paymentDueDate = Some(LocalDate.of(2024, 5, 25))
+  )
+  val testReturnDetailsNegativeAmount: AdrReturnCreatedDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = -999.99d,
+    chargeReference = None,
+    paymentDueDate = None
+  )
+
+  val btaUrl: String                     = "http://localhost:9020/business-account/"
+  val formattedDueDateNotOverdue: String = "25 June 2024"
+  val formattedDueDateOverdue: String    = "25 May 2024"
 
   "ReturnSubmittedHelper" - {
-    "must return a ReturnSubmittedViewModel" - {
-      "when given return details and a valid period key" in {
+    "must return a ReturnSubmittedViewModel with the correct details" - {
+      "when given return details with a positive amount and processing date is before payment due date" in {
         when(mockAppConfig.businessTaxAccountUrl).thenReturn(btaUrl)
-        when(mockDateTimeHelper.formatDateMonthYear(any())(any())).thenReturn(formattedDate)
-        when(mockDateTimeHelper.instantToLocalDate(any())).thenReturn(LocalDate.of(1, 1, 1))
+        when(mockDateTimeHelper.instantToLocalDate(eqTo(Instant.now(clock)))).thenReturn(LocalDate.of(2024, 6, 11))
+        when(mockDateTimeHelper.formatDateMonthYear(eqTo(LocalDate.of(2024, 6, 25)))(any()))
+          .thenReturn(formattedDueDateNotOverdue)
         when(mockReturnPeriodViewModelFactory.apply(any())(any()))
           .thenReturn(ReturnPeriodViewModel("TEST DATE 1", "TEST DATE 2", "TEST DATE 3"))
 
-        val result = returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetails)(identifierRequest, messages)
+        val result =
+          returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetailsNotOverdue)(identifierRequest, messages)
 
         result.businessTaxAccountUrl mustBe btaUrl
         result.periodKey             mustBe periodKey
+        result.isPaymentOverdue      mustBe false
+      }
+
+      "when given return details with a positive amount and processing date is after payment due date" in {
+        when(mockAppConfig.businessTaxAccountUrl).thenReturn(btaUrl)
+        when(mockDateTimeHelper.instantToLocalDate(eqTo(Instant.now(clock)))).thenReturn(LocalDate.of(2024, 6, 11))
+        when(mockDateTimeHelper.formatDateMonthYear(eqTo(LocalDate.of(2024, 5, 25)))(any()))
+          .thenReturn(formattedDueDateOverdue)
+        when(mockReturnPeriodViewModelFactory.apply(any())(any()))
+          .thenReturn(ReturnPeriodViewModel("TEST DATE 1", "TEST DATE 2", "TEST DATE 3"))
+
+        val result =
+          returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetailsOverdue)(identifierRequest, messages)
+
+        result.businessTaxAccountUrl mustBe btaUrl
+        result.periodKey             mustBe periodKey
+        result.isPaymentOverdue      mustBe true
+      }
+
+      "when given return details with a negative amount" in {
+        val expectedClaimRefundUrl =
+          "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=999.99"
+
+        when(mockAppConfig.businessTaxAccountUrl).thenReturn(btaUrl)
+        when(mockAppConfig.claimRefundGformUrl(eqTo("999.99"))).thenReturn(expectedClaimRefundUrl)
+        when(mockDateTimeHelper.instantToLocalDate(eqTo(Instant.now(clock)))).thenReturn(LocalDate.of(2024, 6, 11))
+        when(mockDateTimeHelper.formatDateMonthYear(any())(any())).thenReturn(formattedDueDateNotOverdue)
+        when(mockReturnPeriodViewModelFactory.apply(any())(any()))
+          .thenReturn(ReturnPeriodViewModel("TEST DATE 1", "TEST DATE 2", "TEST DATE 3"))
+
+        val result =
+          returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetailsNegativeAmount)(
+            identifierRequest,
+            messages
+          )
+
+        result.businessTaxAccountUrl mustBe btaUrl
+        result.periodKey             mustBe periodKey
+
+        result.formattedPaymentDueDate mustBe ""
+        result.isPaymentOverdue        mustBe false
+        result.claimRefundUrl          mustBe expectedClaimRefundUrl
       }
     }
   }

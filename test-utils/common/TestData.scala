@@ -1640,8 +1640,10 @@ trait TestData extends ModelGenerators {
     periodEndDate = returnPeriodViewModel(dateTimeHelper).toDate,
     formattedProcessingDate = "27 August 2019",
     formattedPaymentDueDate = "27 August 2020",
+    isPaymentOverdue = false,
     periodKey = periodKey,
     businessTaxAccountUrl = "http://localhost:9020/business-account/",
+    claimRefundUrl = "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=1",
     warningText = warningMessage
   )
 

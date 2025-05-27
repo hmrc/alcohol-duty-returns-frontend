@@ -34,8 +34,10 @@ case class ReturnSubmittedViewModel(
   periodEndDate: String,
   formattedProcessingDate: String,
   formattedPaymentDueDate: String,
+  isPaymentOverdue: Boolean,
   periodKey: String,
   businessTaxAccountUrl: String,
+  claimRefundUrl: String,
   warningText: WarningText
 )
 
@@ -60,6 +62,7 @@ class ReturnSubmittedHelper @Inject() (
     val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
     val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
     val formattedPaymentDueDate            = returnDetails.paymentDueDate.map(dateTimeHelper.formatDateMonthYear).getOrElse("")
+    val isPaymentOverdue                   = returnDetails.paymentDueDate.exists(_.isBefore(formattedProcessingDateAsLocalDate))
 
     ReturnSubmittedViewModel(
       returnDetails = returnDetails,
@@ -67,8 +70,10 @@ class ReturnSubmittedHelper @Inject() (
       periodEndDate = returnPeriodViewModel.toDate,
       formattedProcessingDate = formattedProcessingDate,
       formattedPaymentDueDate = formattedPaymentDueDate,
+      isPaymentOverdue = isPaymentOverdue,
       periodKey = periodKey,
       businessTaxAccountUrl = appConfig.businessTaxAccountUrl,
+      claimRefundUrl = appConfig.claimRefundGformUrl((-returnDetails.amount).toString),
       warningText = getWarningText
     )
 
