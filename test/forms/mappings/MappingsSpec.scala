@@ -492,7 +492,7 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind values that are too small" - {
       "totalLitresVolume" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "0", "value.pureAlcoholVolume" -> "0.0001", "value.sprDutyRate" -> "0")
+          Map("value.totalLitresVolume" -> "0.00", "value.pureAlcoholVolume" -> "0.0001", "value.sprDutyRate" -> "0")
         )
         result.errors mustBe Seq(FormError("value_totalLitresVolume", "minimumValue.totalLitresVolume", Seq.empty))
       }
@@ -535,7 +535,7 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitresVolume" in {
         val result = testForm.bind(
           Map(
-            "value.totalLitresVolume" -> "1000000000",
+            "value.totalLitresVolume" -> "1000000000.00",
             "value.pureAlcoholVolume" -> "999999999.9999",
             "value.sprDutyRate"       -> "999999999.99"
           )
@@ -717,7 +717,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     "must not bind values that are too small" - {
       "totalLitresVolume" in {
-        val result = testForm.bind(Map("value.totalLitresVolume" -> "0", "value.pureAlcoholVolume" -> "0.0001"))
+        val result = testForm.bind(Map("value.totalLitresVolume" -> "0.00", "value.pureAlcoholVolume" -> "0.0001"))
         result.errors mustBe Seq(FormError("value_totalLitresVolume", "minimumValue.totalLitresVolume", Seq.empty))
       }
 
@@ -740,7 +740,9 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind values that are too large" - {
       "totalLitresVolume" in {
         val result =
-          testForm.bind(Map("value.totalLitresVolume" -> "1000000000", "value.pureAlcoholVolume" -> "999999999.9999"))
+          testForm.bind(
+            Map("value.totalLitresVolume" -> "1000000000.00", "value.pureAlcoholVolume" -> "999999999.9999")
+          )
         result.errors mustBe Seq(FormError("value_totalLitresVolume", "maximumValue.totalLitresVolume", Seq.empty))
       }
 
@@ -1081,7 +1083,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.rateBandDescription" -> rateBandDescription,
             "value.taxType"             -> "123",
-            "value.totalLitres"         -> "0",
+            "value.totalLitres"         -> "0.00",
             "value.pureAlcohol"         -> "0.0001",
             "value.dutyRate"            -> "0"
           )
@@ -1145,7 +1147,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.rateBandDescription" -> rateBandDescription,
             "value.taxType"             -> "123",
-            "value.totalLitres"         -> "1000000000",
+            "value.totalLitres"         -> "1000000000.00",
             "value.pureAlcohol"         -> "999999999.9999",
             "value.dutyRate"            -> "999999999.99"
           )
@@ -1525,7 +1527,7 @@ class MappingsSpec extends SpecBase with Mappings {
         val result = testForm.bind(
           Map(
             "value.taxType"     -> "123",
-            "value.totalLitres" -> "0",
+            "value.totalLitres" -> "0.00",
             "value.pureAlcohol" -> "0.0001",
             "value.dutyRate"    -> "0"
           )
@@ -1585,7 +1587,7 @@ class MappingsSpec extends SpecBase with Mappings {
         val result = testForm.bind(
           Map(
             "value.taxType"     -> "123",
-            "value.totalLitres" -> "1000000000",
+            "value.totalLitres" -> "1000000000.00",
             "value.pureAlcohol" -> "999999999.9999",
             "value.dutyRate"    -> "999999999.99"
           )
@@ -1919,7 +1921,7 @@ class MappingsSpec extends SpecBase with Mappings {
             Map(
               "value.rateBandDescription" -> rateBandDescription,
               "value.taxType"             -> "123",
-              "value.totalLitres"         -> "0",
+              "value.totalLitres"         -> "0.00",
               "value.pureAlcohol"         -> "0.0001"
             )
           )
@@ -1966,7 +1968,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.rateBandDescription" -> rateBandDescription,
             "value.taxType"             -> "123",
-            "value.totalLitres"         -> "1000000000",
+            "value.totalLitres"         -> "1000000000.00",
             "value.pureAlcohol"         -> "999999999.9999"
           )
         )
@@ -2251,7 +2253,7 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitresVolume" in {
         val result = testForm.bind(
           Map(
-            "value.totalLitresVolume" -> "0",
+            "value.totalLitresVolume" -> "0.00",
             "value.pureAlcoholVolume" -> "0.0001",
             "value.duty"              -> "0.01"
           )
@@ -2301,7 +2303,7 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitresVolume" in {
         val result = testForm.bind(
           Map(
-            "value.totalLitresVolume" -> "1000000000",
+            "value.totalLitresVolume" -> "1000000000.00",
             "value.pureAlcoholVolume" -> "999999999.9999",
             "value.duty"              -> "99999999999.99"
           )

@@ -69,7 +69,6 @@
                   value = form(s"volumesWithRate[$index].totalLitres").value
                 )
                 .withWidth(Fixed10)
-                .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                 .withAttribute("inputmode", "text")
               ),
@@ -81,7 +80,6 @@
                   errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
                   value = form(s"volumesWithRate[$index].pureAlcohol").value
                 )
-                .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                 .withAttribute("inputmode", "text")
@@ -95,6 +93,7 @@
                   value = form(s"volumesWithRate[$index].dutyRate").value
                 )
                 .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
                 .withAttribute("inputmode", "text")
@@ -139,7 +138,6 @@
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
                 )
-                .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                 .withAttribute("inputmode", "text")
@@ -152,7 +150,6 @@
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_pureAlcohol"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
                 )
-                .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
                 .withWidth(Fixed10)
                 .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
                 .withAttribute("inputmode", "text")
@@ -166,6 +163,7 @@
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
                 )
                 .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
                 .withPoundPrefix
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
                 .withAttribute("inputmode", "text")
