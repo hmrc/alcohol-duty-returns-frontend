@@ -49,8 +49,9 @@
       caption = Some(messages("productList.caption")),
       captionClasses = Css.tableCaptionLCssClass,
       head = Some(dutyDueViewModel.head),
+      classes = "",
       rows = dutyDueViewModel.rows.map(row => {
-        val actions = TableRow(format = Some(Format.numeric), content = HtmlContent(tableRowActionList(
+        val actions = TableRow(format = None, content = HtmlContent(tableRowActionList(
           id = "productList",
           actions = row.actions.map(action => tableRowAction(
             id = "",
