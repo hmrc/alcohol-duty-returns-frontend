@@ -194,39 +194,9 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(
-      Some(emptyUserAnswers),
-      false
-    ) {
-      running(application) {
-        val request = FakeRequest(GET, spiritTypeRoute)
-
-        val result = route(application, request).value
-
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
     "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
       running(application) {
         val request = FakeRequest(GET, spiritTypeRoute)
-
-        val result = route(application, request).value
-
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(
-      Some(emptyUserAnswers),
-      false
-    ) {
-      running(application) {
-        val request =
-          FakeRequest(POST, spiritTypeRoute)
-            .withFormUrlEncodedBody(("value[0]", SpiritType.values.head.toString))
 
         val result = route(application, request).value
 
@@ -249,10 +219,8 @@ class SpiritTypeControllerSpec extends SpecBase {
     }
   }
 
-  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
-    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
-    val application: Application =
-      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+  class SetUp(maybeUserAnswers: Option[UserAnswers]) {
+    val application: Application = applicationBuilder(userAnswers = maybeUserAnswers).build()
 
     def onwardRoute = Call("GET", "/foo")
 
