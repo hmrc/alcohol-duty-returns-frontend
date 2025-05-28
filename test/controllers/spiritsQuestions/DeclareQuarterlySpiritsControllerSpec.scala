@@ -44,7 +44,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
   }
 
   "DeclareQuarterlySpirits Controller" - {
-    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers), true) {
+    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request = FakeRequest(GET, declareQuarterlySpiritsRoute)
 
@@ -58,8 +58,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new SetUp(
-      Some(userAnswersPreviouslyAnswered),
-      true
+      Some(userAnswersPreviouslyAnswered)
     ) {
       running(application) {
         val request = FakeRequest(GET, declareQuarterlySpiritsRoute)
@@ -73,7 +72,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers), true) {
+    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       val mockUserAnswersConnector               = mock[UserAnswersConnector]
       val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
@@ -107,8 +106,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     }
 
     "must redirect to the task list page and clear user answers when 'No' is submitted" in new SetUp(
-      Some(emptyUserAnswers),
-      true
+      Some(emptyUserAnswers)
     ) {
       val taskListRoute = controllers.routes.TaskListController.onPageLoad
 
@@ -173,7 +171,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers), true) {
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request =
           FakeRequest(POST, declareQuarterlySpiritsRoute)
@@ -190,10 +188,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(
-      Some(emptyUserAnswers),
-      false
-    ) {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
       running(application) {
         val request = FakeRequest(GET, declareQuarterlySpiritsRoute)
 
@@ -204,34 +199,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None, true) {
-      running(application) {
-        val request = FakeRequest(GET, declareQuarterlySpiritsRoute)
-
-        val result = route(application, request).value
-
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(
-      Some(emptyUserAnswers),
-      false
-    ) {
-      running(application) {
-        val request =
-          FakeRequest(POST, declareQuarterlySpiritsRoute)
-            .withFormUrlEncodedBody(("value", "true"))
-
-        val result = route(application, request).value
-
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None, true) {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None) {
       running(application) {
         val request =
           FakeRequest(POST, declareQuarterlySpiritsRoute)
@@ -245,10 +213,8 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     }
   }
 
-  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
-    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
-    val application: Application =
-      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+  class SetUp(maybeUserAnswers: Option[UserAnswers]) {
+    val application: Application = applicationBuilder(userAnswers = maybeUserAnswers).build()
 
     def onwardRoute = Call("GET", "/foo")
 
