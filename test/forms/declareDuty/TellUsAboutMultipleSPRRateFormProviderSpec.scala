@@ -105,7 +105,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       val result = form.bind(
         Map(
           "volumesWithRate.taxType"     -> "123",
-          "volumesWithRate.totalLitres" -> "100000000000",
+          "volumesWithRate.totalLitres" -> "100000000000.00",
           "volumesWithRate.pureAlcohol" -> "100000000000.0000",
           "volumesWithRate.dutyRate"    -> "100000000000"
         )
@@ -122,7 +122,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       val result = form.bind(
         Map(
           "volumesWithRate.taxType"     -> "123",
-          "volumesWithRate.totalLitres" -> "0",
+          "volumesWithRate.totalLitres" -> "0.00",
           "volumesWithRate.pureAlcohol" -> "0.0000",
           "volumesWithRate.dutyRate"    -> "-1"
         )
@@ -139,7 +139,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       val result = form.bind(
         Map(
           "volumesWithRate.taxType"     -> "123",
-          "volumesWithRate.totalLitres" -> "1.1",
+          "volumesWithRate.totalLitres" -> "1.10",
           "volumesWithRate.pureAlcohol" -> "100.1000",
           "volumesWithRate.dutyRate"    -> "1.1"
         )
@@ -153,7 +153,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
     "must fail to bind when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
       val data = Map(
         "volumesWithRate.taxType"     -> "123",
-        "volumesWithRate.totalLitres" -> "99999999999",
+        "volumesWithRate.totalLitres" -> "99999999999.00",
         "volumesWithRate.pureAlcohol" -> "",
         "volumesWithRate.dutyRate"    -> "abc"
       )

@@ -30,7 +30,6 @@ class CheckYourAnswersController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
-  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
@@ -38,14 +37,13 @@ class CheckYourAnswersController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
-      implicit request =>
-        val result: Option[Result] = for {
-          spiritsList <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
-        } yield Ok(view(spiritsList))
-        result.getOrElse {
-          logger.warn("Impossible to create summary list")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
+      val result: Option[Result] = for {
+        spiritsList <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
+      } yield Ok(view(spiritsList))
+      result.getOrElse {
+        logger.warn("Impossible to create summary list")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
     }
 }

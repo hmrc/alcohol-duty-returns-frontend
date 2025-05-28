@@ -38,7 +38,6 @@ class DeclareQuarterlySpiritsController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
-  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   formProvider: DeclareQuarterlySpiritsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeclareQuarterlySpiritsView
@@ -49,28 +48,26 @@ class DeclareQuarterlySpiritsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
-      implicit request =>
-        val preparedForm = request.userAnswers.get(DeclareQuarterlySpiritsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(DeclareQuarterlySpiritsPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-        Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
-      .async { implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
-                _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers, Some(true)))
-          )
-      }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers, Some(true)))
+        )
+    }
 }

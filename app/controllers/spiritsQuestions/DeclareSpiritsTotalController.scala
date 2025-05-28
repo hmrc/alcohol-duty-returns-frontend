@@ -41,7 +41,6 @@ class DeclareSpiritsTotalController @Inject() (
   requireData: DataRequiredAction,
   formProvider: DeclareSpiritsTotalFormProvider,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
-  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: DeclareSpiritsTotalView,
   appConfig: FrontendAppConfig
@@ -52,33 +51,31 @@ class DeclareSpiritsTotalController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
-      implicit request =>
-        val preparedForm = request.userAnswers.get(DeclareSpiritsTotalPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(DeclareSpiritsTotalPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-        val declareSpiritsGuidanceUrl = appConfig.declareSpiritsGuidanceUrl
+      val declareSpiritsGuidanceUrl = appConfig.declareSpiritsGuidanceUrl
 
-        Ok(view(preparedForm, mode, declareSpiritsGuidanceUrl))
+      Ok(view(preparedForm, mode, declareSpiritsGuidanceUrl))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
-      .async { implicit request =>
-        val declareSpiritsGuidanceUrl = appConfig.declareSpiritsGuidanceUrl
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime).async { implicit request =>
+      val declareSpiritsGuidanceUrl = appConfig.declareSpiritsGuidanceUrl
 
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, declareSpiritsGuidanceUrl))),
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(DeclareSpiritsTotalPage, value))
-                _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DeclareSpiritsTotalPage, mode, updatedAnswers, Some(true)))
-          )
-      }
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, declareSpiritsGuidanceUrl))),
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(DeclareSpiritsTotalPage, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DeclareSpiritsTotalPage, mode, updatedAnswers, Some(true)))
+        )
+    }
 }

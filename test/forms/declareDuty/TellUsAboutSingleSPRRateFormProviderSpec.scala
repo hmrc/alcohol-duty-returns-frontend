@@ -184,7 +184,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
           yield Seq(
             s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"         -> "100000000000",
+            s"volumesWithRate[$index].totalLitres"         -> "100000000000.00",
             s"volumesWithRate[$index].pureAlcohol"         -> "100000000000.0000",
             s"volumesWithRate[$index].dutyRate"            -> "100000000000"
           )
@@ -221,7 +221,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
           yield Seq(
             s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"         -> "0",
+            s"volumesWithRate[$index].totalLitres"         -> "0.00",
             s"volumesWithRate[$index].pureAlcohol"         -> "0.0000",
             s"volumesWithRate[$index].dutyRate"            -> "-1"
           )
@@ -258,7 +258,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
           yield Seq(
             s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"         -> "1.1",
+            s"volumesWithRate[$index].totalLitres"         -> "1.10",
             s"volumesWithRate[$index].pureAlcohol"         -> "100.1000",
             s"volumesWithRate[$index].dutyRate"            -> "1.1"
           )
@@ -285,7 +285,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours wit
           yield Seq(
             s"volumesWithRate[$index].rateBandDescription" -> s"${rateBandDescription}_$index",
             s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"         -> "999999999999",
+            s"volumesWithRate[$index].totalLitres"         -> "999999999999.00",
             s"volumesWithRate[$index].pureAlcohol"         -> "",
             s"volumesWithRate[$index].dutyRate"            -> "1.1abc"
           )
