@@ -44,8 +44,11 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends Logging {
   private def checkRouteMap(page: Page, userAnswers: UserAnswers, hasChanged: Boolean): Call = page match {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => checkDeclareQuarterlySpiritsNavigation(userAnswers)
     case pages.spiritsQuestions.SpiritTypePage              =>
-      if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
-      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      if (hasChanged) {
+        controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
+      } else {
+        controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
     case _                                                  => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.adjustment
 
 import config.Constants.{Css, rowsPerPage}
 import models.UserAnswers
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.Spoilt
 import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
@@ -77,20 +77,8 @@ object AdjustmentListSummaryHelper {
       }
       val formattedDutyValue  =
         Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from user answers")))
-      val description         = (adjustmentType, adjustmentEntry.spoiltRegime) match {
-        case (Spoilt, Some(spoiltRegime)) => Text(messages(spoiltRegime.regimeMessageKey).capitalize)
-        case _                            =>
-          Text(
-            RateBandDescription
-              .toDescription(
-                adjustmentEntry.rateBand.getOrElse(
-                  throw new RuntimeException("Couldn't fetch rateBand from user answers")
-                ),
-                None
-              )
-              .capitalize
-          )
-      }
+      val description: Text   = getDescription(adjustmentEntry, adjustmentType)
+
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(adjustmentTypeLabel)),
@@ -118,6 +106,26 @@ object AdjustmentListSummaryHelper {
         )
       )
     }
+
+  private def getDescription(adjustmentEntry: AdjustmentEntry, adjustmentType: AdjustmentType)(implicit
+    messages: Messages
+  ): Text = {
+    val description = (adjustmentType, adjustmentEntry.spoiltRegime) match {
+      case (Spoilt, Some(spoiltRegime)) => Text(messages(spoiltRegime.regimeMessageKey).capitalize)
+      case _                            =>
+        Text(
+          RateBandDescription
+            .toDescription(
+              adjustmentEntry.rateBand.getOrElse(
+                throw new RuntimeException("Couldn't fetch rateBand from user answers")
+              ),
+              None
+            )
+            .capitalize
+        )
+    }
+    description
+  }
 
   private def adjustmentsTotal(total: BigDecimal)(implicit messages: Messages): SummaryList =
     SummaryListViewModel(

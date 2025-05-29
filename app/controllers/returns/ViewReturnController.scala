@@ -18,6 +18,7 @@ package controllers.returns
 
 import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
 import controllers.actions._
+import models.returns.ReturnDetails
 import models.{RateBand, ReturnPeriod}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -47,7 +48,6 @@ class ViewReturnController @Inject() (
 
   def onPageLoad(periodKey: String): Action[AnyContent] = identify.async { implicit request =>
     val appaId = request.appaId
-
     ReturnPeriod
       .fromPeriodKey(periodKey)
       .fold {
@@ -56,56 +56,37 @@ class ViewReturnController @Inject() (
       } { returnPeriod =>
         (for {
           returnDetails                     <- alcoholDutyReturnsConnector.getReturn(appaId, periodKey)
-          _                                 <- if (returnDetails.identification.periodKey != periodKey) {
-                                                 val error =
-                                                   s"Period key on the return ${returnDetails.identification.periodKey} does not match the return $periodKey requested for $appaId"
-                                                 logger.warn(error)
-                                                 Future.failed(new RuntimeException(error))
-                                               } else {
-                                                 Future.unit
-                                               }
+          _                                 <- handleInvalidPeriodKey(periodKey, appaId, returnDetails)
           periodKey                          = returnDetails.identification.periodKey
-          returnPeriodsAndTaxCodes           =
-            returnDetails.alcoholDeclared.taxCodes.map(
-              (periodKey, _)
-            ) ++ returnDetails.adjustments.returnPeriodsAndTaxCodes
-          ratePeriodsAndTaxCodes             = returnPeriodsAndTaxCodes.flatMap { case (periodKey, taxCode) =>
-                                                 ReturnPeriod
-                                                   .fromPeriodKey(periodKey)
-                                                   .map(returnPeriod => (returnPeriod.period, taxCode))
-                                               }
+          returnPeriodsAndTaxCodes           = getPeriodsAndTaxCodes(returnDetails, periodKey)
+          ratePeriodsAndTaxCodes             = getRatePeriodsAndTaxCodes(returnPeriodsAndTaxCodes)
           ratePeriodsAndTaxCodesToRateBands <-
             if (ratePeriodsAndTaxCodes.nonEmpty) { calculatorConnector.rateBands(ratePeriodsAndTaxCodes) }
             else { Future.successful(Map.empty[(YearMonth, String), RateBand]) }
         } yield {
-          val dutyToDeclareViewModel =
-            viewModel.createAlcoholDeclaredViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
-          val adjustmentsViewModel   =
-            viewModel.createAdjustmentsViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
-          val totalDueSummaryList    = viewModel.createTotalDueSummaryList(returnDetails)
-          val netDutySuspension      = viewModel.createNetDutySuspensionViewModel(returnDetails)
-          val spirits                = if (returnPeriod.hasQuarterlySpirits) {
+          val spirits          = if (returnPeriod.hasQuarterlySpirits) {
             viewModel.createSpiritsViewModels(returnDetails)
           } else {
             Seq.empty
           }
-          val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
-          val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
-          val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
-          val submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
-          val submittedTimeStr       = dateTimeHelper.formatHourMinuteMeridiem(submittedTime)
+          val returnPeriodStr  = dateTimeHelper.formatMonthYear(returnPeriod.period)
+          val submittedDate    = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
+          val submittedDateStr = dateTimeHelper.formatDateMonthYear(submittedDate)
+          val submittedTime    = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
+          val submittedTimeStr = dateTimeHelper.formatHourMinuteMeridiem(submittedTime)
 
           Ok(
             view(
-              returnPeriodStr,
-              returnDetails.identification.chargeReference,
-              submittedDateStr,
-              submittedTimeStr,
-              dutyToDeclareViewModel,
-              adjustmentsViewModel,
-              totalDueSummaryList,
-              netDutySuspension,
-              spirits
+              period = returnPeriodStr,
+              chargeReference = returnDetails.identification.chargeReference,
+              submittedAtDate = submittedDateStr,
+              submittedAtTime = submittedTimeStr,
+              dutyToDeclare =
+                viewModel.createAlcoholDeclaredViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands),
+              adjustments = viewModel.createAdjustmentsViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands),
+              totalDue = viewModel.createTotalDueSummaryList(returnDetails),
+              netDutySuspension = viewModel.createNetDutySuspensionViewModel(returnDetails),
+              spirits = spirits
             )
           )
         })
@@ -115,4 +96,26 @@ class ViewReturnController @Inject() (
           }
       }
   }
+
+  private def getRatePeriodsAndTaxCodes(returnPeriodsAndTaxCodes: Seq[(String, String)]) =
+    returnPeriodsAndTaxCodes.flatMap { case (periodKey, taxCode) =>
+      ReturnPeriod
+        .fromPeriodKey(periodKey)
+        .map(returnPeriod => (returnPeriod.period, taxCode))
+    }
+
+  private def getPeriodsAndTaxCodes(returnDetails: ReturnDetails, periodKey: String) =
+    returnDetails.alcoholDeclared.taxCodes.map(
+      (periodKey, _)
+    ) ++ returnDetails.adjustments.returnPeriodsAndTaxCodes
+
+  private def handleInvalidPeriodKey(periodKey: String, appaId: String, returnDetails: ReturnDetails) =
+    if (returnDetails.identification.periodKey != periodKey) {
+      val error =
+        s"Period key on the return ${returnDetails.identification.periodKey} does not match the return $periodKey requested for $appaId"
+      logger.warn(error)
+      Future.failed(new RuntimeException(error))
+    } else {
+      Future.unit
+    }
 }

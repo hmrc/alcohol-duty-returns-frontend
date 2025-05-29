@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, 
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import models.requests.DataRequest
 import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
@@ -103,19 +104,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                           "adjustmentRepackagedTaxType.error.nonDraught"
                         )
                       case Some(repackagedRateBand) =>
-                        for {
-                          updatedAnswers <-
-                            Future.fromTry(
-                              request.userAnswers
-                                .set(
-                                  CurrentAdjustmentEntryPage,
-                                  updatedAdjustment.copy(repackagedRateBand = Some(repackagedRateBand))
-                                )
-                            )
-                          _              <- userAnswersConnector.set(updatedAnswers)
-                        } yield Redirect(
-                          navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, Some(hasChanged))
-                        )
+                        handleSuccess(mode, request, updatedAdjustment, hasChanged, repackagedRateBand)
                       case None                     =>
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
                     }
@@ -129,6 +118,27 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
             }
         )
   }
+
+  private def handleSuccess(
+    mode: Mode,
+    request: DataRequest[AnyContent],
+    updatedAdjustment: AdjustmentEntry,
+    hasChanged: Boolean,
+    repackagedRateBand: RateBand
+  )(implicit hc: HeaderCarrier) =
+    for {
+      updatedAnswers <-
+        Future.fromTry(
+          request.userAnswers
+            .set(
+              CurrentAdjustmentEntryPage,
+              updatedAdjustment.copy(repackagedRateBand = Some(repackagedRateBand))
+            )
+        )
+      _              <- userAnswersConnector.set(updatedAnswers)
+    } yield Redirect(
+      navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, Some(hasChanged))
+    )
 
   private def handleFormWithErrors(mode: Mode, userAnswers: UserAnswers, formWithErrors: Form[Int])(implicit
     request: Request[_]

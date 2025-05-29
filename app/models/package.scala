@@ -54,14 +54,7 @@ package object models {
               opt
                 .map(JsSuccess(_))
                 .getOrElse {
-                  second match {
-                    case _: KeyPathNode     =>
-                      JsSuccess(Json.obj())
-                    case _: IdxPathNode     =>
-                      JsSuccess(Json.arr())
-                    case _: RecursiveSearch =>
-                      JsError("recursive search is not supported")
-                  }
+                  handleSecond(second)
                 }
                 .flatMap {
                   _.set(JsPath(second :: rest), value).flatMap { newValue =>
@@ -93,12 +86,12 @@ package object models {
       val index: Int = node.idx
 
       valueToRemoveFrom match {
-        case valueToRemoveFrom: JsArray if index >= 0 && index < valueToRemoveFrom.value.length =>
+        case valueToRemoveFrom if index >= 0 && index < valueToRemoveFrom.value.length =>
           val updatedJsArray = valueToRemoveFrom.value.slice(0, index) ++ valueToRemoveFrom.value
             .slice(index + 1, valueToRemoveFrom.value.size)
           JsSuccess(JsArray(updatedJsArray))
-        case valueToRemoveFrom: JsArray                                                         => JsError(s"array index out of bounds: $index, $valueToRemoveFrom")
-        case _                                                                                  => JsError(s"cannot set an index on $valueToRemoveFrom")
+        case valueToRemoveFrom: JsArray                                                => JsError(s"array index out of bounds: $index, $valueToRemoveFrom")
+        case _                                                                         => JsError(s"cannot set an index on $valueToRemoveFrom")
       }
     }
 
@@ -131,14 +124,7 @@ package object models {
               opt
                 .map(JsSuccess(_))
                 .getOrElse {
-                  second match {
-                    case _: KeyPathNode     =>
-                      JsSuccess(Json.obj())
-                    case _: IdxPathNode     =>
-                      JsSuccess(Json.arr())
-                    case _: RecursiveSearch =>
-                      JsError("recursive search is not supported")
-                  }
+                  handleSecond(second)
                 }
                 .flatMap {
                   _.remove(JsPath(second :: rest)).flatMap { newValue =>
@@ -148,4 +134,14 @@ package object models {
             }
       }
   }
+
+  private def handleSecond(second: PathNode) =
+    second match {
+      case _: KeyPathNode     =>
+        JsSuccess(Json.obj())
+      case _: IdxPathNode     =>
+        JsSuccess(Json.arr())
+      case _: RecursiveSearch =>
+        JsError("recursive search is not supported")
+    }
 }
