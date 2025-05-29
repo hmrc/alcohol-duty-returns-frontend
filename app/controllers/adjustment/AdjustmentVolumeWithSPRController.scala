@@ -101,16 +101,13 @@ class AdjustmentVolumeWithSPRController @Inject() (
               )
             )
           case _                                                                                            =>
-            logger.warn(
-              "Couldn't fetch the adjustmentType, rateBand, totalLitres, pureAlcohol and sprDutyRate in AdjustmentEntry from user answers"
-            )
+            logger.warn("Couldn't fetch values in AdjustmentEntry from user answers")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       case _            =>
         logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
-
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -175,7 +172,9 @@ class AdjustmentVolumeWithSPRController @Inject() (
   ): (AdjustmentEntry, Boolean) =
     (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume, adjustmentEntry.sprDutyRate) match {
       case (Some(existingTotalLitres), Some(existingPureAlcohol), Some(existingSprDutyRate))
-          if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol && currentValue.sprDutyRate == existingSprDutyRate =>
+          if currentValue.totalLitresVolume == existingTotalLitres
+            && currentValue.pureAlcoholVolume == existingPureAlcohol
+            && currentValue.sprDutyRate == existingSprDutyRate =>
         (adjustmentEntry, false)
       case _ =>
         (

@@ -20,13 +20,13 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import play.api.libs.json._
 
 case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
-  def hasBeer()                  = regimes.contains(Beer)
-  def hasCider()                 = regimes.contains(Cider)
-  def hasWine()                  = regimes.contains(Wine)
-  def hasSpirits()               = regimes.contains(Spirits)
-  def hasOtherFermentedProduct() = regimes.contains(OtherFermentedProduct)
+  val hasBeer: Boolean                  = regimes.contains(Beer)
+  val hasCider: Boolean                 = regimes.contains(Cider)
+  val hasWine: Boolean                  = regimes.contains(Wine)
+  val hasSpirits: Boolean               = regimes.contains(Spirits)
+  val hasOtherFermentedProduct: Boolean = regimes.contains(OtherFermentedProduct)
 
-  def hasRegime(regime: AlcoholRegime) = regimes.contains(regime)
+  def hasRegime(regime: AlcoholRegime): Boolean = regimes.contains(regime)
 }
 
 object AlcoholRegimes {
