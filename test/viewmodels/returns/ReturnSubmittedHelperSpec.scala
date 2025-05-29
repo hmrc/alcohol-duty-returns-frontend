@@ -93,7 +93,7 @@ class ReturnSubmittedHelperSpec extends SpecBase {
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe formattedDueDateNotOverdue
-        result.isPaymentOverdue        mustBe false
+        result.paymentDueText          mustBe messages("returnSubmitted.positive.p1.notOverdue", formattedDueDateNotOverdue)
       }
 
       "when given return details with a positive amount and processing date is after payment due date" in {
@@ -105,7 +105,7 @@ class ReturnSubmittedHelperSpec extends SpecBase {
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe formattedDueDateOverdue
-        result.isPaymentOverdue        mustBe true
+        result.paymentDueText          mustBe messages("returnSubmitted.positive.p1.overdue", formattedDueDateOverdue)
       }
 
       "when given return details with a negative amount (and claim refund url is needed)" in {
@@ -124,7 +124,6 @@ class ReturnSubmittedHelperSpec extends SpecBase {
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe ""
-        result.isPaymentOverdue        mustBe false
         result.claimRefundUrl          mustBe expectedClaimRefundUrl
       }
     }

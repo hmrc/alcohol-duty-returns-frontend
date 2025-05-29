@@ -34,7 +34,7 @@ case class ReturnSubmittedViewModel(
   periodEndDate: String,
   formattedProcessingDate: String,
   formattedPaymentDueDate: String,
-  isPaymentOverdue: Boolean,
+  paymentDueText: String,
   periodKey: String,
   businessTaxAccountUrl: String,
   claimRefundUrl: String,
@@ -62,7 +62,12 @@ class ReturnSubmittedHelper @Inject() (
     val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
     val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
     val formattedPaymentDueDate            = returnDetails.paymentDueDate.map(dateTimeHelper.formatDateMonthYear).getOrElse("")
-    val isPaymentOverdue                   = returnDetails.paymentDueDate.exists(_.isBefore(formattedProcessingDateAsLocalDate))
+
+    val paymentDueText = if (returnDetails.paymentDueDate.exists(_.isBefore(formattedProcessingDateAsLocalDate))) {
+      messages("returnSubmitted.positive.p1.overdue", formattedPaymentDueDate)
+    } else {
+      messages("returnSubmitted.positive.p1.notOverdue", formattedPaymentDueDate)
+    }
 
     ReturnSubmittedViewModel(
       returnDetails = returnDetails,
@@ -70,7 +75,7 @@ class ReturnSubmittedHelper @Inject() (
       periodEndDate = returnPeriodViewModel.toDate,
       formattedProcessingDate = formattedProcessingDate,
       formattedPaymentDueDate = formattedPaymentDueDate,
-      isPaymentOverdue = isPaymentOverdue,
+      paymentDueText = paymentDueText,
       periodKey = periodKey,
       businessTaxAccountUrl = appConfig.businessTaxAccountUrl,
       claimRefundUrl = appConfig.claimRefundGformUrl((-returnDetails.amount).toString),

@@ -67,13 +67,9 @@
 
         @subHeading(messages("returnSubmitted.whatHappensNext"))
 
-        @if(viewModel.isPaymentOverdue) {
-            @paragraph(messages("returnSubmitted.positive.p1.overdue", viewModel.formattedPaymentDueDate))
-        } else {
-            @paragraph(messages("returnSubmitted.positive.p1.notOverdue", viewModel.formattedPaymentDueDate))
-        }
+        @paragraph(viewModel.paymentDueText)
 
-        @paragraph(messages("returnSubmitted.positive.p2", viewModel.formattedPaymentDueDate))
+        @paragraph(messages("returnSubmitted.positive.p2"))
 
         @govukWarningText(viewModel.warningText)
 
