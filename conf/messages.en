@@ -201,6 +201,8 @@ viewPastPayments.historic.noPayments = You have no cleared returns payments or l
 viewPastPayments.historic.Return.description = Cleared Alcohol Duty payments
 viewPastPayments.historic.LPI.description = Cleared late payment interest charge payments
 viewPastPayments.historic.paragraph = Cleared payments are those where monies have been received by HMRC or an existing credit balance has been used to pay any applicable duty.
+viewPastPayments.visually-hidden.pay-now = amount of £{0} due {1}
+viewPastPayments.visually-hidden.claim-refund = of £{0}
 
 taskList.title = Complete your Alcohol Duty Return
 taskList.period = This is your alcohol return for the period {0} to {1}.
