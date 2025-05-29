@@ -16,6 +16,7 @@
 
 package viewmodels.tasklist
 
+import config.Constants.Css.marginBottom8CssClass
 import config.{Constants, FrontendAppConfig}
 import models.TaskListSection.{AdjustmentSection, DutySuspendedSection, SpiritsSection}
 import models.adjustment.AdjustmentType
@@ -351,7 +352,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
       }
     Section(
       title = messages("taskList.section.checkAndSubmit.heading"),
-      taskList = TaskList(items = Seq(item), idPrefix = "checkAndSubmit"),
+      taskList = TaskList(items = Seq(item), classes = marginBottom8CssClass, idPrefix = "checkAndSubmit"),
       statusCompleted = status
     )
   }
