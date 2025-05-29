@@ -21,7 +21,7 @@ import controllers.actions._
 import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, TotalDutyCalculationRequest, UserAnswers}
 import pages.QuestionPage
-import pages.declareDuty.{AlcoholDutyPage, DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
+import pages.declareDuty._
 import play.api.Logging
 
 import javax.inject.Inject

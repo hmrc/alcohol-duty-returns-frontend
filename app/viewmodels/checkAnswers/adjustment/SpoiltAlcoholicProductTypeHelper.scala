@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.adjustment
 
 import cats.data.NonEmptySeq
+import config.Constants.maxABV
 import config.FrontendAppConfig
 import models.RateType.Core
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholRegimes, AlcoholType, RangeDetailsByRegime, RateBand}
@@ -33,7 +34,7 @@ class SpoiltAlcoholicProductTypeHelper @Inject() (
   appConfig: FrontendAppConfig
 ) extends Logging {
   private val rangeMinABV = BigDecimal(0)
-  private val rangeMaxABV = BigDecimal(100)
+  private val rangeMaxABV = BigDecimal(maxABV)
 
   def createRateBandFromRegime(regime: AlcoholRegime)(implicit messages: Messages): RateBand = {
     val rate = appConfig.spoiltRate

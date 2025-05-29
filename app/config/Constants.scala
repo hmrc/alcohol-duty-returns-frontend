@@ -58,7 +58,11 @@ object Constants {
   val dutySuspendedVolumeNewMinimumValue: BigDecimal = BigDecimal(0.00)
   val dutySuspendedLpaNewMinimumValue: BigDecimal    = BigDecimal(0.0000)
 
-  val overUnderDeclarationThreshold: BigDecimal = BigDecimal(1000) // When a reason is required
+  val dayOfSubmissionDeadline: Int = 15
+
+  private val oneThousand: Int = 1000
+
+  val overUnderDeclarationThreshold: BigDecimal = BigDecimal(oneThousand) // When a reason is required
   val overUnderDeclarationReasonLength: Int     = 250
 
   val adjustmentTooEarlyMonth: Int = 7 // Only dates afterward we allow to be adjusted via the service
@@ -66,6 +70,8 @@ object Constants {
 
   val minTaxType = 100 // Although the boundaries will not be valid codes
   val maxTaxType = 999
+
+  val maxABV: Int = 100
 
   val otherSpiritsProducedMaxLength = 150
 
