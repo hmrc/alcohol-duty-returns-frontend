@@ -160,10 +160,11 @@ class ReturnsNavigator @Inject() () {
         regime =>
           hasChanged =>
             index =>
-              if (hasChanged)
+              if (hasChanged) {
                 controllers.declareDuty.routes.CheckYourAnswersSPRController.onPageLoad(regime, index)
-              else
+              } else {
                 controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
+              }
     case _                              =>
       _ => _ => _ => _ => routes.TaskListController.onPageLoad
   }

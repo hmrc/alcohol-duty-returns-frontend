@@ -56,50 +56,77 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.DeclareAdjustmentQuestionPage             =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) declareAdjustmentQuestionRoute(userAnswers)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            declareAdjustmentQuestionRoute(userAnswers)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.AdjustmentTypePage                        =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentTypeRoute(userAnswers, CheckMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            adjustmentTypeRoute(userAnswers, CheckMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.AlcoholicProductTypePage                  =>
       _ =>
         hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ =>
         hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.AdjustmentTaxTypePage                     =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentTaxTypePageRoute(userAnswers, CheckMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            adjustmentTaxTypePageRoute(userAnswers, CheckMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentVolumePageRoute(userAnswers, CheckMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            adjustmentVolumePageRoute(userAnswers, CheckMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentVolumePageRoute(userAnswers, CheckMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            adjustmentVolumePageRoute(userAnswers, CheckMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) repackagedTaxTypeRoute(userAnswers, CheckMode)
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            repackagedTaxTypeRoute(userAnswers, CheckMode)
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ =>
         hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          if (hasChanged) {
+            controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+          } else {
+            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          }
     case _                                                          => _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
   }
 

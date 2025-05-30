@@ -44,8 +44,9 @@ class CheckYourAnswersController @Inject() (
       checkYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
         case Some(summaryList) => Ok(view(regime, summaryList))
         case None              =>
+          val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
           logger.warn(
-            s"Unable to retrieve summary list rows during declare duty CYA onPageLoad ${request.userAnswers.returnId.appaId}/${request.userAnswers.returnId.periodKey}"
+            s"Unable to retrieve summary list rows during declare duty CYA onPageLoad appa id: $appaId, period key: $periodKey"
           )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }

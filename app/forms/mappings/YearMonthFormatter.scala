@@ -36,9 +36,13 @@ class YearMonthFormatter(
     if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(s"$key.month", s"$invalidKey.month", args)))
 
   private def verifyYear(key: String, year: Int): Either[Seq[FormError], Int] =
-    if (year >= 1000 && year <= 9999) Right(year)
-    else if ((year < 1000 && year >= 0) || year > 9999) Left(Seq(FormError(s"$key.year", s"$invalidYear.year", args)))
-    else Left(Seq(FormError(s"$key.year", s"$invalidKey.year", args)))
+    if (year >= 1000 && year <= 9999) {
+      Right(year)
+    } else if ((year < 1000 && year >= 0) || year > 9999) {
+      Left(Seq(FormError(s"$key.year", s"$invalidYear.year", args)))
+    } else {
+      Left(Seq(FormError(s"$key.year", s"$invalidKey.year", args)))
+    }
 
   private val monthIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.month",
