@@ -96,7 +96,12 @@ class ViewPastPaymentsHelper @Inject() (
           ),
           TableRow(content = HtmlContent(statusTag))
         ),
-        actions = getActionOutstandingPayments(status, index, outstandingPaymentsData.remainingAmount)
+        actions = getActionOutstandingPayments(
+          status,
+          index,
+          outstandingPaymentsData.remainingAmount,
+          outstandingPaymentsData.dueDate
+        )
       )
     }
 
@@ -154,7 +159,7 @@ class ViewPastPaymentsHelper @Inject() (
               classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
             )
           ),
-          actions = getActionUnallocatedPayments(unallocatedPaymentData.unallocatedAmount.abs.toString)
+          actions = getActionUnallocatedPayments(unallocatedPaymentData.unallocatedAmount)
         )
       } else {
         TableRowViewModel(
@@ -210,26 +215,31 @@ class ViewPastPaymentsHelper @Inject() (
     }
 
   private def getActionUnallocatedPayments(
-    amount: String
-  )(implicit messages: Messages): Seq[TableRowActionViewModel] =
+    amount: BigDecimal
+  )(implicit messages: Messages): Seq[TableRowActionViewModel] = {
+    val gformAmount = amount.abs.toString
     Seq(
       TableRowActionViewModel(
         label = messages("viewPastPayments.claimRefund.linkText"),
-        href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount))
+        href = Call("GET", frontendAppConfig.claimRefundGformUrl(gformAmount)),
+        visuallyHiddenText = Some(getClaimRefundHiddenText(amount = amount))
       )
     )
+  }
 
   private def getActionOutstandingPayments(
     status: OutstandingPaymentStatusToDisplay,
     index: Int,
-    amount: BigDecimal
+    amount: BigDecimal,
+    paymentDate: LocalDate
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
       if (frontendAppConfig.claimARefundGformEnabled) {
         Seq(
           TableRowActionViewModel(
             label = messages("viewPastPayments.claimRefund.linkText"),
-            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString))
+            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString)),
+            visuallyHiddenText = Some(getClaimRefundHiddenText(amount = amount))
           )
         )
       } else {
@@ -239,7 +249,8 @@ class ViewPastPaymentsHelper @Inject() (
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastPayments.payNow.linkText"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index)
+          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
+          visuallyHiddenText = Some(getPayNowHiddenText(amount = amount, paymentDate = paymentDate))
         )
       )
     }
@@ -314,4 +325,12 @@ class ViewPastPaymentsHelper @Inject() (
       year = year,
       claimARefundGformEnabled = frontendAppConfig.claimARefundGformEnabled
     )
+
+  private def getClaimRefundHiddenText(amount: BigDecimal)(implicit messages: Messages): String = {
+    val refundAmountAbsString: String = amount.abs.toString
+    messages("viewPastPayments.visually-hidden.claim-refund", refundAmountAbsString)
+  }
+
+  private def getPayNowHiddenText(amount: BigDecimal, paymentDate: LocalDate)(implicit messages: Messages): String =
+    messages("viewPastPayments.visually-hidden.pay-now", amount, dateTimeHelper.formatDateMonthYear(paymentDate))
 }
