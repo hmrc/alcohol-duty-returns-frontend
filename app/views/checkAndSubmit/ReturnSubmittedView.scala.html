@@ -23,11 +23,11 @@
         govukButton: GovukButton,
         subHeading: SubHeading,
         pageHeading: PageHeading,
-        govukPanel : GovukPanel,
+        govukPanel: GovukPanel,
         paragraph: Paragraph,
         paragraphWithMonetaryValue: ParagraphWithMonetaryValue,
         link: Link,
-        govukWarningText : GovukWarningText
+        govukWarningText: GovukWarningText
 )
 
 @(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
@@ -43,7 +43,7 @@
 
 @negPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.map(_.value).getOrElse("")), classes = "")
-    @paragraphWithMonetaryValue(s"${messages("returnSubmitted.panel.body.dutyOwed")}", viewModel.returnDetails.amount, classes = "")
+    @paragraphWithMonetaryValue(s"${messages("returnSubmitted.panel.body.dutyOwed")}", -viewModel.returnDetails.amount, classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
@@ -57,7 +57,7 @@
 
         @paragraph(messages("returnSubmitted.p1", viewModel.formattedProcessingDate, viewModel.periodStartDate, viewModel.periodEndDate))
 
-        @paragraph( content =
+        @paragraph(content =
             HtmlContent(
                 link(
                     id = "view-return-link",
@@ -65,10 +65,11 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.positive.h1"))
+        @subHeading(messages("returnSubmitted.whatHappensNext"))
 
-        @paragraph(messages("returnSubmitted.positive.p1", viewModel.formattedPaymentDueDate))
-        @paragraph(messages("returnSubmitted.positive.p2", viewModel.formattedPaymentDueDate))
+        @paragraph(viewModel.paymentDueText)
+
+        @paragraph(messages("returnSubmitted.positive.p2"))
 
         @govukWarningText(viewModel.warningText)
 
@@ -76,7 +77,7 @@
             ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
         )
 
-        @paragraph( content =
+        @paragraph(content =
             HtmlContent(
                 messages("returnSubmitted.direct.debit.p1") +
                 link(
@@ -85,7 +86,7 @@
                     href = controllers.payments.routes.StartDirectDebitController.initiateAndRedirect().url
         )))
 
-        @paragraph( content =
+        @paragraph(content =
             HtmlContent(
                 link(
                     id = "business-tax-account-link",
@@ -102,7 +103,7 @@
 
         @paragraph(messages("returnSubmitted.p1", viewModel.formattedProcessingDate, viewModel.periodStartDate, viewModel.periodEndDate))
 
-        @paragraph( content =
+        @paragraph(content =
             HtmlContent(
                 link(
                     id = "view-return-link",
@@ -110,7 +111,7 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @paragraph( content =
+        @paragraph(content =
             HtmlContent(
                 link(
                     id = "business-tax-account-link",
@@ -118,7 +119,6 @@
                     href = viewModel.businessTaxAccountUrl
         )))
     }
-
 
     @if(viewModel.returnDetails.isAmountLessThanZero) {
         @govukPanel(Panel(
@@ -128,7 +128,7 @@
 
         @paragraph(messages("returnSubmitted.p1", viewModel.formattedProcessingDate, viewModel.periodStartDate, viewModel.periodEndDate))
 
-        @paragraph( content =
+        @paragraph(content =
             HtmlContent(
                 link(
                     id = "view-return-link",
@@ -136,10 +136,23 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.positive.h1"))
-        @paragraph(messages("returnSubmitted.negative.p1"))
+        @subHeading(messages("returnSubmitted.whatHappensNext"))
+        @paragraph(content =
+            HtmlContent(
+                Seq(link(
+                    id = "claim-refund-link",
+                    text = messages("returnSubmitted.negative.link"),
+                    href = viewModel.claimRefundUrl
+                ), messages("returnSubmitted.negative.guidance")).mkString(" ")
+            )
+        )
 
-        @paragraph( content =
+        @govukButton(
+            ButtonViewModel("claimRefundButton", messages("site.claimRefund"))
+            .asLink(viewModel.claimRefundUrl)
+        )
+
+        @paragraph(content =
             HtmlContent(
                 link(
                     id = "business-tax-account-link",

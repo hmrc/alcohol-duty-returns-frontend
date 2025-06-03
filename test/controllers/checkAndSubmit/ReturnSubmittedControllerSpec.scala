@@ -26,6 +26,7 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import viewmodels.DateTimeHelper
 import viewmodels.returns.ReturnSubmittedHelper
+import views.html.checkAndSubmit.ReturnSubmittedView
 
 import java.time.{Instant, LocalDate}
 
@@ -54,20 +55,21 @@ class ReturnSubmittedControllerSpec extends SpecBase {
       running(application) {
         val request = FakeRequest(
           GET,
-          controllers.checkAndSubmit.routes.ReturnSubmittedController
-            .onPageLoad()
-            .url
+          controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url
         ).withSession(
           returnCreatedDetailsKey -> Json.toJson(returnDetails).toString()
         )
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        val view = application.injector.instanceOf[ReturnSubmittedView]
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(testViewModel)(request, getMessages(application)).toString
       }
     }
 
-    "must redirect in the Journey Recovery screen if the return details in session is empty" in {
+    "must redirect to Journey Recovery if the return details in session is empty" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
         .build()
@@ -80,7 +82,6 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-
       }
     }
 
