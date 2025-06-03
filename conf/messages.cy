@@ -302,7 +302,7 @@ return.journey.multipleSPR.error.noValue.totalLitres = Nodwch gyfanswm y litrau 
 return.journey.multipleSPR.error.invalid.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn rhif
 return.journey.multipleSPR.error.maximumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn llai nag 1 biliwn
 return.journey.multipleSPR.error.minimumValue.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn fwy na 0.00
-return.journey.multipleSPR.error.tooManyDecimalPlaces.totalLitres = Cyfanswm y litrau o gynnyrch alcoholaidd: Mae’n rhaid i hyn fod yn rhif sy’n cynnwys 2 le degol
+return.journey.multipleSPR.error.tooManyDecimalPlaces.totalLitres = Mae’n rhaid i gyfanswm y litrau o gynnyrch alcoholaidd fod yn rhif sy’n cynnwys 2 le degol
 
 return.journey.multipleSPR.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur
 return.journey.multipleSPR.error.invalid.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif
