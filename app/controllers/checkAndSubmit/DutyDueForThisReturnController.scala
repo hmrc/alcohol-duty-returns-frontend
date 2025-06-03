@@ -118,7 +118,6 @@ class DutyDueForThisReturnController @Inject() (
               .withSession(session)
           )
         } else {
-          logger.warn(error.message)
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         },
       adrSubmissionCreatedDetails => {
