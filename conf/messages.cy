@@ -830,7 +830,7 @@ dutySuspended.received.error.minimumValue.totalLitres.regime.otherfermentedprodu
 dutySuspended.received.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
 
 dutySuspended.deliveredInsideUK.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
-dutySuspended.deliveredInsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
+dutySuspended.deliveredInsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
 dutySuspended.deliveredInsideUK.error.maximumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
 dutySuspended.deliveredInsideUK.error.minimumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
 dutySuspended.deliveredInsideUK.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
