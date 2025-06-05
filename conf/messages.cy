@@ -107,7 +107,7 @@ section.adjustment.spoilt = Addasu ar gyfer alcohol wedi’i ddifetha
 section.adjustment.drawback = Addasu ar gyfer ad-dalu toll
 section.adjustment.repackaged-draught-products = Addasu ar gyfer cynhyrchion o’r gasgen wedi’u hailbecynnu
 section.adjustment.checkAnswers = Addasiad o ddatganiad blaenorol
-section.dutySuspended = Rhoi gwybod am ddosbarthiadau o alcohol y gohiriwyd tollau arno
+section.dutySuspended = Rhoi gwybod am ddosbarthiadau o alcohol o dan ohiriad tollau
 section.checkAndSubmit = Anfon Datganiad
 
 viewPastReturns.heading = Eich Datganiadau
@@ -229,7 +229,7 @@ taskList.section.adjustment = Datgan addasiadau
 taskList.section.adjustment.under-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu tanddatgan
 taskList.section.adjustment.over-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu gorddatgan
 
-taskList.section.dutySuspended.heading = Rhoi gwybod am ddosbarthiadau o alcohol y gohiriwyd tollau arno
+taskList.section.dutySuspended.heading = Rhoi gwybod am ddosbarthiadau o alcohol o dan ohiriad tollau
 taskList.section.dutySuspended.needToDeclare = Rhoi gwybod i ni a ydych wedi dosbarthu neu dderbyn cynhyrchion gorffenedig o dan ohiriad tollau
 taskList.section.dutySuspended = Newid y cofnodion rydych chi wedi rhoi gwybod i ni amdanynt
 
@@ -707,7 +707,7 @@ checkYourAnswersDutySuspendedDeliveries.heading = Dosbarthiadau y gohiriwyd toll
 
 declareDutySuspenseQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
 declareDutySuspenseQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
-declareDutySuspenseQuestion.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno
+declareDutySuspenseQuestion.error.required = Dewiswch ‘Iawn’ os gwnaethoch ddosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig o dan ohiriad tollau
 
 dutySuspendedAlcoholType.title = Pa gynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau?
 dutySuspendedAlcoholType.heading = Pa gynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau?
@@ -727,11 +727,11 @@ dutySuspendedQuantities.deliveredInsideUK = Dosbarthwyd y tu mewn i’r DU o dan
 dutySuspendedQuantities.deliveredOutsideUK = Dosbarthwyd y tu allan i’r DU o dan ohiriad tollau
 dutySuspendedQuantities.received = Derbyniwyd o dan ohiriad tollau
 
-dutySuspendedQuantities.totalLitres.heading.regime.beer = Cyfanswm y litrau o cwrw gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.beer = Cyfanswm y litrau o gwrw gorffenedig
 dutySuspendedQuantities.totalLitres.heading.regime.cider = Cyfanswm y litrau o seidr gorffenedig
-dutySuspendedQuantities.totalLitres.heading.regime.wine = Cyfanswm y litrau o gwin gorffenedig
-dutySuspendedQuantities.totalLitres.heading.regime.spirits = Cyfanswm y litrau o gwirodydd gorffenedig
-dutySuspendedQuantities.totalLitres.heading.regime.otherfermentedproduct = Cyfanswm y litrau o cynhyrchion eplesedig eraill gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.wine = Cyfanswm y litrau o win gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.spirits = Cyfanswm y litrau o wirodydd gorffenedig
+dutySuspendedQuantities.totalLitres.heading.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig
 dutySuspendedQuantities.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol. Nodwch 0 os nad yw hyn yn berthnasol.
 dutySuspendedQuantities.pureAlcohol.heading = Litrau o alcohol pur
 dutySuspendedQuantities.pureAlcohol.hint = Nodwch y litrau, hyd at 4 lle degol. Nodwch 0 os nad yw hyn yn berthnasol.
@@ -830,7 +830,7 @@ dutySuspended.received.error.minimumValue.totalLitres.regime.otherfermentedprodu
 dutySuspended.received.error.decimalPlaces.totalLitres.regime.otherfermentedproduct = Cyfanswm y litrau o gynhyrchion eplesedig eraill gorffenedig a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 2 le degol
 
 dutySuspended.deliveredInsideUK.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU. Nodwch 0 os nad yw hyn yn berthnasol.
-dutySuspended.deliveredInsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif
+dutySuspended.deliveredInsideUK.error.invalid.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
 dutySuspended.deliveredInsideUK.error.maximumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn llai nag 1 biliwn o litrau
 dutySuspended.deliveredInsideUK.error.minimumValue.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
 dutySuspended.deliveredInsideUK.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a ddosbarthwyd y tu mewn i’r DU: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
@@ -847,8 +847,8 @@ dutySuspended.received.error.maximumValue.pureAlcohol = Litrau o alcohol pur a d
 dutySuspended.received.error.minimumValue.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn fwy na neu’n hafal i 0 litrau
 dutySuspended.received.error.decimalPlaces.pureAlcohol = Litrau o alcohol pur a dderbyniwyd o dan ohiriad tollau: Mae’n rhaid i hyn fod yn rhif hyd at 4 lle degol
 
-dutySuspendedCalculation.title = Rydym wedi cyfrifo’ch alcohol y gohiriwyd tollau arno
-dutySuspendedCalculation.heading = Rydym wedi cyfrifo’ch alcohol y gohiriwyd tollau arno
+dutySuspendedCalculation.title = Rydym wedi cyfrifo’ch alcohol o dan ohiriad tollau
+dutySuspendedCalculation.heading = Rydym wedi cyfrifo’ch alcohol o dan ohiriad tollau
 dutySuspendedCalculation.p.regime.beer = Rydym wedi cyfrifo cyfanswm cyfaint net eich cwrw ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi cael mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
 dutySuspendedCalculation.p.regime.cider = Rydym wedi cyfrifo cyfanswm cyfaint net eich seidr ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi cael mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
 dutySuspendedCalculation.p.regime.wine = Rydym wedi cyfrifo cyfanswm cyfaint net eich gwin ac alcohol pur, ar sail yr wybodaeth a roesoch. Os yw’r cyfaint net yn swm negyddol, mae hyn yn golygu eich bod wedi cael mwy o alcohol o dan ohiriad tollau nag yr ydych wedi’i ddosbarthu.
@@ -877,15 +877,15 @@ dutySuspendedCalculation.totalLitres.add.regime.otherfermentedproduct = Adio cyf
 dutySuspendedCalculation.totalLitres.subtract.regime.otherfermentedproduct = Tynnu swm y cynhyrchion eplesedig eraill y gwnaethoch ei gael ({0} litr) o swm y cynhyrchion eplesedig eraill y gwnaethoch ei ddosbarthu ({1} litr).
 
 dutySuspendedCalculation.pureAlcohol.total = Cyfanswm eich cyfaint net o alcohol pur yw {0} o litrau
-dutySuspendedCalculation.pureAlcohol.add = Gwnaethom adio’r litrau o alcohol pur y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at y litrau o alcohol pur y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
-dutySuspendedCalculation.pureAlcohol.subtract = Fe wnaethom dynnu’r litrau o alcohol pur a gawsoch ({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({1} litr).
+dutySuspendedCalculation.pureAlcohol.add = Adio’r litrau o alcohol pur y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at y litrau o alcohol pur y gwnaethoch eu dosbarthu y tu allan i’r DU ({0} o litrau).
+dutySuspendedCalculation.pureAlcohol.subtract = Tynnu’r litrau o alcohol pur a gawsoch({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({0} litr).
 
-dutySuspended.checkYourAnswers.alcoholType.heading = Math o alcohol y gohiriwyd tollau arno
+dutySuspended.checkYourAnswers.alcoholType.heading = Math o alcohol o dan ohiriad tollau
 dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Math o alcohol
 dutySuspended.checkYourAnswers.amount.heading = Swm yr alcohol y gohiriwyd tollau arno
 dutySuspended.checkYourAnswers.totalLitres = {0} o litrau o gynnyrch yn ei gyfanrwydd
 dutySuspended.checkYourAnswers.pureAlcohol = {0} o litrau o alcohol pur
-dutySuspended.checkYourAnswers.alcoholType.change.hidden = math o alcohol y gohiriwyd tollau arno
+dutySuspended.checkYourAnswers.alcoholType.change.hidden = math o alcohol o dan ohiriad tollau
 dutySuspended.checkYourAnswers.amount.change.hidden = swm yr alcohol y gohiriwyd tollau arno
 
 # End of NEW duty suspended deliveries sub-journey
@@ -1026,7 +1026,7 @@ spoiltVolumeWithDuty.heading.regime.cider = Rhoi gwybod i ni am eich seidr wedi�
 spoiltVolumeWithDuty.heading.regime.wine = Rhoi gwybod i ni am eich gwin wedi’i ddifetha
 spoiltVolumeWithDuty.heading.regime.spirits = Rhoi gwybod i ni am eich gwirodydd wedi’u difetha
 spoiltVolumeWithDuty.heading.regime.otherfermentedproduct = Rhoi gwybod i ni am eich cynhyrchion eplesedig eraill wedi’u difetha
-spoiltVolumeWithDuty.totalLitresVolume.heading.regime.beer = Rhoi gwybod i ni am eich cwrw wedi’i ddifetha (i 2 le degol)
+spoiltVolumeWithDuty.totalLitresVolume.heading.regime.beer = Cyfanswm y litrau o gwrw wedi’i ddifetha (i 2 le degol)
 spoiltVolumeWithDuty.totalLitresVolume.heading.regime.cider = Cyfanswm y litrau o seidr wedi’i ddifetha (i 2 le degol)
 spoiltVolumeWithDuty.totalLitresVolume.heading.regime.wine = Cyfanswm y litrau o win wedi’i ddifetha (i 2 le degol)
 spoiltVolumeWithDuty.totalLitresVolume.heading.regime.spirits = Cyfanswm y litrau o wirodydd wedi’u difetha (i 2 le degol)
