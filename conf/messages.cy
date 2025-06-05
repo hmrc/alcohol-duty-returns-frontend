@@ -877,8 +877,8 @@ dutySuspendedCalculation.totalLitres.add.regime.otherfermentedproduct = Adio cyf
 dutySuspendedCalculation.totalLitres.subtract.regime.otherfermentedproduct = Tynnu swm y cynhyrchion eplesedig eraill y gwnaethoch ei gael ({0} litr) o swm y cynhyrchion eplesedig eraill y gwnaethoch ei ddosbarthu ({1} litr).
 
 dutySuspendedCalculation.pureAlcohol.total = Cyfanswm eich cyfaint net o alcohol pur yw {0} o litrau
-dutySuspendedCalculation.pureAlcohol.add = Adio’r litrau o alcohol pur y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at y litrau o alcohol pur y gwnaethoch eu dosbarthu y tu allan i’r DU ({0} o litrau).
-dutySuspendedCalculation.pureAlcohol.subtract = Tynnu’r litrau o alcohol pur a gawsoch({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({0} litr).
+dutySuspendedCalculation.pureAlcohol.add = Adio’r litrau o alcohol pur y gwnaethoch eu dosbarthu y tu mewn i’r DU ({0} o litrau) at y litrau o alcohol pur y gwnaethoch eu dosbarthu y tu allan i’r DU ({1} o litrau).
+dutySuspendedCalculation.pureAlcohol.subtract = Tynnu’r litrau o alcohol pur a gawsoch ({0} litr) o swm yr alcohol pur y gwnaethoch eu dosbarthu ({1} litr).
 
 dutySuspended.checkYourAnswers.alcoholType.heading = Math o alcohol o dan ohiriad tollau
 dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Math o alcohol
