@@ -713,16 +713,16 @@ dutySuspendedAlcoholType.title = Pa gynhyrchion alcoholaidd gorffenedig rydych c
 dutySuspendedAlcoholType.heading = Pa gynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau?
 dutySuspendedAlcoholType.error.required = Dewiswch y cynhyrchion alcoholaidd gorffenedig rydych chi wedi’u dosbarthu neu eu derbyn o dan ohiriad tollau
 
-dutySuspendedQuantities.title.regime.beer = Rhoi gwybod i ni faint o cwrw sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.beer = Rhoi gwybod i ni faint o gwrw sydd o dan ohiriad tollau
 dutySuspendedQuantities.title.regime.cider = Rhoi gwybod i ni faint o seidr sydd o dan ohiriad tollau
-dutySuspendedQuantities.title.regime.wine = Rhoi gwybod i ni faint o gwin sydd o dan ohiriad tollau
-dutySuspendedQuantities.title.regime.spirits = Rhoi gwybod i ni faint o gwirodydd sydd o dan ohiriad tollau
-dutySuspendedQuantities.title.regime.otherfermentedproduct = Rhoi gwybod i ni faint o cynhyrchion eplesedig eraill sydd o dan ohiriad tollau
-dutySuspendedQuantities.heading.regime.beer = Rhoi gwybod i ni faint o cwrw sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.wine = Rhoi gwybod i ni faint o win sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.spirits = Rhoi gwybod i ni faint o wirodydd sydd o dan ohiriad tollau
+dutySuspendedQuantities.title.regime.otherfermentedproduct = Rhoi gwybod i ni faint o gynhyrchion eplesedig eraill sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.beer = Rhoi gwybod i ni faint o gwrw sydd o dan ohiriad tollau
 dutySuspendedQuantities.heading.regime.cider = Rhoi gwybod i ni faint o seidr sydd o dan ohiriad tollau
-dutySuspendedQuantities.heading.regime.wine = Rhoi gwybod i ni faint o gwin sydd o dan ohiriad tollau
-dutySuspendedQuantities.heading.regime.spirits = Rhoi gwybod i ni faint o gwirodydd sydd o dan ohiriad tollau
-dutySuspendedQuantities.heading.regime.otherfermentedproduct = Rhoi gwybod i ni faint o cynhyrchion eplesedig eraill sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.wine = Rhoi gwybod i ni faint o win sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.spirits = Rhoi gwybod i ni faint o wirodydd sydd o dan ohiriad tollau
+dutySuspendedQuantities.heading.regime.otherfermentedproduct = Rhoi gwybod i ni faint o gynhyrchion eplesedig eraill sydd o dan ohiriad tollau
 dutySuspendedQuantities.deliveredInsideUK = Dosbarthwyd y tu mewn i’r DU o dan ohiriad tollau
 dutySuspendedQuantities.deliveredOutsideUK = Dosbarthwyd y tu allan i’r DU o dan ohiriad tollau
 dutySuspendedQuantities.received = Derbyniwyd o dan ohiriad tollau
@@ -882,11 +882,11 @@ dutySuspendedCalculation.pureAlcohol.subtract = Tynnu’r litrau o alcohol pur a
 
 dutySuspended.checkYourAnswers.alcoholType.heading = Math o alcohol o dan ohiriad tollau
 dutySuspended.checkYourAnswers.alcoholType.summaryListKey = Math o alcohol
-dutySuspended.checkYourAnswers.amount.heading = Swm yr alcohol y gohiriwyd tollau arno
+dutySuspended.checkYourAnswers.amount.heading = Swm yr alcohol o dan ohiriad tollau
 dutySuspended.checkYourAnswers.totalLitres = {0} o litrau o gynnyrch yn ei gyfanrwydd
 dutySuspended.checkYourAnswers.pureAlcohol = {0} o litrau o alcohol pur
 dutySuspended.checkYourAnswers.alcoholType.change.hidden = math o alcohol o dan ohiriad tollau
-dutySuspended.checkYourAnswers.amount.change.hidden = swm yr alcohol y gohiriwyd tollau arno
+dutySuspended.checkYourAnswers.amount.change.hidden = swm yr alcohol o dan ohiriad tollau
 
 # End of NEW duty suspended deliveries sub-journey
 
