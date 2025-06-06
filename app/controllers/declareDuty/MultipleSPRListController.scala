@@ -26,7 +26,7 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.declareDuty.MultipleSPRListHelper
+import viewmodels.declareDuty.{MissingSPRRateBandHelper, MultipleSPRListHelper}
 import views.html.declareDuty.MultipleSPRListView
 
 import javax.inject.Inject
@@ -78,35 +78,21 @@ class MultipleSPRListController @Inject() (
                 },
                 sprTable => Future.successful(BadRequest(view(formWithErrors, regime, sprTable)))
               ),
-          value =>
+          value => {
+            val missingRateBands =
+              MissingSPRRateBandHelper.findMissingSPRRateBands(regime, request.userAnswers).getOrElse(Set.empty)
             for {
               updatedUserAnswers              <-
                 Future.fromTry(request.userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, value))
               userAnswersWithMissingRateBands <-
-                Future.fromTry(updateMissingRateBands(value, updatedUserAnswers, regime))
+                Future.fromTry(updatedUserAnswers.setByKey(MissingRateBandsPage, regime, missingRateBands))
               cleanedUserAnswers              <-
                 Future.fromTry(userAnswersWithMissingRateBands.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
               _                               <- userAnswersConnector.set(cleanedUserAnswers)
             } yield Redirect(
               navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, NormalMode, cleanedUserAnswers, regime)
             )
+          }
         )
-    }
-
-  private def updateMissingRateBands(
-    selectedYes: Boolean,
-    userAnswers: UserAnswers,
-    regime: AlcoholRegime
-  ): Try[UserAnswers] =
-    if (selectedYes) { Success(userAnswers) }
-    else {
-      val selectedSPRRateBands: Set[RateBand] =
-        userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime).map(_.filter(_.rateType.isSPR)).getOrElse(Set.empty)
-      val declaredSPRTaxTypes: Seq[String]    =
-        userAnswers.getByKey(MultipleSPRListPage, regime).map(_.map(_.taxType)).getOrElse(Seq.empty)
-      val missingSPRRateBands: Set[RateBand]  =
-        selectedSPRRateBands.filter(rateBand => !declaredSPRTaxTypes.contains(rateBand.taxTypeCode))
-
-      userAnswers.setByKey(MissingRateBandsPage, regime, missingSPRRateBands)
     }
 }

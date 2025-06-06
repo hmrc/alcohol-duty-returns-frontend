@@ -28,7 +28,7 @@
         paragraph: Paragraph
 )
 
-@(form: Form[_], regime: AlcoholRegime)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("multipleSPRMissingDetails.title"))) {
 
@@ -45,6 +45,7 @@
         @pageHeading(messages("multipleSPRMissingDetails.heading"))
 
         @paragraph(messages("multipleSPRMissingDetails.guidance"))
+        @bulletList(missingRateBandDescriptions)
 
         @govukRadios(
             RadiosViewModel(

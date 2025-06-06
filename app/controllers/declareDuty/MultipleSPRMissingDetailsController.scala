@@ -18,18 +18,18 @@ package controllers.declareDuty
 
 import connectors.UserAnswersConnector
 import controllers.actions._
-import forms.declareDuty.{DoYouHaveMultipleSPRDutyRatesFormProvider, MultipleSPRMissingDetailsFormProvider}
-import models.{AlcoholRegime, Mode}
+import forms.declareDuty.MultipleSPRMissingDetailsFormProvider
+import models.AlcoholRegime
 import navigation.ReturnsNavigator
-import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, nextPages}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.declareDuty.{DoYouHaveMultipleSPRDutyRatesView, MultipleSPRMissingDetailsView}
+import viewmodels.declareDuty.MissingSPRRateBandHelper
+import views.html.declareDuty.MultipleSPRMissingDetailsView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class MultipleSPRMissingDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -50,7 +50,15 @@ class MultipleSPRMissingDetailsController @Inject() (
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      Ok(view(form, regime))
+      MissingSPRRateBandHelper.findMissingSPRRateBands(regime, request.userAnswers) match {
+        case Some(missingRateBands) if missingRateBands.nonEmpty =>
+          val missingRateBandDescriptions =
+            MissingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
+          Ok(view(form, regime, missingRateBandDescriptions))
+        case _                                                   =>
+          logger.warn("User has not selected multiple SPR rates or does not have missing SPR rate bands")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
     }
 
   def onSubmit(regime: AlcoholRegime): Action[AnyContent] =
