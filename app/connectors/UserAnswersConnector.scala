@@ -39,7 +39,12 @@ class UserAnswersConnector @Inject() (
       .get(url"${config.adrUserAnswersGetUrl(appaId, periodKey)}")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
+  // TODO - retry based on Http Response
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    actionSet(userAnswers)
+
+  // TODO - handle Http Response for retry. Fail future on all but success
+  def actionSet(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
       .put(url"${config.adrUserAnswersUrl()}")
       .setHeader("Csrf-Token" -> "nocheck")
