@@ -23,6 +23,8 @@ import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import scala.concurrent.duration.FiniteDuration
+
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
@@ -187,12 +189,19 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val spoiltDefaults: Map[String, String] = configuration
     .get[Map[String, String]]("spoilt-defaults")
 
-  private val spoiltReverseLookup: Map[String, String]                = spoiltDefaults.map(_.swap)
+  private val spoiltReverseLookup: Map[String, String] = spoiltDefaults.map(_.swap)
+
   def getRegimeNameByTaxTypeCode(taxTypeCode: String): Option[String] = spoiltReverseLookup.get(taxTypeCode)
-  def getTaxTypeCodeByRegime(regime: AlcoholRegime): String           = spoiltDefaults.getOrElse(
+
+  def getTaxTypeCodeByRegime(regime: AlcoholRegime): String = spoiltDefaults.getOrElse(
     regime.toString,
     throw new RuntimeException(
       s"Couldn't fetch spoilt tax type code for $regime regime"
     )
   )
+
+  // API retry attempts
+  lazy val retryAttempts: Int                 = configuration.get[Int]("microservice.services.retry.retry-attempts")
+  lazy val retryAttemptsDelay: FiniteDuration =
+    configuration.get[FiniteDuration]("microservice.services.retry.retry-attempts-delay")
 }

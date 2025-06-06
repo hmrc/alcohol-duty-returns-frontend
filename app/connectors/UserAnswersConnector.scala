@@ -18,6 +18,10 @@ package connectors
 
 import config.FrontendAppConfig
 import models.{ReturnId, UserAnswers}
+import org.apache.pekko.actor.{ActorSystem, Scheduler}
+import org.apache.pekko.pattern.retry
+import play.api.UnexpectedException
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -28,9 +32,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UserAnswersConnector @Inject() (
   config: FrontendAppConfig,
-  implicit val httpClient: HttpClientV2
+  implicit val httpClient: HttpClientV2,
+  implicit val system: ActorSystem
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances {
+
+  implicit val scheduler: Scheduler = system.scheduler
 
   def get(appaId: String, periodKey: String)(implicit
     hc: HeaderCarrier
@@ -40,11 +47,26 @@ class UserAnswersConnector @Inject() (
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    retry(
+      () => callSet(userAnswers),
+      attempts = config.retryAttempts,
+      delay = config.retryAttemptsDelay
+    ).recoverWith { e =>
+      Future.successful(HttpResponse(INTERNAL_SERVER_ERROR, e.getMessage))
+    }
+
+  private def callSet(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
       .put(url"${config.adrUserAnswersUrl()}")
       .setHeader("Csrf-Token" -> "nocheck")
       .withBody(Json.toJson(userAnswers))
       .execute[HttpResponse]
+      .flatMap { response =>
+        response.status match {
+          case OK => Future.successful(response)
+          case _  => Future.failed(throw UnexpectedException(Some(s"Failed to update user answers: ${response.status}")))
+        }
+      }
 
   def createUserAnswers(
     returnAndUserDetails: ReturnAndUserDetails

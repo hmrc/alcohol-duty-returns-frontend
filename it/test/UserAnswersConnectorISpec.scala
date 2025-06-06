@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, delete, equalToJson, get, post, put, urlMatching}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, delete, equalToJson, get, getRequestedFor, post, put, putRequestedFor, urlEqualTo, urlMatching}
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.Beer
 import models.{AlcoholRegimes, ReturnId, UserAnswers}
@@ -25,7 +25,19 @@ import play.api.libs.json.Json
 import java.time.Instant
 
 class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
-  override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.alcohol-duty-returns.port" -> server.port()).build()
+  override def fakeApplication(): Application = applicationBuilder(None)
+    .configure(
+      "microservice.services.alcohol-duty-returns.port" -> server.port(),
+      "microservice.services.retry.retry-attempts" -> 0
+    )
+    .build()
+
+  def fakeApplicationWithRetry(): Application = applicationBuilder(None)
+    .configure(
+      "microservice.services.alcohol-duty-returns.port" -> server.port(),
+      "microservice.services.retry.retry-attempts" -> 1
+    )
+    .build()
 
 "UserAnswersConnector" - {
 
@@ -100,7 +112,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
        }
      }
 
-     "fail to write user answers when the service returns an error" in new SetUp {
+     "fail to write user answers when the service returns an error without retry" in new SetUp {
        server.stubFor(
          put(urlMatching(userAnswersUrl))
            .withRequestBody(equalToJson(Json.stringify(Json.toJson(emptyUserAnswers))))
@@ -108,8 +120,24 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
        )
 
        whenReady(connector.set(emptyUserAnswers)) { result =>
-         result.status mustBe SERVICE_UNAVAILABLE
+         result.status mustBe INTERNAL_SERVER_ERROR
        }
+
+       server.verify(1, putRequestedFor(urlMatching(userAnswersUrl)))
+     }
+
+     "fail to write user answers when the service returns an error with retry" in new SetUp {
+       server.stubFor(
+         put(urlMatching(userAnswersUrl))
+           .withRequestBody(equalToJson(Json.stringify(Json.toJson(emptyUserAnswers))))
+           .willReturn(aResponse().withStatus(SERVICE_UNAVAILABLE))
+       )
+
+       whenReady(connectorWithRetry.set(emptyUserAnswers)) { result =>
+         result.status mustBe INTERNAL_SERVER_ERROR
+       }
+
+       server.verify(2, putRequestedFor(urlMatching(userAnswersUrl)))
      }
    }
 
@@ -163,7 +191,8 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
   }
 
   class SetUp {
-    val connector = app.injector.instanceOf[UserAnswersConnector]
+    val connector = fakeApplication().injector.instanceOf[UserAnswersConnector]
+    val connectorWithRetry = fakeApplicationWithRetry().injector.instanceOf[UserAnswersConnector]
     val userAnswers = UserAnswers(ReturnId(appaId, periodKey),"abc","xyz",  AlcoholRegimes(Set(Beer)), Json.obj(), Instant.now(clock), Instant.now(clock))
     val userAnswersGetUrl = s"/alcohol-duty-returns/user-answers/$appaId/$periodKey"
     val userAnswersUrl = "/alcohol-duty-returns/user-answers"

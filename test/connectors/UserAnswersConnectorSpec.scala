@@ -19,6 +19,7 @@ package connectors
 import base.SpecBase
 import config.FrontendAppConfig
 import models.UserAnswers
+import org.apache.pekko.actor.ActorSystem
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.libs.json.Json
@@ -169,7 +170,8 @@ class UserAnswersConnectorSpec extends SpecBase {
   class SetUp {
     val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
     val httpClient: HttpClientV2       = mock[HttpClientV2]
-    val connector                      = new UserAnswersConnector(config = mockConfig, httpClient = httpClient)
+    val actorSystem: ActorSystem       = mock[ActorSystem]
+    val connector                      = new UserAnswersConnector(config = mockConfig, httpClient = httpClient, actorSystem)
     val mockHttpResponse: HttpResponse = mock[HttpResponse]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
