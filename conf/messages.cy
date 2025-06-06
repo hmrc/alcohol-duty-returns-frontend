@@ -569,6 +569,14 @@ checkYourAnswersLabel.row.totalLitres = Cyfanswm y cyfaint
 checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 checkYourAnswersLabel.row.dutyRate = Cyfradd doll SPR
 
+multipleSPRMissingDetails.title = Mae gennych rai manylion sydd ar goll
+multipleSPRMissingDetails.heading = Mae gennych rai manylion sydd ar goll
+multipleSPRMissingDetails.guidance = Nid ydych wedi ychwanegu unrhyw fanylion ar gyfer yr alcohol a ddatganwyd gennych:
+multipleSPRMissingDetails.h2 = Beth y mae angen i chi ei wneud?
+multipleSPRMissingDetails.addDetails = 	Ychwanegu manylion ar gyfer y datganiadau hyn
+multipleSPRMissingDetails.removeDeclarations = Dileu’r datganiadau yma o’r ffurflen hon
+multipleSPRMissingDetails.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
+
 deleteMultipleSPREntry.title = Tynnu’r cofnod {0} hwn?
 deleteMultipleSPREntry.heading = Tynnu’r cofnod {0} hwn?
 deleteMultipleSPREntry.hint = Bydd y cofnod cynnyrch alcoholaidd hwn yn cael ei dynnu oddi wrth eich Datganiad.

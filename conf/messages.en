@@ -569,6 +569,14 @@ checkYourAnswersLabel.row.totalLitres = Total volume
 checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 checkYourAnswersLabel.row.dutyRate = SPR duty rate
 
+multipleSPRMissingDetails.title = You have some missing details
+multipleSPRMissingDetails.heading = You have some missing details
+multipleSPRMissingDetails.guidance = You have not added any details for these alcohols you declared:
+multipleSPRMissingDetails.h2 = What do you need to do?
+multipleSPRMissingDetails.addDetails = Add details for these declarations
+multipleSPRMissingDetails.removeDeclarations = Delete these declarations from this return
+multipleSPRMissingDetails.error.required = Select what you need to do
+
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?
 deleteMultipleSPREntry.hint = This alcoholic product entry will be removed from your return
