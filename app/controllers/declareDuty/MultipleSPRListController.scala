@@ -16,22 +16,22 @@
 
 package controllers.declareDuty
 
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.declareDuty.MultipleSPRListFormProvider
-
-import javax.inject.Inject
-import models.{AlcoholRegime, NormalMode}
+import models.{AlcoholRegime, NormalMode, RateBand, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, TellUsAboutMultipleSPRRatePage}
+import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, MissingRateBandsPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.UserAnswersConnector
-import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.declareDuty.MultipleSPRListHelper
 import views.html.declareDuty.MultipleSPRListView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Success, Try}
 
 class MultipleSPRListController @Inject() (
   override val messagesApi: MessagesApi,
@@ -80,14 +80,33 @@ class MultipleSPRListController @Inject() (
               ),
           value =>
             for {
-              updatedUserAnswers <-
+              updatedUserAnswers              <-
                 Future.fromTry(request.userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, value))
-              cleanedUserAnswers <-
-                Future.fromTry(updatedUserAnswers.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
-              _                  <- userAnswersConnector.set(cleanedUserAnswers)
+              userAnswersWithMissingRateBands <-
+                Future.fromTry(updateMissingRateBands(value, updatedUserAnswers, regime))
+              cleanedUserAnswers              <-
+                Future.fromTry(userAnswersWithMissingRateBands.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
+              _                               <- userAnswersConnector.set(cleanedUserAnswers)
             } yield Redirect(
               navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, NormalMode, cleanedUserAnswers, regime)
             )
         )
+    }
+
+  private def updateMissingRateBands(
+    selectedYes: Boolean,
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime
+  ): Try[UserAnswers] =
+    if (selectedYes) { Success(userAnswers) }
+    else {
+      val selectedSPRRateBands: Set[RateBand] =
+        userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime).map(_.filter(_.rateType.isSPR)).getOrElse(Set.empty)
+      val declaredSPRTaxTypes: Seq[String]    =
+        userAnswers.getByKey(MultipleSPRListPage, regime).map(_.map(_.taxType)).getOrElse(Seq.empty)
+      val missingSPRRateBands: Set[RateBand]  =
+        selectedSPRRateBands.filter(rateBand => !declaredSPRTaxTypes.contains(rateBand.taxTypeCode))
+
+      userAnswers.setByKey(MissingRateBandsPage, regime, missingSPRRateBands)
     }
 }

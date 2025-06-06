@@ -107,7 +107,13 @@ class ReturnsNavigator @Inject() () {
               ua.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
                 case Some(true)  =>
                   controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
-                case Some(false) => controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
+                case Some(false) =>
+                  ua.getByKey(MissingRateBandsPage, regime) match {
+                    case Some(missingRateBands) if missingRateBands.nonEmpty =>
+                      controllers.declareDuty.routes.MultipleSPRMissingDetailsController.onPageLoad(regime)
+                    case Some(_)                                             => controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
+                    case _                                                   => routes.TaskListController.onPageLoad
+                  }
                 case _           => routes.TaskListController.onPageLoad
               }
 
