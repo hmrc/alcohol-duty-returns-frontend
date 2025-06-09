@@ -23,10 +23,13 @@ import models.{AlcoholRegimes, CheckMode, NormalMode}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages.Page
 import pages.declareDuty.DeclareAlcoholDutyQuestionPage
+import viewmodels.declareDuty.MissingSPRRateBandHelper
 
 class ReturnsNavigatorSpec extends SpecBase {
 
-  val navigator = new ReturnsNavigator
+  val mockMissingSPRRateBandHelper = mock[MissingSPRRateBandHelper]
+
+  val navigator = new ReturnsNavigator(mockMissingSPRRateBandHelper)
   val regime    = regimeGen.sample.value
   val rateBands = genListOfRateBandForRegime(regime).sample.value
 

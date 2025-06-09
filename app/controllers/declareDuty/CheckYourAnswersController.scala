@@ -62,10 +62,10 @@ class CheckYourAnswersController @Inject() (
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.removePagesByKey(pagesToRemove, regime))
         _              <- userAnswersConnector.set(updatedAnswers)
-      } yield checkYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
+      } yield checkYourAnswersSummaryListHelper.createSummaryList(regime, updatedAnswers) match {
         case Some(summaryList) => Ok(view(regime, summaryList, removedRateBands))
         case None              =>
-          val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
+          val (appaId, periodKey) = (updatedAnswers.returnId.appaId, updatedAnswers.returnId.periodKey)
           logger.warn(
             s"Unable to retrieve summary list rows during declare duty CYA onPageLoad appa id: $appaId, period key: $periodKey"
           )

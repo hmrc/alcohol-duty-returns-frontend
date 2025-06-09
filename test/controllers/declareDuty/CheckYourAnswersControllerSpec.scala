@@ -40,7 +40,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(regime, returnSummaryList)(
+        contentAsString(result) mustEqual view(regime, returnSummaryList, None)(
           request,
           getMessages(application)
         ).toString
