@@ -123,14 +123,12 @@ class MissingSPRRateBandHelperSpec extends SpecBase {
 
   "getMissingRateBandDescriptions must" - {
     "return a Seq of HtmlContent containing the rate band descriptions" in {
-      val result = helper.getMissingRateBandDescriptions(Beer, missingSPRRateBands)
-
       val expectedResult = Seq(
         HtmlContent("Non-draught beer between 6% and 8% ABV (tax type code 127 SPR)"),
         HtmlContent("Draught beer between 1% and 3% ABV (tax type code 128 SPR)")
       )
 
-      result mustBe expectedResult
+      helper.getMissingRateBandDescriptions(Beer, missingSPRRateBands) mustBe expectedResult
     }
   }
 
