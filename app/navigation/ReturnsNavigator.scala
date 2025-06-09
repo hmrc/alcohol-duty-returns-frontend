@@ -23,9 +23,12 @@ import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, Smal
 import pages._
 import models._
 import pages.declareDuty._
+import viewmodels.declareDuty.MissingSPRRateBandHelper
 
 @Singleton
-class ReturnsNavigator @Inject() () {
+class ReturnsNavigator @Inject() (
+  missingSPRRateBandHelper: MissingSPRRateBandHelper
+) {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DeclareAlcoholDutyQuestionPage => userAnswers => declareAlcoholQuestionRoute(userAnswers, NormalMode)
@@ -108,12 +111,40 @@ class ReturnsNavigator @Inject() () {
                 case Some(true)  =>
                   controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
                 case Some(false) =>
-                  ua.getByKey(MissingRateBandsPage, regime) match {
+                  missingSPRRateBandHelper.findMissingSPRRateBands(regime, ua) match {
                     case Some(missingRateBands) if missingRateBands.nonEmpty =>
                       controllers.declareDuty.routes.MultipleSPRMissingDetailsController.onPageLoad(regime)
-                    case Some(_)                                             => controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
-                    case _                                                   => routes.TaskListController.onPageLoad
+                    case Some(_)                                             =>
+                      controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
+                    case _                                                   =>
+                      routes.TaskListController.onPageLoad
                   }
+                case _           => routes.TaskListController.onPageLoad
+              }
+
+    case MultipleSPRMissingDetailsPage =>
+      ua =>
+        regime =>
+          _ =>
+            _ =>
+              ua.getByKey(MultipleSPRMissingDetailsPage, regime) match {
+                case Some(true)  =>
+                  controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
+                case Some(false) =>
+                  controllers.declareDuty.routes.MultipleSPRMissingDetailsConfirmationController.onPageLoad(regime)
+                case _           => routes.TaskListController.onPageLoad
+              }
+
+    case MultipleSPRMissingDetailsConfirmationPage =>
+      ua =>
+        regime =>
+          _ =>
+            _ =>
+              ua.getByKey(MultipleSPRMissingDetailsConfirmationPage, regime) match {
+                case Some(true)  =>
+                  controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
+                case Some(false) =>
+                  controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
                 case _           => routes.TaskListController.onPageLoad
               }
 

@@ -21,7 +21,7 @@ import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 
-object MissingSPRRateBandHelper {
+class MissingSPRRateBandHelper {
   def findMissingSPRRateBands(regime: AlcoholRegime, userAnswers: UserAnswers): Option[Set[RateBand]] =
     if (userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime).contains(true)) {
       for {

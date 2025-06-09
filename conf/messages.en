@@ -7,6 +7,7 @@ site.no = No
 site.yes = Yes
 site.continue = Continue
 site.saveAndContinue = Save and continue
+site.confirmAndContinue = Confirm and continue
 site.saveAndReturn = Save and return to your business tax account
 site.agreeAndSubmit = Agree and send return
 site.payNow = Pay now
@@ -576,6 +577,14 @@ multipleSPRMissingDetails.h2 = What do you need to do?
 multipleSPRMissingDetails.addDetails = Add details for these declarations
 multipleSPRMissingDetails.removeDeclarations = Delete these declarations from this return
 multipleSPRMissingDetails.error.required = Select what you need to do
+
+multipleSPRMissingDetailsConfirmation.title = Are you sure you want to delete these declarations from your return?
+multipleSPRMissingDetailsConfirmation.heading = Are you sure you want to delete these declarations from your return?
+multipleSPRMissingDetailsConfirmation.guidance = We will delete your declarations for:
+multipleSPRMissingDetailsConfirmation.hidden = Are you sure you want to delete these declarations from your return?
+multipleSPRMissingDetailsConfirmation.yes = Yes, delete these declarations
+multipleSPRMissingDetailsConfirmation.no = No, I want to go back and add details for these declarations
+multipleSPRMissingDetailsConfirmation.error.required = Select what you need to do
 
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?

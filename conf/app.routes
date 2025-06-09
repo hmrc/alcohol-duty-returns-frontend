@@ -96,6 +96,9 @@ POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty
 GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/missing-details                  controllers.declareDuty.MultipleSPRMissingDetailsController.onPageLoad(regime:AlcoholRegime)
 POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/missing-details                  controllers.declareDuty.MultipleSPRMissingDetailsController.onSubmit(regime:AlcoholRegime)
 
+GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/missing-details/confirmation        controllers.declareDuty.MultipleSPRMissingDetailsConfirmationController.onPageLoad(regime:AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/missing-details/confirmation        controllers.declareDuty.MultipleSPRMissingDetailsConfirmationController.onSubmit(regime:AlcoholRegime)
+
 GET        /complete-return/alcoholic-products/:regime/declare/duty-due                                  controllers.declareDuty.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
 POST       /complete-return/alcoholic-products/:regime/declare/duty-due                                  controllers.declareDuty.DutyCalculationController.onSubmit(regime:AlcoholRegime)
 # End of product entry sub-journey

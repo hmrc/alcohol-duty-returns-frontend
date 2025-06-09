@@ -18,21 +18,21 @@ package controllers.declareDuty
 
 import connectors.UserAnswersConnector
 import controllers.actions._
-import forms.declareDuty.MultipleSPRMissingDetailsFormProvider
+import forms.declareDuty.MultipleSPRMissingDetailsConfirmationFormProvider
 import models.{AlcoholRegime, NormalMode}
 import navigation.ReturnsNavigator
-import pages.declareDuty.MultipleSPRMissingDetailsPage
+import pages.declareDuty.{MissingRateBandsPage, MultipleSPRMissingDetailsConfirmationPage}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.declareDuty.MissingSPRRateBandHelper
-import views.html.declareDuty.MultipleSPRMissingDetailsView
+import views.html.declareDuty.MultipleSPRMissingDetailsConfirmationView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class MultipleSPRMissingDetailsController @Inject() (
+class MultipleSPRMissingDetailsConfirmationController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
@@ -40,9 +40,9 @@ class MultipleSPRMissingDetailsController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   missingSPRRateBandHelper: MissingSPRRateBandHelper,
-  formProvider: MultipleSPRMissingDetailsFormProvider,
+  formProvider: MultipleSPRMissingDetailsConfirmationFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: MultipleSPRMissingDetailsView
+  view: MultipleSPRMissingDetailsConfirmationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -58,7 +58,7 @@ class MultipleSPRMissingDetailsController @Inject() (
             missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
           Ok(view(form, regime, missingRateBandDescriptions))
         case _                                                   =>
-          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetails page")
+          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }
@@ -77,15 +77,23 @@ class MultipleSPRMissingDetailsController @Inject() (
               },
               value =>
                 for {
-                  updatedAnswers <-
-                    Future.fromTry(request.userAnswers.setByKey(MultipleSPRMissingDetailsPage, regime, value))
-                  _              <- userAnswersConnector.set(updatedAnswers)
+                  updatedAnswers                     <-
+                    Future
+                      .fromTry(request.userAnswers.setByKey(MultipleSPRMissingDetailsConfirmationPage, regime, value))
+                  updatedAnswersWithMissingRateBands <-
+                    Future.fromTry(updatedAnswers.setByKey(MissingRateBandsPage, regime, missingRateBands))
+                  _                                  <- userAnswersConnector.set(updatedAnswersWithMissingRateBands)
                 } yield Redirect(
-                  navigator.nextPageWithRegime(MultipleSPRMissingDetailsPage, NormalMode, updatedAnswers, regime)
+                  navigator.nextPageWithRegime(
+                    MultipleSPRMissingDetailsConfirmationPage,
+                    NormalMode,
+                    updatedAnswersWithMissingRateBands,
+                    regime
+                  )
                 )
             )
         case _                                                   =>
-          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetails page")
+          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
     }
