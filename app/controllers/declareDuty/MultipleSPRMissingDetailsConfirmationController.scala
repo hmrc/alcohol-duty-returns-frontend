@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.declareDuty.MultipleSPRMissingDetailsConfirmationFormProvider
 import models.{AlcoholRegime, NormalMode}
 import navigation.ReturnsNavigator
-import pages.declareDuty.{MissingRateBandsPage, MultipleSPRMissingDetailsConfirmationPage}
+import pages.declareDuty.MultipleSPRMissingDetailsConfirmationPage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -77,17 +77,20 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
               },
               value =>
                 for {
-                  updatedAnswers                     <-
+                  updatedAnswers                 <-
                     Future
                       .fromTry(request.userAnswers.setByKey(MultipleSPRMissingDetailsConfirmationPage, regime, value))
-                  updatedAnswersWithMissingRateBands <-
-                    Future.fromTry(updatedAnswers.setByKey(MissingRateBandsPage, regime, missingRateBands))
-                  _                                  <- userAnswersConnector.set(updatedAnswersWithMissingRateBands)
+                  answersWithRemovedDeclarations <-
+                    Future.fromTry(
+                      missingSPRRateBandHelper
+                        .removeMissingRateBandDeclarations(value, regime, updatedAnswers, missingRateBands)
+                    )
+                  _                              <- userAnswersConnector.set(answersWithRemovedDeclarations)
                 } yield Redirect(
                   navigator.nextPageWithRegime(
                     MultipleSPRMissingDetailsConfirmationPage,
                     NormalMode,
-                    updatedAnswersWithMissingRateBands,
+                    answersWithRemovedDeclarations,
                     regime
                   )
                 )

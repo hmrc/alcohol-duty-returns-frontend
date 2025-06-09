@@ -569,6 +569,7 @@ multipleSPRList.action.label = Camau
 checkYourAnswersLabel.row.totalLitres = Cyfanswm y cyfaint
 checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 checkYourAnswersLabel.row.dutyRate = Cyfradd doll SPR
+checkYourAnswers.notificationBanner.heading = Rydych wedi llwyddo i ddileu datganiadau ar gyfer:
 
 multipleSPRMissingDetails.title = Mae gennych rai manylion sydd ar goll
 multipleSPRMissingDetails.heading = Mae gennych rai manylion sydd ar goll

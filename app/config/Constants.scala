@@ -120,10 +120,11 @@ object Constants {
     val pinkCssClass         = "govuk-tag--pink"
     val orangeCssClass       = "govuk-tag--orange"
 
-    val headingXLCssClass = "govuk-heading-xl"
-    val headingLCssClass  = "govuk-heading-l"
-    val headingMCssClass  = "govuk-heading-m"
-    val headingSCssClass  = "govuk-heading-s"
+    val headingXLCssClass                 = "govuk-heading-xl"
+    val headingLCssClass                  = "govuk-heading-l"
+    val headingMCssClass                  = "govuk-heading-m"
+    val headingSCssClass                  = "govuk-heading-s"
+    val headingNotificationBannerCssClass = "govuk-notification-banner__heading"
 
     val labelXLCssClass = "govuk-label--xl"
     val labelLCssClass  = "govuk-label--l"

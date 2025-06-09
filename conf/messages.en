@@ -569,6 +569,7 @@ multipleSPRList.action.label = Action
 checkYourAnswersLabel.row.totalLitres = Total volume
 checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 checkYourAnswersLabel.row.dutyRate = SPR duty rate
+checkYourAnswers.notificationBanner.heading = You have successfully removed declarations for:
 
 multipleSPRMissingDetails.title = You have some missing details
 multipleSPRMissingDetails.heading = You have some missing details

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading}
+@import components.{Caption, NotificationBannerWithBulletList, PageHeading}
 @import viewmodels.declareDuty.ReturnSummaryList
 
 @this(
@@ -22,11 +22,12 @@
         govukButton: GovukButton,
         caption: Caption,
         pageHeading: PageHeading,
-        govukSummaryList : GovukSummaryList
+        notificationBannerWithBulletList: NotificationBannerWithBulletList,
+        govukSummaryList: GovukSummaryList,
+        govukNotificationBanner: GovukNotificationBanner
 )
 
-
-@(regime: AlcoholRegime, summaryList:ReturnSummaryList)(implicit request: Request[_], messages: Messages)
+@(regime: AlcoholRegime, summaryList: ReturnSummaryList, removedRateBands: Option[Seq[HtmlContent]])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -36,6 +37,16 @@
     )
 
     @pageHeading(messages("checkYourAnswers.heading"))
+
+    @removedRateBands.map { rateBands =>
+        @govukNotificationBanner(NotificationBanner(
+            content = HtmlContent(notificationBannerWithBulletList(
+                heading = messages("checkYourAnswers.notificationBanner.heading"),
+                bulletListElements = rateBands
+            )),
+            bannerType = Some("success")
+        ))
+    }
 
     @govukSummaryList(summaryList.whatDoYouNeedToDeclareSummary)
 
@@ -48,7 +59,7 @@
     }
 
     @govukButton(
-      ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+        ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         .asLink(controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
     )
 

@@ -17,9 +17,11 @@
 package viewmodels.declareDuty
 
 import models.{AlcoholRegime, RateBand, UserAnswers}
-import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty._
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+
+import scala.util.{Success, Try}
 
 class MissingSPRRateBandHelper {
   def findMissingSPRRateBands(regime: AlcoholRegime, userAnswers: UserAnswers): Option[Set[RateBand]] =
@@ -39,4 +41,24 @@ class MissingSPRRateBandHelper {
       HtmlContent(RateBandDescription.toDescription(rateBand, Some(regime)).capitalize)
     }
 
+  def removeMissingRateBandDeclarations(
+    shouldRemoveDeclarations: Boolean,
+    regime: AlcoholRegime,
+    userAnswers: UserAnswers,
+    missingRateBands: Set[RateBand]
+  ): Try[UserAnswers] =
+    if (shouldRemoveDeclarations) {
+      val selectedRateBands        = userAnswers
+        .getByKey(WhatDoYouNeedToDeclarePage, regime)
+        .getOrElse(
+          throw new RuntimeException(s"Couldn't fetch selected rate bands for $regime from user answers")
+        )
+      val updatedSelectedRateBands = selectedRateBands.diff(missingRateBands)
+
+      userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, updatedSelectedRateBands).flatMap {
+        _.setByKey(MissingRateBandsToDeletePage, regime, missingRateBands)
+      }
+    } else {
+      Success(userAnswers)
+    }
 }

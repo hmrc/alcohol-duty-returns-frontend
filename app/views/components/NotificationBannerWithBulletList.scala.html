@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package pages.declareDuty
+@import components.BulletList
+@import config.Constants.Css
 
-import models.{AlcoholRegime, RateBand}
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+@this(
+        bulletList: BulletList
+)
 
-case object MissingRateBandsPage extends QuestionPage[Map[AlcoholRegime, Set[RateBand]]] {
+@(heading: String, bulletListElements: Seq[Content], classes: String = Css.headingNotificationBannerCssClass)
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "missingRateBands"
-}
+<h3 class="@classes">@heading</h3>
+@bulletList(bulletListElements)
