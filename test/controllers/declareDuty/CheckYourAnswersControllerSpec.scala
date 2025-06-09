@@ -17,20 +17,34 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import models.AlcoholRegime.Beer
-import play.api.i18n.Messages
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.declareDuty.{MissingRateBandsToDeletePage, MultipleSPRMissingDetailsConfirmationPage, MultipleSPRMissingDetailsPage}
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow, Value}
+import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, ReturnSummaryList}
 import views.html.declareDuty.CheckYourAnswersView
 
+import scala.concurrent.Future
+
 class CheckYourAnswersControllerSpec extends SpecBase {
   "CheckYourAnswers Controller" - {
-    "must return OK and the correct view for a GET" in new SetUp {
-      when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers))
-        .thenReturn(Some(returnSummaryList))
+    "must return OK and the correct view for a GET when no missing rate bands have just been removed" in new SetUp {
+      when(
+        mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(regime), eqTo(emptyUserAnswers))(any())
+      ) thenReturn Some(returnSummaryList)
+      when(mockUserAnswersConnector.set(eqTo(emptyUserAnswers))(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
+        .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
@@ -44,11 +58,78 @@ class CheckYourAnswersControllerSpec extends SpecBase {
           request,
           getMessages(application)
         ).toString
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(emptyUserAnswers))(any())
+      }
+    }
+
+    "must return OK and the correct view for a GET (with notification banner) when some rate bands have just been removed" in new SetUp {
+      val userAnswersWithPagesToDelete =
+        emptyUserAnswers
+          .setByKey(MultipleSPRMissingDetailsPage, Beer, false)
+          .success
+          .value
+          .setByKey(MultipleSPRMissingDetailsConfirmationPage, Beer, true)
+          .success
+          .value
+          .setByKey(
+            MissingRateBandsToDeletePage,
+            Beer,
+            Set(smallProducerReliefRateBand2, draughtAndSmallProducerReliefRateBand2)
+          )
+          .success
+          .value
+
+      val expectedCachedUserAnswers = emptyUserAnswers.copy(data =
+        Json.obj(
+          MultipleSPRMissingDetailsPage.toString             -> Json.obj(),
+          MultipleSPRMissingDetailsConfirmationPage.toString -> Json.obj(),
+          MissingRateBandsToDeletePage.toString              -> Json.obj()
+        )
+      )
+
+      when(
+        mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(Beer), eqTo(expectedCachedUserAnswers))(any())
+      ) thenReturn Some(returnSummaryList)
+      when(mockUserAnswersConnector.set(eqTo(expectedCachedUserAnswers))(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithPagesToDelete))
+        .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
+        .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Beer).url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        val removedRateBandDescriptions = Seq(
+          HtmlContent("Non-draught beer between 6% and 8% ABV (tax type code 127 SPR)"),
+          HtmlContent("Draught beer between 1% and 3% ABV (tax type code 128 SPR)")
+        )
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(Beer, returnSummaryList, Some(removedRateBandDescriptions))(
+          request,
+          getMessages(application)
+        ).toString
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
       }
     }
 
     "must redirect to the Journey Recovery page when no summary can be returned" in new SetUp {
-      when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers)).thenReturn(None)
+      when(
+        mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(regime), eqTo(emptyUserAnswers))(any())
+      ) thenReturn None
+      when(mockUserAnswersConnector.set(eqTo(emptyUserAnswers))(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
+        .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
@@ -57,6 +138,8 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(emptyUserAnswers))(any())
       }
     }
 
@@ -64,12 +147,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       val mockCheckYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper =
         mock[CheckYourAnswersSummaryListHelper]
 
-      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
-        .build()
-      implicit val messages: Messages = getMessages(application)
+      val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
 
-      val regime = Beer
+      val regime = regimeGen.sample.value
 
       val summaryList1 = SummaryList(rows =
         Seq(SummaryListRow(key = Key(content = Text("Key1")), value = Value(content = Text("Value1"))))
