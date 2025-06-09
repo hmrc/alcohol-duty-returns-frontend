@@ -19,7 +19,7 @@
 @this()
 
 @(id: String, text: String, href: Call, visuallyHiddenContent: Option[String] = None, classes: String = Css.linkNoVisitedStateCssClass)
-<a id="@id" href="@href" class="@classes govuk-link">
+<a id="@id" href="@href" class="@classes">
     @text
     <span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span>
 </a>
