@@ -31,13 +31,8 @@ class MissingSPRRateBandHelperSpec extends SpecBase {
 
   val regime = regimeGen.sample.value
 
-  val declaredNonSPRRateBands = Set(coreRateBand, draughtReliefRateBand) // tax type codes: 123, 124
-  val declaredSPRRateBands    = Set(
-    smallProducerReliefRateBand,
-    smallProducerReliefRateBand2,
-    draughtAndSmallProducerReliefRateBand,
-    draughtAndSmallProducerReliefRateBand2
-  ) // tax type codes: 125-128
+  val declaredNonSPRRateBands = MultipleSPRMissingDetails.declaredNonSPRRateBands(regime)
+  val declaredSPRRateBands    = MultipleSPRMissingDetails.declaredSPRRateBands(regime)
   val allDeclaredRateBands    = declaredNonSPRRateBands ++ declaredSPRRateBands
 
   val multipleSPRListItems            = Seq(
@@ -51,7 +46,7 @@ class MissingSPRRateBandHelperSpec extends SpecBase {
     volumeAndRateByTaxType3
   )
 
-  val missingSPRRateBands = Set(smallProducerReliefRateBand2, draughtAndSmallProducerReliefRateBand2)
+  val missingSPRRateBands = MultipleSPRMissingDetails.missingSPRRateBands(regime)
 
   "findMissingSPRRateBands must" - {
     "return None if the multiple SPR option has not been selected" in {
@@ -123,12 +118,9 @@ class MissingSPRRateBandHelperSpec extends SpecBase {
 
   "getMissingRateBandDescriptions must" - {
     "return a Seq of HtmlContent containing the rate band descriptions" in {
-      val expectedResult = Seq(
-        HtmlContent("Non-draught beer between 6% and 8% ABV (tax type code 127 SPR)"),
-        HtmlContent("Draught beer between 1% and 3% ABV (tax type code 128 SPR)")
-      )
+      val missingRateBandDescriptions = MultipleSPRMissingDetails.missingRateBandDescriptions(regime)
 
-      helper.getMissingRateBandDescriptions(Beer, missingSPRRateBands) mustBe expectedResult
+      helper.getMissingRateBandDescriptions(regime, missingSPRRateBands) mustBe missingRateBandDescriptions
     }
   }
 

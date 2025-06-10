@@ -19,8 +19,8 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.AlcoholRegime.Beer
-import models.{AlcoholRegimes, CheckMode, NormalMode}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
+import models.{AlcoholRegimes, CheckMode, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.Page

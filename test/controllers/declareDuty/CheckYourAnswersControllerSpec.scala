@@ -18,14 +18,13 @@ package controllers.declareDuty
 
 import base.SpecBase
 import connectors.UserAnswersConnector
-import models.AlcoholRegime.Beer
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.{MissingRateBandsToDeletePage, MultipleSPRMissingDetailsConfirmationPage, MultipleSPRMissingDetailsPage}
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow, Value}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, ReturnSummaryList}
@@ -66,17 +65,13 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET (with notification banner) when some rate bands have just been removed" in new SetUp {
       val userAnswersWithPagesToDelete =
         emptyUserAnswers
-          .setByKey(MultipleSPRMissingDetailsPage, Beer, false)
+          .setByKey(MultipleSPRMissingDetailsPage, regime, false)
           .success
           .value
-          .setByKey(MultipleSPRMissingDetailsConfirmationPage, Beer, true)
+          .setByKey(MultipleSPRMissingDetailsConfirmationPage, regime, true)
           .success
           .value
-          .setByKey(
-            MissingRateBandsToDeletePage,
-            Beer,
-            Set(smallProducerReliefRateBand2, draughtAndSmallProducerReliefRateBand2)
-          )
+          .setByKey(MissingRateBandsToDeletePage, regime, MultipleSPRMissingDetails.missingSPRRateBands(regime))
           .success
           .value
 
@@ -89,7 +84,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       )
 
       when(
-        mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(Beer), eqTo(expectedCachedUserAnswers))(any())
+        mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(regime), eqTo(expectedCachedUserAnswers))(any())
       ) thenReturn Some(returnSummaryList)
       when(mockUserAnswersConnector.set(eqTo(expectedCachedUserAnswers))(any())) thenReturn Future.successful(
         mock[HttpResponse]
@@ -101,19 +96,16 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Beer).url)
+        val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val removedRateBandDescriptions = Seq(
-          HtmlContent("Non-draught beer between 6% and 8% ABV (tax type code 127 SPR)"),
-          HtmlContent("Draught beer between 1% and 3% ABV (tax type code 128 SPR)")
-        )
+        val removedRateBandDescriptions = MultipleSPRMissingDetails.missingRateBandDescriptions(regime)
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(Beer, returnSummaryList, Some(removedRateBandDescriptions))(
+        contentAsString(result) mustEqual view(regime, returnSummaryList, Some(removedRateBandDescriptions))(
           request,
           getMessages(application)
         ).toString
