@@ -22,7 +22,7 @@ import play.api.data.FormError
 class MultipleSPRMissingDetailsConfirmationFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "multipleSPRMissingDetailsConfirmation.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new MultipleSPRMissingDetailsConfirmationFormProvider()()
 

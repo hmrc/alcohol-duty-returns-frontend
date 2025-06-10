@@ -31,13 +31,6 @@
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    @caption(
-        id = "checkYourAnswers-section",
-        text = messages(s"section.return.$regime")
-    )
-
-    @pageHeading(messages("checkYourAnswers.heading"))
-
     @removedRateBands.map { rateBands =>
         @govukNotificationBanner(NotificationBanner(
             content = HtmlContent(notificationBannerWithBulletList(
@@ -47,6 +40,13 @@
             bannerType = Some("success")
         ))
     }
+
+    @caption(
+        id = "checkYourAnswers-section",
+        text = messages(s"section.return.$regime")
+    )
+
+    @pageHeading(messages("checkYourAnswers.heading"))
 
     @govukSummaryList(summaryList.whatDoYouNeedToDeclareSummary)
 
@@ -62,5 +62,4 @@
         ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         .asLink(controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
     )
-
 }

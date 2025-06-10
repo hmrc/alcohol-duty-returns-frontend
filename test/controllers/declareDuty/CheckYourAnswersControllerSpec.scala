@@ -91,7 +91,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       when(
         mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(Beer), eqTo(expectedCachedUserAnswers))(any())
       ) thenReturn Some(returnSummaryList)
-      when(mockUserAnswersConnector.set(eqTo(expectedCachedUserAnswers))(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(eqTo(expectedCachedUserAnswers))(any())) thenReturn Future.successful(
+        mock[HttpResponse]
+      )
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithPagesToDelete))
         .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
