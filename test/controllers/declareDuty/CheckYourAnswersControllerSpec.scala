@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow, Value}
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, ReturnSummaryList}
+import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, MissingSPRRateBandHelper, ReturnSummaryList}
 import views.html.declareDuty.CheckYourAnswersView
 
 import scala.concurrent.Future
@@ -38,11 +38,11 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       when(
         mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(regime), eqTo(emptyUserAnswers))(any())
       ) thenReturn Some(returnSummaryList)
-      when(mockUserAnswersConnector.set(eqTo(emptyUserAnswers))(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
         .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        .overrides(bind[MissingSPRRateBandHelper].toInstance(mockMissingSPRRateBandHelper))
         .build()
 
       running(application) {
@@ -58,11 +58,17 @@ class CheckYourAnswersControllerSpec extends SpecBase {
           getMessages(application)
         ).toString
 
+        verify(mockCheckYourAnswersSummaryListHelper, times(1))
+          .createSummaryList(eqTo(regime), eqTo(emptyUserAnswers))(any())
         verify(mockUserAnswersConnector, times(1)).set(eqTo(emptyUserAnswers))(any())
+        verify(mockMissingSPRRateBandHelper, times(0)).getMissingRateBandDescriptions(any(), any())(any())
       }
     }
 
     "must return OK and the correct view for a GET (with notification banner) when some rate bands have just been removed" in new SetUp {
+      val missingSPRRateBands         = MultipleSPRMissingDetails.missingSPRRateBands(regime)
+      val removedRateBandDescriptions = MultipleSPRMissingDetails.missingRateBandDescriptions(regime)
+
       val userAnswersWithPagesToDelete =
         emptyUserAnswers
           .setByKey(MultipleSPRMissingDetailsPage, regime, false)
@@ -71,7 +77,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
           .setByKey(MultipleSPRMissingDetailsConfirmationPage, regime, true)
           .success
           .value
-          .setByKey(MissingRateBandsToDeletePage, regime, MultipleSPRMissingDetails.missingSPRRateBands(regime))
+          .setByKey(MissingRateBandsToDeletePage, regime, missingSPRRateBands)
           .success
           .value
 
@@ -86,13 +92,15 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       when(
         mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(regime), eqTo(expectedCachedUserAnswers))(any())
       ) thenReturn Some(returnSummaryList)
-      when(mockUserAnswersConnector.set(eqTo(expectedCachedUserAnswers))(any())) thenReturn Future.successful(
-        mock[HttpResponse]
-      )
+
+      when(
+        mockMissingSPRRateBandHelper.getMissingRateBandDescriptions(eqTo(regime), eqTo(missingSPRRateBands))(any())
+      ) thenReturn removedRateBandDescriptions
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithPagesToDelete))
         .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
         .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        .overrides(bind[MissingSPRRateBandHelper].toInstance(mockMissingSPRRateBandHelper))
         .build()
 
       running(application) {
@@ -102,15 +110,17 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val removedRateBandDescriptions = MultipleSPRMissingDetails.missingRateBandDescriptions(regime)
-
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(regime, returnSummaryList, Some(removedRateBandDescriptions))(
           request,
           getMessages(application)
         ).toString
 
+        verify(mockCheckYourAnswersSummaryListHelper, times(1))
+          .createSummaryList(eqTo(regime), eqTo(expectedCachedUserAnswers))(any())
         verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
+        verify(mockMissingSPRRateBandHelper, times(1))
+          .getMissingRateBandDescriptions(eqTo(regime), eqTo(missingSPRRateBands))(any())
       }
     }
 
@@ -118,11 +128,11 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       when(
         mockCheckYourAnswersSummaryListHelper.createSummaryList(eqTo(regime), eqTo(emptyUserAnswers))(any())
       ) thenReturn None
-      when(mockUserAnswersConnector.set(eqTo(emptyUserAnswers))(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
         .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        .overrides(bind[MissingSPRRateBandHelper].toInstance(mockMissingSPRRateBandHelper))
         .build()
 
       running(application) {
@@ -133,7 +143,10 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
+        verify(mockCheckYourAnswersSummaryListHelper, times(1))
+          .createSummaryList(eqTo(regime), eqTo(emptyUserAnswers))(any())
         verify(mockUserAnswersConnector, times(1)).set(eqTo(emptyUserAnswers))(any())
+        verify(mockMissingSPRRateBandHelper, times(0)).getMissingRateBandDescriptions(any(), any())(any())
       }
     }
 
@@ -142,6 +155,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         mock[CheckYourAnswersSummaryListHelper]
 
       val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val mockMissingSPRRateBandHelper: MissingSPRRateBandHelper = mock[MissingSPRRateBandHelper]
 
       val regime = regimeGen.sample.value
 

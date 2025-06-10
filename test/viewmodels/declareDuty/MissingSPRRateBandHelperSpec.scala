@@ -17,10 +17,8 @@
 package viewmodels.declareDuty
 
 import base.SpecBase
-import models.AlcoholRegime.Beer
 import pages.declareDuty._
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 
 import scala.util.Success
 

@@ -18,7 +18,7 @@ package controllers.declareDuty
 
 import base.SpecBase
 import connectors.UserAnswersConnector
-import forms.declareDuty.MultipleSPRMissingDetailsFormProvider
+import forms.declareDuty.MultipleSPRMissingDetailsConfirmationFormProvider
 import models.NormalMode
 import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
@@ -29,20 +29,21 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.MissingSPRRateBandHelper
-import views.html.declareDuty.MultipleSPRMissingDetailsView
+import views.html.declareDuty.MultipleSPRMissingDetailsConfirmationView
 
 import scala.concurrent.Future
+import scala.util.Success
 
-class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
+class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new MultipleSPRMissingDetailsFormProvider()
+  val formProvider = new MultipleSPRMissingDetailsConfirmationFormProvider()
   val form         = formProvider()
   val regime       = regimeGen.sample.value
 
-  lazy val multipleSPRMissingDetailsRoute =
-    controllers.declareDuty.routes.MultipleSPRMissingDetailsController.onPageLoad(regime).url
+  lazy val multipleSPRMissingDetailsConfirmationRoute =
+    controllers.declareDuty.routes.MultipleSPRMissingDetailsConfirmationController.onPageLoad(regime).url
 
   val declaredNonSPRRateBands = MultipleSPRMissingDetails.declaredNonSPRRateBands(regime)
   val declaredSPRRateBands    = MultipleSPRMissingDetails.declaredSPRRateBands(regime)
@@ -84,11 +85,12 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
     when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
     when(
-      mockReturnsNavigator.nextPageWithRegime(eqTo(MultipleSPRMissingDetailsPage), any(), any(), any(), any(), any())
+      mockReturnsNavigator
+        .nextPageWithRegime(eqTo(MultipleSPRMissingDetailsConfirmationPage), any(), any(), any(), any(), any())
     ) thenReturn onwardRoute
   }
 
-  "MultipleSPRMissingDetails Controller" - {
+  "MultipleSPRMissingDetailsConfirmation Controller" - {
     "must return OK and the correct view for a GET" in {
       when(
         mockMissingSPRRateBandHelper.findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
@@ -103,11 +105,11 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, multipleSPRMissingDetailsRoute)
+        val request = FakeRequest(GET, multipleSPRMissingDetailsConfirmationRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[MultipleSPRMissingDetailsView]
+        val view = application.injector.instanceOf[MultipleSPRMissingDetailsConfirmationView]
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, missingRateBandDescriptions)(
@@ -123,9 +125,28 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
+      val expectedCachedUserAnswers = userAnswersWithMissingRateBands
+        .setByKey(WhatDoYouNeedToDeclarePage, regime, allDeclaredRateBands.diff(missingSPRRateBands))
+        .success
+        .value
+        .setByKey(MultipleSPRMissingDetailsConfirmationPage, regime, true)
+        .success
+        .value
+        .setByKey(MissingRateBandsToDeletePage, regime, missingSPRRateBands)
+        .success
+        .value
+
       when(
         mockMissingSPRRateBandHelper.findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
       ) thenReturn Some(missingSPRRateBands)
+      when(
+        mockMissingSPRRateBandHelper.removeMissingRateBandDeclarations(
+          eqTo(true),
+          eqTo(regime),
+          any(),
+          eqTo(missingSPRRateBands)
+        )
+      ) thenReturn Success(expectedCachedUserAnswers)
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithMissingRateBands))
         .overrides(
@@ -137,8 +158,8 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, multipleSPRMissingDetailsRoute)
-            .withFormUrlEncodedBody(("addDeclarationDetails", "true"))
+          FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
+            .withFormUrlEncodedBody(("deleteMissingDeclarations", "true"))
 
         val result = route(application, request).value
 
@@ -147,11 +168,17 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
         verify(mockMissingSPRRateBandHelper, times(1))
           .findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockReturnsNavigator, times(1)).nextPageWithRegime(
-          eqTo(MultipleSPRMissingDetailsPage),
-          eqTo(NormalMode),
+        verify(mockMissingSPRRateBandHelper, times(1)).removeMissingRateBandDeclarations(
+          eqTo(true),
+          eqTo(regime),
           any(),
+          eqTo(missingSPRRateBands)
+        )
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
+        verify(mockReturnsNavigator, times(1)).nextPageWithRegime(
+          eqTo(MultipleSPRMissingDetailsConfirmationPage),
+          eqTo(NormalMode),
+          eqTo(expectedCachedUserAnswers),
           eqTo(regime),
           eqTo(false),
           eqTo(None)
@@ -174,12 +201,12 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, multipleSPRMissingDetailsRoute)
-            .withFormUrlEncodedBody(("addDeclarationDetails", ""))
+          FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
+            .withFormUrlEncodedBody(("deleteMissingDeclarations", ""))
 
-        val boundForm = form.bind(Map("addDeclarationDetails" -> ""))
+        val boundForm = form.bind(Map("deleteMissingDeclarations" -> ""))
 
-        val view = application.injector.instanceOf[MultipleSPRMissingDetailsView]
+        val view = application.injector.instanceOf[MultipleSPRMissingDetailsConfirmationView]
 
         val result = route(application, request).value
 
@@ -200,7 +227,7 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, multipleSPRMissingDetailsRoute)
+        val request = FakeRequest(GET, multipleSPRMissingDetailsConfirmationRoute)
 
         val result = route(application, request).value
 
@@ -222,7 +249,7 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, multipleSPRMissingDetailsRoute)
+        val request = FakeRequest(GET, multipleSPRMissingDetailsConfirmationRoute)
 
         val result = route(application, request).value
 
@@ -247,7 +274,7 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, multipleSPRMissingDetailsRoute)
+        val request = FakeRequest(GET, multipleSPRMissingDetailsConfirmationRoute)
 
         val result = route(application, request).value
 
@@ -264,8 +291,8 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, multipleSPRMissingDetailsRoute)
-            .withFormUrlEncodedBody(("addDeclarationDetails", "true"))
+          FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
+            .withFormUrlEncodedBody(("deleteMissingDeclarations", "true"))
 
         val result = route(application, request).value
 
@@ -288,8 +315,8 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, multipleSPRMissingDetailsRoute)
-            .withFormUrlEncodedBody(("addDeclarationDetails", "true"))
+          FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
+            .withFormUrlEncodedBody(("deleteMissingDeclarations", "true"))
 
         val result = route(application, request).value
 
@@ -315,8 +342,8 @@ class MultipleSPRMissingDetailsControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, multipleSPRMissingDetailsRoute)
-            .withFormUrlEncodedBody(("addDeclarationDetails", "true"))
+          FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
+            .withFormUrlEncodedBody(("deleteMissingDeclarations", "true"))
 
         val result = route(application, request).value
 
