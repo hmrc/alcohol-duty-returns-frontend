@@ -41,23 +41,21 @@ class MissingSPRRateBandHelper {
       HtmlContent(RateBandDescription.toDescription(rateBand, Some(regime)).capitalize)
     }
 
-  def removeMissingRateBandDeclarations(
-    shouldRemoveDeclarations: Boolean,
+  def removeMissingRateBandsIfConfirmed(
+    shouldRemove: Boolean,
     regime: AlcoholRegime,
     userAnswers: UserAnswers,
     missingRateBands: Set[RateBand]
   ): Try[UserAnswers] =
-    if (shouldRemoveDeclarations) {
-      val selectedRateBands        = userAnswers
+    if (shouldRemove) {
+      val selectedRateBands = userAnswers
         .getByKey(WhatDoYouNeedToDeclarePage, regime)
         .getOrElse(
-          throw new RuntimeException(s"Couldn't fetch selected rate bands for $regime from user answers")
+          throw new RuntimeException(
+            s"Error removing missing multiple SPR rate bands: Couldn't fetch selected rate bands for $regime from user answers"
+          )
         )
-      val updatedSelectedRateBands = selectedRateBands.diff(missingRateBands)
-
-      userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, updatedSelectedRateBands).flatMap {
-        _.setByKey(MissingRateBandsToDeletePage, regime, missingRateBands)
-      }
+      userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, selectedRateBands.diff(missingRateBands))
     } else {
       Success(userAnswers)
     }

@@ -83,7 +83,7 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
                   answersWithRemovedDeclarations <-
                     Future.fromTry(
                       missingSPRRateBandHelper
-                        .removeMissingRateBandDeclarations(value, regime, updatedAnswers, missingRateBands)
+                        .removeMissingRateBandsIfConfirmed(value, regime, updatedAnswers, missingRateBands)
                     )
                   _                              <- userAnswersConnector.set(answersWithRemovedDeclarations)
                 } yield Redirect(

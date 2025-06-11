@@ -131,39 +131,36 @@ class MissingSPRRateBandHelperSpec extends SpecBase {
       .success
       .value
 
-    "return the input user answers if shouldRemoveDeclarations is false" in {
-      helper.removeMissingRateBandDeclarations(
-        shouldRemoveDeclarations = false,
+    "return the input user answers if shouldRemove is false" in {
+      helper.removeMissingRateBandsIfConfirmed(
+        shouldRemove = false,
         regime,
         userAnswers,
         missingSPRRateBands
       ) mustBe Success(userAnswers)
     }
 
-    "remove the missing rate bands from WhatDoYouNeedToDeclare and cache them separately if shouldRemoveDeclarations is true" in {
+    "remove the missing rate bands from WhatDoYouNeedToDeclare if shouldRemove is true" in {
       val expectedResult = userAnswers
         .setByKey(WhatDoYouNeedToDeclarePage, regime, allDeclaredRateBands.diff(missingSPRRateBands))
-        .success
-        .value
-        .setByKey(MissingRateBandsToDeletePage, regime, missingSPRRateBands)
 
-      helper.removeMissingRateBandDeclarations(
-        shouldRemoveDeclarations = true,
+      helper.removeMissingRateBandsIfConfirmed(
+        shouldRemove = true,
         regime,
         userAnswers,
         missingSPRRateBands
       ) mustBe expectedResult
     }
 
-    "throw an exception if shouldRemoveDeclarations is true and no data is found for the WhatDoYouNeedToDeclare page" in {
-      val userAnswers = emptyUserAnswers
+    "throw an exception if shouldRemove is true and no data is found for the WhatDoYouNeedToDeclare page" in {
+      val userAnswersMissingData = emptyUserAnswers
         .setByKey(MultipleSPRListPage, regime, multipleSPRListWithMissingItems)
         .success
         .value
 
       a[RuntimeException] mustBe thrownBy(
         helper
-          .removeMissingRateBandDeclarations(shouldRemoveDeclarations = true, regime, userAnswers, missingSPRRateBands)
+          .removeMissingRateBandsIfConfirmed(shouldRemove = true, regime, userAnswersMissingData, missingSPRRateBands)
       )
     }
   }

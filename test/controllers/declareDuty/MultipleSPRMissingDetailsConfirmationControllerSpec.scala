@@ -125,14 +125,13 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-      val expectedCachedUserAnswers = userAnswersWithMissingRateBands
-        .setByKey(WhatDoYouNeedToDeclarePage, regime, allDeclaredRateBands.diff(missingSPRRateBands))
-        .success
-        .value
+      val intermediateUserAnswers = userAnswersWithMissingRateBands
         .setByKey(MultipleSPRMissingDetailsConfirmationPage, regime, true)
         .success
         .value
-        .setByKey(MissingRateBandsToDeletePage, regime, missingSPRRateBands)
+
+      val expectedCachedUserAnswers = intermediateUserAnswers
+        .setByKey(WhatDoYouNeedToDeclarePage, regime, allDeclaredRateBands.diff(missingSPRRateBands))
         .success
         .value
 
@@ -140,10 +139,10 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
         mockMissingSPRRateBandHelper.findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
       ) thenReturn Some(missingSPRRateBands)
       when(
-        mockMissingSPRRateBandHelper.removeMissingRateBandDeclarations(
+        mockMissingSPRRateBandHelper.removeMissingRateBandsIfConfirmed(
           eqTo(true),
           eqTo(regime),
-          any(),
+          eqTo(intermediateUserAnswers),
           eqTo(missingSPRRateBands)
         )
       ) thenReturn Success(expectedCachedUserAnswers)
@@ -168,10 +167,10 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
 
         verify(mockMissingSPRRateBandHelper, times(1))
           .findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
-        verify(mockMissingSPRRateBandHelper, times(1)).removeMissingRateBandDeclarations(
+        verify(mockMissingSPRRateBandHelper, times(1)).removeMissingRateBandsIfConfirmed(
           eqTo(true),
           eqTo(regime),
-          any(),
+          eqTo(intermediateUserAnswers),
           eqTo(missingSPRRateBands)
         )
         verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
