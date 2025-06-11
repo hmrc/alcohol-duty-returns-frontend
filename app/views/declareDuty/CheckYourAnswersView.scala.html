@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, NotificationBannerWithBulletList, PageHeading}
+@import components.{Caption, PageHeading}
 @import viewmodels.declareDuty.ReturnSummaryList
 
 @this(
@@ -22,24 +22,12 @@
         govukButton: GovukButton,
         caption: Caption,
         pageHeading: PageHeading,
-        notificationBannerWithBulletList: NotificationBannerWithBulletList,
-        govukSummaryList: GovukSummaryList,
-        govukNotificationBanner: GovukNotificationBanner
+        govukSummaryList : GovukSummaryList
 )
 
-@(regime: AlcoholRegime, summaryList: ReturnSummaryList, removedRateBands: Option[Seq[HtmlContent]])(implicit request: Request[_], messages: Messages)
+@(regime: AlcoholRegime, summaryList: ReturnSummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
-
-    @removedRateBands.map { rateBands =>
-        @govukNotificationBanner(NotificationBanner(
-            content = HtmlContent(notificationBannerWithBulletList(
-                heading = messages("checkYourAnswers.notificationBanner.heading"),
-                bulletListElements = rateBands
-            )),
-            bannerType = Some("success")
-        ))
-    }
 
     @caption(
         id = "checkYourAnswers-section",
