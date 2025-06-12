@@ -26,7 +26,7 @@ import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.dutySuspended._
-import pages.dutySuspendedNew._
+import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.Application
 import play.api.i18n.Messages
@@ -2415,7 +2415,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "the subtask must link to the declare duty suspense question" in {
         result.taskList.items.head.href mustBe Some(
-          controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+          controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
         )
       }
 
@@ -2455,7 +2455,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "the subtask must link to the declare alcohol duty question in CheckMode" in {
         result.taskList.items.head.href mustBe Some(
-          controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
+          controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
         )
       }
 
@@ -2500,7 +2500,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspense question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2519,7 +2519,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
+            controllers.dutySuspended.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
           )
         }
 
@@ -2567,7 +2567,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspense question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2586,7 +2586,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Beer).url
+            controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Beer).url
           )
         }
 
@@ -2637,7 +2637,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2656,7 +2656,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+            controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
           )
         }
 
@@ -2704,7 +2704,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2723,7 +2723,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
+            controllers.dutySuspended.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
           )
         }
 
@@ -2765,7 +2765,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(CheckMode).url
           )
         }
 
@@ -2784,7 +2784,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
 
           maybeTask.get.href mustBe Some(
-            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+            controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
           )
         }
 

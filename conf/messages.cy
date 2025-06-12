@@ -586,124 +586,7 @@ dutyCalculation.table.action = Camau
 
 productList.caption = Toll sy’n ddyledus
 
-# Beginning of OLD duty suspended deliveries sub-journey
-
-declareDutySuspendedDeliveriesQuestion.title = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
-declareDutySuspendedDeliveriesQuestion.heading = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
-declareDutySuspendedDeliveriesQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi roi gwybod i ni am unrhyw alcohol y gohiriwyd tollau arno
-declareDutySuspendedDeliveriesQuestion.p1 = Mae angen i chi roi gwybod i ni a wnaethoch ddosbarthu cynnyrch alcoholaidd gorffenedig i warws lle mae tollau wedi’u gohirio, neu a wnaethoch dderbyn cynnyrch alcoholaidd gorffenedig o dan ohiriad tollau.
-
-dutySuspendedDeliveriesGuidance.title = Cyfrifwch gyfaint y cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
-dutySuspendedDeliveriesGuidance.heading = Cyfrifwch gyfaint y cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
-dutySuspendedDeliveriesGuidance.p1 = Ar gyfer pob math o alcohol rydych chi’n ei gynhyrchu, mae angen i chi roi gwybod i ni beth yw cyfaint y cynhyrchion alcoholaidd gorffenedig a faint o alcohol pur sydd yn y cynhyrchion alcoholaidd gorffenedig hynny.
-dutySuspendedDeliveriesGuidance.item1.addTogether = Bydd angen adio’r canlynol at ei gilydd:
-dutySuspendedDeliveriesGuidance.item1.sublist.1 = litrau a allforiwyd i’r tu allan i’r DU (er enghraifft, storfeydd nwyddau llongau)
-dutySuspendedDeliveriesGuidance.item1.sublist.2 = litrau y gohiriwyd tollau arnynt, a ddosbarthwyd i warysau ecséis a safleoedd cofrestredig eraill yn y DU
-dutySuspendedDeliveriesGuidance.item2.thenSubtract = Yna tynnwch:
-dutySuspendedDeliveriesGuidance.item2.sublist.1 = litrau o dan ohiriad tollau, a dderbyniwyd oddi wrth safleoedd cofrestredig, warysau ecséis a mewnforio
-dutySuspendedDeliveriesGuidance.p2 = Defnyddiwch yr un dull i gyfrifo’r litrau o alcohol pur sydd yn eich cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt.
-dutySuspendedDeliveriesGuidance.p3 = Ni fydd eich atebion yn newid eich cyfrifiad tollau.
-
-dutySuspendedBeer.title = Rhoi gwybod i ni am eich cwrw y gohiriwyd tollau arno
-dutySuspendedBeer.heading = Rhoi gwybod i ni am eich cwrw y gohiriwyd tollau arno
-dutySuspendedBeer.p1 = Mae angen i chi roi gwybod i ni am swm net eich cwrw y gohiriwyd tollau arno, gan nodi cyfanswm y litrau yn ogystal â’r litrau o alcohol pur (LPA).
-dutySuspendedBeer.subheading1 = Beth yw cyfanswm net y cwrw hwn?
-dutySuspendedBeer.hint.1 = Nodwch y litrau, hyd at 2 le degol
-dutySuspendedBeer.subheading2 = Beth yw cyfanswm net yr alcohol pur yn y cwrw hwn?
-dutySuspendedBeer.hint.2 = Nodwch y litrau, gan gynnwys 4 lle degol
-dutySuspendedBeer.totalBeer.checkYourAnswersLabel = Cyfanswm net y cwrw y gohiriwyd tollau arno
-dutySuspendedBeer.pureAlcoholInBeer.checkYourAnswersLabel = Cyfanswm net yr alcohol pur yn y cwrw hwn
-dutySuspendedBeer.error.totalBeer.required = Nodwch gyfanswm net y cwrw
-dutySuspendedBeer.error.pureAlcoholInBeer.required = Nodwch gyfanswm net yr alcohol pur yn y cwrw
-dutySuspendedBeer.totalBeer.change.hidden = cyfanswm net y cwrw y gohiriwyd tollau arno
-dutySuspendedBeer.pureAlcoholInBeer.change.hidden = cyfanswm net yr alcohol pur yn y cwrw hwn
-dutySuspendedBeer.error.totalBeer.nonNumeric = Mae’n rhaid i gyfanswm net y cwrw fod yn rhif
-dutySuspendedBeer.error.totalBeer.maximumRequired = Mae’n rhaid i gyfanswm net y cwrw fod yn llai nag 1 biliwn o litrau
-dutySuspendedBeer.error.totalBeer.minimumRequired = Mae’n rhaid i gyfanswm net y cwrw fod yn fwy na −1 biliwn o litrau
-dutySuspendedBeer.error.totalBeer.decimalPlaces = Mae’n rhaid i gyfanswm net y cwrw fod yn rhif sy’n cynnwys hyd at 2 le degol
-
-dutySuspended.error.pureAlcohol.nonNumeric = Mae’n rhaid i gyfanswm net yr alcohol pur fod yn rhif
-dutySuspended.error.pureAlcohol.maximumRequired = Mae’n rhaid i gyfanswm net yr alcohol pur fod yn llai nag 1 biliwn o litrau
-dutySuspended.error.pureAlcohol.minimumRequired = Mae’n rhaid i gyfanswm net yr alcohol pur fod yn fwy na −1 biliwn o litrau
-dutySuspended.error.pureAlcohol.decimalPlaces = Mae’n rhaid i gyfanswm net yr alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
-
-dutySuspendedCider.title = Rhoi gwybod i ni am eich seidr y gohiriwyd tollau arno
-dutySuspendedCider.heading = Rhoi gwybod i ni am eich seidr y gohiriwyd tollau arno
-dutySuspendedCider.p1 = Mae angen i chi roi gwybod i ni am swm net eich seidr y gohiriwyd tollau arno, gan nodi cyfanswm y litrau yn ogystal â’r litrau o alcohol pur (LPA).
-dutySuspendedCider.subheading1 = Beth yw cyfanswm net y seidr hwn?
-dutySuspendedCider.hint.1 = Nodwch y litrau, hyd at 2 le degol
-dutySuspendedCider.subheading2 = Beth yw cyfanswm net yr alcohol pur yn y seidr hwn?
-dutySuspendedCider.hint.2 = Nodwch y litrau, gan gynnwys 4 lle degol
-dutySuspendedCider.totalCider.checkYourAnswersLabel = Cyfanswm net y seidr y gohiriwyd tollau arno
-dutySuspendedCider.pureAlcoholInCider.checkYourAnswersLabel = Cyfanswm net yr alcohol pur yn y seidr hwn
-dutySuspendedCider.error.totalCider.required = Nodwch gyfanswm net y seidr
-dutySuspendedCider.error.pureAlcoholInCider.required = Nodwch gyfanswm net yr alcohol pur yn y seidr
-dutySuspendedCider.totalCider.change.hidden = cyfanswm net y seidr y gohiriwyd tollau arno
-dutySuspendedCider.pureAlcoholInCider.change.hidden = cyfanswm net yr alcohol pur yn y seidr hwn
-dutySuspendedCider.error.totalCider.nonNumeric = Mae’n rhaid i gyfanswm net y seidr fod yn rhif
-dutySuspendedCider.error.totalCider.maximumRequired = Mae’n rhaid i gyfanswm net y seidr fod yn llai nag 1 biliwn o litrau
-dutySuspendedCider.error.totalCider.minimumRequired = Mae’n rhaid i gyfanswm net y seidr fod yn fwy na −1 biliwn o litrau
-dutySuspendedCider.error.totalCider.decimalPlaces = Mae’n rhaid i gyfanswm net y seidr fod yn rhif sy’n cynnwys hyd at 2 le degol
-
-dutySuspendedWine.title = Rhoi gwybod i ni am eich gwin y gohiriwyd tollau arno
-dutySuspendedWine.heading = Rhoi gwybod i ni am eich gwin y gohiriwyd tollau arno
-dutySuspendedWine.p1 = Mae angen i chi roi gwybod i ni am swm net eich gwin y gohiriwyd tollau arno, gan nodi cyfanswm y litrau yn ogystal â’r litrau o alcohol pur (LPA).
-dutySuspendedWine.subheading1 = Beth yw cyfanswm net y gwin hwn?
-dutySuspendedWine.subheading2 = Beth yw cyfanswm net yr alcohol pur yn y gwin hwn?
-dutySuspendedWine.hint.1 = Nodwch y litrau, hyd at 2 le degol
-dutySuspendedWine.hint.2 = Nodwch y litrau, gan gynnwys 4 lle degol
-dutySuspendedWine.totalWine.checkYourAnswersLabel = Cyfanswm net y gwin y gohiriwyd tollau arno
-dutySuspendedWine.pureAlcoholInWine.checkYourAnswersLabel = Cyfanswm net yr alcohol pur yn y gwin hwn
-dutySuspendedWine.error.totalWine.required = Nodwch gyfanswm net y gwin
-dutySuspendedWine.error.pureAlcoholInWine.required = Nodwch gyfanswm net yr alcohol pur yn y gwin
-dutySuspendedWine.totalWine.change.hidden = cyfanswm net y gwin y gohiriwyd tollau arno
-dutySuspendedWine.pureAlcoholInWine.change.hidden = cyfanswm net yr alcohol pur yn y gwin hwn
-dutySuspendedWine.error.totalWine.nonNumeric = Mae’n rhaid i gyfanswm net y gwin fod yn rhif
-dutySuspendedWine.error.totalWine.maximumRequired = Mae’n rhaid i gyfanswm net y gwin fod yn llai nag 1 biliwn o litrau
-dutySuspendedWine.error.totalWine.minimumRequired = Mae’n rhaid i gyfanswm net y gwin fod yn fwy na −1 biliwn o litrau
-dutySuspendedWine.error.totalWine.decimalPlaces = Mae’n rhaid i gyfanswm net y gwin fod yn rhif sy’n cynnwys hyd at 2 le degol
-
-dutySuspendedSpirits.title = Rhoi gwybod i ni am eich gwirodydd y gohiriwyd tollau arnynt
-dutySuspendedSpirits.heading = Rhoi gwybod i ni am eich gwirodydd y gohiriwyd tollau arnynt
-dutySuspendedSpirits.p1 = Mae angen i chi roi gwybod i ni am swm net eich gwirodydd y gohiriwyd tollau arnynt, gan nodi cyfanswm y litrau yn ogystal â’r litrau o alcohol pur (LPA).
-dutySuspendedSpirits.subheading1 = Beth yw cyfanswm net y gwirodydd hyn?
-dutySuspendedSpirits.hint.1 = Nodwch y litrau, hyd at 2 le degol
-dutySuspendedSpirits.subheading2 = Beth yw cyfanswm net yr alcohol pur yn y gwirodydd hyn?
-dutySuspendedSpirits.totalSpirits.checkYourAnswersLabel = Cyfanswm net y gwirodydd y gohiriwyd tollau arnynt
-dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel = Cyfanswm net yr alcohol pur yn y gwirodydd hyn
-dutySuspendedSpirits.hint.2 = Nodwch y litrau, gan gynnwys 4 lle degol
-dutySuspendedSpirits.error.totalSpirits.required = Nodwch gyfanswm net y gwirodydd
-dutySuspendedSpirits.error.pureAlcoholInSpirits.required = Nodwch gyfanswm net yr alcohol pur yn y gwirodydd
-dutySuspendedSpirits.totalSpirits.change.hidden = cyfanswm net y gwirodydd y gohiriwyd tollau arnynt
-dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden = cyfanswm net yr alcohol pur yn y gwirodydd hyn
-dutySuspendedSpirits.error.totalSpirits.nonNumeric = Mae’n rhaid i gyfanswm net y gwirodydd fod yn rhif
-dutySuspendedSpirits.error.totalSpirits.maximumRequired = Mae’n rhaid i gyfanswm net y gwirodydd fod yn llai nag 1 biliwn o litrau
-dutySuspendedSpirits.error.totalSpirits.minimumRequired = Mae’n rhaid i gyfanswm net y gwirodydd fod yn fwy na −1 biliwn o litrau
-dutySuspendedSpirits.error.totalSpirits.decimalPlaces = Mae’n rhaid i gyfanswm net y gwirodydd fod yn fwy na −1 biliwn o litrau
-
-dutySuspendedOtherFermented.title = Rhoi gwybod i ni am eich cynhyrchion eplesedig eraill y gohiriwyd tollau arnynt
-dutySuspendedOtherFermented.heading = Rhoi gwybod i ni am eich cynhyrchion eplesedig eraill y gohiriwyd tollau arnynt
-dutySuspendedOtherFermented.p1 = Mae angen i chi roi gwybod i ni am swm net eich cynhyrchion eplesedig eraill y gohiriwyd tollau arnynt, gan nodi cyfanswm y litrau yn ogystal â’r litrau o alcohol pur (LPA).
-dutySuspendedOtherFermented.subheading1 = Beth yw cyfanswm net y cynhyrchion eplesedig eraill hyn?
-dutySuspendedOtherFermented.hint.1 = Nodwch y litrau, hyd at 2 le degol
-dutySuspendedOtherFermented.subheading2 = Beth yw cyfanswm net yr alcohol pur yn y cynhyrchion eplesedig eraill hyn?
-dutySuspendedOtherFermented.hint.2 = Nodwch y litrau, gan gynnwys 4 lle degol
-dutySuspendedOtherFermented.totalOtherFermented.checkYourAnswersLabel = Cyfanswm net y cynhyrchion eplesedig eraill y gohiriwyd tollau arnynt
-dutySuspendedOtherFermented.pureAlcoholInOtherFermented.checkYourAnswersLabel = Cyfanswm net yr alcohol pur yn y cynhyrchion eplesedig eraill hyn
-dutySuspendedOtherFermented.error.totalOtherFermented.required = Nodwch gyfanswm net y cynhyrchion eplesedig eraill
-dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required = Nodwch gyfanswm net yr alcohol pur yn y cynhyrchion eplesedig eraill
-dutySuspendedOtherFermented.totalOtherFermented.change.hidden = cyfanswm net y cynhyrchion eplesedig eraill y gohiriwyd tollau arnynt
-dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden = cyfanswm net yr alcohol pur yn y cynhyrchion eplesedig eraill hyn
-dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric = Mae’n rhaid i gyfanswm net y cynhyrchion eplesedig eraill fod yn rhif
-dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired = Mae’n rhaid i gyfanswm net y cynhyrchion eplesedig eraill fod yn llai nag 1 biliwn o litrau
-dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired = Mae’n rhaid i gyfanswm net y cynhyrchion eplesedig eraill fod yn fwy na −1 biliwn o litrau
-dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces = Mae’n rhaid i gyfanswm net y cynhyrchion eplesedig eraill fod yn rhif sy’n cynnwys hyd at 2 le degol
-
-checkYourAnswersDutySuspendedDeliveries.heading = Dosbarthiadau y gohiriwyd tollau arnynt
-
-# End of OLD duty suspended deliveries sub-journey
-
-# Beginning of NEW duty suspended deliveries sub-journey
+# Beginning of duty suspended deliveries sub-journey
 
 declareDutySuspenseQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
 declareDutySuspenseQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
@@ -888,7 +771,7 @@ dutySuspended.checkYourAnswers.pureAlcohol = {0} o litrau o alcohol pur
 dutySuspended.checkYourAnswers.alcoholType.change.hidden = math o alcohol o dan ohiriad tollau
 dutySuspended.checkYourAnswers.amount.change.hidden = swm yr alcohol o dan ohiriad tollau
 
-# End of NEW duty suspended deliveries sub-journey
+# End of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
 

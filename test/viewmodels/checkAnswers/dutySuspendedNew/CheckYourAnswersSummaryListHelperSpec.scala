@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.dutySuspendedNew
 
 import base.SpecBase
 import models.AlcoholRegime.Wine
-import pages.dutySuspendedNew.{DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
+import pages.dutySuspended.{DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 
 class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
   val summaryListHelper = new CheckYourAnswersSummaryListHelper

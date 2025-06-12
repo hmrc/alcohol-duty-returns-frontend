@@ -121,7 +121,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+            controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -152,7 +152,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -185,7 +185,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+            controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
@@ -220,7 +220,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
@@ -257,7 +257,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+            controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
@@ -292,7 +292,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           )
 
           val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+            controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
           val expectedSpiritsRedirectUrl: String                 =
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 

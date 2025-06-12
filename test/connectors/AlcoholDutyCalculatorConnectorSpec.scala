@@ -21,7 +21,7 @@ import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
-import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
+import models.dutySuspended.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import models.{ABVRange, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo

@@ -22,7 +22,7 @@ import models.ReturnPeriod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
 import pages.declareDuty.DeclareAlcoholDutyQuestionPage
-import pages.dutySuspendedNew.DeclareDutySuspenseQuestionPage
+import pages.dutySuspended.DeclareDutySuspenseQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages

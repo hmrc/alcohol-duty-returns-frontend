@@ -26,13 +26,13 @@ import models._
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.checkAndSubmit._
 import models.declareDuty._
-import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
+import models.dutySuspended.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import models.returns._
 import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
-import pages.dutySuspendedNew._
+import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.i18n.Messages
 import play.api.libs.json.Json

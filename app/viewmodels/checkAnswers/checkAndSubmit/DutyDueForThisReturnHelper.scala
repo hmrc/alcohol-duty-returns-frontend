@@ -184,7 +184,7 @@ class DutyDueForThisReturnHelper @Inject() (
             ActionItemViewModel(
               content = Text(messages("site.change")),
               href = if (appConfig.dutySuspendedNewJourneyEnabled) {
-                controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+                controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
               } else {
                 controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
               }
@@ -201,7 +201,7 @@ class DutyDueForThisReturnHelper @Inject() (
             ActionItemViewModel(
               content = Text(messages("site.change")),
               href = if (appConfig.dutySuspendedNewJourneyEnabled) {
-                controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+                controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
               } else {
                 controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
                   .onPageLoad(NormalMode)

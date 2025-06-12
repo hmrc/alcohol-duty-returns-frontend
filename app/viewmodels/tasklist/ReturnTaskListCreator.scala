@@ -25,7 +25,7 @@ import pages.QuestionPage
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.dutySuspended._
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
+import pages.dutySuspended.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions._
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
@@ -264,9 +264,9 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
     }
 
     val incompleteSubTaskUrl = if (userAnswers.regimes.regimes.size > 1) {
-      controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
+      controllers.dutySuspended.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode).url
     } else {
-      controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+      controllers.dutySuspended.routes.DutySuspendedQuantitiesController
         .onPageLoad(NormalMode, userAnswers.regimes.regimes.head)
         .url
     }
@@ -276,7 +276,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
       DutySuspendedSection,
       incompleteSubTaskUrl,
       incompleteSubTaskUrl,
-      controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+      controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
     )
   }
 
@@ -416,7 +416,7 @@ class ReturnTaskListCreator @Inject() (appConfig: FrontendAppConfig) {
       createSection(
         userAnswers.get(DeclareDutySuspenseQuestionPage),
         Seq(returnDSDNewJourneyTaskListItem(userAnswers)),
-        controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(_).url,
+        controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(_).url,
         section = DutySuspendedSection
       )
     } else {

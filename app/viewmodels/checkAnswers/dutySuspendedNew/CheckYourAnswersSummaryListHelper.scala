@@ -16,9 +16,9 @@
 
 package viewmodels.checkAnswers.dutySuspendedNew
 
-import controllers.dutySuspendedNew.routes
+import controllers.dutySuspended.routes
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, UserAnswers}
-import pages.dutySuspendedNew.{DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
+import pages.dutySuspended.{DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
