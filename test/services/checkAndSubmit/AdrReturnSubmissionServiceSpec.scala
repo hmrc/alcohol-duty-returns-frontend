@@ -381,11 +381,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
       }
     }
 
-    class SetUp(newDSDJourneyFeatureToggle: Boolean = true) {
-      val additionalConfig             = Map(
-        "features.duty-suspended-new-journey" -> newDSDJourneyFeatureToggle
-      )
-      val application: Application     = applicationBuilder().configure(additionalConfig).build()
+    class SetUp {
+      val application: Application     = applicationBuilder().build()
       val taskListViewModelMock        = mock[TaskListViewModel]
       val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 

@@ -38,7 +38,6 @@ class DeclareDutySuspenseQuestionController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  checkDSDNewJourneyToggle: CheckDSDNewJourneyToggleAction,
   formProvider: DeclareDutySuspenseQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeclareDutySuspenseQuestionView
@@ -49,7 +48,7 @@ class DeclareDutySuspenseQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(DeclareDutySuspenseQuestionPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -59,7 +58,7 @@ class DeclareDutySuspenseQuestionController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle).async { implicit request =>
+    (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

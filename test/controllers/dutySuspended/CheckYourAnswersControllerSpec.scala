@@ -31,10 +31,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
   lazy val displayCYARoute = controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> true
-  )
-
   "CheckYourAnswers Controller" - {
     "must return OK and render the CheckYourAnswersView when all required data is present" in {
       val expectedAlcoholTypeSummary = SummaryList(

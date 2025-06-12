@@ -34,7 +34,6 @@ class DisplayCalculationController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  checkDSDNewJourneyToggle: CheckDSDNewJourneyToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: DisplayCalculationView
 ) extends FrontendBaseController
@@ -42,7 +41,7 @@ class DisplayCalculationController @Inject() (
     with Logging {
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
       (
         request.userAnswers.getByKey(DutySuspendedQuantitiesPage, regime),
         request.userAnswers.getByKey(DutySuspendedFinalVolumesPage, regime)
@@ -56,7 +55,7 @@ class DisplayCalculationController @Inject() (
     }
 
   def onSubmit(regime: AlcoholRegime): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
       (
         request.userAnswers.getByKey(DutySuspendedQuantitiesPage, regime),
         request.userAnswers.getByKey(DutySuspendedFinalVolumesPage, regime)

@@ -40,12 +40,7 @@ class DeclareDutySuspenseQuestionControllerSpec extends SpecBase {
   val formProvider = new DeclareDutySuspenseQuestionFormProvider()
   val form         = formProvider()
 
-  lazy val declareDutySuspenseQuestionRoute =
-    routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
-
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> true
-  )
+  lazy val declareDutySuspenseQuestionRoute = routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
 
   "DeclareDutySuspenseQuestion Controller" - {
 

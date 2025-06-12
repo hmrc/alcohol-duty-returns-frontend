@@ -43,10 +43,6 @@ class DutySuspendedAlcoholTypeControllerSpec extends SpecBase {
   val formProvider = new DutySuspendedAlcoholTypeFormProvider()
   val form         = formProvider()
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> true
-  )
-
   "DutySuspendedAlcoholType Controller" - {
 
     "must return OK and the correct view for a GET" in {

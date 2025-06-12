@@ -30,10 +30,6 @@ import views.html.dutySuspended.DisplayCalculationView
 class DisplayCalculationControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> true
-  )
-
   val regime = regimeGen.sample.value
 
   lazy val displayCalculationRoute = routes.DisplayCalculationController.onPageLoad(regime).url

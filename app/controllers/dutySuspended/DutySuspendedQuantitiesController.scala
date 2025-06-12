@@ -39,7 +39,6 @@ class DutySuspendedQuantitiesController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  checkDSDNewJourneyToggle: CheckDSDNewJourneyToggleAction,
   formProvider: DutySuspendedQuantitiesFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedQuantitiesView
@@ -49,7 +48,7 @@ class DutySuspendedQuantitiesController @Inject() (
     with Logging {
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
       if (request.userAnswers.get(DutySuspendedAlcoholTypePage).exists(_.contains(regime))) {
         val form         = formProvider(regime)
         val preparedForm = request.userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
@@ -64,7 +63,7 @@ class DutySuspendedQuantitiesController @Inject() (
     }
 
   def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDNewJourneyToggle).async { implicit request =>
+    (identify andThen getData andThen requireData).async { implicit request =>
       if (request.userAnswers.get(DutySuspendedAlcoholTypePage).exists(_.contains(regime))) {
         val form = formProvider(regime)
         form

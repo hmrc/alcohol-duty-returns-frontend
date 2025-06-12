@@ -35,10 +35,6 @@ import scala.concurrent.Future
 class DutySuspendedQuantitiesControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> true
-  )
-
   val regime = regimeGen.sample.value
 
   val formProvider = new DutySuspendedQuantitiesFormProvider()
