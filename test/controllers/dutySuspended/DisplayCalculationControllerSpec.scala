@@ -25,7 +25,7 @@ import pages.dutySuspended._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import views.html.dutySuspendedNew.DisplayCalculationView
+import views.html.dutySuspended.DisplayCalculationView
 
 class DisplayCalculationControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")

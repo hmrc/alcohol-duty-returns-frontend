@@ -150,7 +150,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     val toDateString                 = dateTimeHelper.formatDateMonthYear(toDate)
     val dueDateString                = dateTimeHelper.formatDateMonthYear(dueDate)
     val validUntilString             = dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
-    val returnTaskListCreator        = new ReturnTaskListCreator(appConfig)
+    val returnTaskListCreator        = new ReturnTaskListCreator
     val taskListViewModel            = new TaskListViewModel(createDateTimeHelper(), returnTaskListCreator)
   }
 }

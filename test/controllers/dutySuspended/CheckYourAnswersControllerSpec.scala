@@ -25,7 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}
 import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
-import views.html.dutySuspendedNew.CheckYourAnswersView
+import views.html.dutySuspended.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 

@@ -32,7 +32,6 @@ import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
-import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.i18n.Messages
 import play.api.libs.json.Json

@@ -30,7 +30,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.dutySuspendedNew.DutySuspendedAlcoholTypeView
+import views.html.dutySuspended.DutySuspendedAlcoholTypeView
 
 import scala.concurrent.Future
 
