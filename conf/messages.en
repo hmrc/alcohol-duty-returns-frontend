@@ -205,6 +205,9 @@ viewPastPayments.historic.paragraph = Cleared payments are those where monies ha
 viewPastPayments.visually-hidden.pay-now = amount of £{0} due {1}
 viewPastPayments.visually-hidden.claim-refund = of £{0}
 
+viewPastPayments.CA.description = A Central Assessment has been issued as an Alcohol Duty Return has not been submitted for this return period.
+viewPastPayments.obligations.linkText = View obligations
+
 taskList.title = Complete your Alcohol Duty Return
 taskList.period = This is your alcohol return for the period {0} to {1}.
 taskList.completion.date = Complete all the tasks and send this return on or before the {0}.
