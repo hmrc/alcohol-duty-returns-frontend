@@ -100,7 +100,8 @@ class ViewPastPaymentsHelper @Inject() (
           status,
           index,
           outstandingPaymentsData.remainingAmount,
-          outstandingPaymentsData.dueDate
+          outstandingPaymentsData.dueDate,
+          outstandingPaymentsData.transactionType
         )
       )
     }
@@ -231,7 +232,8 @@ class ViewPastPaymentsHelper @Inject() (
     status: OutstandingPaymentStatusToDisplay,
     index: Int,
     amount: BigDecimal,
-    paymentDate: LocalDate
+    paymentDate: LocalDate,
+    transactionType: TransactionType
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
       if (frontendAppConfig.claimARefundGformEnabled) {
@@ -246,13 +248,22 @@ class ViewPastPaymentsHelper @Inject() (
         Seq.empty
       }
     } else {
-      Seq(
-        TableRowActionViewModel(
-          label = messages("viewPastPayments.payNow.linkText"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
-          visuallyHiddenText = Some(getPayNowHiddenText(amount = amount, paymentDate = paymentDate))
+      if (transactionType != TransactionType.CA) {
+        Seq(
+          TableRowActionViewModel(
+            label = messages("viewPastPayments.payNow.linkText"),
+            href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
+            visuallyHiddenText = Some(getPayNowHiddenText(amount = amount, paymentDate = paymentDate))
+          )
         )
-      )
+      } else {
+        Seq(
+          TableRowActionViewModel(
+            label = messages("viewPastPayments.obligations.linkText"),
+            href = Call("GET", frontendAppConfig.businessTaxAccountUrl)
+          )
+        )
+      }
     }
 
   private def formatDateYearMonth(date: LocalDate)(implicit messages: Messages): String =
