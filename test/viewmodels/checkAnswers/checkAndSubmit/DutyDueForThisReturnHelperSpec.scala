@@ -430,6 +430,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
     val mockCalculatorConnector        = mock[AlcoholDutyCalculatorConnector]
     val mockAdrReturnSubmissionService = mock[AdrReturnSubmissionService]
     val dutyDueForThisReturnHelper     =
-      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService, appConfig)
+      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService)
   }
 }

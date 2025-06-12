@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,92 +16,69 @@
 
 package viewmodels.checkAnswers.dutySuspended
 
-import models.{AlcoholRegimes, UserAnswers}
+import controllers.dutySuspended.routes
+import models.{AlcoholRegime, AlcoholRegimes, CheckMode, UserAnswers}
+import pages.dutySuspended.{DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
-import viewmodels.govuk.summarylist.SummaryListViewModel
+import viewmodels.AlcoholRegimesViewOrder
+import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
-import javax.inject.Inject
+class CheckYourAnswersSummaryListHelper {
+  def alcoholTypeSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] =
+    alcoholTypeRow(userAnswers).map(row => SummaryListViewModel(rows = Seq(row)))
 
-class CheckYourAnswersSummaryListHelper @Inject() () {
+  def dutySuspendedAmountsSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
+    val maybeSelectedRegimes = userAnswers.get(DutySuspendedAlcoholTypePage)
 
-  def dutySuspendedDeliveriesSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): SummaryList = {
-    val regimes = userAnswers.regimes
+    maybeSelectedRegimes.flatMap { selectedRegimes =>
+      val orderedRegimes     = AlcoholRegimesViewOrder.regimesInViewOrder(AlcoholRegimes(selectedRegimes))
+      val selectedRegimeRows = orderedRegimes.map(regime => amountsRow(userAnswers, regime))
 
-    val (maybeTotalBeer, maybePureAlcoholInBeer) =
-      getBeerRows(userAnswers, regimes)
-
-    val (maybeTotalCider, maybePureAlcoholInCider) =
-      getWineRows(userAnswers, regimes)
-
-    val (maybeTotalWine, maybePureAlcoholInWine) =
-      getCiderRows(userAnswers, regimes)
-
-    val (maybeTotalSpirits, maybePureAlcoholInSpirits) =
-      getSpiritsRows(userAnswers, regimes)
-
-    val (maybeTotalOtherFermentedSummary, maybePureAlcoholInOtherFermentedSummary) =
-      getOFPRows(userAnswers, regimes)
-
-    val rows = Seq(
-      maybeTotalBeer,
-      maybePureAlcoholInBeer,
-      maybeTotalCider,
-      maybePureAlcoholInCider,
-      maybeTotalWine,
-      maybePureAlcoholInWine,
-      maybeTotalSpirits,
-      maybePureAlcoholInSpirits,
-      maybeTotalOtherFermentedSummary,
-      maybePureAlcoholInOtherFermentedSummary
-    ).flatten.fold(Seq.empty)(_ ++ _)
-
-    SummaryListViewModel(rows = rows)
+      if (selectedRegimeRows.contains(None)) {
+        None
+      } else {
+        Some(SummaryListViewModel(rows = selectedRegimeRows.flatten))
+      }
+    }
   }
 
-  private def getOFPRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
-    if (regimes.hasOtherFermentedProduct) {
-      (
-        Some(getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers))),
-        Some(getOptionalRow(DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)))
-      )
-    } else { (None, None) }
+  private def alcoholTypeRow(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    userAnswers.get(DutySuspendedAlcoholTypePage).map { alcoholTypes =>
+      val orderedRegimes = AlcoholRegimesViewOrder.regimesInViewOrder(AlcoholRegimes(alcoholTypes))
+      val rowValue       =
+        orderedRegimes.map(regime => HtmlFormat.escape(messages(regime.regimeMessageKey)).toString.capitalize)
 
-  private def getSpiritsRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
-    if (regimes.hasSpirits) {
-      (
-        Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))),
-        Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers)))
+      SummaryListRowViewModel(
+        key = messages("dutySuspended.checkYourAnswers.alcoholType.summaryListKey"),
+        value = ValueViewModel(HtmlContent(rowValue.mkString("<br>"))),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedAlcoholTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspended.checkYourAnswers.alcoholType.change.hidden"))
+        )
       )
-    } else { (None, None) }
+    }
 
-  private def getCiderRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
-    if (regimes.hasWine) {
-      (
-        Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))),
-        Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers)))
+  private def amountsRow(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    userAnswers.getByKey(DutySuspendedFinalVolumesPage, regime).map { volumes =>
+      SummaryListRowViewModel(
+        key = KeyViewModel(HtmlContent(messages(regime.regimeMessageKey).capitalize)),
+        value = ValueViewModel(
+          HtmlContent(
+            s"${messages("dutySuspended.checkYourAnswers.totalLitres", messages("site.2DP", volumes.totalLitres))}"
+              + "<br>"
+              + s"${messages("dutySuspended.checkYourAnswers.pureAlcohol", messages("site.4DP", volumes.pureAlcohol))}"
+          )
+        ),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedQuantitiesController.onPageLoad(CheckMode, regime).url)
+            .withVisuallyHiddenText(messages("dutySuspended.checkYourAnswers.amount.change.hidden"))
+        )
       )
-    } else { (None, None) }
-
-  private def getWineRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
-    if (regimes.hasCider) {
-      (
-        Some(getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))),
-        Some(getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers)))
-      )
-    } else { (None, None) }
-
-  private def getBeerRows(userAnswers: UserAnswers, regimes: AlcoholRegimes)(implicit messages: Messages) =
-    if (regimes.hasBeer) {
-      (
-        Some(getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))),
-        Some(getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers)))
-      )
-    } else { (None, None) }
-
-  private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
-    row match {
-      case Some(row) => Seq(row)
-      case None      => Seq.empty
     }
 }

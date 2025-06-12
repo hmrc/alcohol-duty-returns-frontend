@@ -175,13 +175,13 @@ POST       /complete-return/adjustments/adjustment/declare/remove-adjustment    
 # Beginning of duty suspended deliveries sub-journey
 GET        /complete-return/duty-suspended-deliveries/do-you-need-to-report-duty-suspense                        controllers.dutySuspended.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/duty-suspended-deliveries/do-you-need-to-report-duty-suspense                        controllers.dutySuspended.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                  controllers.dutySuspended.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                  controllers.dutySuspended.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                 controllers.dutySuspended.DeclareDutySuspenseQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/duty-suspended-deliveries/change-if-you-need-to-report-duty-suspense                 controllers.dutySuspended.DeclareDutySuspenseQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/duty-suspended-deliveries/which-duty-suspended-alcohol                        controllers.dutySuspended.DutySuspendedAlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/duty-suspended-deliveries/which-duty-suspended-alcohol                        controllers.dutySuspended.DutySuspendedAlcoholTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/duty-suspended-deliveries/change-which-duty-suspended-alcohol                  controllers.dutySuspended.DutySuspendedAlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/duty-suspended-deliveries/change-which-duty-suspended-alcohol                  controllers.dutySuspended.DutySuspendedAlcoholTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/duty-suspended-deliveries/change-which-duty-suspended-alcohol                 controllers.dutySuspended.DutySuspendedAlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/duty-suspended-deliveries/change-which-duty-suspended-alcohol                 controllers.dutySuspended.DutySuspendedAlcoholTypeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/duty-suspended-deliveries/:regime/report-duty-suspense                        controllers.dutySuspended.DutySuspendedQuantitiesController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
 POST       /complete-return/duty-suspended-deliveries/:regime/report-duty-suspense                        controllers.dutySuspended.DutySuspendedQuantitiesController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)

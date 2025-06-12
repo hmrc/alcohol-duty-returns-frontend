@@ -22,8 +22,8 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.dutySuspendedNew.CheckYourAnswersSummaryListHelper
-import views.html.dutySuspendedNew.CheckYourAnswersView
+import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
+import views.html.dutySuspended.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,

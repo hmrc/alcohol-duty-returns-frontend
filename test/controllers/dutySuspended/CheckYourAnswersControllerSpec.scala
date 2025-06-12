@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryList, SummaryListRow, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}
-import viewmodels.checkAnswers.dutySuspendedNew.CheckYourAnswersSummaryListHelper
+import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.dutySuspendedNew.CheckYourAnswersView
 

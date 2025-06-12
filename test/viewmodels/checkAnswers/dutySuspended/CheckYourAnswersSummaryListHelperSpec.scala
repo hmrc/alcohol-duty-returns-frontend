@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.dutySuspendedNew
+package viewmodels.checkAnswers.dutySuspended
 
 import base.SpecBase
 import models.AlcoholRegime.Wine

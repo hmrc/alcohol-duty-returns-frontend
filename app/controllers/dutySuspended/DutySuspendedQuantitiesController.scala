@@ -26,7 +26,7 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.dutySuspendedNew.DutySuspendedQuantitiesView
+import views.html.dutySuspended.DutySuspendedQuantitiesView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
