@@ -157,6 +157,7 @@ object Constants {
 
     val marginTop8CssClass    = "govuk-!-margin-top-8"
     val marginBottom0CssClass = "govuk-!-margin-bottom-0"
+    val marginBottom1CssClass = "govuk-!-margin-bottom-1"
     val marginBottom8CssClass = "govuk-!-margin-bottom-8"
 
     val paddingBottomCssClass = "govuk-body govuk-!-padding-bottom-3"
