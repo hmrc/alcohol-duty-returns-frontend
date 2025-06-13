@@ -19,7 +19,7 @@ package navigation
 import controllers._
 import models._
 import pages._
-import pages.dutySuspendedNew._
+import pages.dutySuspended._
 import play.api.Logging
 import play.api.mvc.Call
 import viewmodels.AlcoholRegimesViewOrder
@@ -39,7 +39,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
         }
         firstRegime match {
           case Some(regime) =>
-            controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
+            controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
           case None         => routes.JourneyRecoveryController.onPageLoad()
         }
     case _                               =>
@@ -51,7 +51,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       userAnswers =>
         regime =>
           userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
-            case Some(_) => controllers.dutySuspendedNew.routes.DisplayCalculationController.onPageLoad(regime)
+            case Some(_) => controllers.dutySuspended.routes.DisplayCalculationController.onPageLoad(regime)
             case None    => routes.JourneyRecoveryController.onPageLoad()
           }
     case DisplayCalculationPage      =>
@@ -64,10 +64,10 @@ class DutySuspendedNavigator @Inject() () extends Logging {
                 current = Some(regime)
               ) match {
                 case Some(nextRegime) =>
-                  controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+                  controllers.dutySuspended.routes.DutySuspendedQuantitiesController
                     .onPageLoad(NormalMode, nextRegime)
                 case None             =>
-                  controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
+                  controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad()
               }
             case None                       => routes.JourneyRecoveryController.onPageLoad()
           }
@@ -83,7 +83,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
           if (hasRegimesToAdd) {
             normalRoutes(DutySuspendedAlcoholTypePage)(userAnswers)
           } else {
-            controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
+            controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad()
           }
     case _                               =>
       _ => _ => routes.TaskListController.onPageLoad
@@ -94,7 +94,7 @@ class DutySuspendedNavigator @Inject() () extends Logging {
       userAnswers =>
         regime =>
           userAnswers.getByKey(DutySuspendedQuantitiesPage, regime) match {
-            case Some(_) => controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
+            case Some(_) => controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad()
             case None    => routes.JourneyRecoveryController.onPageLoad()
           }
     case _                           => _ => _ => routes.TaskListController.onPageLoad
@@ -127,9 +127,9 @@ class DutySuspendedNavigator @Inject() () extends Logging {
   private def declareDutySuspenseQuestionPageRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(DeclareDutySuspenseQuestionPage) match {
       case Some(true) if userAnswers.regimes.regimes.size > 1 =>
-        controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
+        controllers.dutySuspended.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
       case Some(true)                                         =>
-        controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+        controllers.dutySuspended.routes.DutySuspendedQuantitiesController
           .onPageLoad(NormalMode, userAnswers.regimes.regimes.head)
       case Some(false)                                        => routes.TaskListController.onPageLoad
       case _                                                  => routes.JourneyRecoveryController.onPageLoad()

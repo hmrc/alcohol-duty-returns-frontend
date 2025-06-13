@@ -21,7 +21,7 @@ import controllers._
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
 import pages._
-import pages.dutySuspendedNew._
+import pages.dutySuspended._
 
 class DutySuspendedNavigatorSpec extends SpecBase {
 
@@ -49,7 +49,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
+          ) mustBe controllers.dutySuspended.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -62,7 +62,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the Declare duty suspense question page to task list page if the answer is No" in {
@@ -91,7 +91,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             NormalMode,
             emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+          ) mustBe controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
         }
 
         "must go from the Duty suspended alcohol types page to journey recovery page if the answer is missing" in {
@@ -128,30 +128,30 @@ class DutySuspendedNavigatorSpec extends SpecBase {
                 .success
                 .value,
               regime
-            ) mustBe controllers.dutySuspendedNew.routes.DisplayCalculationController.onPageLoad(regime)
+            ) mustBe controllers.dutySuspended.routes.DisplayCalculationController.onPageLoad(regime)
           }
         }
 
         Seq(
           (
             Beer,
-            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+            () => controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
           ),
           (
             Cider,
-            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Wine)
+            () => controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Wine)
           ),
           (
             Wine,
-            () => controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Spirits)
+            () => controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Spirits)
           ),
           (
             Spirits,
             () =>
-              controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController
+              controllers.dutySuspended.routes.DutySuspendedQuantitiesController
                 .onPageLoad(NormalMode, OtherFermentedProduct)
           ),
-          (OtherFermentedProduct, () => controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad())
+          (OtherFermentedProduct, () => controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad())
         ).foreach { case (regime, expectedPage) =>
           s"must go from the Display calculation page to the correct next page (Declare quantity or CYA) when the regime is ${regime.entryName}" in {
             val alcoholRegimesSubmitted: Set[AlcoholRegime] = Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
@@ -194,7 +194,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DeclareDutySuspenseQuestionPage, true).success.value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
+          ) mustBe controllers.dutySuspended.routes.DutySuspendedAlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Declare duty suspense question page to the Declare quantity page if the user has only 1 approval" in {
@@ -207,7 +207,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the Declare duty suspense question page to the task list page if the answer is No" in {
@@ -227,7 +227,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
             Some(true)
-          ) mustBe controllers.dutySuspendedNew.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
+          ) mustBe controllers.dutySuspended.routes.DutySuspendedQuantitiesController.onPageLoad(NormalMode, Cider)
         }
 
         "must go from the Duty suspended alcohol types page to the CYA page if no regimes were added" in {
@@ -238,7 +238,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
             CheckMode,
             emptyUserAnswers.set(DutySuspendedAlcoholTypePage, alcoholRegimesSubmitted).success.value,
             Some(false)
-          ) mustBe controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
+          ) mustBe controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad()
         }
       }
 
@@ -266,7 +266,7 @@ class DutySuspendedNavigatorSpec extends SpecBase {
                 .success
                 .value,
               regime
-            ) mustBe controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad()
+            ) mustBe controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad()
           }
         }
       }
