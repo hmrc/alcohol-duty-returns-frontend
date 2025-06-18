@@ -19,14 +19,19 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.AlcoholRegime.Beer
-import models.{AlcoholRegimes, CheckMode, NormalMode}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
+import models.{AlcoholRegimes, CheckMode, NormalMode}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.Page
 import pages.declareDuty.DeclareAlcoholDutyQuestionPage
+import viewmodels.declareDuty.MissingSPRRateBandHelper
 
 class ReturnsNavigatorSpec extends SpecBase {
 
-  val navigator = new ReturnsNavigator
+  val mockMissingSPRRateBandHelper = mock[MissingSPRRateBandHelper]
+
+  val navigator = new ReturnsNavigator(mockMissingSPRRateBandHelper)
   val regime    = regimeGen.sample.value
   val rateBands = genListOfRateBandForRegime(regime).sample.value
 
@@ -278,21 +283,117 @@ class ReturnsNavigatorSpec extends SpecBase {
           ) mustBe controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
         }
 
-        "must go from the DoYouWantToAddMultipleSPRToList page to the CheckYourAnswers page if the user has selected 'false'" in {
+        "if the user has selected 'false' on the DoYouWantToAddMultipleSPRToList page" - {
+          val userAnswers = emptyUserAnswers
+            .setByKey(pages.declareDuty.DoYouWantToAddMultipleSPRToListPage, regime, false)
+            .success
+            .value
+
+          "must go to the MultipleSPRMissingDetails page if there are any missing rate bands" in {
+            when(mockMissingSPRRateBandHelper.findMissingSPRRateBands(eqTo(regime), any())) thenReturn Some(
+              Set(smallProducerReliefRateBand)
+            )
+
+            navigator.nextPageWithRegime(
+              pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
+              NormalMode,
+              userAnswers,
+              regime
+            ) mustBe controllers.declareDuty.routes.MultipleSPRMissingDetailsController.onPageLoad(regime)
+          }
+
+          "must go to the CheckYourAnswers page if there are no missing rate bands" in {
+            when(mockMissingSPRRateBandHelper.findMissingSPRRateBands(eqTo(regime), any())) thenReturn Some(Set.empty)
+
+            navigator.nextPageWithRegime(
+              pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
+              NormalMode,
+              userAnswers,
+              regime
+            ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
+          }
+
+          "must go to the Task List page if user answers are missing required data" in {
+            when(mockMissingSPRRateBandHelper.findMissingSPRRateBands(eqTo(regime), any())) thenReturn None
+
+            navigator.nextPageWithRegime(
+              pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
+              NormalMode,
+              userAnswers,
+              regime
+            ) mustBe routes.TaskListController.onPageLoad
+          }
+        }
+
+        "must go from the DoYouWantToAddMultipleSPRToList page to the Task List page if the user hasn't selected any entries" in {
           navigator.nextPageWithRegime(
             pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
             NormalMode,
+            emptyUserAnswers,
+            regime
+          ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the MultipleSPRMissingDetails page to the TellUsAboutMultipleSPRRate page if the user selected to add declaration details" in {
+          navigator.nextPageWithRegime(
+            pages.declareDuty.MultipleSPRMissingDetailsPage,
+            NormalMode,
             emptyUserAnswers
-              .setByKey(pages.declareDuty.DoYouWantToAddMultipleSPRToListPage, regime, false)
+              .setByKey(pages.declareDuty.MultipleSPRMissingDetailsPage, regime, true)
+              .success
+              .value,
+            regime
+          ) mustBe controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
+        }
+
+        "must go from the MultipleSPRMissingDetails page to the MultipleSPRMissingDetailsConfirmation page if the user selected to delete declarations" in {
+          navigator.nextPageWithRegime(
+            pages.declareDuty.MultipleSPRMissingDetailsPage,
+            NormalMode,
+            emptyUserAnswers
+              .setByKey(pages.declareDuty.MultipleSPRMissingDetailsPage, regime, false)
+              .success
+              .value,
+            regime
+          ) mustBe controllers.declareDuty.routes.MultipleSPRMissingDetailsConfirmationController.onPageLoad(regime)
+        }
+
+        "must go from the MultipleSPRMissingDetails page to the Task List page if the user hasn't selected any entries" in {
+          navigator.nextPageWithRegime(
+            pages.declareDuty.MultipleSPRMissingDetailsPage,
+            NormalMode,
+            emptyUserAnswers,
+            regime
+          ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the MultipleSPRMissingDetailsConfirmation page to the CheckYourAnswers page if the user selected 'Yes'" in {
+          navigator.nextPageWithRegime(
+            pages.declareDuty.MultipleSPRMissingDetailsConfirmationPage,
+            NormalMode,
+            emptyUserAnswers
+              .setByKey(pages.declareDuty.MultipleSPRMissingDetailsConfirmationPage, regime, true)
               .success
               .value,
             regime
           ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
-        "must go from the DoYouWantToAddMultipleSPRToList page to the TaskList page if the user hasn't selected any entries" in {
+        "must go from the MultipleSPRMissingDetailsConfirmation page to the TellUsAboutMultipleSPRRate page if the user selected 'No'" in {
           navigator.nextPageWithRegime(
-            pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
+            pages.declareDuty.MultipleSPRMissingDetailsConfirmationPage,
+            NormalMode,
+            emptyUserAnswers
+              .setByKey(pages.declareDuty.MultipleSPRMissingDetailsConfirmationPage, regime, false)
+              .success
+              .value,
+            regime
+          ) mustBe controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
+        }
+
+        "must go from the MultipleSPRMissingDetailsConfirmation page to the Task List page if the user hasn't selected any entries" in {
+          navigator.nextPageWithRegime(
+            pages.declareDuty.MultipleSPRMissingDetailsConfirmationPage,
             NormalMode,
             emptyUserAnswers,
             regime

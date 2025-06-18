@@ -38,6 +38,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 import viewmodels.returns.ReturnSubmittedViewModel
 import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
@@ -1613,6 +1614,40 @@ trait TestData extends ModelGenerators {
 
   val allSmallProducerReliefVolumeAndRateByTaxType =
     Seq(volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+
+  object MultipleSPRMissingDetails {
+    private def changeRegimeInRateBand(rateBand: RateBand, newRegime: AlcoholRegime): RateBand = rateBand.copy(
+      rangeDetails = Set(
+        RangeDetailsByRegime(
+          newRegime,
+          NonEmptySeq.one(
+            rateBand.rangeDetails.head.abvRanges.head.copy(alcoholType = AlcoholType.fromAlcoholRegime(newRegime))
+          )
+        )
+      )
+    )
+
+    def declaredNonSPRRateBands(regime: AlcoholRegime): Set[RateBand] =
+      Set(coreRateBand, draughtReliefRateBand).map(changeRegimeInRateBand(_, regime)) // tax type codes: 123, 124
+
+    def declaredSPRRateBands(regime: AlcoholRegime): Set[RateBand] = Set(
+      smallProducerReliefRateBand,
+      smallProducerReliefRateBand2,
+      draughtAndSmallProducerReliefRateBand,
+      draughtAndSmallProducerReliefRateBand2
+    ).map(changeRegimeInRateBand(_, regime)) // tax type codes: 125-128
+
+    def missingSPRRateBands(regime: AlcoholRegime): Set[RateBand] =
+      Set(smallProducerReliefRateBand2, draughtAndSmallProducerReliefRateBand2).map(changeRegimeInRateBand(_, regime))
+
+    def missingRateBandDescriptions(regime: AlcoholRegime): Seq[HtmlContent] = {
+      val regimeWord = if (regime == OtherFermentedProduct) "other fermented products" else regime.entryName.toLowerCase
+      Seq(
+        HtmlContent(s"Non-draught $regimeWord between 6% and 8% ABV (tax type code 127 SPR)"),
+        HtmlContent(s"Draught $regimeWord between 1% and 3% ABV (tax type code 128 SPR)")
+      )
+    }
+  }
 
   val adrReturnCreatedDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
