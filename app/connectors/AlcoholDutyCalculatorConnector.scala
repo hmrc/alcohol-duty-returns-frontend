@@ -21,7 +21,7 @@ import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.AlcoholDuty
 import models._
 import models.RatePeriod._
-import models.dutySuspended.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2

@@ -21,7 +21,7 @@ import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.{ABVRange, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import models.RatePeriod._
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
-import models.dutySuspended.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
+import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Json

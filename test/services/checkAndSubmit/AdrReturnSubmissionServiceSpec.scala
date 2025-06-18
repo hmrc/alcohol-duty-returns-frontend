@@ -26,7 +26,8 @@ import models.{AlcoholRegime, AlcoholRegimes}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.dutySuspended.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
+import pages.dutySuspended._
+import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import queries.Settable
@@ -257,6 +258,62 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         }
       }
 
+      "Duty Suspended section (old journey)" - {
+        Seq(
+          DeclareDutySuspendedDeliveriesQuestionPage,
+          DutySuspendedBeerPage,
+          DutySuspendedCiderPage,
+          DutySuspendedSpiritsPage,
+          DutySuspendedWinePage,
+          DutySuspendedOtherFermentedPage
+        ).foreach { (page: Settable[_]) =>
+          s"must return Left if $page is not present" in new SetUp(false) {
+            val userAnswers = fullUserAnswersOldDSDFormat.remove(page).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
+            whenReady(
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
+            ) { result =>
+              result mustBe Left(s"Value not found for page: $page")
+            }
+          }
+        }
+
+        val dutySuspendedPages: Seq[(AlcoholRegime, Settable[_])] = Seq(
+          Beer                  -> DutySuspendedBeerPage,
+          Cider                 -> DutySuspendedCiderPage,
+          Spirits               -> DutySuspendedSpiritsPage,
+          Wine                  -> DutySuspendedWinePage,
+          OtherFermentedProduct -> DutySuspendedOtherFermentedPage
+        )
+
+        dutySuspendedPages.foreach { case (regime, page) =>
+          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp(
+            false
+          ) {
+            val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
+            val userAnswers     = fullUserAnswersOldDSDFormat
+              .copy(regimes = AlcoholRegimes(filteredRegimes))
+              .remove(page)
+              .success
+              .value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
+            whenReady(
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
+            ) { result =>
+              result.isRight mustBe true
+              result.map { res =>
+                res.dutySuspended.declared                   mustBe true
+                res.dutySuspended.dutySuspendedProducts.size mustBe 4
+              }
+            }
+          }
+        }
+      }
+
       "Duty Suspended section" - {
         Seq(
           DeclareDutySuspenseQuestionPage,
@@ -368,7 +425,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           Future.failed(new Exception(errorMessage))
         )
 
-        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock)
+        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock, appConfig)
 
         when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -381,8 +438,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
       }
     }
 
-    class SetUp {
-      val application: Application     = applicationBuilder().build()
+    class SetUp(newDSDJourneyFeatureToggle: Boolean = true) {
+      val additionalConfig             = Map(
+        "features.duty-suspended-new-journey" -> newDSDJourneyFeatureToggle
+      )
+      val application: Application     = applicationBuilder().configure(additionalConfig).build()
       val taskListViewModelMock        = mock[TaskListViewModel]
       val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
@@ -393,7 +453,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           Future.successful(AdjustmentDuty(duty = duties.sum))
       }
 
-      val adrReturnSubmissionService = new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock)
+      val adrReturnSubmissionService =
+        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock, appConfig)
     }
   }
 }
