@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
 import config.Constants.Css
+import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.{AdrDutySuspended, AdrSpirits}
@@ -60,7 +61,8 @@ case class DutyDueForThisReturnViewModel(
 
 class DutyDueForThisReturnHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  adrReturnSubmissionService: AdrReturnSubmissionService
+  adrReturnSubmissionService: AdrReturnSubmissionService,
+  appConfig: FrontendAppConfig
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 
@@ -181,7 +183,11 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             ActionItemViewModel(
               content = Text(messages("site.change")),
-              href = controllers.dutySuspended.routes.CheckYourAnswersController.onPageLoad().url
+              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
+                controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
+              } else {
+                controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+              }
             ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )
@@ -194,7 +200,13 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             ActionItemViewModel(
               content = Text(messages("site.change")),
-              href = controllers.dutySuspended.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
+                controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
+              } else {
+                controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                  .onPageLoad(NormalMode)
+                  .url
+              }
             ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )

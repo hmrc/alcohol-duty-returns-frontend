@@ -586,7 +586,124 @@ dutyCalculation.table.action = Action
 
 productList.caption = Duty due
 
-# Beginning of duty suspended deliveries sub-journey
+# Beginning of OLD duty suspended deliveries sub-journey
+
+declareDutySuspendedDeliveriesQuestion.title = Have you delivered or received any duty suspended finished alcoholic product?
+declareDutySuspendedDeliveriesQuestion.heading = Have you delivered or received any duty suspended finished alcoholic product?
+declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to tell us about any duty suspended alcohol
+declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered finished alcoholic product to a duty suspended warehouse or received finished alcoholic product in duty suspense.
+
+dutySuspendedDeliveriesGuidance.title = Calculate the volume of duty suspended finished alcoholic products
+dutySuspendedDeliveriesGuidance.heading = Calculate the volume of duty suspended finished alcoholic products
+dutySuspendedDeliveriesGuidance.p1 = For each type of alcohol you produce you need to tell us the volume of finished alcoholic products and the volume of pure alcohol in those finished alcoholic products.
+dutySuspendedDeliveriesGuidance.item1.addTogether = Add together:
+dutySuspendedDeliveriesGuidance.item1.sublist.1 = litres exported outside the UK (for example, ship stores)
+dutySuspendedDeliveriesGuidance.item1.sublist.2 = litres delivered duty suspended to other UK registered premises and excise warehouses
+dutySuspendedDeliveriesGuidance.item2.thenSubtract = Then subtract:
+dutySuspendedDeliveriesGuidance.item2.sublist.1 = litres received under duty suspense from registered premises, excise warehouses and importation
+dutySuspendedDeliveriesGuidance.p2 = Use the same method to calculate the litres of pure alcohol in your duty suspended finished alcoholic products.
+dutySuspendedDeliveriesGuidance.p3 = Your answers will not change your duty calculation.
+
+dutySuspendedBeer.title = Tell us about your duty suspended beer
+dutySuspendedBeer.heading = Tell us about your duty suspended beer
+dutySuspendedBeer.p1 = You need to tell us about your net quantity of beer that is duty suspended, both as total litres and litres of pure alcohol (LPA).
+dutySuspendedBeer.subheading1 = What is the total net quantity of this beer?
+dutySuspendedBeer.hint.1 = In litres, up to 2 decimal places
+dutySuspendedBeer.subheading2 = What is the total net quantity of pure alcohol in this beer?
+dutySuspendedBeer.hint.2 = In litres, up to 4 decimal places
+dutySuspendedBeer.totalBeer.checkYourAnswersLabel = Total net quantity of duty suspended beer
+dutySuspendedBeer.pureAlcoholInBeer.checkYourAnswersLabel = Total net quantity of pure alcohol in this beer
+dutySuspendedBeer.error.totalBeer.required = Enter the total net quantity of beer
+dutySuspendedBeer.error.pureAlcoholInBeer.required = Enter the total net quantity of pure alcohol in beer
+dutySuspendedBeer.totalBeer.change.hidden = total net quantity of duty suspended beer
+dutySuspendedBeer.pureAlcoholInBeer.change.hidden = total net quantity of pure alcohol in this beer
+dutySuspendedBeer.error.totalBeer.nonNumeric = Total net quantity of beer must be a number
+dutySuspendedBeer.error.totalBeer.maximumRequired = Total net quantity of beer must be less than 1 billion litres
+dutySuspendedBeer.error.totalBeer.minimumRequired = Total net quantity of beer must be more than −1 billion litres
+dutySuspendedBeer.error.totalBeer.decimalPlaces = Total net quantity of beer must be a number up to 2 decimal places
+
+dutySuspended.error.pureAlcohol.nonNumeric = Total net quantity of pure alcohol must be a number
+dutySuspended.error.pureAlcohol.maximumRequired = Total net quantity of pure alcohol must be less than 1 billion litres
+dutySuspended.error.pureAlcohol.minimumRequired = Total net quantity of pure alcohol must be more than −1 billion litres
+dutySuspended.error.pureAlcohol.decimalPlaces = Total net quantity of pure alcohol must be a number up to 4 decimal places
+
+dutySuspendedCider.title = Tell us about your duty suspended cider
+dutySuspendedCider.heading = Tell us about your duty suspended cider
+dutySuspendedCider.p1 = You need to tell us about your net quantity of cider that is duty suspended, both as total litres and litres of pure alcohol (LPA).
+dutySuspendedCider.subheading1 = What is the total net quantity of this cider?
+dutySuspendedCider.hint.1 = In litres, up to 2 decimal places
+dutySuspendedCider.subheading2 = What is the total net quantity of pure alcohol in this cider?
+dutySuspendedCider.hint.2 = In litres, up to 4 decimal places
+dutySuspendedCider.totalCider.checkYourAnswersLabel = Total net quantity of duty suspended cider
+dutySuspendedCider.pureAlcoholInCider.checkYourAnswersLabel = Total net quantity of pure alcohol in this cider
+dutySuspendedCider.error.totalCider.required = Enter the total net quantity of cider
+dutySuspendedCider.error.pureAlcoholInCider.required = Enter the total net quantity of pure alcohol in cider
+dutySuspendedCider.totalCider.change.hidden = total net quantity of duty suspended cider
+dutySuspendedCider.pureAlcoholInCider.change.hidden = total net quantity of pure alcohol in this cider
+dutySuspendedCider.error.totalCider.nonNumeric = Total net quantity of cider must be a number
+dutySuspendedCider.error.totalCider.maximumRequired = Total net quantity of cider must be less than 1 billion litres
+dutySuspendedCider.error.totalCider.minimumRequired = Total net quantity of cider must be more than −1 billion litres
+dutySuspendedCider.error.totalCider.decimalPlaces = Total net quantity of cider must be a number up to 2 decimal places
+
+dutySuspendedWine.title = Tell us about your duty suspended wine
+dutySuspendedWine.heading = Tell us about your duty suspended wine
+dutySuspendedWine.p1 = You need to tell us about your net quantity of wine that is duty suspended, both as total litres and litres of pure alcohol (LPA).
+dutySuspendedWine.subheading1 = What is the total net quantity of this wine?
+dutySuspendedWine.subheading2 = What is the total net quantity of pure alcohol in this wine?
+dutySuspendedWine.hint.1 = In litres, up to 2 decimal places
+dutySuspendedWine.hint.2 = In litres, up to 4 decimal places
+dutySuspendedWine.totalWine.checkYourAnswersLabel = Total net quantity of duty suspended wine
+dutySuspendedWine.pureAlcoholInWine.checkYourAnswersLabel = Total net quantity of pure alcohol in this wine
+dutySuspendedWine.error.totalWine.required = Enter the total net quantity of wine
+dutySuspendedWine.error.pureAlcoholInWine.required = Enter the total net quantity of pure alcohol in wine
+dutySuspendedWine.totalWine.change.hidden = total net quantity of duty suspended wine
+dutySuspendedWine.pureAlcoholInWine.change.hidden = total net quantity of pure alcohol in this wine
+dutySuspendedWine.error.totalWine.nonNumeric = Total net quantity of wine must be a number
+dutySuspendedWine.error.totalWine.maximumRequired = Total net quantity of wine must be less than 1 billion litres
+dutySuspendedWine.error.totalWine.minimumRequired = Total net quantity of wine must be more than −1 billion litres
+dutySuspendedWine.error.totalWine.decimalPlaces = Total net quantity of wine must be a number up to 2 decimal places
+
+dutySuspendedSpirits.title = Tell us about your duty suspended spirits
+dutySuspendedSpirits.heading = Tell us about your duty suspended spirits
+dutySuspendedSpirits.p1 = You need to tell us about your net quantity of spirits that is duty suspended, both as total litres and litres of pure alcohol (LPA).
+dutySuspendedSpirits.subheading1 = What is the total net quantity of these spirits?
+dutySuspendedSpirits.hint.1 = In litres, up to 2 decimal places
+dutySuspendedSpirits.subheading2 = What is the total net quantity of pure alcohol in these spirits?
+dutySuspendedSpirits.totalSpirits.checkYourAnswersLabel = Total net quantity of duty suspended spirits
+dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel = Total net quantity of pure alcohol in these spirits
+dutySuspendedSpirits.hint.2 = In litres, up to 4 decimal places
+dutySuspendedSpirits.error.totalSpirits.required = Enter the total net quantity of spirits
+dutySuspendedSpirits.error.pureAlcoholInSpirits.required = Enter the total net quantity of pure alcohol in spirits
+dutySuspendedSpirits.totalSpirits.change.hidden = total net quantity of duty suspended spirits
+dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden = total net quantity of pure alcohol in these spirits
+dutySuspendedSpirits.error.totalSpirits.nonNumeric = Total net quantity of spirits must be a number
+dutySuspendedSpirits.error.totalSpirits.maximumRequired = Total net quantity of spirits must be less than 1 billion litres
+dutySuspendedSpirits.error.totalSpirits.minimumRequired = Total net quantity of spirits must be more than −1 billion litres
+dutySuspendedSpirits.error.totalSpirits.decimalPlaces = Total net quantity of spirits must be a number up to 2 decimal places
+
+dutySuspendedOtherFermented.title = Tell us about your other fermented products with duty suspended
+dutySuspendedOtherFermented.heading = Tell us about your other fermented products with duty suspended
+dutySuspendedOtherFermented.p1 = You need to tell us about your net quantity of other fermented products that is duty suspended, both as total litres and litres of pure alcohol (LPA).
+dutySuspendedOtherFermented.subheading1 = What is the total net quantity of these other fermented products?
+dutySuspendedOtherFermented.hint.1 = In litres, up to 2 decimal places
+dutySuspendedOtherFermented.subheading2 = What is the total net quantity of pure alcohol in these other fermented products?
+dutySuspendedOtherFermented.hint.2 = In litres, up to 4 decimal places
+dutySuspendedOtherFermented.totalOtherFermented.checkYourAnswersLabel = Total net quantity of duty suspended other fermented products
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented.checkYourAnswersLabel = Total net quantity of pure alcohol in these other fermented products
+dutySuspendedOtherFermented.error.totalOtherFermented.required = Enter the total net quantity of other fermented products
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required = Enter the total net quantity of pure alcohol in other fermented products
+dutySuspendedOtherFermented.totalOtherFermented.change.hidden = total net quantity of duty suspended other fermented products
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden = total net quantity of pure alcohol in these other fermented products
+dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric = Total net quantity of other fermented products must be a number
+dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired = Total net quantity of other fermented products must be less than 1 billion litres
+dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired = Total net quantity of other fermented products must be more than −1 billion litres
+dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces = Total net quantity of other fermented products must be a number up to 2 decimal places
+
+checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
+
+# End of OLD duty suspended deliveries sub-journey
+
+# Beginning of NEW duty suspended deliveries sub-journey
 
 declareDutySuspenseQuestion.title = Have you delivered or received finished alcoholic products under duty suspense?
 declareDutySuspenseQuestion.heading = Have you delivered or received finished alcoholic products under duty suspense?
@@ -771,7 +888,7 @@ dutySuspended.checkYourAnswers.pureAlcohol = {0} litres of pure alcohol
 dutySuspended.checkYourAnswers.alcoholType.change.hidden = type of duty suspended alcohol
 dutySuspended.checkYourAnswers.amount.change.hidden = amount of duty suspended alcohol
 
-# End of duty suspended deliveries sub-journey
+# End of NEW duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
 
