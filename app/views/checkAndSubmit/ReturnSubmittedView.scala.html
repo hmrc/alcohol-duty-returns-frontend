@@ -47,7 +47,7 @@
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
-@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false, showUserResearchBanner = true) {
 
     @if(viewModel.returnDetails.isAmountGreaterThanZero) {
         @govukPanel(Panel(

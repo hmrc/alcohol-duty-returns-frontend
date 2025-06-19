@@ -34,11 +34,14 @@
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcScripts: HmrcScripts,
     betaBanner: StandardBetaBanner,
+    hmrcUserResearchBanner: HmrcUserResearchBanner,
     defaultMainContentLayout: TwoThirdsMainContent,
     fullWidthPageLayout: FullWidthMainContent
 )
 
-@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true, fullWidth: Boolean = false, withPrintCss: Boolean = false)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true,
+        showUserResearchBanner: Boolean = false, fullWidth: Boolean = false, withPrintCss: Boolean = false
+)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @head = {
 
@@ -105,7 +108,12 @@
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(routes.ServiceEntryController.onPageLoad.url),
         signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None,
-        phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
+        phaseBanner = Some(betaBanner(appConfig.feedbackUrl)),
+        additionalBannersBlock = if (showUserResearchBanner) Some(hmrcUserResearchBanner(UserResearchBanner(
+            language = if (messages.lang.code == "cy") Cy else En,
+            url = if (messages.lang.code == "cy") appConfig.userResearchSurveyUrlWelsh else appConfig.userResearchSurveyUrl,
+            hideCloseButton = true
+        ))) else None,
     )),
     beforeContentBlock = Some(beforeContent),
     footerBlock        = Some(hmrcStandardFooter()),
