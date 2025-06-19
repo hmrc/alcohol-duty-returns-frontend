@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import config.Constants
 @import config.Constants.Css
 @import templates.FullWidthMainContent
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
@@ -92,6 +93,13 @@
 
 @content = {
     @contentBlock
+
+@if(!Constants.excludedBackLinkPaths.exists(path =>
+request.uri.contains(path) || request.uri.endsWith(path))) {
+<p class="govuk-body">
+    <a href="@routes.TaskListController.onPageLoad.url" class="govuk-link">@messages("viewAllTasks.Link.text")</a>
+</p>
+}
 
     <div class="@Css.reportIssueLinkMarginCssClass">
         @hmrcReportTechnicalIssueHelper()
