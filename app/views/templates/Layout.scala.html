@@ -109,8 +109,9 @@
         signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None,
         phaseBanner = Some(betaBanner(appConfig.feedbackUrl)),
         userResearchBanner = if (showUserResearchBanner) Some(UserResearchBanner(
-            if (messages.lang.code == "cy") Cy else En,
-            if (messages.lang.code == "cy") appConfig.userResearchSurveyUrlWelsh else appConfig.userResearchSurveyUrl
+            language = if (messages.lang.code == "cy") Cy else En,
+            url = if (messages.lang.code == "cy") appConfig.userResearchSurveyUrlWelsh else appConfig.userResearchSurveyUrl,
+            hideCloseButton = true
         )) else None
     )),
     beforeContentBlock = Some(beforeContent),
