@@ -22,7 +22,7 @@ import models.ReturnPeriod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
 import pages.declareDuty.DeclareAlcoholDutyQuestionPage
-import pages.dutySuspendedNew.DeclareDutySuspenseQuestionPage
+import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages
@@ -65,7 +65,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         .set(DeclareAdjustmentQuestionPage, false)
         .success
         .value
-        .set(DeclareDutySuspenseQuestionPage, false)
+        .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
         .value
         .set(DeclareQuarterlySpiritsPage, false)
@@ -134,7 +134,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
   }
 
   class SetUp {
-    val additionalConfig             = Map("features.spirits-and-ingredients" -> true)
+    val additionalConfig             = Map("features.duty-suspended-new-journey" -> false)
     val application: Application     = applicationBuilder().configure(additionalConfig).build()
     val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
     implicit val messages: Messages  = getMessages(application)
