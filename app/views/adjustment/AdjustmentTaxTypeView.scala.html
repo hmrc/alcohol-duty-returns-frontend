@@ -17,6 +17,7 @@
 @import components.{Caption, FormGroupWithError, PageHeading}
 @import viewmodels.InputWidth._
 @import viewmodels.adjustment.AdjustmentTaxTypeViewModel
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -26,7 +27,8 @@
     govukButton: GovukButton,
     caption: Caption,
     pageHeading: PageHeading,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, viewModel: AdjustmentTaxTypeViewModel)(implicit request: Request[_], messages: Messages)
@@ -60,5 +62,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

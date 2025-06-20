@@ -26,20 +26,6 @@ object Constants {
 
   val noDetailsValue: String = "no-details"
 
-  val excludedBackLinkPaths: Set[String] = Set(
-    "/before-you-start",
-    "/return-sent",
-    "/task-list",
-    "/enrol",
-    "/service-updated",
-    "/there-is-a-problem",
-    "/no-access",
-    "/duty-due",
-    "/start-payment",
-    "/view-your-return",
-    "/clear-return"
-  )
-
   object MappingFields {
     val taxTypeField: String             = "taxType"
     val totalLitresField: String         = "totalLitres"

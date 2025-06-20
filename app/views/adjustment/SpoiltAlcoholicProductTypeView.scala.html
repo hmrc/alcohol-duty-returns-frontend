@@ -16,6 +16,7 @@
 
 @import components.{Caption, PageHeading, Paragraph, FormGroupWithError}
 @import viewmodels.adjustment.SpoiltAlcoholicProductTypeViewModel
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -26,7 +27,8 @@
     caption: Caption,
     paragraph: Paragraph,
     pageHeading: PageHeading,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, viewModel: SpoiltAlcoholicProductTypeViewModel)(implicit request: Request[_], messages: Messages)
@@ -61,5 +63,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

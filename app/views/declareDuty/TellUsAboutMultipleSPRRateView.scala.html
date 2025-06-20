@@ -18,6 +18,7 @@
 @import config.Constants.Css
 @import viewmodels.InputWidth._
 @import viewmodels.LegendSize
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -31,7 +32,8 @@
     subHeading: SubHeading,
     pageHeading: PageHeading,
     govukWarningText: GovukWarningText,
-    govukFieldset: GovukFieldset
+    govukFieldset: GovukFieldset,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem], index: Option[Int])(implicit request: Request[_], messages: Messages)
@@ -137,5 +139,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

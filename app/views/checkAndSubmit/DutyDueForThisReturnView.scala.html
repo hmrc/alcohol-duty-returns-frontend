@@ -17,6 +17,7 @@
 @import components.{Caption, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList, SubHeading}
 @import config.Constants.Css
 @import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
+@import views.html.components.ReturnToTaskList
 
 @this(
         layout: templates.Layout,
@@ -28,7 +29,8 @@
         paragraph: Paragraph,
         subHeading: SubHeading,
         bulletList: BulletList,
-        govukSummaryList: GovukSummaryList
+        govukSummaryList: GovukSummaryList,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(dutyDueViewModel: DutyDueForThisReturnViewModel)(implicit request: Request[_], messages: Messages)
@@ -95,5 +97,6 @@
         @govukButton(
             ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
         )
+        @returnToTaskList()
     }
 }

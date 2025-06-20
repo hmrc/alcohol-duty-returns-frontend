@@ -15,6 +15,7 @@
  *@
 
 @import components.{Caption, PageHeading}
+@import views.html.components.ReturnToTaskList
 
 @this(
         layout: templates.Layout,
@@ -22,7 +23,8 @@
         govukButton: GovukButton,
         govukSummaryList: GovukSummaryList,
         caption: Caption,
-        pageHeading: PageHeading
+        pageHeading: PageHeading,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(regime:AlcoholRegime, list: SummaryList, index: Option[Int])(implicit request: Request[_], messages: Messages)
@@ -41,5 +43,6 @@
     @govukButton(
       ButtonViewModel("continueButton", messages("site.continue"))
     )
+    @returnToTaskList()
   }
 }
