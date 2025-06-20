@@ -1245,4 +1245,6 @@ returnSubmitted.noDetails.viewPayments = gwirio faint o doll sydd arnoch
 returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 ddiwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
 returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
 
+viewAllTasks.Link.text = Ewch yn ôl i fwrw golwg dros yr holl dasgau
+
 # End of Check and submit sub-journey

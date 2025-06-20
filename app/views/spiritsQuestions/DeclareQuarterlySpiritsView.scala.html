@@ -16,6 +16,7 @@
 
 @import components.{Caption, PageHeading, Paragraph, BulletList}
 @import config.Constants.Css
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -26,7 +27,8 @@
     govukButton: GovukButton,
     caption: Caption,
     bulletList: BulletList,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -75,5 +77,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

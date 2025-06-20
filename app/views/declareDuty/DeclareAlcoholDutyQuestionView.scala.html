@@ -16,6 +16,7 @@
 
 @import components.{BulletList, Caption, PageHeading, Paragraph, SectionBreak, SubHeading}
 @import viewmodels.LegendSize
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -29,6 +30,7 @@
     sectionBreak: SectionBreak,
     subHeading: SubHeading,
     caption: Caption,
+    returnToTaskList: ReturnToTaskList
 )
 
 
@@ -104,5 +106,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

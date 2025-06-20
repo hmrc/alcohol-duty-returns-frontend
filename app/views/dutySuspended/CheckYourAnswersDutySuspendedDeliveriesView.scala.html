@@ -16,13 +16,15 @@
 
 @import components.{Caption, PageHeading}
 @import config.Constants.Css
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList,
     govukButton: GovukButton,
     caption: Caption,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
@@ -44,4 +46,5 @@
         ButtonViewModel("continueButton", messages("site.continue"))
             .asLink(routes.TaskListController.onPageLoad.url)
     )
+    @returnToTaskList()
 }

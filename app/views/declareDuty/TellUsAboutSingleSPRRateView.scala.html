@@ -18,6 +18,7 @@
 @import config.Constants.Css
 @import viewmodels.InputWidth._
 @import viewmodels.declareDuty.CategoriesByRateTypeViewModel
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,8 @@
     caption: Caption,
     subHeading: SubHeading,
     pageHeading: PageHeading,
-    govukFieldset: GovukFieldset
+    govukFieldset: GovukFieldset,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], regime: AlcoholRegime, categories: CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -194,5 +196,6 @@
       @govukButton(
         ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
       )
+      @returnToTaskList()
     }
 }
