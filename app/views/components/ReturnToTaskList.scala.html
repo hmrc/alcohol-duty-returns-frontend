@@ -18,11 +18,13 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{En, Cy}
+@import config.Constants
 
 @this()
 
 @()(implicit messages: Messages)
 
 <p class="govuk-body">
- <a href="@TaskListController.onPageLoad.url" class="govuk-link govuk-link--no-visited-state">@messages("viewAllTasks.Link.text")</a>
+ <a href="@TaskListController.onPageLoad.url" class="@Constants.Css.linkNoVisitedStateCssClass">@messages("viewAllTasks.Link.text")</a>
 </p>
+

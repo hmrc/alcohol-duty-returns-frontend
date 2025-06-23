@@ -242,6 +242,7 @@ taskList.section.checkAndSubmit.heading = Anfon Datganiad
 taskList.section.checkAndSubmit.needToDeclare = Gwirio’r doll sy’n daladwy ac anfon eich Datganiad
 taskList.section.checkAndSubmit.hint = Mae’n rhaid i chi lenwi pob adran cyn i chi allu anfon eich Datganiad.
 taskList.button.clearReturn = Dileu cynnwys y datganiad a dechrau eto
+viewAllTasks.Link.text = Ewch yn ôl i fwrw golwg dros yr holl dasgau
 
 beforeStartReturn.title = Cyn i chi ddechrau
 beforeStartReturn.heading = Cyn i chi ddechrau
@@ -1244,7 +1245,5 @@ returnSubmitted.noDetails.viewReturn2 = i gadarnhau’ch cyfeirnod
 returnSubmitted.noDetails.viewPayments = gwirio faint o doll sydd arnoch
 returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 ddiwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
 returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
-
-viewAllTasks.Link.text = Ewch yn ôl i fwrw golwg dros yr holl dasgau
 
 # End of Check and submit sub-journey

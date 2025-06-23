@@ -242,6 +242,7 @@ taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
 taskList.button.clearReturn = Clear return and start again
+viewAllTasks.Link.text = Go back to view all tasks
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
@@ -1244,7 +1245,5 @@ returnSubmitted.noDetails.viewReturn2 = to confirm your reference number
 returnSubmitted.noDetails.viewPayments = check how much duty you owe
 returnSubmitted.noDetails.p2 = Your details from this return may take up to 2 working days to be updated in our service.
 returnSubmitted.noDetails.p3 = Use your reference number from this return as a payment reference if you need to pay any duty.
-
-viewAllTasks.Link.text = Go back to view all tasks
 
 # End of Check and submit sub-journey
