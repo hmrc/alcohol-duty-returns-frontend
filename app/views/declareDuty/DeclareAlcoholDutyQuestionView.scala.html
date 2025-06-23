@@ -32,7 +32,7 @@
 )
 
 
-@(form: Form[_], showCider: Boolean, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], showSparklingCider: Boolean, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareAlcoholDutyQuestion.title"))) {
 
@@ -57,7 +57,7 @@
           messages("declareAlcoholDutyQuestion.p1.l4")
         ))
 
-        @if(showCider) {
+        @if(showSparklingCider) {
           @paragraph(messages("declareAlcoholDutyQuestion.cider.p1"))
 
           @bulletList(Seq(
@@ -83,13 +83,13 @@
           messages("declareAlcoholDutyQuestion.p3.l2")
         ))
 
-        @if(showCider) {
+        @if(showSparklingCider) {
           @paragraph(messages("declareAlcoholDutyQuestion.cider.p2"))
 
           @bulletList(Seq(
             messages("declareAlcoholDutyQuestion.cider.p2.l1"),
             messages("declareAlcoholDutyQuestion.cider.p2.l2")
-        ))
+          ))
         }
 
         @sectionBreak()
