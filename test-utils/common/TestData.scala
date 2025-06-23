@@ -699,7 +699,7 @@ trait TestData extends ModelGenerators {
     )
   )
 
-  val fullUserAnswersOldDSDFormat: UserAnswers = UserAnswers(
+  val fullUserAnswers: UserAnswers = UserAnswers(
     ReturnId(appaId, quarterReturnPeriodGen.sample.get.toPeriodKey),
     groupId,
     internalId,
@@ -1010,7 +1010,7 @@ trait TestData extends ModelGenerators {
     lastUpdated = Instant.now(clock)
   )
 
-  val fullUserAnswers: UserAnswers = UserAnswers(
+  val fullUserAnswersNewDSDJourney: UserAnswers = UserAnswers(
     ReturnId(appaId, quarterReturnPeriodGen.sample.get.toPeriodKey),
     groupId,
     internalId,
@@ -1371,11 +1371,11 @@ trait TestData extends ModelGenerators {
       dutySuspended = AdrDutySuspended(
         declared = true,
         dutySuspendedProducts = List(
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(100, 10)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(100, 10)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Wine, AdrAlcoholQuantity(0, 0)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(3.4, 0.34)),
-          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(-5.5, -0.82))
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(1000, 100)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(2000, 200)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(1000, 100)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Wine, AdrAlcoholQuantity(1000, 100)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(1000, 100))
         )
       ),
       spirits = Some(

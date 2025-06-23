@@ -49,7 +49,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           .set(DeclareAdjustmentQuestionPage, false)
           .success
           .value
-          .set(DeclareDutySuspenseQuestionPage, false)
+          .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
           .success
           .value
 
@@ -70,7 +70,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           .set(DeclareAdjustmentQuestionPage, false)
           .success
           .value
-          .set(DeclareDutySuspenseQuestionPage, false)
+          .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
           .success
           .value
           .set(DeclareQuarterlySpiritsPage, false)
@@ -258,7 +258,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         }
       }
 
-      "Duty Suspended section (old journey)" - {
+      "Duty Suspended section" - {
         Seq(
           DeclareDutySuspendedDeliveriesQuestionPage,
           DutySuspendedBeerPage,
@@ -267,8 +267,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
         ).foreach { (page: Settable[_]) =>
-          s"must return Left if $page is not present" in new SetUp(false) {
-            val userAnswers = fullUserAnswersOldDSDFormat.remove(page).success.value
+          s"must return Left if $page is not present" in new SetUp() {
+            val userAnswers = fullUserAnswers.remove(page).success.value
 
             when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -289,11 +289,9 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         )
 
         dutySuspendedPages.foreach { case (regime, page) =>
-          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp(
-            false
-          ) {
+          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp() {
             val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
-            val userAnswers     = fullUserAnswersOldDSDFormat
+            val userAnswers     = fullUserAnswers
               .copy(regimes = AlcoholRegimes(filteredRegimes))
               .remove(page)
               .success
@@ -314,13 +312,13 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         }
       }
 
-      "Duty Suspended section" - {
+      "Duty Suspended section (new journey)" - {
         Seq(
           DeclareDutySuspenseQuestionPage,
           DutySuspendedAlcoholTypePage
         ).foreach { (page: Settable[_]) =>
-          s"must return Left if $page is not present" in new SetUp {
-            val userAnswers = fullUserAnswers.remove(page).success.value
+          s"must return Left if $page is not present" in new SetUp(true) {
+            val userAnswers = fullUserAnswersNewDSDJourney.remove(page).success.value
 
             when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -333,8 +331,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         }
 
         Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
-          s"must return Left if $regime is selected but key is not present in DutySuspendedFinalVolumesPage" in new SetUp {
-            val userAnswers = fullUserAnswers.removeByKey(DutySuspendedFinalVolumesPage, regime).success.value
+          s"must return Left if $regime is selected but key is not present in DutySuspendedFinalVolumesPage" in new SetUp(
+            true
+          ) {
+            val userAnswers =
+              fullUserAnswersNewDSDJourney.removeByKey(DutySuspendedFinalVolumesPage, regime).success.value
 
             when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -347,9 +348,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         }
 
         Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
-          s"must return Right if $regime is not selected and key is not present in DutySuspendedFinalVolumesPage" in new SetUp {
+          s"must return Right if $regime is not selected and key is not present in DutySuspendedFinalVolumesPage" in new SetUp(
+            true
+          ) {
             val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
-            val userAnswers     = fullUserAnswers
+            val userAnswers     = fullUserAnswersNewDSDJourney
               .set(DutySuspendedAlcoholTypePage, filteredRegimes)
               .success
               .value
@@ -438,7 +441,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
       }
     }
 
-    class SetUp(newDSDJourneyFeatureToggle: Boolean = true) {
+    class SetUp(newDSDJourneyFeatureToggle: Boolean = false) {
       val additionalConfig             = Map(
         "features.duty-suspended-new-journey" -> newDSDJourneyFeatureToggle
       )
