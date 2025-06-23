@@ -27,7 +27,6 @@ import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import queries.Settable
@@ -365,7 +364,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           Future.failed(new Exception(errorMessage))
         )
 
-        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock, appConfig)
+        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock)
 
         when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -391,7 +390,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
       }
 
       val adrReturnSubmissionService =
-        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock, appConfig)
+        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock)
     }
   }
 }

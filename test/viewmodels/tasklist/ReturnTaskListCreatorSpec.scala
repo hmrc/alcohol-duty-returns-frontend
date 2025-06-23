@@ -17,7 +17,6 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import config.FrontendAppConfig
 import models.AlcoholRegime._
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Underdeclaration

@@ -17,7 +17,6 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import config.FrontendAppConfig
 import models.ReturnPeriod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
@@ -134,23 +133,21 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
   }
 
   class SetUp {
-    val additionalConfig             = Map("features.duty-suspended-new-journey" -> false)
-    val application: Application     = applicationBuilder().configure(additionalConfig).build()
-    val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
-    implicit val messages: Messages  = getMessages(application)
-    private val periodKey            = periodKeyDec23
-    val userAnswers                  = emptyUserAnswers.copy(returnId = emptyUserAnswers.returnId.copy(periodKey = periodKey))
-    val returnPeriod                 = ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
-    private val dateTimeHelper       = createDateTimeHelper()
-    val fromDate                     = returnPeriod.periodFromDate()
-    val toDate                       = returnPeriod.periodToDate()
-    val dueDate                      = returnPeriod.periodDueDate()
-    val validUntil                   = Instant.now(clock)
-    val fromDateString               = dateTimeHelper.formatDateMonthYear(fromDate)
-    val toDateString                 = dateTimeHelper.formatDateMonthYear(toDate)
-    val dueDateString                = dateTimeHelper.formatDateMonthYear(dueDate)
-    val validUntilString             = dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
-    val returnTaskListCreator        = new ReturnTaskListCreator(appConfig)
-    val taskListViewModel            = new TaskListViewModel(createDateTimeHelper(), returnTaskListCreator)
+    val application: Application    = applicationBuilder().build()
+    implicit val messages: Messages = getMessages(application)
+    private val periodKey           = periodKeyDec23
+    val userAnswers                 = emptyUserAnswers.copy(returnId = emptyUserAnswers.returnId.copy(periodKey = periodKey))
+    val returnPeriod                = ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
+    private val dateTimeHelper      = createDateTimeHelper()
+    val fromDate                    = returnPeriod.periodFromDate()
+    val toDate                      = returnPeriod.periodToDate()
+    val dueDate                     = returnPeriod.periodDueDate()
+    val validUntil                  = Instant.now(clock)
+    val fromDateString              = dateTimeHelper.formatDateMonthYear(fromDate)
+    val toDateString                = dateTimeHelper.formatDateMonthYear(toDate)
+    val dueDateString               = dateTimeHelper.formatDateMonthYear(dueDate)
+    val validUntilString            = dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
+    val returnTaskListCreator       = new ReturnTaskListCreator()
+    val taskListViewModel           = new TaskListViewModel(createDateTimeHelper(), returnTaskListCreator)
   }
 }

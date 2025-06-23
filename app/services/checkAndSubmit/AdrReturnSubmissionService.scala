@@ -18,7 +18,6 @@ package services.checkAndSubmit
 
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
@@ -40,8 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdrReturnSubmissionServiceImpl @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  taskListViewModel: TaskListViewModel,
-  appConfig: FrontendAppConfig
+  taskListViewModel: TaskListViewModel
 )(implicit
   ec: ExecutionContext
 ) extends AdrReturnSubmissionService {
@@ -472,14 +470,6 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     userAnswers.get(page) match {
       case Some(value) => EitherT.rightT(value)
       case None        => EitherT.leftT(s"Value not found for page: $page")
-    }
-
-  private def getValueByKey[A, B](userAnswers: UserAnswers, page: QuestionPage[Map[A, B]], key: A)(implicit
-    reads: Reads[B]
-  ): EitherT[Future, String, B] =
-    userAnswers.getByKey(page, key) match {
-      case Some(value) => EitherT.rightT(value)
-      case None        => EitherT.leftT(s"Value not found for page $page and key $key")
     }
 
   private def calculateTotalDuties(
