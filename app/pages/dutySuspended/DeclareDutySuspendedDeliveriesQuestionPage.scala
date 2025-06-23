@@ -16,12 +16,30 @@
 
 package pages.dutySuspended
 
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import pages.QuestionPage
+
+import scala.util.Try
 
 case object DeclareDutySuspendedDeliveriesQuestionPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "declareDutySuspendedDeliveriesQuestion"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(
+        List(
+          DutySuspendedBeerPage,
+          DutySuspendedCiderPage,
+          DutySuspendedWinePage,
+          DutySuspendedSpiritsPage,
+          DutySuspendedOtherFermentedPage
+        )
+      )
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }
