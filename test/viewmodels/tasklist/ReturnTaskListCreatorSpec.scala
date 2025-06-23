@@ -34,7 +34,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 class ReturnTaskListCreatorSpec extends SpecBase {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
-  val returnTaskListCreator       = new ReturnTaskListCreator()
+  val returnTaskListCreator       = new ReturnTaskListCreator
   val pageNumber                  = 1
 
   "on calling returnSection" - {

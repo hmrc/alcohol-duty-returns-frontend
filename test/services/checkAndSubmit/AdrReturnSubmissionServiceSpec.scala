@@ -266,7 +266,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
         ).foreach { (page: Settable[_]) =>
-          s"must return Left if $page is not present" in new SetUp() {
+          s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
 
             when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
@@ -288,7 +288,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         )
 
         dutySuspendedPages.foreach { case (regime, page) =>
-          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp() {
+          s"must return Right if the user doesn't have $regime as a regime and $page is not present" in new SetUp {
             val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
             val userAnswers     = fullUserAnswers
               .copy(regimes = AlcoholRegimes(filteredRegimes))
