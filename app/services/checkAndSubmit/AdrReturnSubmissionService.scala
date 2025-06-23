@@ -30,7 +30,6 @@ import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, UnderDeclarationReasonPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
-import pages.dutySuspendedNew.{DeclareDutySuspenseQuestionPage, DutySuspendedAlcoholTypePage, DutySuspendedFinalVolumesPage}
 import pages.spiritsQuestions._
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
@@ -233,31 +232,16 @@ class AdrReturnSubmissionServiceImpl @Inject() (
   }.toRight(s"Impossible to create a Repackaged Adjustment item for values: $adjustmentEntry")
 
   def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended] =
-    if (appConfig.dutySuspendedNewJourneyEnabled) {
-      getValue(userAnswers, DeclareDutySuspenseQuestionPage).flatMap { hasDeclaredDutySuspended =>
-        if (hasDeclaredDutySuspended) {
-          getDutySuspendedProductsNew(userAnswers).map { dutySuspendedProducts =>
-            AdrDutySuspended(
-              declared = true,
-              dutySuspendedProducts
-            )
-          }
-        } else {
-          EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
+    getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>
+      if (hasDeclaredDutySuspended) {
+        getDutySuspendedProducts(userAnswers).map { dutySuspendedProducts =>
+          AdrDutySuspended(
+            declared = true,
+            dutySuspendedProducts
+          )
         }
-      }
-    } else {
-      getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>
-        if (hasDeclaredDutySuspended) {
-          getDutySuspendedProducts(userAnswers).map { dutySuspendedProducts =>
-            AdrDutySuspended(
-              declared = true,
-              dutySuspendedProducts
-            )
-          }
-        } else {
-          EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
-        }
+      } else {
+        EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
       }
     }
 
@@ -265,11 +249,11 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     userAnswers: UserAnswers
   ): EitherT[Future, String, Seq[AdrDutySuspendedProduct]] =
     for {
-      beerDutySuspended           <- getBeerDutySuspendedOld(userAnswers)
-      ciderDutySuspended          <- getCiderDutySuspendedOld(userAnswers)
-      spiritsDutySuspended        <- getSpiritsDutySuspendedOld(userAnswers)
-      wineDutySuspended           <- getWineDutySuspendedOld(userAnswers)
-      otherFermentedDutySuspended <- getOFPDutySuspendedOld(userAnswers)
+      beerDutySuspended           <- getBeerDutySuspended(userAnswers)
+      ciderDutySuspended          <- getCiderDutySuspended(userAnswers)
+      spiritsDutySuspended        <- getSpiritsDutySuspended(userAnswers)
+      wineDutySuspended           <- getWineDutySuspended(userAnswers)
+      otherFermentedDutySuspended <- getOFPDutySuspended(userAnswers)
     } yield Seq(
       beerDutySuspended,
       ciderDutySuspended,
@@ -278,7 +262,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       otherFermentedDutySuspended
     ).flatten
 
-  private def getOFPDutySuspendedOld(userAnswers: UserAnswers) =
+  private def getOFPDutySuspended(userAnswers: UserAnswers) =
     if (userAnswers.regimes.hasOtherFermentedProduct) {
       getValue(userAnswers, DutySuspendedOtherFermentedPage)
         .map(dutySuspendedOtherFermentedProducts =>
@@ -296,7 +280,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       EitherT.rightT[Future, String](None)
     }
 
-  private def getWineDutySuspendedOld(userAnswers: UserAnswers) =
+  private def getWineDutySuspended(userAnswers: UserAnswers) =
     if (userAnswers.regimes.hasWine) {
       getValue(userAnswers, DutySuspendedWinePage)
         .map(dutySuspendedWine =>
@@ -314,7 +298,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       EitherT.rightT[Future, String](None)
     }
 
-  private def getSpiritsDutySuspendedOld(userAnswers: UserAnswers) =
+  private def getSpiritsDutySuspended(userAnswers: UserAnswers) =
     if (userAnswers.regimes.hasSpirits) {
       getValue(userAnswers, DutySuspendedSpiritsPage)
         .map(dutySuspendedSpirits =>
@@ -332,7 +316,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       EitherT.rightT[Future, String](None)
     }
 
-  private def getCiderDutySuspendedOld(userAnswers: UserAnswers) =
+  private def getCiderDutySuspended(userAnswers: UserAnswers) =
     if (userAnswers.regimes.hasCider) {
       getValue(userAnswers, DutySuspendedCiderPage)
         .map(dutySuspendedCider =>
@@ -350,7 +334,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       EitherT.rightT[Future, String](None)
     }
 
-  private def getBeerDutySuspendedOld(userAnswers: UserAnswers) =
+  private def getBeerDutySuspended(userAnswers: UserAnswers) =
     if (userAnswers.regimes.hasBeer) {
       getValue(userAnswers, DutySuspendedBeerPage)
         .map(dutySuspendedBeer =>
@@ -360,118 +344,6 @@ class AdrReturnSubmissionServiceImpl @Inject() (
               suspendedQuantity = AdrAlcoholQuantity(
                 dutySuspendedBeer.totalBeer,
                 dutySuspendedBeer.pureAlcoholInBeer
-              )
-            )
-          )
-        )
-    } else {
-      EitherT.rightT[Future, String](None)
-    }
-
-  private def getDutySuspendedProductsNew(
-    userAnswers: UserAnswers
-  ): EitherT[Future, String, Seq[AdrDutySuspendedProduct]] =
-    for {
-      selectedRegimes             <- getValue(userAnswers, DutySuspendedAlcoholTypePage)
-      beerDutySuspended           <- getBeerDutySuspendedNew(userAnswers, selectedRegimes)
-      ciderDutySuspended          <- getCiderDutySuspendedNew(userAnswers, selectedRegimes)
-      wineDutySuspended           <- getWineDutySuspendedNew(userAnswers, selectedRegimes)
-      spiritsDutySuspended        <- getSpiritsDutySuspendedNew(userAnswers, selectedRegimes)
-      otherFermentedDutySuspended <- getOFPDutySuspendedNew(userAnswers, selectedRegimes)
-    } yield Seq(
-      beerDutySuspended,
-      ciderDutySuspended,
-      wineDutySuspended,
-      spiritsDutySuspended,
-      otherFermentedDutySuspended
-    ).flatten
-
-  private def getOFPDutySuspendedNew(userAnswers: UserAnswers, selectedRegimes: Set[AlcoholRegime]) =
-    if (selectedRegimes.contains(AlcoholRegime.OtherFermentedProduct)) {
-      getValueByKey(
-        userAnswers,
-        DutySuspendedFinalVolumesPage,
-        AlcoholRegime.OtherFermentedProduct
-      )
-        .map(volumes =>
-          Some(
-            AdrDutySuspendedProduct(
-              regime = AdrDutySuspendedAlcoholRegime.OtherFermentedProduct,
-              suspendedQuantity = AdrAlcoholQuantity(
-                volumes.totalLitres,
-                volumes.pureAlcohol
-              )
-            )
-          )
-        )
-    } else {
-      EitherT.rightT[Future, String](None)
-    }
-
-  private def getSpiritsDutySuspendedNew(userAnswers: UserAnswers, selectedRegimes: Set[AlcoholRegime]) =
-    if (selectedRegimes.contains(AlcoholRegime.Spirits)) {
-      getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Spirits)
-        .map(volumes =>
-          Some(
-            AdrDutySuspendedProduct(
-              regime = AdrDutySuspendedAlcoholRegime.Spirits,
-              suspendedQuantity = AdrAlcoholQuantity(
-                volumes.totalLitres,
-                volumes.pureAlcohol
-              )
-            )
-          )
-        )
-    } else {
-      EitherT.rightT[Future, String](None)
-    }
-
-  private def getWineDutySuspendedNew(userAnswers: UserAnswers, selectedRegimes: Set[AlcoholRegime]) =
-    if (selectedRegimes.contains(AlcoholRegime.Wine)) {
-      getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Wine)
-        .map(volumes =>
-          Some(
-            AdrDutySuspendedProduct(
-              regime = AdrDutySuspendedAlcoholRegime.Wine,
-              suspendedQuantity = AdrAlcoholQuantity(
-                volumes.totalLitres,
-                volumes.pureAlcohol
-              )
-            )
-          )
-        )
-    } else {
-      EitherT.rightT[Future, String](None)
-    }
-
-  private def getCiderDutySuspendedNew(userAnswers: UserAnswers, selectedRegimes: Set[AlcoholRegime]) =
-    if (selectedRegimes.contains(AlcoholRegime.Cider)) {
-      getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Cider)
-        .map(volumes =>
-          Some(
-            AdrDutySuspendedProduct(
-              regime = AdrDutySuspendedAlcoholRegime.Cider,
-              suspendedQuantity = AdrAlcoholQuantity(
-                volumes.totalLitres,
-                volumes.pureAlcohol
-              )
-            )
-          )
-        )
-    } else {
-      EitherT.rightT[Future, String](None)
-    }
-
-  private def getBeerDutySuspendedNew(userAnswers: UserAnswers, selectedRegimes: Set[AlcoholRegime]) =
-    if (selectedRegimes.contains(AlcoholRegime.Beer)) {
-      getValueByKey(userAnswers, DutySuspendedFinalVolumesPage, AlcoholRegime.Beer)
-        .map(volumes =>
-          Some(
-            AdrDutySuspendedProduct(
-              regime = AdrDutySuspendedAlcoholRegime.Beer,
-              suspendedQuantity = AdrAlcoholQuantity(
-                volumes.totalLitres,
-                volumes.pureAlcohol
               )
             )
           )

@@ -183,11 +183,7 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             ActionItemViewModel(
               content = Text(messages("site.change")),
-              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
-                controllers.dutySuspendedNew.routes.CheckYourAnswersController.onPageLoad().url
-              } else {
-                controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-              }
+              href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
             ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )
@@ -200,13 +196,9 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             ActionItemViewModel(
               content = Text(messages("site.change")),
-              href = if (appConfig.dutySuspendedNewJourneyEnabled) {
-                controllers.dutySuspendedNew.routes.DeclareDutySuspenseQuestionController.onPageLoad(NormalMode).url
-              } else {
-                controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
-                  .onPageLoad(NormalMode)
-                  .url
-              }
+              href = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                .onPageLoad(NormalMode)
+                .url
             ).withVisuallyHiddenText(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
           )
         )

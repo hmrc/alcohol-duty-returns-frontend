@@ -312,69 +312,6 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         }
       }
 
-      "Duty Suspended section (new journey)" - {
-        Seq(
-          DeclareDutySuspenseQuestionPage,
-          DutySuspendedAlcoholTypePage
-        ).foreach { (page: Settable[_]) =>
-          s"must return Left if $page is not present" in new SetUp(true) {
-            val userAnswers = fullUserAnswersNewDSDJourney.remove(page).success.value
-
-            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
-
-            whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
-            ) { result =>
-              result mustBe Left(s"Value not found for page: $page")
-            }
-          }
-        }
-
-        Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
-          s"must return Left if $regime is selected but key is not present in DutySuspendedFinalVolumesPage" in new SetUp(
-            true
-          ) {
-            val userAnswers =
-              fullUserAnswersNewDSDJourney.removeByKey(DutySuspendedFinalVolumesPage, regime).success.value
-
-            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
-
-            whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
-            ) { result =>
-              result mustBe Left(s"Value not found for page dutySuspendedFinalVolumes and key $regime")
-            }
-          }
-        }
-
-        Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).foreach { regime =>
-          s"must return Right if $regime is not selected and key is not present in DutySuspendedFinalVolumesPage" in new SetUp(
-            true
-          ) {
-            val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
-            val userAnswers     = fullUserAnswersNewDSDJourney
-              .set(DutySuspendedAlcoholTypePage, filteredRegimes)
-              .success
-              .value
-              .removeByKey(DutySuspendedFinalVolumesPage, regime)
-              .success
-              .value
-
-            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
-
-            whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
-            ) { result =>
-              result.isRight mustBe true
-              result.map { res =>
-                res.dutySuspended.declared                   mustBe true
-                res.dutySuspended.dutySuspendedProducts.size mustBe 4
-              }
-            }
-          }
-        }
-      }
-
       "Spirits section" - {
         "must return no spirits if the task is not expected" in new SetUp {
 
@@ -441,11 +378,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
       }
     }
 
-    class SetUp(newDSDJourneyFeatureToggle: Boolean = false) {
-      val additionalConfig             = Map(
-        "features.duty-suspended-new-journey" -> newDSDJourneyFeatureToggle
-      )
-      val application: Application     = applicationBuilder().configure(additionalConfig).build()
+    class SetUp {
+      val application: Application     = applicationBuilder().build()
       val taskListViewModelMock        = mock[TaskListViewModel]
       val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
