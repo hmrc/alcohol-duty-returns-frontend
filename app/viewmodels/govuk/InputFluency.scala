@@ -60,19 +60,10 @@ trait InputFluency {
 
   implicit class FluentInput(input: Input) {
 
-    def asEmail(): Input =
-      input
-        .withInputType("email")
-        .withAutocomplete("email")
-        .withSpellcheck(on = false)
-
     def asNumeric(): Input =
       input
         .withInputMode("numeric")
         .withPattern("[0-9]*")
-
-    def withId(id: String): Input =
-      input.copy(id = id)
 
     def withInputType(inputType: String): Input =
       input.copy(inputType = inputType)
@@ -85,9 +76,6 @@ trait InputFluency {
 
     def withHint(hint: Hint): Input =
       input.copy(hint = Some(hint))
-
-    def withFormGroupClasses(classes: String): Input =
-      input.copy(formGroup = input.formGroup.copy(classes = Some(classes)))
 
     def withCssClass(newClass: String): Input =
       input.copy(classes = s"${input.classes} $newClass")

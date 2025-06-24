@@ -24,5 +24,4 @@ object LegendSize {
   case object ExtraLarge extends WithCssClass(Css.fieldsetLegendXLCssClass) with LegendSize
   case object Large extends WithCssClass(Css.fieldsetLegendLCssClass) with LegendSize
   case object Medium extends WithCssClass(Css.fieldsetLegendMCssClass) with LegendSize
-  case object Small extends WithCssClass(Css.fieldsetLegendSCssClass) with LegendSize
 }

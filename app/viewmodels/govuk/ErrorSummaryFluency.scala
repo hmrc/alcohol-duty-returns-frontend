@@ -18,10 +18,8 @@ package viewmodels.govuk
 
 import play.api.data.Form
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.errorsummary.{ErrorLink, ErrorSummary}
-
-object errorsummary extends ErrorSummaryFluency
 
 trait ErrorSummaryFluency {
 
@@ -47,9 +45,6 @@ trait ErrorSummaryFluency {
   }
 
   implicit class FluentErrorSummary(errorSummary: ErrorSummary) {
-
-    def withDescription(description: Content): ErrorSummary =
-      errorSummary.copy(description = description)
 
     def withCssClass(newClass: String): ErrorSummary =
       errorSummary.copy(classes = s"${errorSummary.classes} $newClass")

@@ -16,7 +16,6 @@
 
 package viewmodels.govuk
 
-import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
@@ -43,12 +42,6 @@ trait ButtonFluency {
         href = Some(href)
       )
 
-    def asInput(inputType: String): Button =
-      button.copy(
-        element = Some("input"),
-        inputType = Some(inputType)
-      )
-
     def withName(name: String): Button =
       button.copy(name = Some(name))
 
@@ -60,17 +53,5 @@ trait ButtonFluency {
 
     def disabled(): Button =
       button.copy(disabled = true)
-
-    def withDoubleClick(): Button =
-      button.copy(preventDoubleClick = None)
-
-    def asStartButton(): Button =
-      button.copy(isStartButton = true)
-
-    def asSecondaryButton(): Button =
-      withCssClass(Css.secondaryButtonCssClass)
-
-    def asWarningButton(): Button =
-      withCssClass(Css.warningButtonCssClass)
   }
 }

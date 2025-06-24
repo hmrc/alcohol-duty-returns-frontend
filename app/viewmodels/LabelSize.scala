@@ -24,5 +24,4 @@ object LabelSize {
   case object ExtraLarge extends WithCssClass(Css.labelXLCssClass) with LabelSize
   case object Large extends WithCssClass(Css.labelLCssClass) with LabelSize
   case object Medium extends WithCssClass(Css.labelMCssClass) with LabelSize
-  case object Small extends WithCssClass(Css.labelSCssClass) with LabelSize
 }

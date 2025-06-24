@@ -16,7 +16,6 @@
 
 package viewmodels.govuk
 
-import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
@@ -31,9 +30,6 @@ trait SummaryListFluency {
   }
 
   implicit class FluentSummaryList(list: SummaryList) {
-
-    def withoutBorders(): SummaryList =
-      list.copy(classes = s"${list.classes} ${Css.summaryListNoBorderCssClass}")
 
     def withCssClass(className: String): SummaryList =
       list.copy(classes = s"${list.classes} $className")

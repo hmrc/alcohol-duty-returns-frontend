@@ -31,9 +31,6 @@ trait HintFluency {
 
   implicit class FluentHint(hint: Hint) {
 
-    def withId(id: String): Hint =
-      hint.copy(id = Some(id))
-
     def withCssClass(newClass: String): Hint =
       hint.copy(classes = s"${hint.classes} $newClass")
 
