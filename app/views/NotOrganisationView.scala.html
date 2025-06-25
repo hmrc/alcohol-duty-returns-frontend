@@ -27,7 +27,7 @@
 @(continueUrl: String, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
 
     @layout(
-        pageTitle = titleNoForm(messages("unauthorised.not-org.title", messages("service.name"))),
+        pageTitle = titleNoForm(messages("unauthorised.not-org.title")),
         timeout = signedIn,
         showSignOut = signedIn
     ) {
