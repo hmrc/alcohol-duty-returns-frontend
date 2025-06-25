@@ -79,6 +79,7 @@ doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products 
 noAppaId.title = You need an alcoholic products producer approval (APPA) ID to access this service
 noAppaId.heading = You need an alcoholic products producer approval (APPA) ID to access this service
 noAppaId.p = You can find your APPA ID on letters you have received from HMRC about the Alcohol Duty online service.
+noAppaId.link.appaIdRegisterUrl = https://www.gov.uk/guidance/apply-for-an-alcoholic-products-producer-approval-appa
 noAppaId.link.text = Find out how to apply for an APPA ID (opens in a new tab)
 noAppaId.p2 = if you do not have one.
 

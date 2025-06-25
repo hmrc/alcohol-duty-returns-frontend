@@ -16,7 +16,6 @@
 
 @import components.{Link, PageHeading, Paragraph}
 @import config.Constants.Css
-@import config.FrontendAppConfig
 
 @this(
     layout: templates.Layout,
@@ -28,7 +27,7 @@
     paragraph: Paragraph
 )
 
-@(appConfig: FrontendAppConfig, wasReferredFromBTA: Boolean, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
+@(wasReferredFromBTA: Boolean, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("noAppaId.title")), timeout = signedIn, showSignOut = signedIn) {
     @formHelper(action = controllers.auth.routes.NoAppaIdController.onSubmit(wasReferredFromBTA), Symbol("autoComplete") -> "off") {
@@ -40,7 +39,7 @@
             @link(
             id = "register-for-alcohol-duty",
             text = messages("noAppaId.link.text"),
-            href = appConfig.appaIdRegisterUrl,
+            href = messages("noAppaId.link.appaIdRegisterUrl"),
             newTab = true
             )
             @messages("noAppaId.p2")

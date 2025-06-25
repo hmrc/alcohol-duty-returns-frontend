@@ -34,12 +34,11 @@ class NoAppaIdControllerSpec extends SpecBase {
         running(application) {
           val request = FakeRequest(GET, noAppaIdRouteUrl(fromBTA))
 
-          val appConfig = application.injector.instanceOf[FrontendAppConfig]
           val view      = application.injector.instanceOf[NoAppaIdView]
           val result    = route(application, request).value
 
           status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(appConfig, fromBTA, true)(request, getMessages(application)).toString
+          contentAsString(result) mustEqual view(fromBTA, true)(request, getMessages(application)).toString
         }
       }
     }
@@ -51,12 +50,11 @@ class NoAppaIdControllerSpec extends SpecBase {
         running(application) {
           val request = FakeRequest(GET, noAppaIdRouteUrl(true))
 
-          val appConfig = application.injector.instanceOf[FrontendAppConfig]
           val view      = application.injector.instanceOf[NoAppaIdView]
           val result    = route(application, request).value
 
           status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(appConfig, true, signedIn)(request, getMessages(application)).toString
+          contentAsString(result) mustEqual view(true, signedIn)(request, getMessages(application)).toString
         }
       }
     }
