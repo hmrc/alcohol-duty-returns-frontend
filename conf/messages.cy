@@ -7,6 +7,7 @@ site.no = Na
 site.yes = Iawn
 site.continue = Parhau
 site.saveAndContinue = Cadw a pharhau
+site.confirmAndContinue = Cadarnhau a pharhau
 site.saveAndReturn = Cadw a mynd yn ôl i’ch cyfrif treth busnes
 site.agreeAndSubmit = Cytuno ac anfon y Datganiad
 site.payNow = Talu nawr
@@ -568,6 +569,23 @@ multipleSPRList.action.label = Camau
 checkYourAnswersLabel.row.totalLitres = Cyfanswm y cyfaint
 checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 checkYourAnswersLabel.row.dutyRate = Cyfradd doll SPR
+checkYourAnswers.notificationBanner.heading = Rydych wedi llwyddo i ddileu datganiadau ar gyfer:
+
+multipleSPRMissingDetails.title = Mae gennych rai manylion sydd ar goll
+multipleSPRMissingDetails.heading = Mae gennych rai manylion sydd ar goll
+multipleSPRMissingDetails.guidance = Nid ydych wedi ychwanegu unrhyw fanylion ar gyfer yr alcohol a ddatganwyd gennych:
+multipleSPRMissingDetails.h2 = Beth y mae angen i chi ei wneud?
+multipleSPRMissingDetails.addDetails = 	Ychwanegu manylion ar gyfer y datganiadau hyn
+multipleSPRMissingDetails.removeDeclarations = Dileu’r datganiadau yma o’r ffurflen hon
+multipleSPRMissingDetails.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
+
+multipleSPRMissingDetailsConfirmation.title = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
+multipleSPRMissingDetailsConfirmation.heading = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
+multipleSPRMissingDetailsConfirmation.guidance = Byddwn yn dileu’ch datganiadau ar gyfer y canlynol:
+multipleSPRMissingDetailsConfirmation.hidden = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
+multipleSPRMissingDetailsConfirmation.yes = Iawn, dileu’r datganiadau hyn
+multipleSPRMissingDetailsConfirmation.no = Na, Hoffwn fynd yn ôl ac ychwanegu manylion ar gyfer y datganiadau hyn
+multipleSPRMissingDetailsConfirmation.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
 
 deleteMultipleSPREntry.title = Tynnu’r cofnod {0} hwn?
 deleteMultipleSPREntry.heading = Tynnu’r cofnod {0} hwn?

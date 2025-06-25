@@ -16,21 +16,20 @@
 
 package controllers.declareDuty
 
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.declareDuty.MultipleSPRListFormProvider
-
-import javax.inject.Inject
 import models.{AlcoholRegime, NormalMode}
 import navigation.ReturnsNavigator
 import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, TellUsAboutMultipleSPRRatePage}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.UserAnswersConnector
-import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.declareDuty.MultipleSPRListHelper
 import views.html.declareDuty.MultipleSPRListView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class MultipleSPRListController @Inject() (
