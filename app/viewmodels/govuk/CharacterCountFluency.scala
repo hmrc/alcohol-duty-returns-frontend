@@ -21,7 +21,6 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.charactercount.CharacterCount
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
-import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.Language
 import viewmodels.{ErrorMessageAwareness, InputWidth}
 
 object charactercount extends CharacterCountFluency
@@ -45,26 +44,11 @@ trait CharacterCountFluency {
 
   implicit class FluentCharacterCount(characterCount: CharacterCount) {
 
-    def withId(id: String): CharacterCount =
-      characterCount.copy(id = id)
-
-    def withRows(rows: Int): CharacterCount =
-      characterCount.copy(rows = rows)
-
     def withMaxLength(maxLength: Int): CharacterCount =
       characterCount.copy(maxLength = Some(maxLength))
 
-    def withMaxWords(maxWords: Int): CharacterCount =
-      characterCount.copy(maxWords = Some(maxWords))
-
-    def withThreshold(threshold: Int): CharacterCount =
-      characterCount.copy(threshold = Some(threshold))
-
     def withHint(hint: Hint): CharacterCount =
       characterCount.copy(hint = Some(hint))
-
-    def withFormGroupClasses(classes: String): CharacterCount =
-      characterCount.copy(formGroup = characterCount.formGroup.copy(classes = Some(classes)))
 
     def withCssClass(newClass: String): CharacterCount =
       characterCount.copy(classes = s"${characterCount.classes} $newClass")
@@ -72,16 +56,10 @@ trait CharacterCountFluency {
     def withAttribute(attribute: (String, String)): CharacterCount =
       characterCount.copy(attributes = characterCount.attributes + attribute)
 
-    def withCountMessageClasses(newClass: String): CharacterCount =
-      characterCount.copy(countMessageClasses = s"${characterCount.classes} $newClass")
-
     def withWidth(inputWidth: InputWidth): CharacterCount =
       characterCount.withCssClass(inputWidth.toString)
 
     def withSpellcheck(spellcheck: Boolean): CharacterCount =
       characterCount.copy(spellcheck = Some(spellcheck))
-
-    def withLanguage(language: Language): CharacterCount =
-      characterCount.copy(language = language)
   }
 }

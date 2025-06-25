@@ -16,48 +16,19 @@
 
 package viewmodels.govuk
 
-import play.api.data.Field
-import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.textarea.Textarea
-import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
-import viewmodels.{ErrorMessageAwareness, InputWidth}
-
-object textarea extends TextareaFluency
+import viewmodels.InputWidth
 
 trait TextareaFluency {
 
-  object TextareaViewModel extends ErrorMessageAwareness {
-
-    def apply(
-      field: Field,
-      label: Label
-    )(implicit messages: Messages): Textarea =
-      Textarea(
-        id = field.id,
-        name = field.name,
-        value = field.value,
-        label = label,
-        errorMessage = errorMessage(field)
-      )
-  }
-
   implicit class FluentTextarea(textarea: Textarea) {
-
-    def withId(id: String): Textarea =
-      textarea.copy(id = id)
-
-    def withRows(rows: Int): Textarea =
-      textarea.copy(rows = rows)
 
     def describedBy(value: String): Textarea =
       textarea.copy(describedBy = Some(value))
 
     def withHint(hint: Hint): Textarea =
       textarea.copy(hint = Some(hint))
-
-    def withFormGroupClasses(classes: String): Textarea =
-      textarea.copy(formGroup = textarea.formGroup.copy(classes = Some(classes)))
 
     def withCssClass(newClass: String): Textarea =
       textarea.copy(classes = s"${textarea.classes} $newClass")

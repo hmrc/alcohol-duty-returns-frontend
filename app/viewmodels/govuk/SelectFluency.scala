@@ -16,38 +16,14 @@
 
 package viewmodels.govuk
 
-import play.api.data.Field
-import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
-import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
-import uk.gov.hmrc.govukfrontend.views.viewmodels.select.{Select, SelectItem}
-import viewmodels.ErrorMessageAwareness
+import uk.gov.hmrc.govukfrontend.views.viewmodels.select.Select
 
 object select extends SelectFluency
 
 trait SelectFluency {
 
-  object SelectViewModel extends ErrorMessageAwareness {
-
-    def apply(
-      field: Field,
-      label: Label,
-      items: Seq[(String, String)]
-    )(implicit messages: Messages): Select =
-      Select(
-        id = field.id,
-        name = field.name,
-        items = items.map { case (value, text) => SelectItem(value = Some(value), text = text) },
-        value = field.value,
-        label = label,
-        errorMessage = errorMessage(field)
-      )
-  }
-
   implicit class FluentSelect(select: Select) {
-
-    def withId(id: String): Select =
-      select.copy(id = id)
 
     def describedBy(value: String): Select =
       select.copy(describedBy = Some(value))
@@ -55,13 +31,7 @@ trait SelectFluency {
     def withHint(hint: Hint): Select =
       select.copy(hint = Some(hint))
 
-    def withFormGroupClasses(classes: String): Select =
-      select.copy(formGroup = select.formGroup.copy(classes = Some(classes)))
-
     def withCssClass(newClass: String): Select =
       select.copy(classes = s"${select.classes} $newClass")
-
-    def withValue(value: String): Select =
-      select.copy(value = Some(value))
   }
 }
