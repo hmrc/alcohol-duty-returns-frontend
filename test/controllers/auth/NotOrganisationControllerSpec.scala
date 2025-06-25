@@ -25,8 +25,7 @@ class NotOrganisationControllerSpec extends SpecBase {
 
   lazy val notOrganisationRoute: String = controllers.auth.routes.NotOrganisationController.onPageLoad.url
 
-  val testCreateOrganisationAccountUrl: String = "https://www.gov.uk/log-in-register-hmrc-online-services/register"
-  val testContinueUrl: String                  = "/manage-alcohol-duty/account/sign-out-log-in"
+  val testContinueUrl: String = "/manage-alcohol-duty/account/sign-out-log-in"
 
   val fakeIsSignedInTrue: FakeIsSignedIn  = FakeIsSignedIn(true)
   val fakeIsSignedInFalse: FakeIsSignedIn = FakeIsSignedIn(false)
@@ -43,7 +42,7 @@ class NotOrganisationControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[NotOrganisationView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(testCreateOrganisationAccountUrl, testContinueUrl, signedIn = true)(
+        contentAsString(result) mustEqual view(testContinueUrl, signedIn = true)(
           request,
           getMessages(application)
         ).toString
@@ -61,7 +60,7 @@ class NotOrganisationControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[NotOrganisationView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(testCreateOrganisationAccountUrl, testContinueUrl, signedIn = false)(
+        contentAsString(result) mustEqual view(testContinueUrl, signedIn = false)(
           request,
           getMessages(application)
         ).toString
