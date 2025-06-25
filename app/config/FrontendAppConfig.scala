@@ -78,6 +78,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val unauthorisedUrl: String               = configuration.get[String]("urls.unauthorisedLink")
   val declareSpiritsGuidanceUrl: String     = configuration.get[String]("urls.declareSpiritsGuidance")
   val createOrganisationAccountUrl: String  = configuration.get[String]("urls.createOrganisationAccountUrl")
+  val userResearchSurveyUrl: String         = configuration.get[String]("urls.userResearchSurveyUrl")
+  val userResearchSurveyUrlWelsh: String    = configuration.get[String]("urls.userResearchSurveyUrlWelsh")
 
   val fromBusinessAccountPath: String = configuration.get[String]("fromBusinessAccountPath")
 
