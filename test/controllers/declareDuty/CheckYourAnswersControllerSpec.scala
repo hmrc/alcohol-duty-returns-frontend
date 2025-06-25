@@ -17,7 +17,6 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import models.AlcoholRegime.Beer
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
@@ -69,7 +68,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         .build()
       implicit val messages: Messages = getMessages(application)
 
-      val regime = Beer
+      val regime = regimeGen.sample.value
 
       val summaryList1 = SummaryList(rows =
         Seq(SummaryListRow(key = Key(content = Text("Key1")), value = Value(content = Text("Value1"))))

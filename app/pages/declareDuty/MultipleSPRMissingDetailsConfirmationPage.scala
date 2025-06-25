@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package viewmodels
+package pages.declareDuty
 
-import config.Constants.Css
+import models.AlcoholRegime
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-sealed trait LabelSize
+case object MultipleSPRMissingDetailsConfirmationPage extends QuestionPage[Map[AlcoholRegime, Boolean]] {
 
-object LabelSize {
-  case object ExtraLarge extends WithCssClass(Css.labelXLCssClass) with LabelSize
-  case object Large extends WithCssClass(Css.labelLCssClass) with LabelSize
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "multipleSPRMissingDetailsConfirmation"
 }
