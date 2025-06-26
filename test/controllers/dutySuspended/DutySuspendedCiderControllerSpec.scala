@@ -44,10 +44,6 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> false
-  )
-
   val userAnswers = userAnswersWithCider.copy(data =
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(

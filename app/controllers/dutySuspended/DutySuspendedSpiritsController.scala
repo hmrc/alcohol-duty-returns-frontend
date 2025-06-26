@@ -37,7 +37,6 @@ class DutySuspendedSpiritsController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  checkDSDOldJourneyToggle: CheckDSDOldJourneyToggleAction,
   checkRegime: CheckSpiritsRegimeAction,
   formProvider: DutySuspendedSpiritsFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,28 +48,26 @@ class DutySuspendedSpiritsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle andThen checkRegime) {
-      implicit request =>
-        val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+    (identify andThen getData andThen requireData andThen checkRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-        Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle andThen checkRegime).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedSpiritsPage, value))
-                _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DutySuspendedSpiritsPage, mode, updatedAnswers))
-          )
+    (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedSpiritsPage, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DutySuspendedSpiritsPage, mode, updatedAnswers))
+        )
     }
 }

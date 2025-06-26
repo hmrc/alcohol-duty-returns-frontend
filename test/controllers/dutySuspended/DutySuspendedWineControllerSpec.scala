@@ -42,10 +42,6 @@ class DutySuspendedWineControllerSpec extends SpecBase {
 
   lazy val dutySuspendedWineRoute = routes.DutySuspendedWineController.onPageLoad(NormalMode).url
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> false
-  )
-
   val validTotalWine         = 23.45
   val validPureAlcoholInWine = 16.46
 

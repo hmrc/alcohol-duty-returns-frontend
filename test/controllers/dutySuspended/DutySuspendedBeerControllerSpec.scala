@@ -42,10 +42,6 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
 
   lazy val dutySuspendedBeerRoute = routes.DutySuspendedBeerController.onPageLoad(NormalMode).url
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> false
-  )
-
   val validTotalBeer         = 55.6
   val validPureAlcoholInBeer = 47.5
 

@@ -18,10 +18,9 @@ import cats.data.NonEmptySeq
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalTo, equalToJson, get, post, urlMatching, urlPathEqualTo}
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
-import models.{ABVRange, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
+import models._
 import models.RatePeriod._
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
-import models.dutySuspendedNew.{DutySuspendedFinalVolumes, DutySuspendedQuantities}
 import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Json
@@ -273,37 +272,6 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         }
       }
     }
-
-    "calculateDutySuspendedVolumes" - {
-      val dutySuspendedQuantities   = DutySuspendedQuantities(100, 10, 0, 0, 0, 0)
-      val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(100, 100, 10, 10)
-
-      "successfully retrieve duty suspended final volumes" in new SetUp {
-        val requestJson  = Json.toJson(dutySuspendedQuantities).toString()
-        val responseJson = Json.toJson(dutySuspendedFinalVolumes).toString()
-        server.stubFor(
-          post(urlMatching(dutySuspendedVolumesUrl))
-            .withRequestBody(equalToJson(requestJson))
-            .willReturn(aResponse().withBody(responseJson).withStatus(OK))
-        )
-        whenReady(connector.calculateDutySuspendedVolumes(dutySuspendedQuantities)) { result =>
-          result mustBe dutySuspendedFinalVolumes
-        }
-      }
-
-      "must fail when upstream service returns an error" in new SetUp {
-        val requestJson = Json.toJson(dutySuspendedQuantities).toString()
-        server.stubFor(
-          post(urlMatching(dutySuspendedVolumesUrl))
-            .withRequestBody(equalToJson(requestJson))
-            .willReturn(aResponse().withStatus(BAD_REQUEST))
-        )
-        whenReady(connector.calculateDutySuspendedVolumes(dutySuspendedQuantities).failed) { ex =>
-          ex                                                mustBe a[UpstreamErrorResponse]
-          ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe BAD_REQUEST
-        }
-      }
-    }
   }
 
   class SetUp {
@@ -365,6 +333,5 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
     val rateBandUrl                  = s"$url/rate-band"
     val rateBandsUrl                 = s"$url/rate-bands"
     val ratesUrl                     = s"$url/rates"
-    val dutySuspendedVolumesUrl      = s"$url/calculate-duty-suspended-volumes"
   }
 }

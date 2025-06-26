@@ -19,19 +19,19 @@ package controllers.dutySuspended
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
-import models.{NormalMode, ReturnId, UserAnswers}
+import models.NormalMode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.dutySuspended._
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import scala.concurrent.Future
-import scala.util.Success
 
 class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
@@ -40,20 +40,8 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
   val formProvider = new DeclareDutySuspendedDeliveriesQuestionFormProvider()
   val form         = formProvider()
 
-  val pagesToDelete = List(
-    DutySuspendedBeerPage,
-    DutySuspendedCiderPage,
-    DutySuspendedWinePage,
-    DutySuspendedSpiritsPage,
-    DutySuspendedOtherFermentedPage
-  )
-
   lazy val declareDutySuspendedDeliveriesQuestionRoute =
     routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
-
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> false
-  )
 
   "DeclareDutySuspendedDeliveriesQuestion Controller" - {
 
@@ -179,27 +167,35 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
       val taskListRoute = controllers.routes.TaskListController.onPageLoad
 
       val mockUserAnswersConnector             = mock[UserAnswersConnector]
-      val mockUserAnswers: UserAnswers         = mock[UserAnswers]
       val mockDutySuspendedDeliveriesNavigator = mock[DeclareDutySuspendedDeliveriesNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
-        mockUserAnswers.set(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(false))(any())
-      ) thenReturn Success(
-        mockUserAnswers
-      )
-      val mockReturnId = mock[ReturnId]
-      when(mockReturnId.periodKey) thenReturn "2025-01"
-      when(mockUserAnswers.returnId) thenReturn mockReturnId
-      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
-        DeclareDutySuspendedDeliveriesQuestionPage,
-        false
-      )
-      when(
         mockDutySuspendedDeliveriesNavigator.nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), any(), any())
       ) thenReturn taskListRoute
 
-      val application = applicationBuilder(userAnswers = Some(mockUserAnswers))
+      val userAnswers = emptyUserAnswers.copy(data =
+        Json.obj(
+          DeclareDutySuspendedDeliveriesQuestionPage.toString -> true,
+          DutySuspendedBeerPage.toString                      -> Json.obj(
+            "totalBeer"         -> 1000,
+            "pureAlcoholInBeer" -> 100
+          ),
+          DutySuspendedCiderPage.toString                     -> Json.obj(
+            "totalCider"         -> 2000,
+            "pureAlcoholInCider" -> 200
+          ),
+          DutySuspendedWinePage.toString                      -> Json.obj(
+            "totalWine"         -> 1000,
+            "pureAlcoholInWine" -> 100
+          )
+        )
+      )
+
+      val expectedCachedUserAnswers =
+        emptyUserAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(mockDutySuspendedDeliveriesNavigator),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -215,11 +211,9 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual taskListRoute.url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockUserAnswers, times(1)).set(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(false))(any())
-        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(expectedCachedUserAnswers))(any())
         verify(mockDutySuspendedDeliveriesNavigator, times(1))
-          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(NormalMode), any())
+          .nextPage(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(NormalMode), eqTo(expectedCachedUserAnswers))
       }
     }
   }
