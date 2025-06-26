@@ -37,7 +37,7 @@ class NoAppaIdController @Inject() (
   def onPageLoad(wasReferredFromBTA: Boolean): Action[AnyContent] = checkSignedIn { implicit request =>
     val signedIn = request.signedIn
 
-    Ok(view(appConfig, wasReferredFromBTA, signedIn))
+    Ok(view(wasReferredFromBTA, signedIn))
   }
 
   def onSubmit(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { _ =>

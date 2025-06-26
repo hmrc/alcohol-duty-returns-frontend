@@ -23,10 +23,10 @@
     pageHeading: PageHeading
 )
 
-@(unauthorisedUrl: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("unauthorised.title", messages("service.name"))),
+    pageTitle = titleNoForm(messages("unauthorised.title")),
     timeout   = false
 ) {
 
@@ -39,8 +39,10 @@
         link(
             id = "sign-in-with-an-organisation-account",
             text = messages("unauthorised.p2.link.text"),
-            href = messages(unauthorisedUrl),
-            newTab = true) + " " +
-        messages("unauthorised.p2.second")))
+            href = messages("unauthorised.link.url"),
+            newTab = true) +
+        messages("unauthorised.p2.commaForWelsh") + " " +
+        messages("unauthorised.p2.second")
+    ))
 
 }

@@ -22,8 +22,6 @@ import views.html.UnauthorisedView
 
 class UnauthorisedControllerSpec extends SpecBase {
 
-  val unauthorisedUrl: String = "https://www.gov.uk/log-in-register-hmrc-online-services/register"
-
   "Unauthorised Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -38,7 +36,7 @@ class UnauthorisedControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[UnauthorisedView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(unauthorisedUrl)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view()(request, getMessages(application)).toString
       }
     }
   }

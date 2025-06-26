@@ -59,13 +59,16 @@ returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
 unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.p1 = Mae’r gwasanaeth Rheoli’ch Toll Alcohol yn wasanaeth ar gyfer busnesau cymeradwy, megis cwmnïau cyfyngedig, partneriaethau ac unig fasnachwyr sy’n cynhyrchu cynhyrchion alcoholaidd.
+unauthorised.link.url = https://www.gov.uk/mewngofnodi-cofrestru-gwasanaethau-ar-lein-cthef/cofrestru
 unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
-unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
+unauthorised.p2.commaForWelsh = ,
+unauthorised.p2.second = a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
 
 unauthorised.not-org.title = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
 unauthorised.not-org.heading = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
 unauthorised.not-org.p1 = I barhau, mae angen i chi allgofnodi a mewngofnodi eto gyda’r manylion ar gyfer cyfrif eich sefydliad.
+unauthorised.not-org.link.url = https://www.gov.uk/mewngofnodi-cofrestru-gwasanaethau-ar-lein-cthef/cofrestru
 unauthorised.not-org.p2.first =
 unauthorised.not-org.p2.second = Gallwch greu cyfrif sefydliad
 unauthorised.not-org.p2.third = os nad oes gennych un eisoes.
@@ -79,6 +82,7 @@ doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID Cymerad
 noAppaId.title = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.heading = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.p = Gallwch ddod o hyd i’ch ID APPA ar lythyrau oddi wrth CThEF ynghylch y gwasanaeth ar-lein ar gyfer Toll Alcohol.
+noAppaId.link.appaIdRegisterUrl = https://www.gov.uk/guidance/apply-for-an-alcoholic-products-producer-approval-appa.cy
 noAppaId.link.text = Dysgwch sut i wneud cais am ID APPA (yn agor mewn tab newydd)
 noAppaId.p2 = os nad oes gennych un.
 
