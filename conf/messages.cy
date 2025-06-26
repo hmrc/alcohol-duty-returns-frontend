@@ -62,7 +62,8 @@ unauthorised.p1 = Mae’r gwasanaeth Rheoli’ch Toll Alcohol yn wasanaeth ar gy
 unauthorised.link.url = https://www.gov.uk/mewngofnodi-cofrestru-gwasanaethau-ar-lein-cthef/cofrestru
 unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
-unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
+unauthorised.p2.commaForWelsh = ,
+unauthorised.p2.second = a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
 
 unauthorised.not-org.title = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
 unauthorised.not-org.heading = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn

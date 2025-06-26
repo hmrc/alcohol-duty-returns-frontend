@@ -62,6 +62,7 @@ unauthorised.p1 = Manage your alcohol duty is a service for approved businesses,
 unauthorised.link.url = https://www.gov.uk/log-in-register-hmrc-online-services/register
 unauthorised.p2.first = To use this service you need to
 unauthorised.p2.link.text = sign in with an organisation Government Gateway account
+unauthorised.p2.commaForWelsh =
 unauthorised.p2.second = and be enrolled in the service.
 
 unauthorised.not-org.title = You need an organisation account to use this service
