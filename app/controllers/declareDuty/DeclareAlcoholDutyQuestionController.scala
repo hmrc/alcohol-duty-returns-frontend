@@ -19,8 +19,8 @@ package controllers.declareDuty
 import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegime, Mode, UserAnswers}
+import models.AlcoholRegime.{Cider, OtherFermentedProduct}
+import models.{Mode, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.declareDuty.{AlcoholTypePage, DeclareAlcoholDutyQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -49,24 +49,27 @@ class DeclareAlcoholDutyQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val regimes: Seq[AlcoholRegime] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
+    val approvedRegimes = request.userAnswers.regimes.regimes
 
     val preparedForm = request.userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    val showCider = regimes.contains(Cider)
-    Ok(view(preparedForm, showCider, mode))
+    val showSparklingCider = approvedRegimes.contains(Cider) || approvedRegimes.contains(OtherFermentedProduct)
+    Ok(view(preparedForm, showSparklingCider, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val regimes: Seq[AlcoholRegime] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, regimes.contains(Cider), mode))),
+          formWithErrors => {
+            val approvedRegimes    = request.userAnswers.regimes.regimes
+            val showSparklingCider = approvedRegimes.contains(Cider) || approvedRegimes.contains(OtherFermentedProduct)
+            Future.successful(BadRequest(view(formWithErrors, showSparklingCider, mode)))
+          },
           value =>
             for {
               singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(request.userAnswers))
