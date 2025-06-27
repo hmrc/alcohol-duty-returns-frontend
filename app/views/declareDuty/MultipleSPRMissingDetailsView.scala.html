@@ -15,6 +15,7 @@
  *@
 
 @import components.{BulletList, Caption, PageHeading, Paragraph}
+@import views.html.components.ReturnToTaskList
 
 @this(
         layout: templates.Layout,
@@ -25,7 +26,8 @@
         bulletList: BulletList,
         caption: Caption,
         pageHeading: PageHeading,
-        paragraph: Paragraph
+        paragraph: Paragraph,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent])(implicit request: Request[_], messages: Messages)
@@ -69,5 +71,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

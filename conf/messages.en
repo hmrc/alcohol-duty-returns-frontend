@@ -247,6 +247,7 @@ taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
 taskList.button.clearReturn = Clear return and start again
+viewAllTasks.Link.text = Go back to view all tasks
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start

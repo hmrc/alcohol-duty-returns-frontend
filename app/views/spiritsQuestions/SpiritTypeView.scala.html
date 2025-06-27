@@ -15,6 +15,7 @@
  *@
 
 @import components.{Caption, PageHeading}
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -22,7 +23,8 @@
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
     govukButton: GovukButton,
-    caption: Caption
+    caption: Caption,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -53,5 +55,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

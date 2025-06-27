@@ -17,6 +17,7 @@
 @import viewmodels.InputWidth._
 @import components.{Caption, PageHeading, Link, Paragraph, FormGroupWithError}
 @import models.adjustment.AdjustmentType
+@import views.html.components.ReturnToTaskList
 
 @this(
     layout: templates.Layout,
@@ -28,7 +29,8 @@
     link: Link,
     paragraph: Paragraph,
     pageHeading: PageHeading,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
@@ -64,5 +66,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

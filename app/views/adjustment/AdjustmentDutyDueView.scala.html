@@ -18,6 +18,7 @@
 @import models.adjustment.AdjustmentType
 @import viewmodels.Money
 @import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModel
+@import views.html.components.ReturnToTaskList
 
 @this(
         layout: templates.Layout,
@@ -26,7 +27,8 @@
         pageHeadingWithMonetaryValue: PageHeadingWithMonetaryValue,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        bulletList: BulletList
+        bulletList: BulletList,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(adjustmentDutyDueViewModel: AdjustmentDutyDueViewModel, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
@@ -52,5 +54,5 @@
         ButtonViewModel("continueButton", messages("site.continue"))
                 .asLink(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
     )
-
+    @returnToTaskList()
 }
