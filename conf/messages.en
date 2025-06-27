@@ -7,6 +7,7 @@ site.no = No
 site.yes = Yes
 site.continue = Continue
 site.saveAndContinue = Save and continue
+site.confirmAndContinue = Confirm and continue
 site.saveAndReturn = Save and return to your business tax account
 site.agreeAndSubmit = Agree and send return
 site.payNow = Pay now
@@ -58,13 +59,16 @@ returnLocked.p2 = Please try again in a few minutes.
 unauthorised.title = Sorry, you cannot access this service with this account
 unauthorised.heading = Sorry, you cannot access this service with this account
 unauthorised.p1 = Manage your alcohol duty is a service for approved businesses, such as limited companies, partnerships and sole traders producing alcoholic products.
+unauthorised.link.url = https://www.gov.uk/log-in-register-hmrc-online-services/register
 unauthorised.p2.first = To use this service you need to
 unauthorised.p2.link.text = sign in with an organisation Government Gateway account
+unauthorised.p2.commaForWelsh =
 unauthorised.p2.second = and be enrolled in the service.
 
 unauthorised.not-org.title = You need an organisation account to use this service
 unauthorised.not-org.heading = You need an organisation account to use this service
 unauthorised.not-org.p1 = To continue, you need to sign out and sign back in with the details for your organisation account.
+unauthorised.not-org.link.url = https://www.gov.uk/log-in-register-hmrc-online-services/register
 unauthorised.not-org.p2.first = You can
 unauthorised.not-org.p2.second = create an organisation account
 unauthorised.not-org.p2.third = if you do not already have one.
@@ -78,6 +82,7 @@ doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products 
 noAppaId.title = You need an alcoholic products producer approval (APPA) ID to access this service
 noAppaId.heading = You need an alcoholic products producer approval (APPA) ID to access this service
 noAppaId.p = You can find your APPA ID on letters you have received from HMRC about the Alcohol Duty online service.
+noAppaId.link.appaIdRegisterUrl = https://www.gov.uk/guidance/apply-for-an-alcoholic-products-producer-approval-appa
 noAppaId.link.text = Find out how to apply for an APPA ID (opens in a new tab)
 noAppaId.p2 = if you do not have one.
 
@@ -569,6 +574,23 @@ multipleSPRList.action.label = Action
 checkYourAnswersLabel.row.totalLitres = Total volume
 checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 checkYourAnswersLabel.row.dutyRate = SPR duty rate
+checkYourAnswers.notificationBanner.heading = You have successfully removed declarations for:
+
+multipleSPRMissingDetails.title = You have some missing details
+multipleSPRMissingDetails.heading = You have some missing details
+multipleSPRMissingDetails.guidance = You have not added any details for these alcohols you declared:
+multipleSPRMissingDetails.h2 = What do you need to do?
+multipleSPRMissingDetails.addDetails = Add details for these declarations
+multipleSPRMissingDetails.removeDeclarations = Delete these declarations from this return
+multipleSPRMissingDetails.error.required = Select what you need to do
+
+multipleSPRMissingDetailsConfirmation.title = Are you sure you want to delete these declarations from your return?
+multipleSPRMissingDetailsConfirmation.heading = Are you sure you want to delete these declarations from your return?
+multipleSPRMissingDetailsConfirmation.guidance = We will delete your declarations for:
+multipleSPRMissingDetailsConfirmation.hidden = Are you sure you want to delete these declarations from your return?
+multipleSPRMissingDetailsConfirmation.yes = Yes, delete these declarations
+multipleSPRMissingDetailsConfirmation.no = No, I want to go back and add details for these declarations
+multipleSPRMissingDetailsConfirmation.error.required = Select what you need to do
 
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?

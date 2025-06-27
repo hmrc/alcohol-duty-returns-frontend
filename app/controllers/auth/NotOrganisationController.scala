@@ -16,7 +16,6 @@
 
 package controllers.auth
 
-import config.FrontendAppConfig
 import controllers.actions.CheckSignedInAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -28,16 +27,14 @@ import javax.inject.Inject
 class NotOrganisationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: NotOrganisationView,
-  appConfig: FrontendAppConfig,
   checkSignedIn: CheckSignedInAction
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = checkSignedIn { implicit request =>
-    val unauthorisedUrl = appConfig.createOrganisationAccountUrl
-    val continueUrl     = controllers.auth.routes.SignOutController.signOutDuringEnrolment().url
-    val signedIn        = request.signedIn
+    val continueUrl = controllers.auth.routes.SignOutController.signOutDuringEnrolment().url
+    val signedIn    = request.signedIn
 
-    Ok(view(unauthorisedUrl, continueUrl, signedIn))
+    Ok(view(continueUrl, signedIn))
   }
 }

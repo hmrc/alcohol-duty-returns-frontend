@@ -16,7 +16,6 @@
 
 package viewmodels.govuk
 
-import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 
@@ -37,35 +36,5 @@ trait TagFluency {
 
     def withAttribute(attribute: (String, String)): Tag =
       tag.copy(attributes = tag.attributes + attribute)
-
-    def grey(): Tag =
-      withCssClass(Css.greyTagCssClass)
-
-    def green(): Tag =
-      withCssClass(Css.greenTagCssClass)
-
-    def turquoise(): Tag =
-      withCssClass(Css.turquoiseCssClass)
-
-    def lightBlue(): Tag =
-      withCssClass(Css.lightBlueTagCssClass)
-
-    def blue(): Tag =
-      withCssClass(Css.blueTagCssClass)
-
-    def purple(): Tag =
-      withCssClass(Css.purpleCssClass)
-
-    def pink(): Tag =
-      withCssClass(Css.pinkCssClass)
-
-    def red(): Tag =
-      withCssClass(Css.redTagCssClass)
-
-    def orange(): Tag =
-      withCssClass(Css.orangeCssClass)
-
-    def yellow(): Tag =
-      withCssClass(Css.yellowTagCssClass)
   }
 }

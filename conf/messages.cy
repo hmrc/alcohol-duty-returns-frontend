@@ -7,6 +7,7 @@ site.no = Na
 site.yes = Iawn
 site.continue = Parhau
 site.saveAndContinue = Cadw a pharhau
+site.confirmAndContinue = Cadarnhau a pharhau
 site.saveAndReturn = Cadw a mynd yn ôl i’ch cyfrif treth busnes
 site.agreeAndSubmit = Cytuno ac anfon y Datganiad
 site.payNow = Talu nawr
@@ -58,13 +59,16 @@ returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
 unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.p1 = Mae’r gwasanaeth Rheoli’ch Toll Alcohol yn wasanaeth ar gyfer busnesau cymeradwy, megis cwmnïau cyfyngedig, partneriaethau ac unig fasnachwyr sy’n cynhyrchu cynhyrchion alcoholaidd.
+unauthorised.link.url = https://www.gov.uk/mewngofnodi-cofrestru-gwasanaethau-ar-lein-cthef/cofrestru
 unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
-unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
+unauthorised.p2.commaForWelsh = ,
+unauthorised.p2.second = a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
 
 unauthorised.not-org.title = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
 unauthorised.not-org.heading = Mae angen cyfrif sefydliad arnoch i ddefnyddio’r gwasanaeth hwn
 unauthorised.not-org.p1 = I barhau, mae angen i chi allgofnodi a mewngofnodi eto gyda’r manylion ar gyfer cyfrif eich sefydliad.
+unauthorised.not-org.link.url = https://www.gov.uk/mewngofnodi-cofrestru-gwasanaethau-ar-lein-cthef/cofrestru
 unauthorised.not-org.p2.first =
 unauthorised.not-org.p2.second = Gallwch greu cyfrif sefydliad
 unauthorised.not-org.p2.third = os nad oes gennych un eisoes.
@@ -78,6 +82,7 @@ doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID Cymerad
 noAppaId.title = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.heading = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.p = Gallwch ddod o hyd i’ch ID APPA ar lythyrau oddi wrth CThEF ynghylch y gwasanaeth ar-lein ar gyfer Toll Alcohol.
+noAppaId.link.appaIdRegisterUrl = https://www.gov.uk/guidance/apply-for-an-alcoholic-products-producer-approval-appa.cy
 noAppaId.link.text = Dysgwch sut i wneud cais am ID APPA (yn agor mewn tab newydd)
 noAppaId.p2 = os nad oes gennych un.
 
@@ -569,6 +574,23 @@ multipleSPRList.action.label = Camau
 checkYourAnswersLabel.row.totalLitres = Cyfanswm y cyfaint
 checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 checkYourAnswersLabel.row.dutyRate = Cyfradd doll SPR
+checkYourAnswers.notificationBanner.heading = Rydych wedi llwyddo i ddileu datganiadau ar gyfer:
+
+multipleSPRMissingDetails.title = Mae gennych rai manylion sydd ar goll
+multipleSPRMissingDetails.heading = Mae gennych rai manylion sydd ar goll
+multipleSPRMissingDetails.guidance = Nid ydych wedi ychwanegu unrhyw fanylion ar gyfer yr alcohol a ddatganwyd gennych:
+multipleSPRMissingDetails.h2 = Beth y mae angen i chi ei wneud?
+multipleSPRMissingDetails.addDetails = 	Ychwanegu manylion ar gyfer y datganiadau hyn
+multipleSPRMissingDetails.removeDeclarations = Dileu’r datganiadau yma o’r ffurflen hon
+multipleSPRMissingDetails.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
+
+multipleSPRMissingDetailsConfirmation.title = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
+multipleSPRMissingDetailsConfirmation.heading = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
+multipleSPRMissingDetailsConfirmation.guidance = Byddwn yn dileu’ch datganiadau ar gyfer y canlynol:
+multipleSPRMissingDetailsConfirmation.hidden = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
+multipleSPRMissingDetailsConfirmation.yes = Iawn, dileu’r datganiadau hyn
+multipleSPRMissingDetailsConfirmation.no = Na, Hoffwn fynd yn ôl ac ychwanegu manylion ar gyfer y datganiadau hyn
+multipleSPRMissingDetailsConfirmation.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
 
 deleteMultipleSPREntry.title = Tynnu’r cofnod {0} hwn?
 deleteMultipleSPREntry.heading = Tynnu’r cofnod {0} hwn?

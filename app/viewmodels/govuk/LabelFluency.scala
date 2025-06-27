@@ -57,12 +57,5 @@ trait LabelFluency {
 
     def asVisuallyHidden(): Label =
       withCssClass(Css.visuallyHiddenCssClass)
-
-    def withHiddenText(visibleText: String, hiddenText: String): Label =
-      label.copy(content =
-        HtmlContent(
-          s"$visibleText <span class='${Css.visuallyHiddenCssClass}'>$hiddenText</span>"
-        )
-      )
   }
 }

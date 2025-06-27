@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package viewmodels
+package forms.declareDuty
 
-import config.Constants.Css
+import forms.mappings.Mappings
+import play.api.data.Form
 
-sealed trait LabelSize
+import javax.inject.Inject
 
-object LabelSize {
-  case object ExtraLarge extends WithCssClass(Css.labelXLCssClass) with LabelSize
-  case object Large extends WithCssClass(Css.labelLCssClass) with LabelSize
+class MultipleSPRMissingDetailsConfirmationFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "deleteMissingDeclarations" -> boolean("multipleSPRMissingDetailsConfirmation.error.required")
+    )
 }

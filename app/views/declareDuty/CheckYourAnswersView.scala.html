@@ -16,20 +16,16 @@
 
 @import components.{Caption, PageHeading}
 @import viewmodels.declareDuty.ReturnSummaryList
-@import views.html.components.ReturnToTaskList
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         caption: Caption,
         pageHeading: PageHeading,
-        govukSummaryList : GovukSummaryList,
-        returnToTaskList: ReturnToTaskList
-
+        govukSummaryList : GovukSummaryList
 )
 
-
-@(regime: AlcoholRegime, summaryList:ReturnSummaryList)(implicit request: Request[_], messages: Messages)
+@(regime: AlcoholRegime, summaryList: ReturnSummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -51,9 +47,7 @@
     }
 
     @govukButton(
-      ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+        ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         .asLink(controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
     )
-    @returnToTaskList()
-
 }
