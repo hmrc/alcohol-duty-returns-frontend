@@ -14,14 +14,19 @@
  * limitations under the License.
  *@
 
-@import controllers.routes.TaskListController
-@import config.Constants
+@import views.html.components.{Link, Paragraph}
 
-@this()
+@this(
+        link: Link,
+        paragraph: Paragraph
+)
 
 @()(implicit messages: Messages)
 
-<p class="govuk-body">
- <a href="@TaskListController.onPageLoad.url" class="@Constants.Css.linkNoVisitedStateCssClass">@messages("viewAllTasks.Link.text")</a>
-</p>
-
+@paragraph(content = HtmlContent(
+  link(
+        id = "return-to-task-list-link",
+        text = messages("viewAllTasks.Link.text"),
+        href = routes.TaskListController.onPageLoad.url
+    )
+))
