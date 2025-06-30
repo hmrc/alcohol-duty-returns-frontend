@@ -22,7 +22,7 @@ import forms.declareDuty.TellUsAboutSingleSPRRateFormProvider
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode}
 import navigation.ReturnsNavigator
-import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
@@ -33,6 +33,7 @@ import viewmodels.declareDuty.CategoriesByRateTypeHelper
 import views.html.declareDuty.TellUsAboutSingleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 class TellUsAboutSingleSPRRateController @Inject() (
   override val messagesApi: MessagesApi,
@@ -93,13 +94,13 @@ class TellUsAboutSingleSPRRateController @Inject() (
               value => {
                 val hasChanged = hasValueChanged(value, regime)
                 for {
-                  updatedAnswers <-
-                    Future.fromTry(request.userAnswers.setByKey(currentPage, regime, value))
-                  _              <- userAnswersConnector.set(updatedAnswers)
-                } yield Redirect(
-                  navigator
-                    .nextPageWithRegime(currentPage, mode, updatedAnswers, regime, hasChanged)
-                )
+                  updatedAnswers <- Future.fromTry(request.userAnswers.setByKey(currentPage, regime, value))
+                  answersToSave  <- Future.fromTry {
+                                      if (hasChanged) { updatedAnswers.removeByKey(AlcoholDutyPage, regime) }
+                                      else { Success(updatedAnswers) }
+                                    }
+                  _              <- userAnswersConnector.set(answersToSave)
+                } yield Redirect(navigator.nextPageWithRegime(currentPage, mode, answersToSave, regime, hasChanged))
               }
             )
       }

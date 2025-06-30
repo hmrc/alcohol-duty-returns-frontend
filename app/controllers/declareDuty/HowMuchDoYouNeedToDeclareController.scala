@@ -22,7 +22,7 @@ import forms.declareDuty.HowMuchDoYouNeedToDeclareFormProvider
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode, RateBand}
 import navigation.ReturnsNavigator
-import pages.declareDuty.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
@@ -93,12 +93,16 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
                       request.userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRateByTaxTypes)
                     )
                   hasChanged                = hasValueChanged(volumesAndRateByTaxTypes, regime)
-                  _                        <- userAnswersConnector.set(updatedAnswers)
+                  answersToSave            <- Future.fromTry {
+                                                if (hasChanged) { updatedAnswers.removeByKey(AlcoholDutyPage, regime) }
+                                                else { Success(updatedAnswers) }
+                                              }
+                  _                        <- userAnswersConnector.set(answersToSave)
                 } yield Redirect(
                   navigator.nextPageWithRegime(
                     HowMuchDoYouNeedToDeclarePage,
                     mode,
-                    updatedAnswers,
+                    answersToSave,
                     regime,
                     hasChanged
                   )
@@ -126,7 +130,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
       .foldLeft(Success(Seq.empty): Try[Seq[VolumeAndRateByTaxType]]) {
         case (acc, Some(value)) => acc.map(_ :+ value)
         case (_, None)          =>
-          logger.warn(s"Failed to find rate band for tax type")
+          logger.warn("Failed to find rate band for tax type")
           Failure(new Exception("Failed to find rate band for tax type"))
       }
 }
