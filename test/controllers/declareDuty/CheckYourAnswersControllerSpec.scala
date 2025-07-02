@@ -17,6 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import models.ErrorModel
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
@@ -29,7 +30,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
   "CheckYourAnswers Controller" - {
     "must return OK and the correct view for a GET" in new SetUp {
       when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers))
-        .thenReturn(Some(returnSummaryList))
+        .thenReturn(Right(returnSummaryList))
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
@@ -47,7 +48,8 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     }
 
     "must redirect to the Journey Recovery page when no summary can be returned" in new SetUp {
-      when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers)).thenReturn(None)
+      when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers))
+        .thenReturn(Left(ErrorModel(BAD_REQUEST, "Error from helper")))
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
