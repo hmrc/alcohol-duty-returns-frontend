@@ -105,7 +105,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
       "if SPR rate bands are declared but single/multiple SPR question is not answered" in new SetUp {
         val userAnswersSetup1 = specifyWhatDoYouNeedToDeclare(userAnswersWithBeer, Beer)
-        val userAnswers = specifyAllHowMuchDoYouNeedToDeclare(userAnswersSetup1, Beer)
+        val userAnswers       = specifyAllHowMuchDoYouNeedToDeclare(userAnswersSetup1, Beer)
 
         checkYourAnswersSummaryListHelper.createSummaryList(Beer, userAnswers) mustBe
           Left(ErrorModel(BAD_REQUEST, "SPR rate bands declared but single/multiple SPR question not answered"))
