@@ -57,8 +57,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateRepackagedDutyChangeUrl")
   private val adrCalculatorCalculateTotalAdjustmentUrlPart: String      =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateTotalAdjustmentUrl")
-  private val adrCalculatorCalculateDutySuspendedVolumesUrlPart: String =
-    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateDutySuspendedVolumesUrl")
   private val gformPrefix: String                                       =
     configuration.get[String]("microservice.services.gform.prefix")
   private val gformClaimARefundUrl: String                              =
@@ -88,9 +86,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val claimARefundGformEnabled: Boolean =
     configuration.get[Boolean]("features.claim-a-refund-gform")
-
-  val dutySuspendedNewJourneyEnabled: Boolean =
-    configuration.get[Boolean]("features.duty-suspended-new-journey")
 
   val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
@@ -171,9 +166,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrCalculatorCalculateTotalAdjustmentUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateTotalAdjustmentUrlPart
-
-  def adrCalculatorCalculateDutySuspendedVolumesUrl(): String =
-    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateDutySuspendedVolumesUrlPart
 
   def startPaymentUrl: String =
     servicesConfig.baseUrl("pay-api") + configuration.get[String]("microservice.services.pay-api.url")
