@@ -38,7 +38,6 @@ class DutySuspendedWineController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkRegime: CheckWineRegimeAction,
-  checkDSDOldJourneyToggle: CheckDSDOldJourneyToggleAction,
   formProvider: DutySuspendedWineFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedWineView
@@ -49,28 +48,26 @@ class DutySuspendedWineController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle andThen checkRegime) {
-      implicit request =>
-        val preparedForm = request.userAnswers.get(DutySuspendedWinePage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+    (identify andThen getData andThen requireData andThen checkRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(DutySuspendedWinePage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-        Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle andThen checkRegime).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedWinePage, value))
-                _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DutySuspendedWinePage, mode, updatedAnswers))
-          )
+    (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedWinePage, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DutySuspendedWinePage, mode, updatedAnswers))
+        )
     }
 }

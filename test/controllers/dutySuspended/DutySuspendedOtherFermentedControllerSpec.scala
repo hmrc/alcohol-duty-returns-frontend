@@ -44,10 +44,6 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> false
-  )
-
   val userAnswers = userAnswersWithOtherFermentedProduct.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
