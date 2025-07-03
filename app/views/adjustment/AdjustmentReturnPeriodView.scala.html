@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, FormGroupWithError, Link, PageHeading, Paragraph}
+@import components.{Caption, FormGroupWithError, Link, PageHeading, ReturnToTaskList}
 @import config.Constants.Css
-@import viewmodels.adjustment.AdjustmentReturnPeriodViewModel
+@import models.adjustment.AdjustmentType
 
 @this(
     layout: templates.Layout,
@@ -24,16 +24,17 @@
     govukErrorSummary: GovukErrorSummary,
     govukDateInput: GovukDateInput,
     govukButton: GovukButton,
-    paragraph: Paragraph,
+    govukInsetText: GovukInsetText,
     caption: Caption,
     pageHeading: PageHeading,
     link: Link,
+    returnToTaskList: ReturnToTaskList,
     formGroupWithError: FormGroupWithError
 )
 
-@(form: Form[_], mode: Mode, viewModel: AdjustmentReturnPeriodViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, viewModel.getHeading)) {
+@layout(pageTitle = title(form, messages("adjustmentReturnPeriod.title"))) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentReturnPeriodController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -43,32 +44,37 @@
 
         @caption(
             id = "adjustment-return-period-section",
-            messages(s"section.adjustment.${viewModel.adjustmentType}"),
+            messages(s"section.adjustment.$adjustmentType"),
         )
 
         @formGroupWithError(form.errors.nonEmpty) {
-            @pageHeading(viewModel.getHeading)
+            @pageHeading(messages("adjustmentReturnPeriod.heading"))
 
-            <p class="@Css.bodyCssClass">
-                @link(
-                    id = "excise-enquiries-link",
-                    text = messages("adjustmentReturnPeriod.exciseEnquiries.link"),
-                    href = viewModel.exciseEnquiriesUrl,
-                    newTab = true
+            @govukInsetText(InsetText(
+                content = HtmlContent(
+                    messages("adjustmentReturnPeriod.guidance") +
+                    link(
+                        id = "excise-enquiries-link",
+                        text = messages("adjustmentReturnPeriod.exciseEnquiries.link"),
+                        href = messages("adjustmentReturnPeriod.exciseEnquiries.url"),
+                        newTab = true
+                    ) + "."
                 )
-                @messages("adjustmentReturnPeriod.paragraph")
-            </p>
+            ))
 
             @govukDateInput(
                 YearMonthDateViewModel(
                     form = form,
                     id = "adjustment-return-period-input",
-                    legend = LegendViewModel(viewModel.getHeading).asVisuallyHidden(),
+                    legend = LegendViewModel(messages("adjustmentReturnPeriod.heading")).asVisuallyHidden(),
                 ).withHint(HintViewModel(messages("adjustmentReturnPeriod.hint")))
             )
         }
+
         @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
+
+        @returnToTaskList()
     }
 }

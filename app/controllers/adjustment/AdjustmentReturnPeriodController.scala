@@ -55,13 +55,9 @@ class AdjustmentReturnPeriodController @Inject() (
     val form         = formProvider(returnPeriod)
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), Some(period), _, _, _, _, _, _, _, _, _, _)) =>
-        Ok(
-          view(form.fill(period), mode, helper.createViewModel(adjustmentType))
-        )
+        Ok(view(form.fill(period), mode, adjustmentType))
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))            =>
-        Ok(
-          view(form, mode, helper.createViewModel(adjustmentType))
-        )
+        Ok(view(form, mode, adjustmentType))
       case _                                                                                          =>
         logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
@@ -79,7 +75,7 @@ class AdjustmentReturnPeriodController @Inject() (
             request.userAnswers.get(CurrentAdjustmentEntryPage) match {
               case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _)) =>
                 Future.successful(
-                  BadRequest(view(formWithErrors, mode, helper.createViewModel(adjustmentType)))
+                  BadRequest(view(formWithErrors, mode, adjustmentType))
                 )
               case _                                                                               =>
                 logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
