@@ -14,15 +14,17 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading}
 @import config.Constants.Css
+@import components.{Caption, PageHeading, ReturnToTaskList, SubHeading}
 
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList,
     govukButton: GovukButton,
     caption: Caption,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    subHeading: SubHeading,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
@@ -36,7 +38,7 @@
 
     @pageHeading(messages("checkYourAnswers.heading"))
 
-    <h2 class="@Css.headingMCssClass">@messages("checkYourAnswersDutySuspendedDeliveries.heading")</h2>
+    @subHeading(messages("checkYourAnswersDutySuspendedDeliveries.heading"), classes = Css.headingMCssClass)
 
     @govukSummaryList(list)
 
@@ -44,4 +46,5 @@
         ButtonViewModel("continueButton", messages("site.continue"))
             .asLink(routes.TaskListController.onPageLoad.url)
     )
+    @returnToTaskList()
 }

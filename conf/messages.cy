@@ -247,6 +247,7 @@ taskList.section.checkAndSubmit.heading = Anfon Datganiad
 taskList.section.checkAndSubmit.needToDeclare = Gwirio’r doll sy’n daladwy ac anfon eich Datganiad
 taskList.section.checkAndSubmit.hint = Mae’n rhaid i chi lenwi pob adran cyn i chi allu anfon eich Datganiad.
 taskList.button.clearReturn = Dileu cynnwys y datganiad a dechrau eto
+viewAllTasks.Link.text = Ewch yn ôl i fwrw golwg dros yr holl dasgau
 
 beforeStartReturn.title = Cyn i chi ddechrau
 beforeStartReturn.heading = Cyn i chi ddechrau

@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
-@import components.{Caption, PageHeading, Link, Paragraph, FormGroupWithError}
 @import models.adjustment.AdjustmentType
+@import viewmodels.InputWidth._
+@import components.{Caption, FormGroupWithError, Link, PageHeading, Paragraph, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -28,7 +28,8 @@
     link: Link,
     paragraph: Paragraph,
     pageHeading: PageHeading,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
@@ -64,5 +65,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

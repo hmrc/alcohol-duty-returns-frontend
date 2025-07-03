@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{Caption, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -26,7 +26,8 @@
     caption: Caption,
     paragraph: Paragraph,
     pageHeading: PageHeading,
-    subHeading: SubHeading
+    subHeading: SubHeading,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -74,5 +75,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

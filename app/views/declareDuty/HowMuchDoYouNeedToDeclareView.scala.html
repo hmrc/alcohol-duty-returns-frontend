@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
-@import viewmodels.declareDuty.CategoriesByRateTypeViewModel
 @import viewmodels.InputWidth._
+@import viewmodels.declareDuty.CategoriesByRateTypeViewModel
+@import components.{Caption, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -30,7 +30,8 @@
     pageHeading: PageHeading,
     paragraph: Paragraph,
     govukWarningText: GovukWarningText,
-    govukFieldset: GovukFieldset
+    govukFieldset: GovukFieldset,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], regime: AlcoholRegime, howMuchDoYouNeedToDeclareHelper: CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -174,5 +175,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

@@ -16,20 +16,19 @@
 
 package controllers.declareDuty
 
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.declareDuty.DeleteMultipleSPREntryFormProvider
-
-import javax.inject.Inject
 import models.{AlcoholRegime, NormalMode}
-import pages.declareDuty.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
+import navigation.ReturnsNavigator
+import pages.declareDuty.{AlcoholDutyPage, DeleteMultipleSPREntryPage, MultipleSPRListPage}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.UserAnswersConnector
-import navigation.ReturnsNavigator
-import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.declareDuty.DeleteMultipleSPREntryView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeleteMultipleSPREntryController @Inject() (
@@ -75,9 +74,10 @@ class DeleteMultipleSPREntryController @Inject() (
                   for {
                     updatedAnswers <-
                       Future.fromTry(request.userAnswers.removeByKeyAndIndex(MultipleSPRListPage, regime, index))
-                    _              <- userAnswersConnector.set(updatedAnswers)
+                    answersToSave  <- Future.fromTry(updatedAnswers.removeByKey(AlcoholDutyPage, regime))
+                    _              <- userAnswersConnector.set(answersToSave)
                   } yield Redirect(
-                    navigator.nextPageWithRegime(DeleteMultipleSPREntryPage, NormalMode, updatedAnswers, regime)
+                    navigator.nextPageWithRegime(DeleteMultipleSPREntryPage, NormalMode, answersToSave, regime)
                   )
                 } else {
                   Future

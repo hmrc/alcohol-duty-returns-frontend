@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, Paragraph, FormGroupWithError}
-@import viewmodels.declareDuty.AlcoholTypeViewModel
 @import models.AlcoholRegimes
+@import viewmodels.declareDuty.AlcoholTypeViewModel
+@import components.{Caption, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -27,7 +27,8 @@
     pageHeading: PageHeading,
     caption: Caption,
     paragraph: Paragraph,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, regimes: AlcoholRegimes)(implicit request: Request[_], messages: Messages)
@@ -65,5 +66,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

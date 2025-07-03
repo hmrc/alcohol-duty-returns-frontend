@@ -14,15 +14,16 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading}
 @import viewmodels.declareDuty.ReturnSummaryList
+@import components.{Caption, PageHeading, ReturnToTaskList}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         caption: Caption,
         pageHeading: PageHeading,
-        govukSummaryList : GovukSummaryList
+        govukSummaryList : GovukSummaryList,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(regime: AlcoholRegime, summaryList: ReturnSummaryList)(implicit request: Request[_], messages: Messages)
@@ -50,4 +51,5 @@
         ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         .asLink(controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
     )
+    @returnToTaskList()
 }

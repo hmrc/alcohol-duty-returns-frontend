@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, SubHeading, PageHeading, TableRowAction, TableRowActionList}
 @import viewmodels.TableViewModel
+@import components.{Caption, PageHeading, ReturnToTaskList, SubHeading, TableRowAction, TableRowActionList}
 
 @this(
     layout: templates.Layout,
@@ -28,7 +28,8 @@
     subHeading: SubHeading,
     caption: Caption,
     tableRowActionList: TableRowActionList,
-    tableRowAction: TableRowAction
+    tableRowAction: TableRowAction,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], regime:AlcoholRegime, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
@@ -75,5 +76,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

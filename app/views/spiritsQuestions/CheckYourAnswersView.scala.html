@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading}
+@import components.{Caption, PageHeading, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -22,7 +22,8 @@
     govukSummaryList: GovukSummaryList,
     govukButton: GovukButton,
     caption: Caption,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(spiritsList: SummaryList)(implicit request: Request[_], messages: Messages)
@@ -42,5 +43,6 @@
         ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
             .asLink(routes.TaskListController.onPageLoad.url)
     )
+    @returnToTaskList()
 }
 

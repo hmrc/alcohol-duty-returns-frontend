@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, Caption, PageHeading, Paragraph, SectionBreak, SubHeading}
 @import viewmodels.LegendSize
+@import components.{BulletList, Caption, PageHeading, Paragraph, ReturnToTaskList, SectionBreak, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -29,6 +29,7 @@
     sectionBreak: SectionBreak,
     subHeading: SubHeading,
     caption: Caption,
+    returnToTaskList: ReturnToTaskList
 )
 
 
@@ -104,5 +105,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

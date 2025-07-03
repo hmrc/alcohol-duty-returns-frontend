@@ -22,7 +22,7 @@ import forms.declareDuty.TellUsAboutMultipleSPRRateFormProvider
 import javax.inject.Inject
 import models.{AlcoholRegime, CheckMode, Mode, NormalMode, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.declareDuty.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
@@ -34,6 +34,7 @@ import viewmodels.declareDuty.TellUsAboutMultipleSPRRateHelper
 import views.html.declareDuty.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 class TellUsAboutMultipleSPRRateController @Inject() (
   override val messagesApi: MessagesApi,
@@ -90,10 +91,15 @@ class TellUsAboutMultipleSPRRateController @Inject() (
                 for {
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
-                  _              <- userAnswersConnector.set(updatedAnswers)
+                  answersToSave  <- Future.fromTry {
+                                      if (hasChanged || index.isEmpty) {
+                                        updatedAnswers.removeByKey(AlcoholDutyPage, regime)
+                                      } else { Success(updatedAnswers) }
+                                    }
+                  _              <- userAnswersConnector.set(answersToSave)
                 } yield Redirect(
                   navigator
-                    .nextPageWithRegime(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers, regime, hasChanged, index)
+                    .nextPageWithRegime(TellUsAboutMultipleSPRRatePage, mode, answersToSave, regime, hasChanged, index)
                 )
               }
             )

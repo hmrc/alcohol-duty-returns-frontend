@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{NestedOrderedUnorderedList, PageHeading, Paragraph, Caption}
+@import components.{Caption, NestedOrderedUnorderedList, PageHeading, Paragraph, ReturnToTaskList}
 
 @this(
         layout: templates.Layout,
@@ -23,7 +23,8 @@
         caption: Caption,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        nestedOrderedUnorderedList: NestedOrderedUnorderedList
+        nestedOrderedUnorderedList: NestedOrderedUnorderedList,
+        returnToTaskList: ReturnToTaskList
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -59,5 +60,6 @@
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))
         )
+        @returnToTaskList()
    }
 }

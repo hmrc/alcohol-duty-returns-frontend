@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, SubHeading, PageHeading, Paragraph, BulletList, FormGroupWithError}
 @import config.Constants.Css
+@import components.{BulletList, Caption, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -28,7 +28,8 @@
     pageHeading: PageHeading,
     bulletList: BulletList,
     paragraph: Paragraph,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -77,5 +78,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

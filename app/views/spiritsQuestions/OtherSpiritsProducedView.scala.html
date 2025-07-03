@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, SubHeading}
 @import config.Constants
-@import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 @import viewmodels.InputWidth._
+@import components.{Caption, ReturnToTaskList, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -26,7 +25,8 @@
     hmrcCharacterCount: HmrcCharacterCount,
     govukButton: GovukButton,
     caption: Caption,
-    subHeading: SubHeading
+    subHeading: SubHeading,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -56,5 +56,6 @@
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

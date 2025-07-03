@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{Link, Caption, PageHeading, BulletList}
 @import config.Constants.Css
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 @import viewmodels.InputWidth._
+@import components.{BulletList, Caption, Link, PageHeading, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -31,6 +30,7 @@
     subheading: components.SubHeading,
     paragraph: components.Paragraph,
     bulletList: BulletList,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode, declareSpiritsGuidanceUrl: String)(implicit request: Request[_], messages: Messages)
@@ -83,5 +83,6 @@
         @govukButton(
         ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }

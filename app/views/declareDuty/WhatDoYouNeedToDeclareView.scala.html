@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, Paragraph, SubHeading, FormGroupWithError, ErrorMessageStandalone}
 @import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
+@import components.{Caption, ErrorMessageStandalone, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -29,7 +29,8 @@
     caption: Caption,
     subHeading: SubHeading,
     formGroupWithError: FormGroupWithError,
-    errorMessage: ErrorMessageStandalone
+    errorMessage: ErrorMessageStandalone,
+    returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], regime: AlcoholRegime, taxBandsViewModel: TaxBandsViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -100,5 +101,6 @@
         @govukButton(
           ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
+        @returnToTaskList()
     }
 }
