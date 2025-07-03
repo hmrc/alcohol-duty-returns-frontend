@@ -72,7 +72,7 @@ class AdjustmentReturnPeriodFormProviderSpec extends DateBehaviours with IntFiel
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.month", "adjustmentReturnPeriod.date.error.invalid.month")
+      FormError(s"$inputKey.month", "adjustmentReturnPeriod.date.error.invalid.nonNumeric.month")
     )
 
     behave like yearMonthWithMonthOutOfMinRange(
@@ -93,7 +93,7 @@ class AdjustmentReturnPeriodFormProviderSpec extends DateBehaviours with IntFiel
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.year", "adjustmentReturnPeriod.date.error.invalid.year")
+      FormError(s"$inputKey.year", "adjustmentReturnPeriod.date.error.invalid.nonNumeric.year")
     )
 
     behave like yearMonthWithYearOutOfMinRange(

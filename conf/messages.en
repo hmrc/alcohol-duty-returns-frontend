@@ -900,9 +900,11 @@ adjustmentReturnPeriod.date.error.required.year = The return period must include
 adjustmentReturnPeriod.date.error.invalid.future = The return period must be in the past
 adjustmentReturnPeriod.date.error.invalid.month = The return period must be a real date using numbers
 adjustmentReturnPeriod.date.error.invalid.year = The return period must be a real date using numbers
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.month = The return period must use numbers
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.year = The return period must use numbers
 adjustmentReturnPeriod.date.error.invalid.past = The return period must be in August 2023 or later
-adjustmentReturnPeriod.checkYourAnswersLabel = Original return period
-adjustmentReturnPeriod.change.hidden = original return period
+adjustmentReturnPeriod.checkYourAnswersLabel = Return period being adjusted
+adjustmentReturnPeriod.change.hidden = return period being adjusted
 adjustmentReturnPeriod.date.error.invalidYear.year = The year must include 4 numbers
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?

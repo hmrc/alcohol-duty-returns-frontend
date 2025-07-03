@@ -900,9 +900,11 @@ adjustmentReturnPeriod.date.error.required.year = Mae’n rhaid i gyfnod y Ffurf
 adjustmentReturnPeriod.date.error.invalid.future = Mae’n rhaid i gyfnod y Ffurflen Dreth fod yn y gorffennol
 adjustmentReturnPeriod.date.error.invalid.month = Mae’n rhaid i gyfnod y Ffurflen Dreth fod yn ddyddiad go iawn gan ddefnyddio rhifau
 adjustmentReturnPeriod.date.error.invalid.year = Mae’n rhaid i gyfnod y Ffurflen Dreth fod yn ddyddiad go iawn gan ddefnyddio rhifau
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.month = Mae’n rhaid i gyfnod y Ffurflen Dreth ddefnyddio rhifau
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.year = Mae’n rhaid i gyfnod y Ffurflen Dreth ddefnyddio rhifau
 adjustmentReturnPeriod.date.error.invalid.past = Mae’n rhaid i gyfnod y Ffurflen Dreth fod ar ôl Gorffennaf 2023
-adjustmentReturnPeriod.checkYourAnswersLabel = Cyfnod gwreiddiol y Datganiad
-adjustmentReturnPeriod.change.hidden = cyfnod gwreiddiol y Datganiad
+adjustmentReturnPeriod.checkYourAnswersLabel = Cyfnod y Ffurflen Dreth sy’n cael ei addasu
+adjustmentReturnPeriod.change.hidden = cyfnod y Ffurflen Dreth sy’n cael ei addasu
 adjustmentReturnPeriod.date.error.invalidYear.year = Mae’n rhaid i’r flwyddyn gynnwys 4 rhif
 
 adjustmentTaxType.title = Beth yw cod y math o dreth ar gyfer yr alcohol rydych chi’n ei addasu?

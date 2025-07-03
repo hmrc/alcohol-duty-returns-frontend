@@ -30,7 +30,7 @@ class AdjustmentReturnPeriodSummarySpec extends SpecBase {
     "must return a row if the period and adjustment type can be fetched" in new SetUp(true, true) {
       adjustmentReturnPeriodSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
-          Key(Text("Original return period")),
+          Key(Text("Return period being adjusted")),
           Value(HtmlContent("June 2024")),
           "",
           Some(
@@ -39,7 +39,7 @@ class AdjustmentReturnPeriodSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/return-period",
                   Text("Change"),
-                  Some("original return period")
+                  Some("return period being adjusted")
                 )
               )
             )

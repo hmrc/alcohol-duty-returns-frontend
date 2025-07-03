@@ -265,12 +265,12 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind a non-numeric value" - {
       "of month" in {
         val result = testForm.bind(Map("value.month" -> "a", "value.year" -> "2024"))
-        result.errors mustBe Seq(FormError("value.month", "invalid.month", Seq()))
+        result.errors mustBe Seq(FormError("value.month", "invalid.nonNumeric.month", Seq()))
       }
 
       "of year" in {
         val result = testForm.bind(Map("value.month" -> "1", "value.year" -> "a"))
-        result.errors mustBe Seq(FormError("value.year", "invalid.year", Seq()))
+        result.errors mustBe Seq(FormError("value.year", "invalid.nonNumeric.year", Seq()))
       }
     }
 
