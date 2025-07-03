@@ -157,8 +157,8 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", monthString),
-              ("when-did-you-pay-duty-input.year", yearString)
+              ("adjustment-return-period-input.month", monthString),
+              ("adjustment-return-period-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -198,8 +198,8 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", monthString),
-              ("when-did-you-pay-duty-input.year", yearString)
+              ("adjustment-return-period-input.month", monthString),
+              ("adjustment-return-period-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -250,8 +250,8 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", monthString),
-              ("when-did-you-pay-duty-input.year", yearString)
+              ("adjustment-return-period-input.month", monthString),
+              ("adjustment-return-period-input.year", yearString)
             )
 
         val result = route(application, request).value

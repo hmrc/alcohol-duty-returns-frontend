@@ -27,11 +27,11 @@ case class AdjustmentReturnPeriodViewModel(adjustmentType: AdjustmentType, excis
 
   def getHeading(implicit messages: Messages): String =
     if (adjustmentType == Underdeclaration) {
-      messages("whenDidYouPayDuty.under-declaration.title")
+      messages("adjustmentReturnPeriod.under-declaration.title")
     } else if (adjustmentType == Spoilt) {
-      throw new IllegalArgumentException("Not expecting WhenDidYouPayDuty to be asked for Spoilt")
+      throw new IllegalArgumentException("Not expecting adjustment return period to be asked for Spoilt")
     } else {
-      messages("whenDidYouPayDuty.default.title")
+      messages("adjustmentReturnPeriod.default.title")
     }
 
 }

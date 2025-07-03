@@ -29,12 +29,12 @@ class AdjustmentReturnPeriodViewModelSpec extends SpecBase {
     "return the correct heading for an Under Declaration" in {
       val viewModel = AdjustmentReturnPeriodViewModel(Underdeclaration, url)
 
-      viewModel.getHeading mustBe messages("whenDidYouPayDuty.under-declaration.title")
+      viewModel.getHeading mustBe messages("adjustmentReturnPeriod.under-declaration.title")
     }
     "return the default heading for adjustment types that are not Spoilt or Under Declaration" in {
       val viewModel = AdjustmentReturnPeriodViewModel(RepackagedDraughtProducts, url)
 
-      viewModel.getHeading mustBe messages("whenDidYouPayDuty.default.title")
+      viewModel.getHeading mustBe messages("adjustmentReturnPeriod.default.title")
     }
     "throw an exception if called on Spoilt" in {
       val viewModel = AdjustmentReturnPeriodViewModel(Spoilt, url)

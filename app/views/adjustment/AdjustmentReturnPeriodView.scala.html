@@ -38,11 +38,11 @@
     @formHelper(action = controllers.adjustment.routes.AdjustmentReturnPeriodController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("when-did-you-pay-duty-input" -> "when-did-you-pay-duty-input.month")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("adjustment-return-period-input" -> "adjustment-return-period-input.month")))
         }
 
         @caption(
-            id = "when-did-you-pay-duty-section",
+            id = "adjustment-return-period-section",
             messages(s"section.adjustment.${viewModel.adjustmentType}"),
         )
 
@@ -52,19 +52,19 @@
             <p class="@Css.bodyCssClass">
                 @link(
                     id = "excise-enquiries-link",
-                    text = messages("whenDidYouPayDuty.exciseEnquiries.link"),
+                    text = messages("adjustmentReturnPeriod.exciseEnquiries.link"),
                     href = viewModel.exciseEnquiriesUrl,
                     newTab = true
                 )
-                @messages("whenDidYouPayDuty.paragraph")
+                @messages("adjustmentReturnPeriod.paragraph")
             </p>
 
             @govukDateInput(
                 YearMonthDateViewModel(
                     form = form,
-                    id = "when-did-you-pay-duty-input",
+                    id = "adjustment-return-period-input",
                     legend = LegendViewModel(viewModel.getHeading).asVisuallyHidden(),
-                ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
+                ).withHint(HintViewModel(messages("adjustmentReturnPeriod.hint")))
             )
         }
         @govukButton(

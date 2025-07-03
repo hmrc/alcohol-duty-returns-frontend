@@ -35,14 +35,14 @@ class AdjustmentReturnPeriodSummary @Inject() (dateTimeHelper: DateTimeHelper) e
       case (Some(period), Some(adjustmentType)) if !adjustmentType.equals(Spoilt) =>
         Some(
           SummaryListRowViewModel(
-            key = "whenDidYouPayDuty.checkYourAnswersLabel",
+            key = "adjustmentReturnPeriod.checkYourAnswersLabel",
             value = ValueViewModel(HtmlContent(dateTimeHelper.formatMonthYear(period))),
             actions = Seq(
               ActionItemViewModel(
                 "site.change",
                 controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(CheckMode).url
               )
-                .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
+                .withVisuallyHiddenText(messages("adjustmentReturnPeriod.change.hidden"))
             )
           )
         )
