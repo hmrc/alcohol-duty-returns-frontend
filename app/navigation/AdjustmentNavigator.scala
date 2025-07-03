@@ -34,7 +34,7 @@ class AdjustmentNavigator @Inject() () {
       userAnswers => adjustmentTypeRoute(userAnswers, NormalMode)
     case pages.adjustment.AlcoholicProductTypePage                  =>
       _ => controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
-    case pages.adjustment.WhenDidYouPayDutyPage                     =>
+    case pages.adjustment.AdjustmentReturnPeriodPage                =>
       _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
     case pages.adjustment.AdjustmentTaxTypePage                     => userAnswers => adjustmentTaxTypePageRoute(userAnswers)
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
@@ -77,7 +77,7 @@ class AdjustmentNavigator @Inject() () {
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
-    case pages.adjustment.WhenDidYouPayDutyPage                     =>
+    case pages.adjustment.AdjustmentReturnPeriodPage                =>
       _ =>
         hasChanged =>
           if (hasChanged) {
@@ -211,7 +211,7 @@ class AdjustmentNavigator @Inject() () {
         controllers.adjustment.routes.SpoiltVolumeWithDutyController
           .onPageLoad(mode)
       case _                                                    =>
-        controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(mode)
+        controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(mode)
     }
   }
 }

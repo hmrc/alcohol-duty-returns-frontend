@@ -21,12 +21,12 @@ import play.api.data.FormError
 
 import java.time.{LocalDate, YearMonth}
 
-class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
+class AdjustmentReturnPeriodFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
 
   val returnPeriod                = returnPeriodGen.sample.get.period
-  val form                        = new WhenDidYouPayDutyFormProvider()(returnPeriod)
+  val form                        = new AdjustmentReturnPeriodFormProvider()(returnPeriod)
   val invalidYearMonth: YearMonth = YearMonth.of(2023, 7)
-  val inputKey                    = "when-did-you-pay-duty-input"
+  val inputKey                    = "adjustment-return-period-input"
 
   "input" - {
     val validData = datesBetween(
@@ -39,75 +39,75 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
     behave like mandatoryField(
       form,
       inputKey,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.required.all")
+      FormError(inputKey, "adjustmentReturnPeriod.date.error.required.all")
     )
 
     behave like yearMonthMandatoryMonthField(
       form,
       inputKey,
-      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.required.month")
+      FormError(s"$inputKey.month", "adjustmentReturnPeriod.date.error.required.month")
     )
 
     behave like yearMonthMandatoryYearField(
       form,
       inputKey,
-      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.required.year")
+      FormError(s"$inputKey.year", "adjustmentReturnPeriod.date.error.required.year")
     )
 
     behave like yearMonthFieldInFuture(
       form,
       inputKey,
       returnPeriod,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.future")
+      FormError(inputKey, "adjustmentReturnPeriod.date.error.invalid.future")
     )
 
     behave like yearMonthFieldWithMin(
       form,
       inputKey,
       invalidYearMonth,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.past")
+      FormError(inputKey, "adjustmentReturnPeriod.date.error.invalid.past")
     )
 
     behave like yearMonthInvalidMonth(
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(s"$inputKey.month", "adjustmentReturnPeriod.date.error.invalid.nonNumeric.month")
     )
 
     behave like yearMonthWithMonthOutOfMinRange(
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(s"$inputKey.month", "adjustmentReturnPeriod.date.error.invalid.month")
     )
 
     behave like yearMonthWithMonthOutOfMaxRange(
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(s"$inputKey.month", "adjustmentReturnPeriod.date.error.invalid.month")
     )
 
     behave like yearMonthInvalidYear(
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.invalid.year")
+      FormError(s"$inputKey.year", "adjustmentReturnPeriod.date.error.invalid.nonNumeric.year")
     )
 
     behave like yearMonthWithYearOutOfMinRange(
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.invalidYear.year")
+      FormError(s"$inputKey.year", "adjustmentReturnPeriod.date.error.invalidYear.year")
     )
 
     behave like yearMonthWithYearOutOfMaxRange(
       form,
       inputKey,
       validData,
-      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.invalidYear.year")
+      FormError(s"$inputKey.year", "adjustmentReturnPeriod.date.error.invalidYear.year")
     )
 
   }
