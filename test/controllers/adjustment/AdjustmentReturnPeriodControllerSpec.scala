@@ -17,7 +17,6 @@
 package controllers.adjustment
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.UserAnswersConnector
 import forms.adjustment.AdjustmentReturnPeriodFormProvider
 import models.NormalMode
@@ -32,7 +31,6 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentReturnPeriodView
-import viewmodels.adjustment.{AdjustmentReturnPeriodHelper, AdjustmentReturnPeriodViewModel}
 
 import scala.concurrent.Future
 
@@ -71,18 +69,9 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
   "AdjustmentReturnPeriod Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val mockHelper = mock[AdjustmentReturnPeriodHelper]
-
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
-
-      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
-        .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers)).build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-
         val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
 
         val view = application.injector.instanceOf[AdjustmentReturnPeriodView]
@@ -90,11 +79,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          form,
-          NormalMode,
-          AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl)
-        )(
+        contentAsString(result) mustEqual view(form, NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -102,18 +87,9 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val mockHelper = mock[AdjustmentReturnPeriodHelper]
-
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-
         val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
 
         val view = application.injector.instanceOf[AdjustmentReturnPeriodView]
@@ -121,11 +97,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(validPeriod),
-          NormalMode,
-          AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl)
-        )(
+        contentAsString(result) mustEqual view(form.fill(validPeriod), NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -135,21 +107,17 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
-      val mockHelper               = mock[AdjustmentReturnPeriodHelper]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockAdjustmentNavigator.nextPage(eqTo(AdjustmentReturnPeriodPage), any(), any(), any())
       ) thenReturn onwardRoute
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
 
       val application =
         applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -176,21 +144,17 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
-      val mockHelper               = mock[AdjustmentReturnPeriodHelper]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockAdjustmentNavigator.nextPage(eqTo(AdjustmentReturnPeriodPage), any(), any(), any())
       ) thenReturn onwardRoute
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -228,21 +192,17 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
-      val mockHelper               = mock[AdjustmentReturnPeriodHelper]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockAdjustmentNavigator.nextPage(eqTo(AdjustmentReturnPeriodPage), any(), any(), any())
       ) thenReturn onwardRoute
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -266,17 +226,9 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-      val mockHelper = mock[AdjustmentReturnPeriodHelper]
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
-
-      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
-        .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers)).build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-
         val request =
           FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
@@ -288,11 +240,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          boundForm,
-          NormalMode,
-          AdjustmentReturnPeriodViewModel(adjustmentType, appConfig.exciseEnquiriesUrl)
-        )(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -300,11 +248,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      val mockHelper = mock[AdjustmentReturnPeriodHelper]
-
-      val application = applicationBuilder(userAnswers = None)
-        .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
@@ -317,11 +261,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if userAnswers are empty" in {
-      val mockHelper = mock[AdjustmentReturnPeriodHelper]
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
@@ -334,11 +274,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
-      val mockHelper = mock[AdjustmentReturnPeriodHelper]
-
-      val application = applicationBuilder(userAnswers = None)
-        .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
@@ -354,11 +290,7 @@ class AdjustmentReturnPeriodControllerSpec extends SpecBase {
   }
 
   "must redirect to Journey Recovery for a POST with invalid data and empty user answers" in {
-    val mockHelper = mock[AdjustmentReturnPeriodHelper]
-
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-      .overrides(bind[AdjustmentReturnPeriodHelper].toInstance(mockHelper))
-      .build()
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
     running(application) {
       val request =

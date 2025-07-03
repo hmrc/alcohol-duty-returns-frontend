@@ -27,7 +27,6 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.adjustment.AdjustmentReturnPeriodHelper
 import views.html.adjustment.AdjustmentReturnPeriodView
 
 import java.time.YearMonth
@@ -42,7 +41,6 @@ class AdjustmentReturnPeriodController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: AdjustmentReturnPeriodFormProvider,
-  helper: AdjustmentReturnPeriodHelper,
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentReturnPeriodView
 )(implicit ec: ExecutionContext)
