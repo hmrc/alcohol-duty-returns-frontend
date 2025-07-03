@@ -24,7 +24,7 @@ import play.api.data.Form
 
 import java.time.YearMonth
 
-class WhenDidYouPayDutyFormProvider @Inject() extends Mappings {
+class AdjustmentReturnPeriodFormProvider @Inject() extends Mappings {
   def apply(returnPeriod: YearMonth): Form[YearMonth] = Form(
     "when-did-you-pay-duty-input" -> yearMonth(
       "whenDidYouPayDuty.date.error.invalid",

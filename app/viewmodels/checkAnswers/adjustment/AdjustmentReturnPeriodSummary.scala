@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 import javax.inject.Inject
 
-class WhenDidYouPayDutySummary @Inject() (dateTimeHelper: DateTimeHelper) extends YearMonthModelFormatter {
+class AdjustmentReturnPeriodSummary @Inject() (dateTimeHelper: DateTimeHelper) extends YearMonthModelFormatter {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     (adjustmentEntry.period, adjustmentEntry.adjustmentType) match {
@@ -40,7 +40,7 @@ class WhenDidYouPayDutySummary @Inject() (dateTimeHelper: DateTimeHelper) extend
             actions = Seq(
               ActionItemViewModel(
                 "site.change",
-                controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
+                controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(CheckMode).url
               )
                 .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
             )

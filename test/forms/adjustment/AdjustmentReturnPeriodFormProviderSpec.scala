@@ -21,10 +21,10 @@ import play.api.data.FormError
 
 import java.time.{LocalDate, YearMonth}
 
-class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
+class AdjustmentReturnPeriodFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
 
   val returnPeriod                = returnPeriodGen.sample.get.period
-  val form                        = new WhenDidYouPayDutyFormProvider()(returnPeriod)
+  val form                        = new AdjustmentReturnPeriodFormProvider()(returnPeriod)
   val invalidYearMonth: YearMonth = YearMonth.of(2023, 7)
   val inputKey                    = "when-did-you-pay-duty-input"
 

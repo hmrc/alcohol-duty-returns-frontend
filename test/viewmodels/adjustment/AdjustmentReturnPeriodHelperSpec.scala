@@ -20,13 +20,13 @@ import base.SpecBase
 import models.adjustment.AdjustmentType
 import models.adjustment.AdjustmentType.Overdeclaration
 
-class WhenDidYouPayDutyHelperSpec extends SpecBase {
+class AdjustmentReturnPeriodHelperSpec extends SpecBase {
 
-  "WhenDidYouPayDutyHelper" - {
+  "AdjustmentReturnPeriodHelper" - {
     "createViewModel method must create a view model with the declared adjustment type and correct url" in new Setup {
       val testAdjustmentType: AdjustmentType = Overdeclaration
 
-      testHelper.createViewModel(testAdjustmentType) mustBe WhenDidYouPayDutyViewModel(
+      testHelper.createViewModel(testAdjustmentType) mustBe AdjustmentReturnPeriodViewModel(
         Overdeclaration,
         appConfig.exciseEnquiriesUrl
       )
@@ -35,7 +35,7 @@ class WhenDidYouPayDutyHelperSpec extends SpecBase {
 
   class Setup {
 
-    val testHelper = app.injector.instanceOf[WhenDidYouPayDutyHelper]
+    val testHelper = app.injector.instanceOf[AdjustmentReturnPeriodHelper]
 
   }
 

@@ -20,24 +20,24 @@ import base.SpecBase
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import play.api.i18n.Messages
 
-class WhenDidYouPayDutyViewModelSpec extends SpecBase {
+class AdjustmentReturnPeriodViewModelSpec extends SpecBase {
 
   val url: String                 = appConfig.exciseEnquiriesUrl
   implicit val messages: Messages = getMessages(app)
 
-  "WhenDidYouPayDutyViewModel getHeading method must" - {
+  "AdjustmentReturnPeriodViewModel getHeading method must" - {
     "return the correct heading for an Under Declaration" in {
-      val viewModel = WhenDidYouPayDutyViewModel(Underdeclaration, url)
+      val viewModel = AdjustmentReturnPeriodViewModel(Underdeclaration, url)
 
       viewModel.getHeading mustBe messages("whenDidYouPayDuty.under-declaration.title")
     }
     "return the default heading for adjustment types that are not Spoilt or Under Declaration" in {
-      val viewModel = WhenDidYouPayDutyViewModel(RepackagedDraughtProducts, url)
+      val viewModel = AdjustmentReturnPeriodViewModel(RepackagedDraughtProducts, url)
 
       viewModel.getHeading mustBe messages("whenDidYouPayDuty.default.title")
     }
     "throw an exception if called on Spoilt" in {
-      val viewModel = WhenDidYouPayDutyViewModel(Spoilt, url)
+      val viewModel = AdjustmentReturnPeriodViewModel(Spoilt, url)
 
       assertThrows[IllegalArgumentException](viewModel.getHeading)
     }

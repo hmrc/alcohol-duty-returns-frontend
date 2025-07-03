@@ -16,7 +16,7 @@
 
 @import components.{Caption, FormGroupWithError, Link, PageHeading, Paragraph}
 @import config.Constants.Css
-@import viewmodels.adjustment.WhenDidYouPayDutyViewModel
+@import viewmodels.adjustment.AdjustmentReturnPeriodViewModel
 
 @this(
     layout: templates.Layout,
@@ -31,11 +31,11 @@
     formGroupWithError: FormGroupWithError
 )
 
-@(form: Form[_], mode: Mode, viewModel: WhenDidYouPayDutyViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, viewModel: AdjustmentReturnPeriodViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, viewModel.getHeading)) {
 
-    @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.adjustment.routes.AdjustmentReturnPeriodController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("when-did-you-pay-duty-input" -> "when-did-you-pay-duty-input.month")))

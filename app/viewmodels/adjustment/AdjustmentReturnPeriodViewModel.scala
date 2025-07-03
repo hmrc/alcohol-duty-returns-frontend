@@ -23,7 +23,7 @@ import play.api.i18n.Messages
 
 import javax.inject.Inject
 
-case class WhenDidYouPayDutyViewModel(adjustmentType: AdjustmentType, exciseEnquiriesUrl: String) {
+case class AdjustmentReturnPeriodViewModel(adjustmentType: AdjustmentType, exciseEnquiriesUrl: String) {
 
   def getHeading(implicit messages: Messages): String =
     if (adjustmentType == Underdeclaration) {
@@ -36,9 +36,9 @@ case class WhenDidYouPayDutyViewModel(adjustmentType: AdjustmentType, exciseEnqu
 
 }
 
-class WhenDidYouPayDutyHelper @Inject() (appConfig: FrontendAppConfig) {
+class AdjustmentReturnPeriodHelper @Inject() (appConfig: FrontendAppConfig) {
 
-  def createViewModel(adjustmentType: AdjustmentType): WhenDidYouPayDutyViewModel =
-    WhenDidYouPayDutyViewModel(adjustmentType = adjustmentType, exciseEnquiriesUrl = appConfig.exciseEnquiriesUrl)
+  def createViewModel(adjustmentType: AdjustmentType): AdjustmentReturnPeriodViewModel =
+    AdjustmentReturnPeriodViewModel(adjustmentType = adjustmentType, exciseEnquiriesUrl = appConfig.exciseEnquiriesUrl)
 
 }

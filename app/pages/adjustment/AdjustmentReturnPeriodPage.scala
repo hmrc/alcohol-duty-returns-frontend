@@ -21,7 +21,7 @@ import play.api.libs.json.JsPath
 
 import java.time.YearMonth
 
-case object WhenDidYouPayDutyPage extends QuestionPage[YearMonth] {
+case object AdjustmentReturnPeriodPage extends QuestionPage[YearMonth] {
 
   override def path: JsPath = JsPath \ toString
 
