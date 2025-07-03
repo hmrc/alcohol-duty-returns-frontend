@@ -44,10 +44,6 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase {
 
   lazy val dutySuspendedSpiritsRoute = routes.DutySuspendedSpiritsController.onPageLoad(NormalMode).url
 
-  override def configOverrides: Map[String, Any] = Map(
-    "features.duty-suspended-new-journey" -> false
-  )
-
   val userAnswers = userAnswersWithSpirits.copy(data =
     Json.obj(
       DutySuspendedSpiritsPage.toString -> Json.obj(

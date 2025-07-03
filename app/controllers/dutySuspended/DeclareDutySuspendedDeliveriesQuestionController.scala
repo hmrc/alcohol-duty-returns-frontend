@@ -19,7 +19,7 @@ package controllers.dutySuspended
 import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
 import pages.dutySuspended._
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -29,7 +29,6 @@ import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   override val messagesApi: MessagesApi,
@@ -38,7 +37,6 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  checkDSDOldJourneyToggle: CheckDSDOldJourneyToggleAction,
   formProvider: DeclareDutySuspendedDeliveriesQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeclareDutySuspendedDeliveriesQuestionView
@@ -49,7 +47,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -59,35 +57,17 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle).async { implicit request =>
+    (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers   <-
-                Future.fromTry(
-                  request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, value)
-                )
-              filterUserAnswer <- Future.fromTry(filterDSDQuestionAnswer(updatedAnswers, value))
-              _                <- userAnswersConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, filterUserAnswer))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, value))
+              _              <- userAnswersConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, updatedAnswers))
         )
-    }
-
-  def filterDSDQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) {
-      Try(userAnswer)
-    } else {
-      userAnswer.remove(
-        List(
-          DutySuspendedBeerPage,
-          DutySuspendedCiderPage,
-          DutySuspendedWinePage,
-          DutySuspendedSpiritsPage,
-          DutySuspendedOtherFermentedPage
-        )
-      )
     }
 }

@@ -17,7 +17,7 @@
 package controllers.dutySuspended
 
 import com.google.inject.Inject
-import controllers.actions.{CheckDSDOldJourneyToggleAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,7 +30,6 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  checkDSDOldJourneyToggle: CheckDSDOldJourneyToggleAction,
   val controllerComponents: MessagesControllerComponents,
   checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper,
   view: CheckYourAnswersDutySuspendedDeliveriesView
@@ -39,7 +38,7 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkDSDOldJourneyToggle) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
       checkYourAnswersSummaryListHelper.dutySuspendedDeliveriesSummaryList(request.userAnswers) match {
         case summaryList if summaryList.rows.nonEmpty => Ok(view(summaryList))
         case _                                        =>
