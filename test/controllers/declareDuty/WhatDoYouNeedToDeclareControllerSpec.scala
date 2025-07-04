@@ -166,8 +166,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted, in Check mode and the value has changed" in {
 
-      val userAnswers =
+      val userAnswers        =
         userAnswersWithAlcoholType.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
+      val updatedUserAnswers =
+        userAnswersWithAlcoholType.setByKey(WhatDoYouNeedToDeclarePage, regime, Set(rateBandList.head)).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -193,7 +195,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         verify(mockAlcoholDutyCalculatorConnector, times(1))
           .rateBandByRegime(any(), eqTo(userAnswers.regimes.regimes.toSeq))(any())
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(updatedUserAnswers))(any())
         verify(mockReturnsNavigator, times(1))
           .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(true), eqTo(None))
       }

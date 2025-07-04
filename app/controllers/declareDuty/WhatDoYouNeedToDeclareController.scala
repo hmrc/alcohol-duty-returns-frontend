@@ -53,7 +53,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     with ReturnController[Set[RateBand], WhatDoYouNeedToDeclarePage.type]
     with Logging {
 
-  val currentPage = WhatDoYouNeedToDeclarePage
+  val currentPage: WhatDoYouNeedToDeclarePage.type = WhatDoYouNeedToDeclarePage
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
@@ -117,12 +117,29 @@ class WhatDoYouNeedToDeclareController @Inject() (
     }
   }
 
+  // This solution now cleans up each section.
+  // I.e. `SPR' or 'Non SPR' if any changes are detected in either. This in theory fixes the bug however...
+
+  // Q. Could we be more granular and only remove from the cache where the tax code was in the original however, is not in the new?
+  // If we wanted to be more granular we would need to...
+  // If we have no standard tax codes then delete the entire section
+  // If we have no SPR Codes then delete the entire SPR section
+  // If there are standard tax codes and standard tax codes are being removed then remove them from Ua individually
+  // If there are SPR rates and SRP rates are being removed then remove them from Ua individually
+  // Additional considerations are to ensure multiple SPR is cleared up where required and any yes / no options
+  // The above would require reading specific tax code values from the relevant section of the cache and writing back
+  // minus any entries that exist in the `oldRateBands` list. This is not a small undertaking and could be problematic!
   private def changedValue(newRateBands: Set[RateBand], regime: AlcoholRegime)(implicit
     request: DataRequest[AnyContent]
   ): (Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]], Boolean) =
     request.userAnswers.getByKey(currentPage, regime) match {
       case Some(oldRateBands) if oldRateBands != newRateBands =>
-        (nextPages(currentPage), true)
+        val removing: Set[RateBand]                                     = oldRateBands diff newRateBands
+        val adding: Set[RateBand]                                       = newRateBands diff oldRateBands
+        val clearSpr: Boolean                                           = removing.exists(x => x.rateType.isSPR) || adding.exists(x => x.rateType.isSPR)
+        val clearNonSpr: Boolean                                        = removing.exists(x => !x.rateType.isSPR) || adding.exists(x => !x.rateType.isSPR)
+        val pagesToClear: Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] = nextPages(currentPage, clearSpr, clearNonSpr)
+        (pagesToClear, true)
       case _                                                  =>
         (Seq.empty, false)
     }

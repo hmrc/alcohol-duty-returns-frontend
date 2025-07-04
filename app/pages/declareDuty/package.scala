@@ -20,8 +20,18 @@ import models.AlcoholRegime
 
 package object declareDuty {
 
-  def nextPages(currentPage: QuestionPage[_]): Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] =
-    sectionPages.dropWhile(_ != currentPage).drop(1)
+  def nextPages(
+    currentPage: QuestionPage[_],
+    clearSpr: Boolean = true,
+    clearNonSpr: Boolean = true
+  ): Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] =
+    if (clearSpr && clearNonSpr) {
+      sectionPages.dropWhile(_ != currentPage).drop(1)
+    } else if (clearSpr) {
+      sprPages
+    } else {
+      nonSprPages
+    }
 
   val sectionPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
     AlcoholTypePage,
@@ -33,6 +43,24 @@ package object declareDuty {
     MultipleSPRListPage,
     DutyCalculationPage,
     AlcoholDutyPage
+  ).map(_.asInstanceOf[QuestionPage[Map[AlcoholRegime, _]]])
+
+  private val nonSprPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
+    AlcoholTypePage,
+    HowMuchDoYouNeedToDeclarePage,
+    DutyCalculationPage,
+    AlcoholDutyPage
+  ).map(_.asInstanceOf[QuestionPage[Map[AlcoholRegime, _]]])
+
+  private val sprPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
+    DoYouHaveMultipleSPRDutyRatesPage,
+    TellUsAboutSingleSPRRatePage,
+    TellUsAboutMultipleSPRRatePage,
+    MultipleSPRListPage,
+    DeleteMultipleSPREntryPage,
+    DoYouWantToAddMultipleSPRToListPage,
+    MultipleSPRMissingDetailsConfirmationPage,
+    MultipleSPRMissingDetailsPage
   ).map(_.asInstanceOf[QuestionPage[Map[AlcoholRegime, _]]])
 
 }
