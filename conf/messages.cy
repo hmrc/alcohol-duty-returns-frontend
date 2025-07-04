@@ -398,6 +398,19 @@ declareAlcoholDutyQuestion.cider.p2.l2 = seidr pefriog rhwng 5.6% ac 8.4%
 declareAlcoholDutyQuestion.h4 = A oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd?
 declareAlcoholDutyQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd
 
+declaringWineDuty.title = Datgan eich gwin am doll
+declaringWineDuty.heading = Datgan eich gwin am doll
+declaringWineDuty.p1 = Mae angen i ni wybod faint o win rydych chi wedi’i gynhyrchu a’r litrau o alcohol pur y mae’n ei gynnwys yn seiliedig ar ei fand alcohol yn ôl cyfaint (ABV).
+declaringWineDuty.subHeading1 = Mae’n rhaid i chi ddatgan eich cynhyrchion gwin yn ôl eu cryfder ABV
+declaringWineDuty.alcoholicStrength.link = Dysgwch ragor am yr hyn y mae cryfder alcoholaidd yn ei olygu wrth ddatgan eich toll (yn agor tab newydd)
+declaringWineDuty.p2 = Mae’n rhaid i chi nawr ddatgan eich gwin o dan un o’r bandiau ABV:
+declaringWineDuty.subHeading2 = Cyfrifo’ch litrau o alcohol pur
+declaringWineDuty.p3 = I gyfrifo’r litrau o alcohol pur, lluoswch y cyfanswm o win mewn litrau â chryfder yr ABV, yna rhannwch â 100.
+declaringWineDuty.details.summary = Enghraifft o gyfrifiad
+declaringWineDuty.details.p = Mae gennych 4,297.55 litr o win ar 13.5% ABV. I gyfrifo’r litrau o alcohol pur yn y gwin hwn, mae’n rhaid i chi wneud y canlynol:
+declaringWineDuty.details.calculation1 = 4,297.55 litr x 13.5% ABV = 58,016.925
+declaringWineDuty.details.calculation2 = 58,016.925 ÷ 100 = 580.1692 litr o alcohol pur
+
 whatDoYouNeedToDeclare.title = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.heading = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.hint = Dewiswch bob un sy’n berthnasol

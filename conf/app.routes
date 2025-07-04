@@ -57,6 +57,8 @@ POST       /complete-return/alcoholic-products/alcoholic-products-to-include    
 GET        /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.declareDuty.AlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.declareDuty.AlcoholTypeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /complete-return/alcoholic-products/Wine/declaring-wine-duty                   controllers.declareDuty.DeclaringWineDutyGuidanceController.onPageLoad()
+
 GET        /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.declareDuty.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
 POST       /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.declareDuty.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
 GET        /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.declareDuty.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
