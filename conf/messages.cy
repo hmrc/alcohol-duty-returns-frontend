@@ -8,7 +8,7 @@ site.yes = Iawn
 site.continue = Parhau
 site.saveAndContinue = Cadw a pharhau
 site.confirmAndContinue = Cadarnhau a pharhau
-site.saveAndReturn = Cadw a mynd yn ôl i’ch cyfrif treth busnes
+site.saveAndReturn = Cadw a dychwelyd yn nes ymlaen
 site.agreeAndSubmit = Cytuno ac anfon y Datganiad
 site.payNow = Talu nawr
 site.claimRefund = Hawlio ad-daliad
@@ -210,14 +210,14 @@ viewPastPayments.historic.paragraph = Mae ‘Taliadau wedi’u clirio’ yn goly
 viewPastPayments.visually-hidden.pay-now = swm o £{0} sy’n ddyledus ar {1}
 viewPastPayments.visually-hidden.claim-refund = o £{0}
 
-taskList.title = Cwblhau’ch Datganiad Toll Alcohol
+taskList.title = Cwblhau’ch datganiad Toll Alcohol
 taskList.period = Dyma’ch Datganiad Toll Alcohol ar gyfer y cyfnod {0} i {1}.
 taskList.completion.date = Cwblhewch yr holl dasgau ac anfonwch y Datganiad hwn ar neu cyn {0}.
 taskList.expiry.date = Byddwn yn cadw’ch atebion tan {0}.
 taskList.section.status.completed = Wedi cwblhau
 taskList.section.status.notStarted = Heb ddechrau eto
 taskList.section.status.inProgress = Ar y gweill
-taskList.section.status.cannotStart = Methu dechrau
+taskList.section.status.cannotStart = Methu dechrau ar hyn o bryd
 
 taskList.section.returns.heading = Datgan cynhyrchion alcoholaidd at ddiben toll
 taskList.section.returns.needToDeclare = Rhoi gwybod i ni a oes gennych gynhyrchion alcoholaidd i’w datgan
@@ -233,6 +233,7 @@ taskList.section.adjustment.needToDeclare = Rhoi gwybod i ni a oes gennych addas
 taskList.section.adjustment = Datgan addasiadau
 taskList.section.adjustment.under-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu tanddatgan
 taskList.section.adjustment.over-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu gorddatgan
+taskList.section.adjustment.hint = Gallwch addasu cynhyrchion alcoholaidd a ddatganwyd a allai bellach fod wedi’u difetha, eu hailbecynnu, eu gorddatgan, eu tanddatgan neu eu hallforio, ac sy’n gymwys i chi hawlio ad-daliad arnynt.
 
 taskList.section.dutySuspended.heading = Rhoi gwybod am ddosbarthiadau o alcohol o dan ohiriad tollau
 taskList.section.dutySuspended.needToDeclare = Rhoi gwybod i ni a ydych wedi dosbarthu neu dderbyn cynhyrchion gorffenedig o dan ohiriad tollau
@@ -275,8 +276,9 @@ alcoholType.title = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu dat
 alcoholType.heading = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan?
 alcoholType.error.required = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan
 alcoholType.p1 = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan yn y Datganiad hwn.
-alcoholType.p2 = Bydd eich Datganiad yn dangos gwerthoedd ‘dim’ ar gyfer y mathau nad ydych yn eu dewis.
+alcoholType.p2 = Bydd cynhyrchion alcoholaidd nad ydych yn eu dewis yn cael eu nodi fel ‘dim’ yn y datganiad hwn.
 alcoholType.hint = Dewiswch bob un sy’n berthnasol
+alcoholType.link.text = Cysylltu â CThEF os na allwch weld y cynhyrchion alcoholaidd y mae gennych gymeradwyaeth ar eu cyfer (yn agor tab newydd)
 
 return.journey.error.lessThanExpected = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
 
@@ -406,6 +408,11 @@ whatDoYouNeedToDeclare.error.required.Cider = Dewiswch y seidr y mae angen i chi
 whatDoYouNeedToDeclare.error.required.Wine = Dewiswch y gwin y mae angen i chi ei ddatgan
 whatDoYouNeedToDeclare.error.required.Spirits = Dewiswch y gwirodydd y mae angen i chi eu datgan
 whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Dewiswch y cynhyrchion eplesedig eraill y mae angen i chi eu datgan
+
+whatDoYouNeedToDeclare.details.link.title = Nid yw’r cod sydd ei angen arnaf ar gyfer y math o dreth yn ymddangos ar y rhestr
+whatDoYouNeedToDeclare.details.link.heading = Gallwch wneud y canlynol:
+whatDoYouNeedToDeclare.details.link.p1 = gwirio pa fath o godau treth y dylech fod yn eu defnyddio (yn agor tab newydd).
+whatDoYouNeedToDeclare.details.link.p2 = cysylltu â CThEF os na allwch weld y cynhyrchion alcoholaidd y mae gennych gymeradwyaeth ar eu cyfer (yn agor tab newydd).
 
 whatDoYouNeedToDeclare.core.heading = {0} (cyfradd safonol)
 whatDoYouNeedToDeclare.draught.heading = {0} o’r gasgen (cyfradd is)

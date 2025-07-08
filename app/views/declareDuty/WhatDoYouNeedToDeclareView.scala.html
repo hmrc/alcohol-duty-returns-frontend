@@ -17,6 +17,8 @@
 @import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
 @import components.{Caption, ErrorMessageStandalone, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukDetails
+@import config.{Constants, FrontendAppConfig}
 
 @this(
     layout: templates.Layout,
@@ -30,7 +32,9 @@
     subHeading: SubHeading,
     formGroupWithError: FormGroupWithError,
     errorMessage: ErrorMessageStandalone,
-    returnToTaskList: ReturnToTaskList
+    returnToTaskList: ReturnToTaskList,
+    appConfig: FrontendAppConfig,
+    govukDetails: GovukDetails
 )
 
 @(form: Form[_], regime: AlcoholRegime, taxBandsViewModel: TaxBandsViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -97,6 +101,31 @@
                   ))
                 }
         }
+
+        @govukDetails(Details(
+            summary = Text(messages("whatDoYouNeedToDeclare.details.link.title")),
+            content = HtmlContent(
+                    s"""<p class="govuk-body">
+                        ${messages("whatDoYouNeedToDeclare.details.link.heading")}
+                    <ul class="govuk-list govuk-list--bullet">
+                            <li>
+                                    <a href="${appConfig.checkTaxTypeCodesUrl}"
+                                        class="${Constants.Css.linkNoVisitedStateCssClass}"
+                                        target="_blank">
+                                            ${messages("whatDoYouNeedToDeclare.details.link.p1")}
+                                    </a>
+                            </li>
+                             <li>
+                                    <a href="${if(messages.lang.code == "cy") appConfig.exciseHelpUrlWelsh else appConfig.exciseHelpUrl}"
+                                        class="${Constants.Css.linkNoVisitedStateCssClass}"
+                                        target="_blank">
+                                         ${messages("whatDoYouNeedToDeclare.details.link.p2")}
+                                 </a>
+                         </li>
+                </ul>
+        </p>"""
+    )
+))
 
         @govukButton(
           ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))

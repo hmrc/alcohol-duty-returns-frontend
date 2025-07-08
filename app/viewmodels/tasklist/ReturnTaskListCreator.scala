@@ -173,13 +173,19 @@ class ReturnTaskListCreator @Inject() {
         case (_, _)          => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
       }
 
-    createDeclarationTask(
+    val task = createDeclarationTask(
       getDeclarationState,
       AdjustmentSection,
       controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url,
       inProgressRoute,
       controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
     )
+
+    if (task.status == AlcoholDutyTaskListItemStatus.notStarted) {
+      task.copy(hint = Some(Hint(content = Text(messages("taskList.section.adjustment.hint")))))
+    } else {
+      task
+    }
   }
 
   private def returnAdjustmentJourneyUnderDeclarationTaskListItem(userAnswers: UserAnswers)(implicit

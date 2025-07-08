@@ -17,6 +17,7 @@
 @import models.AlcoholRegimes
 @import viewmodels.declareDuty.AlcoholTypeViewModel
 @import components.{Caption, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList}
+@import config.{Constants, FrontendAppConfig}
 
 @this(
     layout: templates.Layout,
@@ -28,7 +29,8 @@
     caption: Caption,
     paragraph: Paragraph,
     formGroupWithError: FormGroupWithError,
-    returnToTaskList: ReturnToTaskList
+    returnToTaskList: ReturnToTaskList,
+    appConfig: FrontendAppConfig
 )
 
 @(form: Form[_], mode: Mode, regimes: AlcoholRegimes)(implicit request: Request[_], messages: Messages)
@@ -62,6 +64,13 @@
                     .withHint(Hint(content = messages("alcoholType.hint")))
                 )
         }
+
+        <p class="govuk-body">
+            <a href="@if(messages.lang.code == "cy"){@appConfig.exciseHelpUrlWelsh}else{@appConfig.exciseHelpUrl}"
+            target="_blank"
+            class="@Constants.Css.linkNoVisitedStateCssClass">@messages("alcoholType.link.text")
+            </a>
+        </p>
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))

@@ -8,7 +8,7 @@ site.yes = Yes
 site.continue = Continue
 site.saveAndContinue = Save and continue
 site.confirmAndContinue = Confirm and continue
-site.saveAndReturn = Save and return to your business tax account
+site.saveAndReturn = Save and come back later
 site.agreeAndSubmit = Agree and send return
 site.payNow = Pay now
 site.claimRefund = Claim a refund
@@ -98,7 +98,7 @@ regime.spirits = spirits
 regime.otherfermentedproduct = other fermented products
 
 section.visuallyHidden = This section is:
-section.alcoholDutyReturn = Alcohol Duty Return
+section.alcoholDutyReturn = Alcohol Duty return
 section.return.Beer = Declare beer
 section.return.Cider = Declare cider
 section.return.Wine = Declare wine
@@ -210,14 +210,14 @@ viewPastPayments.historic.paragraph = Cleared payments are those where monies ha
 viewPastPayments.visually-hidden.pay-now = amount of £{0} due {1}
 viewPastPayments.visually-hidden.claim-refund = of £{0}
 
-taskList.title = Complete your Alcohol Duty Return
+taskList.title = Complete your Alcohol Duty return
 taskList.period = This is your alcohol return for the period {0} to {1}.
 taskList.completion.date = Complete all the tasks and send this return on or before the {0}.
 taskList.expiry.date = We will save your answers until {0}.
 taskList.section.status.completed = Completed
 taskList.section.status.notStarted = Not yet started
 taskList.section.status.inProgress = In progress
-taskList.section.status.cannotStart = Cannot Start
+taskList.section.status.cannotStart = Cannot start yet
 
 taskList.section.returns.heading = Declare alcoholic products for duty
 taskList.section.returns.needToDeclare = Tell us if you have alcoholic products to declare
@@ -233,6 +233,7 @@ taskList.section.adjustment.needToDeclare = Tell us if you have adjustments to d
 taskList.section.adjustment = Declare adjustments
 taskList.section.adjustment.under-declaration = Tell us why products were under-declared
 taskList.section.adjustment.over-declaration = Tell us why products were over-declared
+taskList.section.adjustment.hint = You can adjust declared alcoholic products that may now be spoilt, repackaged, over-declared, under-declared, or exported and eligible for you to claim drawback on.
 
 taskList.section.dutySuspended.heading = Report duty suspended alcohol deliveries
 taskList.section.dutySuspended.needToDeclare = Tell us if you have delivered or received finished products in duty suspense
@@ -251,7 +252,7 @@ viewAllTasks.Link.text = Go back to view all tasks
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
-beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty Return for {0} to {1}.
+beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty return for {0} to {1}.
 beforeStartReturn.text.guidance2 = You need to tell us about any alcoholic products for duty in this period. When declaring you will need to tell us the total litres of alcoholic product and the litres of pure alcohol across a range of alcohol by volume (ABV) bands.
 beforeStartReturn.text.guidance3 = You can also use this service to tell us about:
 beforeStartReturn.text.guidance3.usecase1 = alcoholic products not declared in an earlier return
@@ -275,8 +276,9 @@ alcoholType.title = Which types of alcoholic products do you need to declare?
 alcoholType.heading = Which types of alcoholic products do you need to declare?
 alcoholType.error.required = Select the types of alcoholic products you need to declare
 alcoholType.p1 = Select the types of alcoholic product you need to declare in this return.
-alcoholType.p2 = Types you do not select will have nil values in your return.
+alcoholType.p2 = Alcoholic products that you do not select will be reported as nil in this return.
 alcoholType.hint = Select all that apply
+alcoholType.link.text = Contact HMRC if you cannot see the alcoholic products that you hold approval for (opens in a new tab)
 
 return.journey.error.lessThanExpected = {0} - Litres of pure alcohol must be the same or less than the total litres
 
@@ -406,6 +408,11 @@ whatDoYouNeedToDeclare.error.required.Cider = Select the ciders you need to decl
 whatDoYouNeedToDeclare.error.required.Wine = Select the wines you need to declare
 whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
 whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
+
+whatDoYouNeedToDeclare.details.link.title = The tax type code I need is not listed
+whatDoYouNeedToDeclare.details.link.heading = You can:
+whatDoYouNeedToDeclare.details.link.p1 = check which tax type codes you should be using (opens in a new tab).
+whatDoYouNeedToDeclare.details.link.p2 = contact HMRC if you cannot see the alcoholic products that you hold approval for (opens in a new tab).
 
 whatDoYouNeedToDeclare.core.heading = {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
