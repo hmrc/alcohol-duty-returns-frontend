@@ -411,8 +411,9 @@ whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other f
 
 whatDoYouNeedToDeclare.details.link.title = The tax type code I need is not listed
 whatDoYouNeedToDeclare.details.link.heading = You can:
-whatDoYouNeedToDeclare.details.link.p1 = check which tax type codes you should be using (opens in a new tab).
-whatDoYouNeedToDeclare.details.link.p2 = contact HMRC if you cannot see the alcoholic products that you hold approval for (opens in a new tab).
+whatDoYouNeedToDeclare.details.link.p1 = check which tax type codes you should be using (opens in a new tab)
+whatDoYouNeedToDeclare.details.link.p2 = contact HMRC if you cannot see the alcoholic products that you hold approval for (opens in a new tab)
+whatDoYouNeedToDeclare.exciseHelp.url = https://www.gov.uk/find-hmrc-contacts/excise-and-gambling-duties-enquiries
 
 whatDoYouNeedToDeclare.core.heading = {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)

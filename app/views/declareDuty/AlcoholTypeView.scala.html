@@ -66,7 +66,7 @@
         }
 
         <p class="govuk-body">
-            <a href="@if(messages.lang.code == "cy"){@appConfig.exciseHelpUrlWelsh}else{@appConfig.exciseHelpUrl}"
+            <a href= "@messages("whatDoYouNeedToDeclare.exciseHelp.url")"
             target="_blank"
             class="@Constants.Css.linkNoVisitedStateCssClass">@messages("alcoholType.link.text")
             </a>
