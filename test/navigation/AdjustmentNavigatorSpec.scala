@@ -124,14 +124,14 @@ class AdjustmentNavigatorSpec extends SpecBase {
           controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
       }
 
-      "must go from the Adjustment Type Page to the When Did You Pay Duty page" in {
+      "must go from the Adjustment Type Page to the Adjustment Return Period page" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentTypePage,
           NormalMode,
           emptyUserAnswers,
           Some(true)
         ) mustBe
-          controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
+          controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(NormalMode)
       }
 
       "must go from the Alcoholic Product Type Page to the Spoilt Volume page" in {
@@ -144,9 +144,9 @@ class AdjustmentNavigatorSpec extends SpecBase {
           controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
       }
 
-      "must go from the When Did You Pay Duty Page to Adjustment Tax Type page" in {
+      "must go from the Adjustment Return Period Page to Adjustment Tax Type page" in {
         navigator.nextPage(
-          pages.adjustment.WhenDidYouPayDutyPage,
+          pages.adjustment.AdjustmentReturnPeriodPage,
           NormalMode,
           emptyUserAnswers,
           Some(true)
@@ -387,14 +387,14 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the Adjustment Type Page to the When Did You Pay Duty page if answer has changed" in {
+    "must go from the Adjustment Type Page to the Adjustment Return Period page if answer has changed" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTypePage,
         CheckMode,
         emptyUserAnswers,
         Some(true)
       ) mustBe
-        controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode)
+        controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(CheckMode)
     }
 
     "must go from the Adjustment Type Page to the CYA page if answer is the same" in {
@@ -427,9 +427,9 @@ class AdjustmentNavigatorSpec extends SpecBase {
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the When Did You Pay Duty page to the Adjustment Tax Type page if answer has changed" in {
+    "must go from the Adjustment Return Period page to the Adjustment Tax Type page if answer has changed" in {
       navigator.nextPage(
-        pages.adjustment.WhenDidYouPayDutyPage,
+        pages.adjustment.AdjustmentReturnPeriodPage,
         CheckMode,
         emptyUserAnswers,
         Some(true)
@@ -437,9 +437,9 @@ class AdjustmentNavigatorSpec extends SpecBase {
         controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
     }
 
-    "must go from the When Did You Pay Duty Page to the CYA page if answer is the same" in {
+    "must go from the Adjustment Return Period Page to the CYA page if answer is the same" in {
       navigator.nextPage(
-        pages.adjustment.WhenDidYouPayDutyPage,
+        pages.adjustment.AdjustmentReturnPeriodPage,
         CheckMode,
         emptyUserAnswers,
         Some(false)
@@ -516,9 +516,9 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the When Did You Pay Duty page to the Adjustment Tax Type page if the answer has changed" in {
+    "must go from the Adjustment Return Period page to the Adjustment Tax Type page if the answer has changed" in {
       navigator.nextPage(
-        pages.adjustment.WhenDidYouPayDutyPage,
+        pages.adjustment.AdjustmentReturnPeriodPage,
         CheckMode,
         emptyUserAnswers,
         Some(true)
@@ -526,9 +526,9 @@ class AdjustmentNavigatorSpec extends SpecBase {
         controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
     }
 
-    "must go from the When Did You Pay Duty Page to the CYA page if the answer is the same" in {
+    "must go from the Adjustment Return Period Page to the CYA page if the answer is the same" in {
       navigator.nextPage(
-        pages.adjustment.WhenDidYouPayDutyPage,
+        pages.adjustment.AdjustmentReturnPeriodPage,
         CheckMode,
         emptyUserAnswers,
         Some(false)

@@ -16,38 +16,33 @@
 
 package controllers.adjustment
 
-import config.FrontendAppConfig
+import connectors.UserAnswersConnector
 import controllers.actions._
-import forms.adjustment.WhenDidYouPayDutyFormProvider
-
-import javax.inject.Inject
+import forms.adjustment.AdjustmentReturnPeriodFormProvider
 import models.Mode
+import models.adjustment.AdjustmentEntry
 import navigation.AdjustmentNavigator
-import pages.adjustment.{CurrentAdjustmentEntryPage, WhenDidYouPayDutyPage}
+import pages.adjustment.{AdjustmentReturnPeriodPage, CurrentAdjustmentEntryPage}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.UserAnswersConnector
-import models.adjustment.AdjustmentEntry
-import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.adjustment.WhenDidYouPayDutyHelper
-import views.html.adjustment.WhenDidYouPayDutyView
+import views.html.adjustment.AdjustmentReturnPeriodView
 
 import java.time.YearMonth
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhenDidYouPayDutyController @Inject() (
+class AdjustmentReturnPeriodController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: WhenDidYouPayDutyFormProvider,
-  helper: WhenDidYouPayDutyHelper,
-  appConfig: FrontendAppConfig,
+  formProvider: AdjustmentReturnPeriodFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: WhenDidYouPayDutyView
+  view: AdjustmentReturnPeriodView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -58,13 +53,9 @@ class WhenDidYouPayDutyController @Inject() (
     val form         = formProvider(returnPeriod)
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), Some(period), _, _, _, _, _, _, _, _, _, _)) =>
-        Ok(
-          view(form.fill(period), mode, helper.createViewModel(adjustmentType))
-        )
+        Ok(view(form.fill(period), mode, adjustmentType))
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))            =>
-        Ok(
-          view(form, mode, helper.createViewModel(adjustmentType))
-        )
+        Ok(view(form, mode, adjustmentType))
       case _                                                                                          =>
         logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
@@ -82,7 +73,7 @@ class WhenDidYouPayDutyController @Inject() (
             request.userAnswers.get(CurrentAdjustmentEntryPage) match {
               case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _)) =>
                 Future.successful(
-                  BadRequest(view(formWithErrors, mode, helper.createViewModel(adjustmentType)))
+                  BadRequest(view(formWithErrors, mode, adjustmentType))
                 )
               case _                                                                               =>
                 logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
@@ -94,11 +85,10 @@ class WhenDidYouPayDutyController @Inject() (
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers
-                    .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(period = Some(value)))
+                  request.userAnswers.set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(period = Some(value)))
                 )
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers, Some(hasChanged)))
+            } yield Redirect(navigator.nextPage(AdjustmentReturnPeriodPage, mode, updatedAnswers, Some(hasChanged)))
           }
         )
   }

@@ -28,21 +28,21 @@ import viewmodels.implicits._
 
 import javax.inject.Inject
 
-class WhenDidYouPayDutySummary @Inject() (dateTimeHelper: DateTimeHelper) extends YearMonthModelFormatter {
+class AdjustmentReturnPeriodSummary @Inject() (dateTimeHelper: DateTimeHelper) extends YearMonthModelFormatter {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     (adjustmentEntry.period, adjustmentEntry.adjustmentType) match {
       case (Some(period), Some(adjustmentType)) if !adjustmentType.equals(Spoilt) =>
         Some(
           SummaryListRowViewModel(
-            key = "whenDidYouPayDuty.checkYourAnswersLabel",
+            key = "adjustmentReturnPeriod.checkYourAnswersLabel",
             value = ValueViewModel(HtmlContent(dateTimeHelper.formatMonthYear(period))),
             actions = Seq(
               ActionItemViewModel(
                 "site.change",
-                controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
+                controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(CheckMode).url
               )
-                .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
+                .withVisuallyHiddenText(messages("adjustmentReturnPeriod.change.hidden"))
             )
           )
         )

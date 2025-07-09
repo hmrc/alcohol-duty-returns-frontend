@@ -119,10 +119,10 @@ POST       /complete-return/adjustments/adjustment/declare/spoilt-product/alcoho
 GET        /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.SpoiltAlcoholicProductTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.SpoiltAlcoholicProductTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/adjustments/adjustment/change/return-period                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/adjustments/adjustment/change/return-period                  controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.AdjustmentReturnPeriodController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.AdjustmentReturnPeriodController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/adjustment/change/return-period                  controllers.adjustment.AdjustmentReturnPeriodController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/change/return-period                  controllers.adjustment.AdjustmentReturnPeriodController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/tax-type-code                 controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/adjustments/adjustment/declare/tax-type-code                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
