@@ -54,15 +54,23 @@ object RateBandDescription {
     }
   }
 
-  private def getAlcoholTypeWithDraughtStatus(interval: ABVRange, rateType: RateType, showDraughtStatus: Boolean)(
-    implicit messages: Messages
-  ): String =
-    if (showDraughtStatus) {
+  private def getAlcoholTypeWithDraughtStatus(
+    interval: ABVRange,
+    rateType: RateType,
+    showDraughtStatus: Boolean,
+    taxTypeCode: String
+  )(implicit
+    messages: Messages
+  ): String = {
+    val taxTypeCodesWithoutPackaging = Set("331", "341", "333", "343", "335", "345", "334", "344")
+
+    if (showDraughtStatus && !taxTypeCodesWithoutPackaging.contains(taxTypeCode)) {
       val draughtOrNotKey = if (rateType.isDraught) "draught" else "nondraught"
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}.$draughtOrNotKey")
     } else {
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}")
     }
+  }
 
   private def getAbvRange(minAbv: BigDecimal, maxAbv: BigDecimal)(implicit messages: Messages): String = {
     val rateMessageToUse = maxAbv.toInt
@@ -97,7 +105,7 @@ object RateBandDescription {
   ): String =
     messages(
       s"return.journey.abv.single.interval",
-      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
+      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus, taxTypeCode),
       getAbvRange(abvRange.minABV.value, abvRange.maxABV.value),
       getTaxType(taxTypeCode, rateType)
     )
@@ -113,7 +121,7 @@ object RateBandDescription {
   ): String =
     messages(
       s"return.journey.abv.multi.interval.${abvRange2.alcoholType}",
-      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus),
+      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus, taxTypeCode),
       getAbvRange(abvRange1.minABV.value, abvRange1.maxABV.value),
       getAbvRange(abvRange2.minABV.value, abvRange2.maxABV.value),
       getTaxType(taxTypeCode, rateType)
