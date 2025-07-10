@@ -65,7 +65,7 @@ object RateBandDescription {
   )(implicit
     messages: Messages
   ): String = {
-    val draftCandidate: Boolean = Try(ConfigFactory.load().getList("taxTypeCodesNoPackaging")) match {
+    val draftCandidate: Boolean = Try(ConfigFactory.load().getStringList("taxTypeCodesNoPackaging")) match {
       case Success(codes) => !codes.contains(taxTypeCode)
       case _              => throw new IllegalArgumentException("Could not load config item taxTypeCodesNoPackaging!")
     }
