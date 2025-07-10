@@ -16,8 +16,11 @@
 
 package viewmodels.declareDuty
 
+import com.typesafe.config.ConfigFactory
 import models.{ABVRange, AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
+
+import scala.util.{Success, Try}
 
 object RateBandDescription {
 
@@ -62,9 +65,12 @@ object RateBandDescription {
   )(implicit
     messages: Messages
   ): String = {
-    val taxTypeCodesWithoutPackaging = Set("331", "341", "333", "343", "335", "345", "334", "344")
+    val draftCandidate: Boolean = Try(ConfigFactory.load().getList("taxTypeCodesNoPackaging")) match {
+      case Success(codes) => !codes.contains(taxTypeCode)
+      case _              => throw new IllegalArgumentException("Could not load config item taxTypeCodesNoPackaging!")
+    }
 
-    if (showDraughtStatus && !taxTypeCodesWithoutPackaging.contains(taxTypeCode)) {
+    if (showDraughtStatus && draftCandidate) {
       val draughtOrNotKey = if (rateType.isDraught) "draught" else "nondraught"
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}.$draughtOrNotKey")
     } else {
