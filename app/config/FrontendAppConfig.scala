@@ -71,7 +71,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val signOutUrl: String                    = configuration.get[String]("urls.signOut")
   val businessTaxAccountUrl: String         = configuration.get[String]("urls.businessTaxAccount")
   val requestAccessUrl: String              = configuration.get[String]("urls.requestAccess")
-  val exciseEnquiriesUrl: String            = configuration.get[String]("urls.exciseEnquiries")
   val declareSpiritsGuidanceUrl: String     = configuration.get[String]("urls.declareSpiritsGuidance")
   val alcoholicStrengthGuidanceUrl: String  = configuration.get[String]("urls.alcoholicStrengthGuidance")
   val userResearchSurveyUrl: String         = configuration.get[String]("urls.userResearchSurveyUrl")

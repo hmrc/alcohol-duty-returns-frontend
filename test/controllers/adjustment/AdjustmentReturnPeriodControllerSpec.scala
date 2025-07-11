@@ -17,34 +17,32 @@
 package controllers.adjustment
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.UserAnswersConnector
-import forms.adjustment.WhenDidYouPayDutyFormProvider
+import forms.adjustment.AdjustmentReturnPeriodFormProvider
 import models.NormalMode
 import models.adjustment.AdjustmentType.Spoilt
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.adjustment.{CurrentAdjustmentEntryPage, WhenDidYouPayDutyPage}
+import pages.adjustment.{AdjustmentReturnPeriodPage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.adjustment.WhenDidYouPayDutyView
-import viewmodels.adjustment.{WhenDidYouPayDutyHelper, WhenDidYouPayDutyViewModel}
+import views.html.adjustment.AdjustmentReturnPeriodView
 
 import scala.concurrent.Future
 
-class WhenDidYouPayDutyControllerSpec extends SpecBase {
+class AdjustmentReturnPeriodControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider          = new WhenDidYouPayDutyFormProvider()
+  val formProvider          = new AdjustmentReturnPeriodFormProvider()
   val returnPeriodYearMonth = returnPeriod.period
   val form                  = formProvider(returnPeriodYearMonth)
 
-  lazy val whenDidYouPayDutyRoute = routes.WhenDidYouPayDutyController.onPageLoad(NormalMode).url
+  lazy val adjustmentReturnPeriodRoute = routes.AdjustmentReturnPeriodController.onPageLoad(NormalMode).url
 
   val adjustmentType = AdjustmentType.Overdeclaration
   val validPeriod    = returnPeriodYearMonth.minusMonths(1)
@@ -68,33 +66,20 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
   val monthString = validPeriod.getMonthValue.toString
   val yearString  = validPeriod.getYear.toString
 
-  "WhenDidYouPayDuty Controller" - {
+  "AdjustmentReturnPeriod Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val mockHelper = mock[WhenDidYouPayDutyHelper]
-
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
-
-      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
-        .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers)).build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
 
-        val request = FakeRequest(GET, whenDidYouPayDutyRoute)
-
-        val view = application.injector.instanceOf[WhenDidYouPayDutyView]
+        val view = application.injector.instanceOf[AdjustmentReturnPeriodView]
 
         val result = route(application, request).value
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          form,
-          NormalMode,
-          WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl)
-        )(
+        contentAsString(result) mustEqual view(form, NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -102,30 +87,17 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val mockHelper = mock[WhenDidYouPayDutyHelper]
-
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
 
-        val request = FakeRequest(GET, whenDidYouPayDutyRoute)
-
-        val view = application.injector.instanceOf[WhenDidYouPayDutyView]
+        val view = application.injector.instanceOf[AdjustmentReturnPeriodView]
 
         val result = route(application, request).value
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(validPeriod),
-          NormalMode,
-          WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl)
-        )(
+        contentAsString(result) mustEqual view(form.fill(validPeriod), NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -135,28 +107,26 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
-      val mockHelper               = mock[WhenDidYouPayDutyHelper]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(mockAdjustmentNavigator.nextPage(eqTo(WhenDidYouPayDutyPage), any(), any(), any())) thenReturn onwardRoute
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentReturnPeriodPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[WhenDidYouPayDutyHelper].toInstance(mockHelper)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whenDidYouPayDutyRoute)
+          FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", monthString),
-              ("when-did-you-pay-duty-input.year", yearString)
+              ("adjustment-return-period-input.month", monthString),
+              ("adjustment-return-period-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -166,7 +136,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockAdjustmentNavigator, times(1))
-          .nextPage(eqTo(WhenDidYouPayDutyPage), eqTo(NormalMode), any(), eqTo(Some(true)))
+          .nextPage(eqTo(AdjustmentReturnPeriodPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
@@ -174,28 +144,26 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
-      val mockHelper               = mock[WhenDidYouPayDutyHelper]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(mockAdjustmentNavigator.nextPage(eqTo(WhenDidYouPayDutyPage), any(), any(), any())) thenReturn onwardRoute
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentReturnPeriodPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[WhenDidYouPayDutyHelper].toInstance(mockHelper)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whenDidYouPayDutyRoute)
+          FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", monthString),
-              ("when-did-you-pay-duty-input.year", yearString)
+              ("adjustment-return-period-input.month", monthString),
+              ("adjustment-return-period-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -205,7 +173,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockAdjustmentNavigator, times(1))
-          .nextPage(eqTo(WhenDidYouPayDutyPage), eqTo(NormalMode), any(), eqTo(Some(true)))
+          .nextPage(eqTo(AdjustmentReturnPeriodPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
@@ -224,28 +192,26 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
-      val mockHelper               = mock[WhenDidYouPayDutyHelper]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(mockAdjustmentNavigator.nextPage(eqTo(WhenDidYouPayDutyPage), any(), any(), any())) thenReturn onwardRoute
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentReturnPeriodPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[WhenDidYouPayDutyHelper].toInstance(mockHelper)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whenDidYouPayDutyRoute)
+          FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", monthString),
-              ("when-did-you-pay-duty-input.year", yearString)
+              ("adjustment-return-period-input.month", monthString),
+              ("adjustment-return-period-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -255,38 +221,26 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockAdjustmentNavigator, times(1))
-          .nextPage(eqTo(WhenDidYouPayDutyPage), eqTo(NormalMode), any(), eqTo(Some(false)))
+          .nextPage(eqTo(AdjustmentReturnPeriodPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-      val mockHelper = mock[WhenDidYouPayDutyHelper]
-      when(mockHelper.createViewModel(any()))
-        .thenReturn(WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl))
-
-      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
-        .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers)).build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-
         val request =
-          FakeRequest(POST, whenDidYouPayDutyRoute)
+          FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[WhenDidYouPayDutyView]
+        val view = application.injector.instanceOf[AdjustmentReturnPeriodView]
 
         val result = route(application, request).value
 
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          boundForm,
-          NormalMode,
-          WhenDidYouPayDutyViewModel(adjustmentType, appConfig.exciseEnquiriesUrl)
-        )(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -294,14 +248,10 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      val mockHelper = mock[WhenDidYouPayDutyHelper]
-
-      val application = applicationBuilder(userAnswers = None)
-        .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, whenDidYouPayDutyRoute)
+        val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
 
         val result = route(application, request).value
 
@@ -311,14 +261,10 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if userAnswers are empty" in {
-      val mockHelper = mock[WhenDidYouPayDutyHelper]
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whenDidYouPayDutyRoute)
+        val request = FakeRequest(GET, adjustmentReturnPeriodRoute)
 
         val result = route(application, request).value
 
@@ -328,15 +274,11 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
-      val mockHelper = mock[WhenDidYouPayDutyHelper]
-
-      val application = applicationBuilder(userAnswers = None)
-        .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-        .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whenDidYouPayDutyRoute)
+          FakeRequest(POST, adjustmentReturnPeriodRoute)
             .withFormUrlEncodedBody(("month", "value 1"), ("year", "value 2"))
 
         val result = route(application, request).value
@@ -348,15 +290,11 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
   }
 
   "must redirect to Journey Recovery for a POST with invalid data and empty user answers" in {
-    val mockHelper = mock[WhenDidYouPayDutyHelper]
-
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-      .overrides(bind[WhenDidYouPayDutyHelper].toInstance(mockHelper))
-      .build()
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
     running(application) {
       val request =
-        FakeRequest(POST, whenDidYouPayDutyRoute)
+        FakeRequest(POST, adjustmentReturnPeriodRoute)
           .withFormUrlEncodedBody(("month", "value 1"), ("year", "value 2"))
 
       val result = route(application, request).value

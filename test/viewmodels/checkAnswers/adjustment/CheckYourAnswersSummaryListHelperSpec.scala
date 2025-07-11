@@ -78,7 +78,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
     val mockAdjustmentRepackagedTaxTypeSummary           = mock[AdjustmentRepackagedTaxTypeSummary]
     val mockAdjustmentSmallProducerReliefDutyRateSummary = mock[AdjustmentSmallProducerReliefDutyRateSummary]
-    val mockWhenDidYouPayDutySummary                     = mock[WhenDidYouPayDutySummary]
+    val mockAdjustmentReturnPeriodSummary                = mock[AdjustmentReturnPeriodSummary]
     val mockSpoiltAlcoholicProductTypeSummary            = mock[SpoiltAlcoholicProductTypeSummary]
     val mockAdjustmentTaxTypeSummary                     = mock[AdjustmentTaxTypeSummary]
     val mockAdjustmentTypeSummary                        = mock[AdjustmentTypeSummary]
@@ -89,7 +89,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
     when(mockAdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry)).thenReturn(Some(row1))
     when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry)).thenReturn(Some(row2))
-    when(mockWhenDidYouPayDutySummary.row(adjustmentEntry)).thenReturn(Some(row3))
+    when(mockAdjustmentReturnPeriodSummary.row(adjustmentEntry)).thenReturn(Some(row3))
     when(mockSpoiltAlcoholicProductTypeSummary.row(adjustmentEntry)).thenReturn(Some(row4))
     when(mockAdjustmentTaxTypeSummary.row(adjustmentEntry)).thenReturn(Some(row5))
 
@@ -114,7 +114,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     val checkYourAnswersSummaryListHelper = new CheckYourAnswersSummaryListHelper(
       mockAdjustmentRepackagedTaxTypeSummary,
       mockAdjustmentSmallProducerReliefDutyRateSummary,
-      mockWhenDidYouPayDutySummary,
+      mockAdjustmentReturnPeriodSummary,
       mockSpoiltAlcoholicProductTypeSummary,
       mockAdjustmentTaxTypeSummary,
       mockAdjustmentTypeSummary,

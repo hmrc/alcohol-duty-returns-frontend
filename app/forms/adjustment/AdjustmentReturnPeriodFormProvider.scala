@@ -24,17 +24,17 @@ import play.api.data.Form
 
 import java.time.YearMonth
 
-class WhenDidYouPayDutyFormProvider @Inject() extends Mappings {
+class AdjustmentReturnPeriodFormProvider @Inject() extends Mappings {
   def apply(returnPeriod: YearMonth): Form[YearMonth] = Form(
-    "when-did-you-pay-duty-input" -> yearMonth(
-      "whenDidYouPayDuty.date.error.invalid",
-      "whenDidYouPayDuty.date.error.required.all",
-      "whenDidYouPayDuty.date.error.required",
-      "whenDidYouPayDuty.date.error.invalidYear"
+    "adjustment-return-period-input" -> yearMonth(
+      "adjustmentReturnPeriod.date.error.invalid",
+      "adjustmentReturnPeriod.date.error.required.all",
+      "adjustmentReturnPeriod.date.error.required",
+      "adjustmentReturnPeriod.date.error.invalidYear"
     )
-      .verifying("whenDidYouPayDuty.date.error.invalid.future", value => value.isBefore(returnPeriod))
+      .verifying("adjustmentReturnPeriod.date.error.invalid.future", value => value.isBefore(returnPeriod))
       .verifying(
-        "whenDidYouPayDuty.date.error.invalid.past",
+        "adjustmentReturnPeriod.date.error.invalid.past",
         value => value.isAfter(YearMonth.of(Constants.adjustmentTooEarlyYear, Constants.adjustmentTooEarlyMonth))
       )
   )
