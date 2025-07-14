@@ -398,6 +398,19 @@ declareAlcoholDutyQuestion.cider.p2.l2 = sparkling cider between 5.6% and 8.4%
 declareAlcoholDutyQuestion.h4 = Do you need to declare any alcoholic products?
 declareAlcoholDutyQuestion.error.required = Select yes if you need to declare any alcoholic products
 
+declaringWineDuty.title = Declaring your wine for duty
+declaringWineDuty.heading = Declaring your wine for duty
+declaringWineDuty.p1 = We need to know how much wine you’ve produced and the litres of pure alcohol it contains based on its alcohol by volume (ABV) band.
+declaringWineDuty.subHeading1 = You must declare your wine products according to their ABV strength
+declaringWineDuty.alcoholicStrength.link = Find out more about what alcoholic strength means when declaring your duty (opens in a new tab)
+declaringWineDuty.p2 = You must now declare your wine under one of the ABV bands:
+declaringWineDuty.subHeading2 = Calculating your litres of pure alcohol
+declaringWineDuty.p3 = To calculate the litres of pure alcohol, multiply the total volume of wine in litres by the ABV strength, then divide by 100.
+declaringWineDuty.details.summary = Example of a calculation
+declaringWineDuty.details.p = You have 4,297.55 litres of wine at 13.5% ABV. To calculate the litres of pure alcohol in this wine, you must:
+declaringWineDuty.details.calculation1 = 4,297.55 litres x 13.5% ABV = 58,016.925
+declaringWineDuty.details.calculation2 = 58,016.925 ÷ 100 = 580.1692 litres of pure alcohol
+
 whatDoYouNeedToDeclare.title = What do you need to declare?
 whatDoYouNeedToDeclare.heading = What do you need to declare?
 whatDoYouNeedToDeclare.hint = Select all that apply
