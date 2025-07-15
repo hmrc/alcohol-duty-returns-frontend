@@ -28,7 +28,7 @@ import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.declareDuty.DutyCalculationHelper
+import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, DutyCalculationHelper}
 import views.html.declareDuty.DutyCalculationView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,6 +40,7 @@ class DutyCalculationController @Inject() (
   requireData: DataRequiredAction,
   userAnswersConnector: UserAnswersConnector,
   calculatorConnector: AlcoholDutyCalculatorConnector,
+  checkYourAnswersHelper: CheckYourAnswersSummaryListHelper,
   val controllerComponents: MessagesControllerComponents,
   view: DutyCalculationView
 )(implicit ec: ExecutionContext)
@@ -49,16 +50,23 @@ class DutyCalculationController @Inject() (
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val totalDutyCalculatorRequest = createTotalDutyRequest(regime, request.userAnswers)
-      for {
-        totalDuty          <- calculatorConnector.calculateTotalDuty(totalDutyCalculatorRequest)
-        updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(DutyCalculationPage, regime, totalDuty))
-        _                  <- userAnswersConnector.set(updatedUserAnswers)
-      } yield DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
-        case Left(errorMessage)      =>
-          logger.warn(s"Failed to create duty due table view model: $errorMessage")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel, totalDuty.totalDuty))
+      checkYourAnswersHelper.checkDeclarationDetailsArePresent(regime, request.userAnswers) match {
+        case Right(_)    =>
+          val totalDutyCalculatorRequest = createTotalDutyRequest(regime, request.userAnswers)
+          for {
+            totalDuty          <- calculatorConnector.calculateTotalDuty(totalDutyCalculatorRequest)
+            updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(DutyCalculationPage, regime, totalDuty))
+            _                  <- userAnswersConnector.set(updatedUserAnswers)
+          } yield DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
+            case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel, totalDuty.totalDuty))
+            case Left(errorMessage)      =>
+              logger.warn(s"Failed to create duty due table view model: $errorMessage")
+              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          }
+        case Left(error) =>
+          val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
+          logger.warn(s"Error on Duty due page for appa id $appaId, period key $periodKey: ${error.message}")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
   }
 

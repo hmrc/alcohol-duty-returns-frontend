@@ -42,12 +42,10 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       checkYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
-        case Some(summaryList) => Ok(view(regime, summaryList))
-        case None              =>
+        case Right(summaryList) => Ok(view(regime, summaryList))
+        case Left(error)        =>
           val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
-          logger.warn(
-            s"Unable to retrieve summary list rows during declare duty CYA onPageLoad appa id: $appaId, period key: $periodKey"
-          )
+          logger.warn(s"Error on declare duty CYA for appa id $appaId, period key $periodKey: ${error.message}")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
