@@ -400,6 +400,19 @@ declareAlcoholDutyQuestion.cider.p2.l2 = seidr pefriog rhwng 5.6% ac 8.4%
 declareAlcoholDutyQuestion.h4 = A oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd?
 declareAlcoholDutyQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd
 
+declaringWineDuty.title = Datgan eich gwin am doll
+declaringWineDuty.heading = Datgan eich gwin am doll
+declaringWineDuty.p1 = Mae angen i ni wybod faint o win rydych chi wedi’i gynhyrchu a’r litrau o alcohol pur y mae’n ei gynnwys yn seiliedig ar ei fand alcohol yn ôl cyfaint (ABV).
+declaringWineDuty.subHeading1 = Mae’n rhaid i chi ddatgan eich cynhyrchion gwin yn ôl eu cryfder ABV
+declaringWineDuty.alcoholicStrength.link = Dysgwch ragor am yr hyn y mae cryfder alcoholaidd yn ei olygu wrth ddatgan eich toll (yn agor tab newydd)
+declaringWineDuty.p2 = Mae’n rhaid i chi nawr ddatgan eich gwin o dan un o’r bandiau ABV:
+declaringWineDuty.subHeading2 = Cyfrifo’ch litrau o alcohol pur
+declaringWineDuty.p3 = I gyfrifo’r litrau o alcohol pur, lluoswch y cyfanswm o win mewn litrau â chryfder yr ABV, yna rhannwch â 100.
+declaringWineDuty.details.summary = Enghraifft o gyfrifiad
+declaringWineDuty.details.p = Mae gennych 4,297.55 litr o win ar 13.5% ABV. I gyfrifo’r litrau o alcohol pur yn y gwin hwn, mae’n rhaid i chi wneud y canlynol:
+declaringWineDuty.details.calculation1 = 4,297.55 litr x 13.5% ABV = 58,016.925
+declaringWineDuty.details.calculation2 = 58,016.925 ÷ 100 = 580.1692 litr o alcohol pur
+
 whatDoYouNeedToDeclare.title = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.heading = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.hint = Dewiswch bob un sy’n berthnasol
@@ -896,23 +909,24 @@ spoiltVolumeWithDuty.error.decimalPlaces.duty = Mae’n rhaid i swm y doll a dal
 spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
 spoiltVolumeWithDuty.change.hidden = gwerth y doll
 
-whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
-whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
-whenDidYouPayDuty.under-declaration.title = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.under-declaration.heading = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.exciseEnquiries.link = Ffoniwch CThEF neu cysylltwch â CThEF drwy’r post (yn agor tab newydd)
-whenDidYouPayDuty.paragraph = os cyhoeddwyd hyn yn wreiddiol cyn mis Awst 2023.
-whenDidYouPayDuty.hint = Er enghraifft, 10 2024
-whenDidYouPayDuty.date.error.required.all = Nodwch y dyddiad y gwnaethoch dalu toll
-whenDidYouPayDuty.date.error.required.month = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll gynnwys mis
-whenDidYouPayDuty.date.error.required.year = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll gynnwys blwyddyn
-whenDidYouPayDuty.date.error.invalid.future = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod yn y gorffennol
-whenDidYouPayDuty.date.error.invalid.month = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod yn ddyddiad go iawn gan ddefnyddio rhifau
-whenDidYouPayDuty.date.error.invalid.year = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod yn ddyddiad go iawn gan ddefnyddio rhifau
-whenDidYouPayDuty.date.error.invalid.past = Mae’n rhaid i’r dyddiad y gwnaethoch dalu toll fod ar ôl mis Gorffennaf 2023
-whenDidYouPayDuty.checkYourAnswersLabel = Cyfnod gwreiddiol y Datganiad
-whenDidYouPayDuty.change.hidden = cyfnod gwreiddiol y Datganiad
-whenDidYouPayDuty.date.error.invalidYear.year = Mae’n rhaid i’r flwyddyn gynnwys 4 rhif
+adjustmentReturnPeriod.title = Pa gyfnod Ffurflen Dreth yr ydych chi am ei addasu?
+adjustmentReturnPeriod.heading = Pa gyfnod Ffurflen Dreth yr ydych chi am ei addasu?
+adjustmentReturnPeriod.guidance = Os ydych am wneud addasiad am gyfnod cyn Awst 2023,
+adjustmentReturnPeriod.exciseEnquiries.link = cysylltwch â CThEF (yn agor tab newydd)
+adjustmentReturnPeriod.exciseEnquiries.url = https://www.gov.uk/find-hmrc-contacts/ymholiadau-taw-tollau-ac-ecseis
+adjustmentReturnPeriod.hint = Er enghraifft, 10 2024
+adjustmentReturnPeriod.date.error.required.all = Nodwch pa gyfnod Ffurflen Dreth yr ydych chi am ei addasu
+adjustmentReturnPeriod.date.error.required.month = Mae’n rhaid i gyfnod y Ffurflen Dreth gynnwys mis
+adjustmentReturnPeriod.date.error.required.year = Mae’n rhaid i gyfnod y Ffurflen Dreth gynnwys blwyddyn
+adjustmentReturnPeriod.date.error.invalid.future = Mae’n rhaid i gyfnod y Ffurflen Dreth fod yn y gorffennol
+adjustmentReturnPeriod.date.error.invalid.month = Mae’n rhaid i gyfnod y Ffurflen Dreth fod yn ddyddiad go iawn gan ddefnyddio rhifau
+adjustmentReturnPeriod.date.error.invalid.year = Mae’n rhaid i gyfnod y Ffurflen Dreth fod yn ddyddiad go iawn gan ddefnyddio rhifau
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.month = Mae’n rhaid i gyfnod y Ffurflen Dreth ddefnyddio rhifau
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.year = Mae’n rhaid i gyfnod y Ffurflen Dreth ddefnyddio rhifau
+adjustmentReturnPeriod.date.error.invalid.past = Mae’n rhaid i gyfnod y Ffurflen Dreth fod ar ôl Gorffennaf 2023
+adjustmentReturnPeriod.date.error.invalidYear.year = Mae’n rhaid i’r flwyddyn gynnwys 4 rhif
+adjustmentReturnPeriod.checkYourAnswersLabel = Cyfnod y Ffurflen Dreth sy’n cael ei addasu
+adjustmentReturnPeriod.change.hidden = cyfnod y Ffurflen Dreth sy’n cael ei addasu
 
 adjustmentTaxType.title = Beth yw cod y math o dreth ar gyfer yr alcohol rydych chi’n ei addasu?
 adjustmentTaxType.repackaged.title = Beth yw cod gwreiddiol y math o dreth ar gyfer yr alcohol rydych chi’n ei ailbecynnu?

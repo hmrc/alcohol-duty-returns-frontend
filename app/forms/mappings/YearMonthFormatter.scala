@@ -47,14 +47,14 @@ class YearMonthFormatter(
   private val monthIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.month",
     wholeNumberKey = s"$invalidKey.month",
-    nonNumericKey = s"$invalidKey.month",
+    nonNumericKey = s"$invalidKey.nonNumeric.month",
     args
   )
 
   private val yearIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.year",
     wholeNumberKey = s"$invalidKey.year",
-    nonNumericKey = s"$invalidKey.year",
+    nonNumericKey = s"$invalidKey.nonNumeric.year",
     args
   )
 

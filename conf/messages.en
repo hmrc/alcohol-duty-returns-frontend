@@ -400,6 +400,19 @@ declareAlcoholDutyQuestion.cider.p2.l2 = sparkling cider between 5.6% and 8.4%
 declareAlcoholDutyQuestion.h4 = Do you need to declare any alcoholic products?
 declareAlcoholDutyQuestion.error.required = Select yes if you need to declare any alcoholic products
 
+declaringWineDuty.title = Declaring your wine for duty
+declaringWineDuty.heading = Declaring your wine for duty
+declaringWineDuty.p1 = We need to know how much wine you’ve produced and the litres of pure alcohol it contains based on its alcohol by volume (ABV) band.
+declaringWineDuty.subHeading1 = You must declare your wine products according to their ABV strength
+declaringWineDuty.alcoholicStrength.link = Find out more about what alcoholic strength means when declaring your duty (opens in a new tab)
+declaringWineDuty.p2 = You must now declare your wine under one of the ABV bands:
+declaringWineDuty.subHeading2 = Calculating your litres of pure alcohol
+declaringWineDuty.p3 = To calculate the litres of pure alcohol, multiply the total volume of wine in litres by the ABV strength, then divide by 100.
+declaringWineDuty.details.summary = Example of a calculation
+declaringWineDuty.details.p = You have 4,297.55 litres of wine at 13.5% ABV. To calculate the litres of pure alcohol in this wine, you must:
+declaringWineDuty.details.calculation1 = 4,297.55 litres x 13.5% ABV = 58,016.925
+declaringWineDuty.details.calculation2 = 58,016.925 ÷ 100 = 580.1692 litres of pure alcohol
+
 whatDoYouNeedToDeclare.title = What do you need to declare?
 whatDoYouNeedToDeclare.heading = What do you need to declare?
 whatDoYouNeedToDeclare.hint = Select all that apply
@@ -896,23 +909,24 @@ spoiltVolumeWithDuty.error.decimalPlaces.duty = The amount of duty paid must inc
 spoiltVolumeWithDuty.error.lessThanExpected = Litres of pure alcohol must be the same or less than the total litres of alcoholic product
 spoiltVolumeWithDuty.change.hidden = duty value
 
-whenDidYouPayDuty.default.title = When did you pay duty on this?
-whenDidYouPayDuty.default.heading = When did you pay duty on this?
-whenDidYouPayDuty.under-declaration.title = When should you have paid duty?
-whenDidYouPayDuty.under-declaration.heading = When should you have paid duty?
-whenDidYouPayDuty.exciseEnquiries.link = Call or contact HMRC by post (opens in new tab)
-whenDidYouPayDuty.paragraph = if this was originally declared before August 2023.
-whenDidYouPayDuty.hint = For example, 10 2024
-whenDidYouPayDuty.date.error.required.all = Enter the date you paid duty
-whenDidYouPayDuty.date.error.required.month = The date you paid duty must include a month
-whenDidYouPayDuty.date.error.required.year = The date you paid duty must include a year
-whenDidYouPayDuty.date.error.invalid.future = The date you paid duty must be in the past
-whenDidYouPayDuty.date.error.invalid.month = The date you paid duty must be a real date using numbers
-whenDidYouPayDuty.date.error.invalid.year = The date you paid duty must be a real date using numbers
-whenDidYouPayDuty.date.error.invalid.past = The date you paid duty must be after July 2023
-whenDidYouPayDuty.checkYourAnswersLabel = Original return period
-whenDidYouPayDuty.change.hidden = original return period
-whenDidYouPayDuty.date.error.invalidYear.year = Year must include 4 numbers
+adjustmentReturnPeriod.title = What return period do you need to adjust?
+adjustmentReturnPeriod.heading = What return period do you need to adjust?
+adjustmentReturnPeriod.guidance = If you need to make an adjustment for a period before August 2023,
+adjustmentReturnPeriod.exciseEnquiries.link = contact HMRC (opens in new tab)
+adjustmentReturnPeriod.exciseEnquiries.url = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/excise-enquiries
+adjustmentReturnPeriod.hint = For example, 10 2024
+adjustmentReturnPeriod.date.error.required.all = Enter the return period you need to adjust
+adjustmentReturnPeriod.date.error.required.month = The return period must include a month
+adjustmentReturnPeriod.date.error.required.year = The return period must include a year
+adjustmentReturnPeriod.date.error.invalid.future = The return period must be in the past
+adjustmentReturnPeriod.date.error.invalid.month = The return period must be a real date using numbers
+adjustmentReturnPeriod.date.error.invalid.year = The return period must be a real date using numbers
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.month = The return period must use numbers
+adjustmentReturnPeriod.date.error.invalid.nonNumeric.year = The return period must use numbers
+adjustmentReturnPeriod.date.error.invalid.past = The return period must be in August 2023 or later
+adjustmentReturnPeriod.date.error.invalidYear.year = The year must include 4 numbers
+adjustmentReturnPeriod.checkYourAnswersLabel = Return period being adjusted
+adjustmentReturnPeriod.change.hidden = return period being adjusted
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
 adjustmentTaxType.repackaged.title = What is the original tax type code for the alcohol you are repackaging?

@@ -25,12 +25,12 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, Sum
 
 import java.time.YearMonth
 
-class WhenDidYouPayDutySummarySpec extends SpecBase {
-  "WhenDidYouPayDutySummary" - {
+class AdjustmentReturnPeriodSummarySpec extends SpecBase {
+  "AdjustmentReturnPeriodSummary" - {
     "must return a row if the period and adjustment type can be fetched" in new SetUp(true, true) {
-      whenDidYouPayDutySummary.row(adjustmentEntry) mustBe Some(
+      adjustmentReturnPeriodSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
-          Key(Text("Original return period")),
+          Key(Text("Return period being adjusted")),
           Value(HtmlContent("June 2024")),
           "",
           Some(
@@ -39,7 +39,7 @@ class WhenDidYouPayDutySummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/return-period",
                   Text("Change"),
-                  Some("original return period")
+                  Some("return period being adjusted")
                 )
               )
             )
@@ -49,11 +49,11 @@ class WhenDidYouPayDutySummarySpec extends SpecBase {
     }
 
     "must return no row if no period type can be fetched" in new SetUp(false, true) {
-      whenDidYouPayDutySummary.row(adjustmentEntry) mustBe None
+      adjustmentReturnPeriodSummary.row(adjustmentEntry) mustBe None
     }
 
     "must return no row if no adjustment type can be fetched" in new SetUp(true, false) {
-      whenDidYouPayDutySummary.row(adjustmentEntry) mustBe None
+      adjustmentReturnPeriodSummary.row(adjustmentEntry) mustBe None
     }
   }
 
@@ -67,6 +67,6 @@ class WhenDidYouPayDutySummarySpec extends SpecBase {
     else { None }
     val adjustmentEntry     = AdjustmentEntry(adjustmentType = maybeAdjustmentType, period = maybePeriod)
 
-    val whenDidYouPayDutySummary = new WhenDidYouPayDutySummary(createDateTimeHelper())
+    val adjustmentReturnPeriodSummary = new AdjustmentReturnPeriodSummary(createDateTimeHelper())
   }
 }

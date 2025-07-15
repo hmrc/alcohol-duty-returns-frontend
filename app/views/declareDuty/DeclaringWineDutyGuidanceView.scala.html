@@ -1,0 +1,89 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{BulletList, Caption, Link, NumberedList, PageHeading, Paragraph, ReturnToTaskList, SectionBreak, SubHeading}
+@import config.Constants.Css
+@import models.AlcoholRegime.Wine
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        govukDetails: GovukDetails,
+        caption: Caption,
+        pageHeading: PageHeading,
+        subHeading: SubHeading,
+        paragraph: Paragraph,
+        link: Link,
+        bulletList: BulletList,
+        numberedList: NumberedList,
+        sectionBreak: SectionBreak,
+        returnToTaskList: ReturnToTaskList
+)
+
+@(alcoholicStrengthGuidanceUrl: String)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("declaringWineDuty.title"))) {
+    @caption(
+        id = "declaring-wine-duty-guidance-section",
+        text = messages("section.return.Wine"),
+    )
+
+    @pageHeading(messages("declaringWineDuty.heading"))
+
+    @paragraph(messages("declaringWineDuty.p1"))
+
+    @subHeading(messages("declaringWineDuty.subHeading1"), classes = Css.headingMCssClass)
+
+    @paragraph(content = HtmlContent(
+        link(
+            id = "alcoholic-strength-guidance-link",
+            text = messages("declaringWineDuty.alcoholicStrength.link"),
+            href = alcoholicStrengthGuidanceUrl,
+            newTab = true
+        ) + "."
+    ))
+
+    @paragraph(messages("declaringWineDuty.p2"))
+    @bulletList(Seq(
+        messages("declareAlcoholDutyQuestion.p1.l1"),
+        messages("declareAlcoholDutyQuestion.p1.l2"),
+        messages("declareAlcoholDutyQuestion.p1.l3"),
+        messages("declareAlcoholDutyQuestion.p1.l4")
+    ))
+
+    @subHeading(messages("declaringWineDuty.subHeading2"), classes = Css.headingMCssClass)
+
+    @paragraph(messages("declaringWineDuty.p3"))
+
+    @govukDetails(Details(
+        summary = messages("declaringWineDuty.details.summary"),
+        content = HtmlContent(
+            paragraph(messages("declaringWineDuty.details.p")) +
+            numberedList(Seq(
+                messages("declaringWineDuty.details.calculation1"),
+                messages("declaringWineDuty.details.calculation2")
+            )).toString
+        )
+    ))
+
+    @sectionBreak()
+
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Wine).url)
+    )
+    @returnToTaskList()
+}

@@ -26,7 +26,7 @@ import javax.inject.Inject
 class CheckYourAnswersSummaryListHelper @Inject() (
   adjustmentRepackagedTaxTypeSummary: AdjustmentRepackagedTaxTypeSummary,
   adjustmentSmallProducerReliefDutyRateSummary: AdjustmentSmallProducerReliefDutyRateSummary,
-  whenDidYouPayDutySummary: WhenDidYouPayDutySummary,
+  adjustmentReturnPeriodSummary: AdjustmentReturnPeriodSummary,
   spoiltAlcoholicProductTypeSummary: SpoiltAlcoholicProductTypeSummary,
   adjustmentTaxTypeSummary: AdjustmentTaxTypeSummary,
   adjustmentTypeSummary: AdjustmentTypeSummary,
@@ -40,7 +40,7 @@ class CheckYourAnswersSummaryListHelper @Inject() (
 
     val newTaxType        = adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry).toList
     val sprDutyRate       = adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry).toList
-    val returnPeriod      = whenDidYouPayDutySummary.row(adjustmentEntry).toList
+    val returnPeriod      = adjustmentReturnPeriodSummary.row(adjustmentEntry).toList
     val spoiltAlcoholType = spoiltAlcoholicProductTypeSummary.row(adjustmentEntry).toList
     val taxType           = adjustmentTaxTypeSummary.row(adjustmentEntry).toList
 
