@@ -424,8 +424,8 @@ whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Dewiswch y cynhyrc
 
 whatDoYouNeedToDeclare.details.link.title = Nid yw’r cod sydd ei angen arnaf ar gyfer y math o dreth yn ymddangos ar y rhestr
 whatDoYouNeedToDeclare.details.link.heading = Gallwch wneud y canlynol:
-whatDoYouNeedToDeclare.details.link.p1 = gwirio pa fath o godau treth y dylech fod yn eu defnyddio (yn agor tab newydd).
-whatDoYouNeedToDeclare.details.link.p2 = cysylltu â CThEF os na allwch weld y cynhyrchion alcoholaidd y mae gennych gymeradwyaeth ar eu cyfer (yn agor tab newydd).
+whatDoYouNeedToDeclare.details.link.p1 = gwirio pa fath o godau treth y dylech fod yn eu defnyddio (yn agor tab newydd)
+whatDoYouNeedToDeclare.details.link.p2 = cysylltu â CThEF os na allwch weld y cynhyrchion alcoholaidd y mae gennych gymeradwyaeth ar eu cyfer (yn agor tab newydd)
 whatDoYouNeedToDeclare.exciseHelp.url = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-customs-and-excise-and-duties-enquiries-for-welsh-speaking-customers
 
 whatDoYouNeedToDeclare.core.heading = {0} (cyfradd safonol)
