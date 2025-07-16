@@ -921,9 +921,9 @@ adjustmentReturnPeriod.checkYourAnswersLabel = Cyfnod y Ffurflen Dreth sy’n ca
 adjustmentReturnPeriod.change.hidden = cyfnod y Ffurflen Dreth sy’n cael ei addasu
 
 adjustmentTaxType.title = Beth yw cod y math o dreth ar gyfer yr alcohol rydych chi’n ei addasu?
-adjustmentTaxType.repackaged.title = Beth yw cod gwreiddiol y math o dreth ar gyfer yr alcohol rydych chi’n ei ailbecynnu?
+adjustmentTaxType.repackaged.title = Beth oedd cod y math o dreth ar gyfer yr alcohol y gwnaethoch chi ei ailbecynnu?
 adjustmentTaxType.heading = Beth yw cod y math o dreth ar gyfer yr alcohol rydych chi’n ei addasu?
-adjustmentTaxType.repackaged.heading = Beth yw cod gwreiddiol y math o dreth ar gyfer yr alcohol rydych chi’n ei ailbecynnu?
+adjustmentTaxType.repackaged.heading = Beth oedd cod y math o dreth ar gyfer yr alcohol y gwnaethoch chi ei ailbecynnu?
 adjustmentTaxType.underDeclaration.hint = Cod 3 digid y math o dreth ar gyfer yr alcohol a danddatganwyd
 adjustmentTaxType.default.hint = Cod 3 digid y math o dreth a ddefnyddiwyd ar eich Datganiad blaenorol
 adjustmentTaxType.checkYourAnswersLabel = Math o dreth

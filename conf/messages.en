@@ -921,9 +921,9 @@ adjustmentReturnPeriod.checkYourAnswersLabel = Return period being adjusted
 adjustmentReturnPeriod.change.hidden = return period being adjusted
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
-adjustmentTaxType.repackaged.title = What is the original tax type code for the alcohol you are repackaging?
+adjustmentTaxType.repackaged.title = What was the tax type code for the alcohol you repackaged?
 adjustmentTaxType.heading = What is the tax type code for the alcohol you are adjusting?
-adjustmentTaxType.repackaged.heading = What is the original tax type code for the alcohol you are repackaging?
+adjustmentTaxType.repackaged.heading = What was the tax type code for the alcohol you repackaged?
 adjustmentTaxType.underDeclaration.hint = The 3 digit tax type code for the under-declared alcohol
 adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous return
 adjustmentTaxType.checkYourAnswersLabel = Tax type

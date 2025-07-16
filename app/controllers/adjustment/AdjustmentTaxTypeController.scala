@@ -61,6 +61,7 @@ class AdjustmentTaxTypeController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+        logger.info(s"Repackaged tax type code: ${rateBand.repackagedTaxTypeCode}")
         Ok(
           view(
             form.fill(rateBand.taxTypeCode.toInt),
