@@ -2,7 +2,7 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapVersion = "9.13.0"
+  private val bootstrapVersion = "9.14.0"
   private val hmrcMongoVersion = "2.6.0"
   val mockitoScalaVersion = "1.17.37"
 

@@ -792,8 +792,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
       }
 
-      "no hint must be displayed" in {
-        result.taskList.items.head.hint.map(_.content) mustBe None
+      "hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe Some(
+          Text("You can adjust declared alcoholic products that may now be spoilt," +
+            " repackaged, over-declared, under-declared, or exported and eligible for you to claim drawback on."))
       }
     }
 
