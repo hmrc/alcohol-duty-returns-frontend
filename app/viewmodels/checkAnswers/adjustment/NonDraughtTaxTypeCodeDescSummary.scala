@@ -23,8 +23,7 @@ import viewmodels.govuk.all.{SummaryListRowViewModel, ValueViewModel}
 import viewmodels.implicits._
 
 class NonDraughtTaxTypeCodeDescSummary {
-  def row()(implicit messages: Messages): SummaryListRow = {
-
+  def row()(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersNonDraughtTaxType.foobar.key",
       value = ValueViewModel(
@@ -32,5 +31,4 @@ class NonDraughtTaxTypeCodeDescSummary {
       ),
       actions = Seq.empty
     )
-  }
 }

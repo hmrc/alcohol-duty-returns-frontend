@@ -23,16 +23,16 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class NonDraughtTaxTypeSummaryListHelper @Inject()(
-                                                    draughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary,
-                                                    nonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary,
-                                                    nonDraughtTaxTypeCodeDescSummary: NonDraughtTaxTypeCodeDescSummary
-                                                  ) {
+class NonDraughtTaxTypeSummaryListHelper @Inject() (
+  draughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary,
+  nonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary,
+  nonDraughtTaxTypeCodeDescSummary: NonDraughtTaxTypeCodeDescSummary
+) {
 
-  def nonDraughtTaxTypeSummaryList ()(implicit message: Messages): SummaryList = {
+  def nonDraughtTaxTypeSummaryList()(implicit message: Messages): SummaryList = {
 
-    val draughtTaxTypeCode = draughtTaxTypeCodeSummary.row()
-    val nonDraughtTaxTypeCode = nonDraughtTaxTypeCodeSummary.row()
+    val draughtTaxTypeCode        = draughtTaxTypeCodeSummary.row()
+    val nonDraughtTaxTypeCode     = nonDraughtTaxTypeCodeSummary.row()
     val nonDraughtTaxTypeCodeDesc = nonDraughtTaxTypeCodeDescSummary.row()
 
     SummaryListViewModel(

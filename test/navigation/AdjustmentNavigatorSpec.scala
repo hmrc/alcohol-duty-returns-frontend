@@ -154,6 +154,24 @@ class AdjustmentNavigatorSpec extends SpecBase {
           controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
       }
 
+      "must go from the Adjustment Tax Type page to the Non Draught CYA Page if the adjustment type is RepackagedDraughtProducts" in {
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTaxTypePage,
+          NormalMode,
+          emptyUserAnswers
+            .set(
+              pages.adjustment.CurrentAdjustmentEntryPage,
+              AdjustmentEntry(
+                rateBand = Some(rateBand.copy(rateType = Core)),
+                adjustmentType = Some(RepackagedDraughtProducts)
+              )
+            )
+            .success
+            .value,
+          Some(true)
+        ) mustBe controllers.adjustment.routes.CheckYourAnswersNonDraughtTaxTypeController.onPageLoad()
+      }
+
       "must go from the Adjustment Tax Type page to the Adjustment Volume Page if RateType is Core" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentTaxTypePage,
@@ -226,7 +244,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value,
           Some(true)
-        ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
       "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtAndSmallProducerRelief" in {
@@ -566,7 +584,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the Adjustment Volume With SPR page if adjustmentType is Core to the Adjustment Duty Due page if answer has changed" in {
+    "must go from the Adjustment Volume With SPR page if adjustmentType is RepackagedDraughtProducts to the Adjustment Duty Due page if answer has changed" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentVolumeWithSPRPage,
         CheckMode,
@@ -578,7 +596,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           .success
           .value,
         Some(true)
-      ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode)
+      ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
 
     "must go from the Adjustment Volume With SPR Page if adjustmentType is Core to the CYA page if the answer is the same" in {

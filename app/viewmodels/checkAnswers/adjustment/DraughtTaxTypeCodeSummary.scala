@@ -24,16 +24,18 @@ import viewmodels.govuk.all.{ActionItemViewModel, FluentActionItem, SummaryListR
 import viewmodels.implicits._
 
 class DraughtTaxTypeCodeSummary {
-  def row()(implicit messages: Messages): SummaryListRow = {
+  def row()(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersNonDraughtTaxType.foo.key",
       value = ValueViewModel(
         HtmlContent("foo")
       ),
       actions = Seq(
-        ActionItemViewModel("site.change", controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
+        ActionItemViewModel(
+          "site.change",
+          controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url
+        )
           .withVisuallyHiddenText(messages("checkYourAnswersNonDraughtTaxType.foo.key.hidden"))
       )
     )
-  }
 }

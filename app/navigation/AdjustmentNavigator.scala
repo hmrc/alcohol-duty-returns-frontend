@@ -87,6 +87,7 @@ class AdjustmentNavigator @Inject() () {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
     case pages.adjustment.AdjustmentTaxTypePage                     =>
+      // TODO - If the value has not change we need to establish which CYA we have come from in order to send the user back to the correct one in CheckMode
       userAnswers =>
         hasChanged =>
           if (hasChanged) {
@@ -139,19 +140,25 @@ class AdjustmentNavigator @Inject() () {
     }
 
   private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
-    val rateTypeOpt: Option[(RateType, AdjustmentType)] = for {
+    val adjustmentTypeOpt = for {
       adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
       adjustmentType <- adjustment.adjustmentType
-      rateBand       <- adjustment.rateBand
-    } yield (rateBand.rateType, adjustmentType)
-    rateTypeOpt match {
-      case Some((_, RepackagedDraughtProducts)) =>
+    } yield adjustmentType
+    adjustmentTypeOpt match {
+      case Some(RepackagedDraughtProducts) =>
         controllers.adjustment.routes.CheckYourAnswersNonDraughtTaxTypeController.onPageLoad()
-      case Some((Core, _))                      => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
-      case Some((DraughtRelief, _))             =>
-        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
-      case _                                    =>
-        controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(mode)
+      case _                               =>
+        val rateTypeOpt = for {
+          adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+          rateBand   <- adjustment.rateBand
+        } yield rateBand.rateType
+        rateTypeOpt match {
+          case Some(Core)          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
+          case Some(DraughtRelief) =>
+            controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
+          case _                   =>
+            controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(mode)
+        }
     }
   }
 
