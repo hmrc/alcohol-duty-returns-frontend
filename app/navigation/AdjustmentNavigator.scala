@@ -18,6 +18,7 @@ package navigation
 import controllers._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import models._
+import models.adjustment.AdjustmentType
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import pages._
 import pages.adjustment.DeclareAdjustmentQuestionPage
@@ -40,9 +41,9 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
-      userAnswers => adjustmentVolumePageRoute(userAnswers)
+      _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
-      userAnswers => adjustmentVolumePageRoute(userAnswers)
+      _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
@@ -96,18 +97,18 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
-      userAnswers =>
+      _ =>
         hasChanged =>
           if (hasChanged) {
-            adjustmentVolumePageRoute(userAnswers, CheckMode)
+            controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
-      userAnswers =>
+      _ =>
         hasChanged =>
           if (hasChanged) {
-            adjustmentVolumePageRoute(userAnswers, CheckMode)
+            controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
@@ -138,29 +139,19 @@ class AdjustmentNavigator @Inject() () {
     }
 
   private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
-    val rateTypeOpt = for {
-      adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
-      rateBand   <- adjustment.rateBand
-    } yield rateBand.rateType
-    rateTypeOpt match {
-      case Some(Core)          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
-      case Some(DraughtRelief) =>
-        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
-      case _                   =>
-        controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(mode)
-    }
-  }
-
-  private def adjustmentVolumePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
-    val adjustmentTypeOpt = for {
+    val rateTypeOpt: Option[(RateType, AdjustmentType)] = for {
       adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
       adjustmentType <- adjustment.adjustmentType
-    } yield adjustmentType
-    adjustmentTypeOpt match {
-      case Some(RepackagedDraughtProducts) =>
-        controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
-      case _                               =>
-        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      rateBand       <- adjustment.rateBand
+    } yield (rateBand.rateType, adjustmentType)
+    rateTypeOpt match {
+      case Some((_, RepackagedDraughtProducts)) =>
+        controllers.adjustment.routes.CheckYourAnswersNonDraughtTaxTypeController.onPageLoad()
+      case Some((Core, _))                      => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
+      case Some((DraughtRelief, _))             =>
+        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
+      case _                                    =>
+        controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(mode)
     }
   }
 

@@ -127,9 +127,12 @@ GET        /complete-return/adjustments/adjustment/change/return-period         
 POST       /complete-return/adjustments/adjustment/change/return-period                  controllers.adjustment.AdjustmentReturnPeriodController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/tax-type-code                 controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/adjustments/adjustment/declare/tax-type-code                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/adjustments/adjustment/change/tax-type-code                       controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/adjustments/adjustment/change/tax-type-code                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/declare/tax-type-code                 controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/adjustment/change/tax-type-code                  controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/change/tax-type-code                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /complete-return/adjustments/adjustment/declare/confirm-tax-type-code         controllers.adjustment.CheckYourAnswersNonDraughtTaxTypeController.onPageLoad()
+POST       /complete-return/adjustments/adjustment/declare/confirm-tax-type-code         controllers.adjustment.CheckYourAnswersNonDraughtTaxTypeController.onSubmit()
 
 GET        /complete-return/adjustments/adjustment/declare/repackaged/new-spr-duty-rate                controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/adjustments/adjustment/declare/repackaged/new-spr-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
