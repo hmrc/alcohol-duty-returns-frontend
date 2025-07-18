@@ -29,6 +29,7 @@ import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+import models.requests.DataRequest
 import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
@@ -61,6 +62,7 @@ class AdjustmentTaxTypeController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+        logger.info(s"Repackaged tax type code: ${rateBand.repackagedTaxTypeCode}")
         Ok(
           view(
             form.fill(rateBand.taxTypeCode.toInt),
@@ -96,20 +98,7 @@ class AdjustmentTaxTypeController @Inject() (
                   case (Some(adjustmentType), Some(period)) =>
                     fetchAdjustmentRateBand(value.toString, period).flatMap {
                       case Some(rateBand) =>
-                        if (checkRepackagedDraughtReliefEligibility(adjustmentType, rateBand)) {
-                          rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.notDraught")
-                        } else {
-                          for {
-                            updatedAnswers <-
-                              Future.fromTry(
-                                request.userAnswers
-                                  .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(rateBand = Some(rateBand)))
-                              )
-                            _              <- userAnswersConnector.set(updatedAnswers)
-                          } yield Redirect(
-                            navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, Some(hasChanged))
-                          )
-                        }
+                        validateTaxType(mode, rateBand, adjustmentType, period, value, updatedAdjustment, hasChanged)
                       case None           =>
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")
                     }
@@ -123,6 +112,56 @@ class AdjustmentTaxTypeController @Inject() (
             }
         )
   }
+
+  private def validateTaxType(
+    mode: Mode,
+    rateBand: RateBand,
+    adjustmentType: AdjustmentType,
+    period: YearMonth,
+    taxTypeCode: Int,
+    updatedAdjustment: AdjustmentEntry,
+    hasChanged: Boolean
+  )(implicit hc: HeaderCarrier, request: DataRequest[AnyContent]): Future[Result] =
+    if (checkRepackagedDraughtReliefEligibility(adjustmentType, rateBand)) {
+      rateBandResponseError(mode, taxTypeCode, adjustmentType, "adjustmentTaxType.error.notDraught")
+    } else {
+      rateBand.repackagedTaxTypeCode match {
+        case Some(repackagedTaxTypeCode) =>
+          fetchAdjustmentRateBand(repackagedTaxTypeCode, period).flatMap {
+            case Some(repackagedRateBand) =>
+              handleSuccess(mode, request, updatedAdjustment, hasChanged, rateBand, repackagedRateBand)
+            case _                        =>
+              rateBandResponseError(mode, taxTypeCode, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
+          }
+        case _                           =>
+          rateBandResponseError(mode, taxTypeCode, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
+      }
+    }
+
+  private def handleSuccess(
+    mode: Mode,
+    request: DataRequest[AnyContent],
+    updatedAdjustment: AdjustmentEntry,
+    hasChanged: Boolean,
+    rateBand: RateBand,
+    repackagedRateBand: RateBand
+  )(implicit hc: HeaderCarrier): Future[Result] =
+    for {
+      updatedAnswers <-
+        Future.fromTry(
+          request.userAnswers
+            .set(
+              CurrentAdjustmentEntryPage,
+              updatedAdjustment.copy(
+                rateBand = Some(rateBand),
+                repackagedRateBand = Some(repackagedRateBand)
+              )
+            )
+        )
+      _              <- userAnswersConnector.set(updatedAnswers)
+    } yield Redirect(
+      navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, Some(hasChanged))
+    )
 
   private def checkRepackagedDraughtReliefEligibility(adjustmentType: AdjustmentType, rateBand: RateBand): Boolean =
     adjustmentType.equals(

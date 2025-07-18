@@ -133,7 +133,8 @@ case class RateBand(
   description: String,
   rateType: RateType,
   rate: Option[BigDecimal],
-  rangeDetails: Set[RangeDetailsByRegime]
+  rangeDetails: Set[RangeDetailsByRegime],
+  repackagedTaxTypeCode: Option[String] = None
 )
 
 object RateBand {
