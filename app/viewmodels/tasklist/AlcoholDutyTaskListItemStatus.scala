@@ -37,7 +37,7 @@ object AlcoholDutyTaskListItemStatus {
     classes = Css.textAlignRightCssClass
   )
   def cannotStart(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = Css.greyTagCssClass)),
-    classes = Css.textAlignRightCssClass
+    content = Text(messages("taskList.section.status.cannotStart")),
+    classes = Css.textAlignRightCssClass + " " + Css.cannotStartYetCssClass
   )
 }

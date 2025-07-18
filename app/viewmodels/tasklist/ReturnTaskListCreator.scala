@@ -50,7 +50,7 @@ class ReturnTaskListCreator @Inject() {
       case Some(_) =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))),
-          hint = addHints(section),
+          hint = if (section == AdjustmentSection) None else addHints(section),
           status = AlcoholDutyTaskListItemStatus.completed,
           href = Some(declarationController(CheckMode))
         )
@@ -81,11 +81,15 @@ class ReturnTaskListCreator @Inject() {
     messages: Messages
   ): Option[Hint] =
     section match {
-      case SpiritsSection =>
+      case SpiritsSection    =>
         Some(
           Hint(content = Text(messages(s"taskList.section.${section.name}.hint")))
         )
-      case _              => None
+      case AdjustmentSection =>
+        Some(
+          Hint(content = Text(messages(s"taskList.section.${section.name}.hint")))
+        )
+      case _                 => None
     }
 
   private def createDeclarationTask(
