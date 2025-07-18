@@ -338,11 +338,15 @@ return.journey.abv.interval.label.Spirits.draught = gwirodydd o’r gasgen
 return.journey.abv.interval.label.OtherFermentedProduct.draught = cynhyrchion eplesedig eraill o’r gasgen
 
 return.journey.abv.interval.label.Beer.nondraught = cwrw nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Beer.nondraught.nopackaging = Cwrw
 return.journey.abv.interval.label.Cider.nondraught = seidr nad yw’n dod o’r gasgen
 return.journey.abv.interval.label.SparklingCider.nondraught = seidr pefriog nad yw’n dod o’r gasgen
 return.journey.abv.interval.label.Wine.nondraught = gwin nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Wine.nondraught.nopackaging = Gwin
 return.journey.abv.interval.label.Spirits.nondraught = gwirodydd nad ydynt yn dod o’r gasgen
+return.journey.abv.interval.label.Spirits.nondraught.nopackaging = Gwirodydd
 return.journey.abv.interval.label.OtherFermentedProduct.nondraught = cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen
+return.journey.abv.interval.label.OtherFermentedProduct.nondraught.nopackaging = Cynhyrchion eplesedig eraill
 
 return.journey.abv.rangeKey.3 = rhwng {0}% a {1}%
 return.journey.abv.rangeKey.4 = rhwng {0}% ac {1}%
@@ -463,7 +467,7 @@ howMuchDoYouNeedToDeclare.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae an
 howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyrchion eplesedig eraill y mae angen i chi eu datgan a’r alcohol pur ynddyn nhw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 
-howMuchDoYouNeedToDeclare.core.heading.regime.beer = Faint o gwrw nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.beer = Faint o gwrw (cyfradd safonol) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.core.heading.regime.cider = Faint o seidr nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.core.heading.regime.wine = Faint o win nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.core.heading.regime.spirits = Faint o wirodydd nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?

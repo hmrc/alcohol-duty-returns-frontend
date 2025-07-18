@@ -32,9 +32,11 @@ case class CategoriesByRateTypeViewModel(
 )
 
 object CategoriesByRateTypeHelper {
-  def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime)(implicit
-    messages: Messages
-  ): CategoriesByRateTypeViewModel = {
+  def rateBandCategories(
+    rateBands: Set[RateBand],
+    regime: AlcoholRegime,
+    useNoPackagingSuffix: Boolean = false
+  )(implicit messages: Messages): CategoriesByRateTypeViewModel = {
     val rateBandsByType = rateBands.toSeq
       .groupBy(_.rateType)
       .view
@@ -42,7 +44,8 @@ object CategoriesByRateTypeHelper {
         rateBands.sortBy(_.taxTypeCode).map { rateBand =>
           CategoryViewModel(
             taxTypeCode = rateBand.taxTypeCode,
-            description = RateBandDescription.toDescription(rateBand, Some(regime))
+            description =
+              RateBandDescription.toDescription(rateBand, Some(regime), useNoPackagingSuffix = useNoPackagingSuffix)
           )
         }
       }

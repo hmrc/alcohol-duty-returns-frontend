@@ -32,7 +32,8 @@ object RateBandDescription {
   def toDescription(
     rateBand: RateBand,
     maybeByRegime: Option[AlcoholRegime],
-    showDraughtStatus: Boolean = true
+    showDraughtStatus: Boolean = true,
+    useNoPackagingSuffix: Boolean = false
   )(implicit messages: Messages): String = {
     val taxTypeCode = rateBand.taxTypeCode
 
@@ -46,10 +47,18 @@ object RateBandDescription {
           abvRange,
           taxTypeCode,
           rateBand.rateType,
-          showDraughtStatus
+          showDraughtStatus,
+          useNoPackagingSuffix
         )
       case List(abvRange1, abvRange2) =>
-        multipleIntervalsText(abvRange1, abvRange2, taxTypeCode, rateBand.rateType, showDraughtStatus)
+        multipleIntervalsText(
+          abvRange1,
+          abvRange2,
+          taxTypeCode,
+          rateBand.rateType,
+          showDraughtStatus,
+          useNoPackagingSuffix
+        )
       case _                          =>
         throw new IllegalArgumentException(
           s"Only 2 ranges supported at present, more found for tax code $taxTypeCode regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
@@ -61,7 +70,8 @@ object RateBandDescription {
     interval: ABVRange,
     rateType: RateType,
     showDraughtStatus: Boolean,
-    taxTypeCode: String
+    taxTypeCode: String,
+    useNoPackagingSuffix: Boolean
   )(implicit
     messages: Messages
   ): String = {
@@ -71,8 +81,19 @@ object RateBandDescription {
     }
 
     if (showDraughtStatus && draftCandidate) {
-      val draughtOrNotKey = if (rateType.isDraught) "draught" else "nondraught"
-      messages(s"return.journey.abv.interval.label.${interval.alcoholType}.$draughtOrNotKey")
+      if (rateType.isDraught) {
+        messages(s"return.journey.abv.interval.label.${interval.alcoholType}.draught")
+      } else if (rateType.isSPR) {
+        messages(s"return.journey.abv.interval.label.${interval.alcoholType}.nondraught")
+      } else if (
+        useNoPackagingSuffix && messages.isDefinedAt(
+          s"return.journey.abv.interval.label.${interval.alcoholType}.nondraught.nopackaging"
+        )
+      ) {
+        messages(s"return.journey.abv.interval.label.${interval.alcoholType}.nondraught.nopackaging")
+      } else {
+        messages(s"return.journey.abv.interval.label.${interval.alcoholType}.nondraught")
+      }
     } else {
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}")
     }
@@ -105,13 +126,14 @@ object RateBandDescription {
     abvRange: ABVRange,
     taxTypeCode: String,
     rateType: RateType,
-    showDraughtStatus: Boolean
+    showDraughtStatus: Boolean,
+    useNoPackagingSuffix: Boolean
   )(implicit
     messages: Messages
   ): String =
     messages(
       s"return.journey.abv.single.interval",
-      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus, taxTypeCode),
+      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus, taxTypeCode, useNoPackagingSuffix),
       getAbvRange(abvRange.minABV.value, abvRange.maxABV.value),
       getTaxType(taxTypeCode, rateType)
     )
@@ -121,13 +143,14 @@ object RateBandDescription {
     abvRange2: ABVRange,
     taxTypeCode: String,
     rateType: RateType,
-    showDraughtStatus: Boolean
+    showDraughtStatus: Boolean,
+    useNoPackagingSuffix: Boolean
   )(implicit
     messages: Messages
   ): String =
     messages(
       s"return.journey.abv.multi.interval.${abvRange2.alcoholType}",
-      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus, taxTypeCode),
+      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus, taxTypeCode, useNoPackagingSuffix),
       getAbvRange(abvRange1.minABV.value, abvRange1.maxABV.value),
       getAbvRange(abvRange2.minABV.value, abvRange2.maxABV.value),
       getTaxType(taxTypeCode, rateType)
