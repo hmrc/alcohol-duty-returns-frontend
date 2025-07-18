@@ -214,7 +214,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
-      "must go from the Adjustment Volume With SPR Page if adjustmentType is RepackagedDraughtProducts to the Adjustment Repackaged Tax Type page" in {
+      "must go from the Adjustment Volume With SPR Page if adjustmentType is RepackagedDraughtProducts to the Adjustment Duty Due page" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentVolumeWithSPRPage,
           NormalMode,
@@ -226,7 +226,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value,
           Some(true)
-        ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
       "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtAndSmallProducerRelief" in {
@@ -462,19 +462,61 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(CheckMode)
     }
 
-    "must go from the Adjustment Tax Type page to the CYA page if RateType is Core if the answer is the same" in {
+    "must go from the Adjustment Tax Type page to the CYA page if RateType is Core if the answer is the same and the duty is populated" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTaxTypePage,
         CheckMode,
         emptyUserAnswers
           .set(
             pages.adjustment.CurrentAdjustmentEntryPage,
-            AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = Core)))
+            AdjustmentEntry(
+              rateBand = Some(rateBand.copy(rateType = Core)),
+              newDuty = Some(BigDecimal(1.23)),
+              duty = Some(BigDecimal(1.56))
+            )
           )
           .success
           .value,
         Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    }
+
+    "must go from the Adjustment Tax Type page to the CYA page if RateType is Core if the answer is the same and the duty is populated for repackaged" in {
+      navigator.nextPage(
+        pages.adjustment.AdjustmentTaxTypePage,
+        CheckMode,
+        emptyUserAnswers
+          .set(
+            pages.adjustment.CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              rateBand = Some(rateBand.copy(rateType = Core)),
+              newDuty = Some(BigDecimal(1.23)),
+              duty = Some(BigDecimal(1.56)),
+              adjustmentType = Some(RepackagedDraughtProducts)
+            )
+          )
+          .success
+          .value,
+        Some(false)
+      ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    }
+
+    "must go from the Adjustment Tax Type page to the repackaged CYA page if RateType is Core if the answer is the same and the duty is populated" in {
+      navigator.nextPage(
+        pages.adjustment.AdjustmentTaxTypePage,
+        CheckMode,
+        emptyUserAnswers
+          .set(
+            pages.adjustment.CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              rateBand = Some(rateBand.copy(rateType = Core)),
+              adjustmentType = Some(RepackagedDraughtProducts)
+            )
+          )
+          .success
+          .value,
+        Some(false)
+      ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode)
     }
 
     "must go from the Adjustment Tax Type page to the Adjustment Volume page if RateType is SmallProducerRelief if the answer has changed" in {
@@ -501,6 +543,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
+
     "must go from the Adjustment Tax Type page to CYA page if RateType is SmallProducerRelief if the answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTaxTypePage,
@@ -566,7 +609,22 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the Adjustment Volume With SPR page if adjustmentType is Core to the Adjustment Duty Due page if answer has changed" in {
+    "must go from the Adjustment Volume With SPR page if rateType is Core to the Adjustment Duty Due page if answer has changed" in {
+      navigator.nextPage(
+        pages.adjustment.AdjustmentVolumeWithSPRPage,
+        CheckMode,
+        emptyUserAnswers
+          .set(
+            pages.adjustment.CurrentAdjustmentEntryPage,
+            AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = Core)))
+          )
+          .success
+          .value,
+        Some(true)
+      ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+    }
+
+    "must go from the Adjustment Volume With SPR page if adjustmentType is RepackagedDraughtProducts to the Adjustment Duty Due page if answer has changed" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentVolumeWithSPRPage,
         CheckMode,
@@ -578,7 +636,22 @@ class AdjustmentNavigatorSpec extends SpecBase {
           .success
           .value,
         Some(true)
-      ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode)
+      ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+    }
+
+    "must go from the Adjustment Volume With SPR page if adjustmentType is Spoilt to the Adjustment Duty Due page if answer has changed" in {
+      navigator.nextPage(
+        pages.adjustment.AdjustmentVolumeWithSPRPage,
+        CheckMode,
+        emptyUserAnswers
+          .set(
+            pages.adjustment.CurrentAdjustmentEntryPage,
+            AdjustmentEntry(adjustmentType = Some(Spoilt))
+          )
+          .success
+          .value,
+        Some(true)
+      ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
 
     "must go from the Adjustment Volume With SPR Page if adjustmentType is Core to the CYA page if the answer is the same" in {

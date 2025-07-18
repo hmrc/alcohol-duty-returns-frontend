@@ -40,9 +40,9 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
-      userAnswers => adjustmentVolumePageRoute(userAnswers)
+      _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
-      userAnswers => adjustmentVolumePageRoute(userAnswers)
+      _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
@@ -99,7 +99,7 @@ class AdjustmentNavigator @Inject() () {
       userAnswers =>
         hasChanged =>
           if (hasChanged) {
-            adjustmentVolumePageRoute(userAnswers, CheckMode)
+            controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
@@ -107,7 +107,7 @@ class AdjustmentNavigator @Inject() () {
       userAnswers =>
         hasChanged =>
           if (hasChanged) {
-            adjustmentVolumePageRoute(userAnswers, CheckMode)
+            controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
@@ -161,28 +161,36 @@ class AdjustmentNavigator @Inject() () {
   }
 
   private def adjustmentTaxTypePageCyaRoute(userAnswers: UserAnswers, mode: Mode): Call = {
-    val calcOpt = for {
-      adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
-      finalCya    = adjustment.duty.nonEmpty && adjustment.newDuty.nonEmpty
-    } yield finalCya
-    calcOpt match {
-      case Some(true) => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
-      case _          => controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
-    }
-  }
-
-  private def adjustmentVolumePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val adjustmentTypeOpt = for {
       adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
       adjustmentType <- adjustment.adjustmentType
     } yield adjustmentType
     adjustmentTypeOpt match {
       case Some(RepackagedDraughtProducts) =>
-        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-      case _                               =>
-        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+        val calcOpt = for {
+          adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+          finalCya    = adjustment.duty.nonEmpty && adjustment.newDuty.nonEmpty
+        } yield finalCya
+        calcOpt match {
+          case Some(true) => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+          case _          => controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
+        }
+      case _                               => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
   }
+
+//  private def adjustmentVolumePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
+//    val adjustmentTypeOpt = for {
+//      adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+//      adjustmentType <- adjustment.adjustmentType
+//    } yield adjustmentType
+//    adjustmentTypeOpt match {
+//      case Some(RepackagedDraughtProducts) =>
+//        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+//      case _                               =>
+//        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+//    }
+//  }
 
   private def repackagedTaxTypeRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val adjustmentTypeOpt = for {
