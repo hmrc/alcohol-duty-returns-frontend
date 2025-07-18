@@ -91,7 +91,8 @@ class AdjustmentNavigator @Inject() () {
           if (hasChanged) {
             adjustmentTaxTypePageRoute(userAnswers, CheckMode)
           } else {
-            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+            adjustmentTaxTypePageCyaRoute(userAnswers, CheckMode)
+            //controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
@@ -148,6 +149,17 @@ class AdjustmentNavigator @Inject() () {
         controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
       case _                   =>
         controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(mode)
+    }
+  }
+
+  private def adjustmentTaxTypePageCyaRoute(userAnswers: UserAnswers, mode: Mode): Call = {
+    val calcOpt = for {
+      adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+      finalCya    = adjustment.duty.nonEmpty && adjustment.newDuty.nonEmpty
+    } yield finalCya
+    calcOpt match {
+      case Some(true) => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+      case _          => controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
     }
   }
 
