@@ -16,8 +16,11 @@
 
 package viewmodels.declareDuty
 
+import com.typesafe.config.ConfigFactory
 import models.{ABVRange, AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
+
+import scala.util.{Success, Try}
 
 object RateBandDescription {
 
@@ -54,15 +57,26 @@ object RateBandDescription {
     }
   }
 
-  private def getAlcoholTypeWithDraughtStatus(interval: ABVRange, rateType: RateType, showDraughtStatus: Boolean)(
-    implicit messages: Messages
-  ): String =
-    if (showDraughtStatus) {
+  private def getAlcoholTypeWithDraughtStatus(
+    interval: ABVRange,
+    rateType: RateType,
+    showDraughtStatus: Boolean,
+    taxTypeCode: String
+  )(implicit
+    messages: Messages
+  ): String = {
+    val draftCandidate: Boolean = Try(ConfigFactory.load().getStringList("taxTypeCodesNoPackaging")) match {
+      case Success(codes) => !codes.contains(taxTypeCode)
+      case _              => throw new IllegalArgumentException("Could not load config item taxTypeCodesNoPackaging!")
+    }
+
+    if (showDraughtStatus && draftCandidate) {
       val draughtOrNotKey = if (rateType.isDraught) "draught" else "nondraught"
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}.$draughtOrNotKey")
     } else {
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}")
     }
+  }
 
   private def getAbvRange(minAbv: BigDecimal, maxAbv: BigDecimal)(implicit messages: Messages): String = {
     val rateMessageToUse = maxAbv.toInt
@@ -97,7 +111,7 @@ object RateBandDescription {
   ): String =
     messages(
       s"return.journey.abv.single.interval",
-      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
+      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus, taxTypeCode),
       getAbvRange(abvRange.minABV.value, abvRange.maxABV.value),
       getTaxType(taxTypeCode, rateType)
     )
@@ -113,7 +127,7 @@ object RateBandDescription {
   ): String =
     messages(
       s"return.journey.abv.multi.interval.${abvRange2.alcoholType}",
-      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus),
+      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus, taxTypeCode),
       getAbvRange(abvRange1.minABV.value, abvRange1.maxABV.value),
       getAbvRange(abvRange2.minABV.value, abvRange2.maxABV.value),
       getTaxType(taxTypeCode, rateType)
