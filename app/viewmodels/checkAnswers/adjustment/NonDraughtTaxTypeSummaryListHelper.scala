@@ -24,12 +24,14 @@ import viewmodels.govuk.summarylist._
 import javax.inject.Inject
 
 class NonDraughtTaxTypeSummaryListHelper @Inject() (
-                                                     draughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary,
-                                                     nonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary,
-                                                     nonDraughtTaxTypeCodeDescSummary: NonDraughtTaxTypeCodeDescSummary
-                                                   ) {
+  draughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary,
+  nonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary,
+  nonDraughtTaxTypeCodeDescSummary: NonDraughtTaxTypeCodeDescSummary
+) {
 
-  def nonDraughtTaxTypeSummaryList(rateBand: RateBand, repackagedRateBand: RateBand)(implicit message: Messages): SummaryList = {
+  def nonDraughtTaxTypeSummaryList(rateBand: RateBand, repackagedRateBand: RateBand)(implicit
+    message: Messages
+  ): SummaryList = {
 
     val draughtTaxTypeCode        = draughtTaxTypeCodeSummary.row(rateBand)
     val nonDraughtTaxTypeCode     = nonDraughtTaxTypeCodeSummary.row(repackagedRateBand)
