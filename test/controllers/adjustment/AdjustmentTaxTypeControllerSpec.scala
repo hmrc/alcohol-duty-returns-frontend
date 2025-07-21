@@ -53,15 +53,76 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
   lazy val mockUserAnswersConnector           = mock[UserAnswersConnector]
   lazy val mockAdjustmentNavigator            = mock[AdjustmentNavigator]
 
-  val spoilt          = Spoilt.toString
-  val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), period = Some(period))
-  val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-  val taxCode         = "310"
-  val alcoholRegime   = AlcoholRegime.Beer
-  val rate            = Some(BigDecimal(10.99))
+  val adjustmentEntry           = AdjustmentEntry(adjustmentType = Some(Spoilt), period = Some(period))
+  val adjustmentEntryRepackaged =
+    AdjustmentEntry(adjustmentType = Some(RepackagedDraughtProducts), period = Some(period))
+  val userAnswers               = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswersRepackaged     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntryRepackaged).success.value
+
+  val alcoholRegime = AlcoholRegime.Beer
+  val rate          = Some(BigDecimal(10.99))
 
   val rateBand = RateBand(
-    taxCode,
+    "310",
+    "some band",
+    RateType.DraughtRelief,
+    rate,
+    Set(
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    )
+  )
+
+  val rateBandRepackaged = RateBand(
+    "351",
+    "some band",
+    RateType.DraughtRelief,
+    rate,
+    Set(
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    ),
+    repackagedTaxTypeCode = Some("311")
+  )
+
+  val rateBandRepackagedInvalid = RateBand(
+    "351",
+    "some band",
+    RateType.DraughtRelief,
+    rate,
+    Set(
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    ),
+    repackagedTaxTypeCode = None
+  )
+
+  val rateBandRepackagedFull = RateBand(
+    "311",
     "some band",
     RateType.DraughtRelief,
     rate,
@@ -124,78 +185,225 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
-        Some(rateBand)
-      )
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
+    "For non repackaged" - {
+      "must redirect to the correct page when valid data is submitted" in {
+        when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+          Some(rateBand)
+        )
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, adjustmentTaxTypeRoute)
-            .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+        running(application) {
+          val request =
+            FakeRequest(POST, adjustmentTaxTypeRoute)
+              .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
 
-        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockAdjustmentNavigator, times(1))
-          .nextPage(eqTo(AdjustmentTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
+          verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
+          verify(mockUserAnswersConnector, times(1)).set(any())(any())
+          verify(mockAdjustmentNavigator, times(1))
+            .nextPage(eqTo(AdjustmentTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
+        }
+      }
+
+      "must redirect to the correct page when the same data is submitted" in {
+        when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+          Some(rateBand)
+        )
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
+
+        val newUserAnswers =
+          emptyUserAnswers
+            .set(
+              CurrentAdjustmentEntryPage,
+              adjustmentEntry.copy(rateBand = Some(rateBand))
+            )
+            .success
+            .value
+
+        val application =
+          applicationBuilder(userAnswers = Some(newUserAnswers))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, adjustmentTaxTypeRoute)
+              .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+
+          val result = route(application, request).value
+
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+
+          verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
+          verify(mockUserAnswersConnector, times(1)).set(any())(any())
+          verify(mockAdjustmentNavigator, times(1))
+            .nextPage(eqTo(AdjustmentTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(false)))
+        }
       }
     }
 
-    "must redirect to the next page when the same data is submitted" in {
-      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
-        Some(rateBand)
-      )
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
+    "For repackaged" - {
+      "must redirect to the correct page when valid data is submitted" in {
+        when(
+          mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())
+        ) thenReturn (
+          Future.successful(Some(rateBandRepackaged)),
+          Future.successful(Some(rateBandRepackagedFull))
+        )
 
-      val newUserAnswers =
-        emptyUserAnswers
-          .set(
-            CurrentAdjustmentEntryPage,
-            adjustmentEntry.copy(rateBand = Some(rateBand))
-          )
-          .success
-          .value
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
 
-      val application =
-        applicationBuilder(userAnswers = Some(newUserAnswers))
-          .overrides(
-            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
-            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersRepackaged))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, adjustmentTaxTypeRoute)
-            .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+        running(application) {
+          val request =
+            FakeRequest(POST, adjustmentTaxTypeRoute)
+              .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
 
-        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-        verify(mockAdjustmentNavigator, times(1))
-          .nextPage(eqTo(AdjustmentTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(false)))
+          verify(mockAlcoholDutyCalculatorConnector, times(2)).rateBand(any(), any())(any())
+          verify(mockUserAnswersConnector, times(1)).set(any())(any())
+          verify(mockAdjustmentNavigator, times(1))
+            .nextPage(eqTo(AdjustmentTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
+        }
+      }
+
+      "must redirect to the correct page when the same data is submitted" in {
+        when(
+          mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())
+        ) thenReturn (
+          Future.successful(Some(rateBandRepackaged)),
+          Future.successful(Some(rateBandRepackagedFull))
+        )
+
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
+
+        val newUserAnswers =
+          userAnswersRepackaged
+            .set(
+              CurrentAdjustmentEntryPage,
+              adjustmentEntryRepackaged.copy(rateBand = Some(rateBand))
+            )
+            .success
+            .value
+
+        val application =
+          applicationBuilder(userAnswers = Some(newUserAnswers))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, adjustmentTaxTypeRoute)
+              .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+
+          val result = route(application, request).value
+
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+
+          verify(mockAlcoholDutyCalculatorConnector, times(2)).rateBand(any(), any())(any())
+          verify(mockUserAnswersConnector, times(1)).set(any())(any())
+          verify(mockAdjustmentNavigator, times(1))
+            .nextPage(eqTo(AdjustmentTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(false)))
+        }
+      }
+
+      "must go to journey recovery if no linked repackaged tax code type" in {
+        when(
+          mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())
+        ) thenReturn
+          Future.successful(Some(rateBandRepackagedInvalid))
+
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
+
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersRepackaged))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, adjustmentTaxTypeRoute)
+              .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+
+          val result = route(application, request).value
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "must go to journey recovery if no linked repackaged rate band" in {
+        when(
+          mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())
+        ) thenReturn (
+          Future.successful(Some(rateBandRepackaged)),
+          Future.successful(None)
+        )
+
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockAdjustmentNavigator.nextPage(eqTo(AdjustmentTaxTypePage), any(), any(), any())) thenReturn onwardRoute
+
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersRepackaged))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, adjustmentTaxTypeRoute)
+              .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+
+          val result = route(application, request).value
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 

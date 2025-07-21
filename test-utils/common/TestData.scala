@@ -978,7 +978,8 @@ trait TestData extends ModelGenerators {
               )
             )
           )
-        )
+        ),
+        repackagedTaxTypeCode = Some("002")
       )
     ),
     totalLitresVolume = Some(BigDecimal(0)),

@@ -62,7 +62,6 @@ class AdjustmentTaxTypeController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
-        logger.info(s"Repackaged tax type code: ${rateBand.repackagedTaxTypeCode}")
         Ok(
           view(
             form.fill(rateBand.taxTypeCode.toInt),
@@ -96,56 +95,63 @@ class AdjustmentTaxTypeController @Inject() (
                 val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
                 (updatedAdjustment.adjustmentType, updatedAdjustment.period) match {
                   case (Some(adjustmentType), Some(period)) =>
-                    fetchAdjustmentRateBand(value.toString, period).flatMap {
-                      case Some(rateBand) =>
-                        validateTaxType(mode, rateBand, adjustmentType, period, value, updatedAdjustment, hasChanged)
-                      case None           =>
-                        rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")
-                    }
+                    processAdjustment(mode, value, period, adjustmentType, updatedAdjustment, hasChanged)
                   case _                                    =>
-                    logger.warn("Impossible to retrieve adjustmentType and period in currentAdjustmentEntry")
-                    Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                    illegalStateError("Impossible to retrieve adjustmentType and period in currentAdjustmentEntry")
                 }
-              case None                         =>
-                logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
-                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              case None                         => illegalStateError("Couldn't fetch currentAdjustmentEntry from user answers")
             }
         )
   }
 
-  private def validateTaxType(
+  private def processAdjustment(
     mode: Mode,
-    rateBand: RateBand,
-    adjustmentType: AdjustmentType,
+    value: Int,
     period: YearMonth,
-    taxTypeCode: Int,
+    adjustmentType: AdjustmentType,
     updatedAdjustment: AdjustmentEntry,
     hasChanged: Boolean
-  )(implicit hc: HeaderCarrier, request: DataRequest[AnyContent]): Future[Result] =
-    if (checkRepackagedDraughtReliefEligibility(adjustmentType, rateBand)) {
-      rateBandResponseError(mode, taxTypeCode, adjustmentType, "adjustmentTaxType.error.notDraught")
-    } else {
-      rateBand.repackagedTaxTypeCode match {
-        case Some(repackagedTaxTypeCode) =>
-          fetchAdjustmentRateBand(repackagedTaxTypeCode, period).flatMap {
-            case Some(repackagedRateBand) =>
-              handleSuccess(mode, request, updatedAdjustment, hasChanged, rateBand, repackagedRateBand)
-            case _                        =>
-              rateBandResponseError(mode, taxTypeCode, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
+  )(implicit hc: HeaderCarrier, request: DataRequest[AnyContent]) =
+    fetchAdjustmentRateBand(value.toString, period).flatMap {
+      case Some(rateBand) =>
+        if (checkRepackagedDraughtReliefEligibility(adjustmentType, rateBand)) {
+          rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.notDraught")
+        } else {
+          (adjustmentType, rateBand.repackagedTaxTypeCode) match {
+            case (RepackagedDraughtProducts, Some(repackagedTaxTypeCode)) =>
+              fetchAdjustmentRateBand(repackagedTaxTypeCode, period).flatMap {
+                case Some(repackagedRateBand) =>
+                  handleSuccess(
+                    mode,
+                    updatedAdjustment,
+                    hasChanged,
+                    rateBand,
+                    Some(repackagedRateBand)
+                  )
+                case _                        =>
+                  illegalStateError(
+                    s"Repackaged tax code missing for adjustment type RepackagedDraughtProducts: ${rateBand.taxTypeCode}"
+                  )
+              }
+            case (RepackagedDraughtProducts, None)                        =>
+              illegalStateError(
+                s"Repackaged tax code type missing for adjustment type RepackagedDraughtProducts: ${rateBand.taxTypeCode}"
+              )
+            case _                                                        =>
+              handleSuccess(mode, updatedAdjustment, hasChanged, rateBand, None)
           }
-        case _                           =>
-          rateBandResponseError(mode, taxTypeCode, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
-      }
+        }
+      case None           =>
+        rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")
     }
 
   private def handleSuccess(
     mode: Mode,
-    request: DataRequest[AnyContent],
     updatedAdjustment: AdjustmentEntry,
     hasChanged: Boolean,
     rateBand: RateBand,
-    repackagedRateBand: RateBand
-  )(implicit hc: HeaderCarrier): Future[Result] =
+    repackagedRateBand: Option[RateBand]
+  )(implicit hc: HeaderCarrier, request: DataRequest[AnyContent]): Future[Result] =
     for {
       updatedAnswers <-
         Future.fromTry(
@@ -154,7 +160,7 @@ class AdjustmentTaxTypeController @Inject() (
               CurrentAdjustmentEntryPage,
               updatedAdjustment.copy(
                 rateBand = Some(rateBand),
-                repackagedRateBand = Some(repackagedRateBand)
+                repackagedRateBand = repackagedRateBand
               )
             )
         )
@@ -162,6 +168,30 @@ class AdjustmentTaxTypeController @Inject() (
     } yield Redirect(
       navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, Some(hasChanged))
     )
+
+  private def fetchAdjustmentRateBand(taxTypeCode: String, period: YearMonth)(implicit
+    hc: HeaderCarrier
+  ): Future[Option[RateBand]] =
+    alcoholDutyCalculatorConnector.rateBand(taxTypeCode, period)
+
+  private def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.rateBand.map(_.taxTypeCode) match {
+      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
+      case _                                                             =>
+        (
+          adjustmentEntry.copy(
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            sprDutyRate = None,
+            duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
+            newDuty = None
+          ),
+          true
+        )
+    }
 
   private def checkRepackagedDraughtReliefEligibility(adjustmentType: AdjustmentType, rateBand: RateBand): Boolean =
     adjustmentType.equals(
@@ -202,27 +232,8 @@ class AdjustmentTaxTypeController @Inject() (
       )
     )
 
-  private def fetchAdjustmentRateBand(taxTypeCode: String, period: YearMonth)(implicit
-    hc: HeaderCarrier
-  ): Future[Option[RateBand]] =
-    alcoholDutyCalculatorConnector.rateBand(taxTypeCode, period)
-
-  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
-    adjustmentEntry.rateBand.map(_.taxTypeCode) match {
-      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
-      case _                                                             =>
-        (
-          adjustmentEntry.copy(
-            totalLitresVolume = None,
-            pureAlcoholVolume = None,
-            sprDutyRate = None,
-            duty = None,
-            repackagedRateBand = None,
-            repackagedDuty = None,
-            repackagedSprDutyRate = None,
-            newDuty = None
-          ),
-          true
-        )
-    }
+  private def illegalStateError(logPut: String) = {
+    logger.warn(logPut)
+    Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+  }
 }

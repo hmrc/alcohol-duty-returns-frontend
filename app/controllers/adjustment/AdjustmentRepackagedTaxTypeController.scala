@@ -23,6 +23,7 @@ import models.adjustment.AdjustmentEntry
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.Logging
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -30,7 +31,7 @@ import viewmodels.checkAnswers.adjustment.NonDraughtTaxTypeSummaryListHelper
 import views.html.adjustment.AdjustmentRepackagedTaxTypeView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class AdjustmentRepackagedTaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -42,12 +43,11 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentRepackagedTaxTypeView,
   checkYourAnswersSummaryListHelper: NonDraughtTaxTypeSummaryListHelper
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  val form = formProvider()
+  val form: Form[Int] = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
