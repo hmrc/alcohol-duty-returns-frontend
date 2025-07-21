@@ -40,7 +40,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
   val form: Form[Int]                           = formProvider()
   val content: Html                             = Html("blah")
   val mockView: AdjustmentRepackagedTaxTypeView = mock[AdjustmentRepackagedTaxTypeView]
-  when(mockView.apply(any(), any(), any(), any())(any(), any())).thenReturn(content)
+  when(mockView.apply(any(), any(), any(), any(), any())(any(), any())).thenReturn(content)
 
   val period: YearMonth                = YearMonth.of(2024, 1)
   val adjustmentEntry: AdjustmentEntry =

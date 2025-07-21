@@ -921,9 +921,9 @@ adjustmentReturnPeriod.checkYourAnswersLabel = Cyfnod y Ffurflen Dreth sy’n ca
 adjustmentReturnPeriod.change.hidden = cyfnod y Ffurflen Dreth sy’n cael ei addasu
 
 adjustmentTaxType.title = Beth yw cod y math o dreth ar gyfer yr alcohol rydych chi’n ei addasu?
-adjustmentTaxType.repackaged.title = Beth yw cod gwreiddiol y math o dreth ar gyfer yr alcohol rydych chi’n ei ailbecynnu?
+adjustmentTaxType.repackaged.title = Beth oedd cod y math o dreth ar gyfer yr alcohol y gwnaethoch chi ei ailbecynnu?
 adjustmentTaxType.heading = Beth yw cod y math o dreth ar gyfer yr alcohol rydych chi’n ei addasu?
-adjustmentTaxType.repackaged.heading = Beth yw cod gwreiddiol y math o dreth ar gyfer yr alcohol rydych chi’n ei ailbecynnu?
+adjustmentTaxType.repackaged.heading = Beth oedd cod y math o dreth ar gyfer yr alcohol y gwnaethoch chi ei ailbecynnu?
 adjustmentTaxType.underDeclaration.hint = Cod 3 digid y math o dreth ar gyfer yr alcohol a danddatganwyd
 adjustmentTaxType.default.hint = Cod 3 digid y math o dreth a ddefnyddiwyd ar eich Datganiad blaenorol
 adjustmentTaxType.checkYourAnswersLabel = Math o dreth
@@ -960,14 +960,19 @@ adjustmentVolume.smallProducerReliefDutyRate.heading = Cyfradd doll yn sgil Rhyd
 adjustmentVolume.pureAlcohol = o litrau o alcohol pur (LPA)
 adjustmentVolume.totalLitres = o litrau
 
-adjustmentRepackagedTaxType.title = Beth yw cod y math o dreth ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
-adjustmentRepackagedTaxType.heading = Beth yw cod y math o dreth ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
+adjustmentRepackagedTaxType.title = Cadarnhau’r math o god ar gyfer cynnyrch nad yw’n dod o’r gasgen
+adjustmentRepackagedTaxType.heading = Cadarnhau’r math o god ar gyfer cynnyrch nad yw’n dod o’r gasgen
+adjustmentRepackagedTaxType.p1 = Y cod ar gyfer cynnyrch nad yw’n dod o’r gasgen sy’n gyfatebol i god yn math o dreth ar gyfer cynnyrch o’r gasgen yw {0}
 adjustmentRepackagedTaxType.checkYourAnswersLabel = Math newydd o dreth
 adjustmentRepackagedTaxType.error.invalid = Nodwch god dilys ar gyfer y math o dreth
 adjustmentRepackagedTaxType.error.required = Nodwch god newydd y math o dreth
 adjustmentRepackagedTaxType.error.nonDraught = Mae’n rhaid i god y math o dreth fod yn god ar gyfer cynnyrch nad yw’n dod o’r gasgen
 adjustmentRepackagedTaxType.change.hidden = y math newydd o dreth
 adjustmentRepackagedTaxType.hint = Cod 3 digid y math o dreth ar gyfer cynnyrch nad yw’n dod o’r gasgen
+adjustmentRepackagedTaxType.summary.key1 = Cod y math o dreth ar gyfer cynnyrch o’r gasgen
+adjustmentRepackagedTaxType.summary.key2 = Cod y math o dreth ar gyfer cynnyrch nad yw’n dod o’r gasgen
+adjustmentRepackagedTaxType.summary.key3 = Disgrifiad o god y math o dreth ar gyfer cynnyrch o’r gasgen
+adjustmentRepackagedTaxType.summary.key1.hidden = Cod y math o dreth ar gyfer cynnyrch o’r gasgen
 
 adjustmentSmallProducerReliefDutyRate.title = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
 adjustmentSmallProducerReliefDutyRate.heading = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?

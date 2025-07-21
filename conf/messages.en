@@ -921,9 +921,9 @@ adjustmentReturnPeriod.checkYourAnswersLabel = Return period being adjusted
 adjustmentReturnPeriod.change.hidden = return period being adjusted
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
-adjustmentTaxType.repackaged.title = What is the original tax type code for the alcohol you are repackaging?
+adjustmentTaxType.repackaged.title = What was the tax type code for the alcohol you repackaged?
 adjustmentTaxType.heading = What is the tax type code for the alcohol you are adjusting?
-adjustmentTaxType.repackaged.heading = What is the original tax type code for the alcohol you are repackaging?
+adjustmentTaxType.repackaged.heading = What was the tax type code for the alcohol you repackaged?
 adjustmentTaxType.underDeclaration.hint = The 3 digit tax type code for the under-declared alcohol
 adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous return
 adjustmentTaxType.checkYourAnswersLabel = Tax type
@@ -960,14 +960,19 @@ adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief dut
 adjustmentVolume.pureAlcohol = litres of pure alcohol (LPA)
 adjustmentVolume.totalLitres = litres
 
-adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?
-adjustmentRepackagedTaxType.heading = What is the tax type code for the newly repackaged products?
+adjustmentRepackagedTaxType.title = Confirm the non-draught tax type code
+adjustmentRepackagedTaxType.heading = Confirm the non-draught tax type code
+adjustmentRepackagedTaxType.p1 = The non-draught equivalent of your draught tax type code is {0}
 adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
 adjustmentRepackagedTaxType.error.invalid = Enter a valid tax type code
 adjustmentRepackagedTaxType.error.required = Enter the new tax type code
 adjustmentRepackagedTaxType.error.nonDraught = Tax type code must be the non-draught tax type code
 adjustmentRepackagedTaxType.change.hidden = new tax type
 adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
+adjustmentRepackagedTaxType.summary.key1 = Draught tax type code
+adjustmentRepackagedTaxType.summary.key2 = Non-draught tax type code
+adjustmentRepackagedTaxType.summary.key3 = Description of the non-draught tax type code
+adjustmentRepackagedTaxType.summary.key1.hidden = draught tax type code
 
 adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief Duty rate for the newly repackaged products?
 adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief Duty rate for the newly repackaged products?

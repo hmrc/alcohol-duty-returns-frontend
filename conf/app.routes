@@ -156,10 +156,10 @@ POST       /complete-return/adjustments/adjustment/change/spoilt-product/volume 
 GET        /complete-return/adjustments/adjustment/declare/check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /complete-return/adjustments/adjustment/declare/check-your-answers                       controllers.adjustment.CheckYourAnswersController.onSubmit()
 
-GET        /complete-return/adjustments/declare/repackaged/new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/adjustments/declare/repackaged/new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/adjustments/change/repackaged/new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/adjustments/change/repackaged/new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/adjustments/declare/repackaged/confirm-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/declare/repackaged/confirm-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/change/repackaged/confirm-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/change/repackaged/confirm-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/:pageNumber                        controllers.adjustment.AdjustmentListController.onPageLoad(pageNumber: Int)
 POST       /complete-return/adjustments/:pageNumber                        controllers.adjustment.AdjustmentListController.onSubmit(pageNumber: Int)

@@ -16,7 +16,7 @@
 
 @import models.adjustment.AdjustmentType
 @import viewmodels.InputWidth._
-@import components.{Caption, PageHeading, ReturnToTaskList}
+@import components.{Caption, PageHeading, ReturnToTaskList, Paragraph}
 
 @this(
     layout: templates.Layout,
@@ -25,20 +25,17 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     pageHeading: PageHeading,
+    paragraph: Paragraph,
     caption: Caption,
     returnToTaskList: ReturnToTaskList,
     govukSummaryList: GovukSummaryList
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, list: Option[SummaryList]= None)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, repackagedCode: String, list: Option[SummaryList]= None)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentRepackagedTaxType.title"))) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @caption(
             id = "adjustment-repackaged-tax-type-section",
@@ -47,12 +44,14 @@
 
         @pageHeading(messages("adjustmentRepackagedTaxType.title"))
 
+        @paragraph(messages("adjustmentRepackagedTaxType.p1", repackagedCode))
+
         @list.map { l =>
             @govukSummaryList(l)
         }
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.confirmAndContinue"))
         )
         @returnToTaskList()
     }

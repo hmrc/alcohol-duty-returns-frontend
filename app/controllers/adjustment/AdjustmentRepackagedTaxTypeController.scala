@@ -27,7 +27,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.NonDraughtTaxTypeSummaryListHelper
+import viewmodels.checkAnswers.adjustment.RepackagedTaxTypeSummaryListHelper
 import views.html.adjustment.AdjustmentRepackagedTaxTypeView
 
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
   formProvider: AdjustmentRepackagedTaxTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentRepackagedTaxTypeView,
-  checkYourAnswersSummaryListHelper: NonDraughtTaxTypeSummaryListHelper
+  checkYourAnswersSummaryListHelper: RepackagedTaxTypeSummaryListHelper
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
@@ -68,12 +68,13 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
               _
             )
           ) =>
-        val summaryList = checkYourAnswersSummaryListHelper.nonDraughtTaxTypeSummaryList(rateBand, repackagedRateBand)
+        val summaryList = checkYourAnswersSummaryListHelper.repackagedTaxTypeSummaryList(rateBand, repackagedRateBand)
         Ok(
           view(
             form,
             mode,
             adjustmentType,
+            repackagedRateBand.taxTypeCode,
             Some(summaryList)
           )
         )

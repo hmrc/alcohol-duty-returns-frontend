@@ -26,7 +26,7 @@ import viewmodels.implicits._
 class DraughtTaxTypeCodeSummary {
   def row(rateBand: RateBand)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersNonDraughtTaxType.foo.key",
+      key = "adjustmentRepackagedTaxType.summary.key1",
       value = ValueViewModel(
         HtmlContent(rateBand.taxTypeCode)
       ),
@@ -35,7 +35,7 @@ class DraughtTaxTypeCodeSummary {
           "site.change",
           controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkYourAnswersNonDraughtTaxType.foo.key.hidden"))
+          .withVisuallyHiddenText(messages("adjustmentRepackagedTaxType.summary.key1.hidden"))
       )
     )
 }

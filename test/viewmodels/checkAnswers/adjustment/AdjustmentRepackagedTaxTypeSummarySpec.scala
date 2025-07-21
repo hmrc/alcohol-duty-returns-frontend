@@ -34,7 +34,7 @@ class AdjustmentRepackagedTaxTypeSummarySpec extends SpecBase {
             Actions(items =
               List(
                 ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/change/repackaged/new-tax-type-code",
+                  "/manage-alcohol-duty/complete-return/adjustments/change/repackaged/confirm-tax-type-code",
                   Text("Change"),
                   Some("new tax type")
                 )

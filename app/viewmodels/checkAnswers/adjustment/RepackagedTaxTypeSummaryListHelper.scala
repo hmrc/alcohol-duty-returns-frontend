@@ -23,13 +23,13 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class NonDraughtTaxTypeSummaryListHelper @Inject() (
+class RepackagedTaxTypeSummaryListHelper @Inject() (
   draughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary,
   nonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary,
   nonDraughtTaxTypeCodeDescSummary: NonDraughtTaxTypeCodeDescSummary
 ) {
 
-  def nonDraughtTaxTypeSummaryList(rateBand: RateBand, repackagedRateBand: RateBand)(implicit
+  def repackagedTaxTypeSummaryList(rateBand: RateBand, repackagedRateBand: RateBand)(implicit
     message: Messages
   ): SummaryList = {
 

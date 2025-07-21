@@ -26,7 +26,7 @@ import viewmodels.implicits._
 class NonDraughtTaxTypeCodeSummary {
   def row(repackagedRateBand: RateBand)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersNonDraughtTaxType.bar.key",
+      key = "adjustmentRepackagedTaxType.summary.key2",
       value = ValueViewModel(
         HtmlContent(repackagedRateBand.taxTypeCode)
       ),
