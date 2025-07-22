@@ -469,9 +469,9 @@ howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys a
 
 howMuchDoYouNeedToDeclare.core.heading.regime.beer = Faint o gwrw (cyfradd safonol) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.core.heading.regime.cider = Faint o seidr nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
-howMuchDoYouNeedToDeclare.core.heading.regime.wine = Faint o win nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
-howMuchDoYouNeedToDeclare.core.heading.regime.spirits = Faint o wirodydd nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?
-howMuchDoYouNeedToDeclare.core.heading.regime.otherfermentedproduct = Faint o gynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.wine = Faint o win (cyfradd safonol) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.spirits = Faint o wirodydd (cyfradd safonol) y mae angen i chi eu datgan?
+howMuchDoYouNeedToDeclare.core.heading.regime.otherfermentedproduct = Faint o gynhyrchion eplesedig eraill (cyfradd safonol) y mae angen i chi eu datgan?
 howMuchDoYouNeedToDeclare.draught.heading.regime.beer = Faint o gwrw o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.draught.heading.regime.cider = Faint o seidr o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.draught.heading.regime.wine = Faint o win o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
