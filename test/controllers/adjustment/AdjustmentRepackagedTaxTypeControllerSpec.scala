@@ -166,7 +166,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentVolumeController
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentVolumeWithSPRController
           .onPageLoad(NormalMode)
           .url
       }
