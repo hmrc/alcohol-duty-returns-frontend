@@ -61,7 +61,8 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
           logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
-          val categoriesByRateType = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
+          val categoriesByRateType =
+            CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime, useNoPackagingSuffix = true)
           val preparedForm         = request.userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
             case None        => form
             case Some(value) => form.fill(value.map(_.toVolumes))
@@ -79,7 +80,8 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
           logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
-          val howMuchDoYouNeedToDeclareHelper = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
+          val howMuchDoYouNeedToDeclareHelper =
+            CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime, useNoPackagingSuffix = true)
           formProvider(regime)
             .bindFromRequest()
             .fold(

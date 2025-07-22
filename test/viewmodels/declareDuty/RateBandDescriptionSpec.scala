@@ -27,6 +27,25 @@ class RateBandDescriptionSpec extends SpecBase {
   implicit val messages: Messages = getMessages(application)
 
   "RateBandDescription" - {
+    "must not show draught status for tax type codes that don't support packaging" in new SetUp {
+      val taxTypeCodesWithoutPackaging = Set("331", "341", "333", "343", "335", "345", "334", "344")
+
+      taxTypeCodesWithoutPackaging.foreach { taxTypeCode =>
+        val rateBand = singleIntervalRateBand(
+          lowerLimit = 3.5,
+          upperLimit = 8.4,
+          rateType = RateType.DraughtRelief,
+          alcoholRegime = AlcoholRegime.Beer,
+          alcoholType = AlcoholType.Beer
+        ).copy(taxTypeCode = taxTypeCode)
+
+        val result = RateBandDescription.toDescription(rateBand, None)
+        withClue(s"For tax type code $taxTypeCode: ") {
+          result must not include "draught"
+        }
+      }
+    }
+
     Seq(true, false).foreach { showDraughtStatus =>
       s"when ${if (showDraughtStatus) {
         "showing"
