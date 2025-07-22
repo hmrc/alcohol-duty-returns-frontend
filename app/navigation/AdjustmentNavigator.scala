@@ -179,19 +179,6 @@ class AdjustmentNavigator @Inject() () {
     }
   }
 
-//  private def adjustmentVolumePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
-//    val adjustmentTypeOpt = for {
-//      adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
-//      adjustmentType <- adjustment.adjustmentType
-//    } yield adjustmentType
-//    adjustmentTypeOpt match {
-//      case Some(RepackagedDraughtProducts) =>
-//        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-//      case _                               =>
-//        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-//    }
-//  }
-
   private def repackagedTaxTypeRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val adjustmentTypeOpt = for {
       adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)

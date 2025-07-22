@@ -180,7 +180,6 @@ class AdjustmentVolumeWithSPRController @Inject() (
         (
           adjustmentEntry.copy(
             duty = None,
-            repackagedRateBand = None,
             repackagedDuty = None,
             repackagedSprDutyRate = None,
             newDuty = None
