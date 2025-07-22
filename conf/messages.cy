@@ -992,12 +992,10 @@ adjustmentDutyDue.bulletList.1 = gwnaethoch ddatgan {0} litr o alcohol pur (LPA)
 adjustmentDutyDue.bulletList.2 = y gyfradd doll yw {0} fesul litr o alcohol pur
 adjustmentDutyDue.bulletList.3 = y doll yw {0} (y gyfradd doll wedi’i lluosi â’r litrau o alcohol pur)
 adjustmentDutyDue.duty.checkYourAnswersLabel = Gwerth y doll
-adjustmentDutyDue.repackaged.bulletList.1 = y gyfradd doll is oedd {0} fesul litr o alcohol pur
-adjustmentDutyDue.repackaged.bulletList.2 = yn wreiddiol gwnaethoch chi dalu {0}
-adjustmentDutyDue.repackaged.bulletList.3 = nid yw cynhyrchion o’r gasgen wedi’u hailbecynnu yn gymwys ar gyfer cyfraddau is
-adjustmentDutyDue.repackaged.bulletList.4 = y gyfradd doll safonol yw {0} fesul litr o alcohol pur
-adjustmentDutyDue.repackaged.bulletList.5 = gwerth newydd y doll ar y gyfradd doll safonol yw {0}
-adjustmentDutyDue.repackaged.bulletList.6 = y doll i’w thalu yw {0}: hynny yw, gwerth newydd y doll llai hen werth y doll
+adjustmentDutyDue.repackaged.bulletList.1 = Yn wreiddiol, gwnaethoch chi dalu {0} gan ddefnyddio’r gyfradd is ar gyfer cynnyrch o’r gasgen.
+adjustmentDutyDue.repackaged.bulletList.2 = Rydych wedi datgan bod {0} o litrau o alcohol pur wedi’u hailbecynnu felly nid ydynt yn gymwys ar gyfer y gyfradd is mwyach.
+adjustmentDutyDue.repackaged.bulletList.3 = Cod newydd y math o dreth ar gyfer cynnyrch nad yw’n dod o’r gasgen yw {0}, sydd â chyfradd doll o {1} y litr o alcohol pur, felly gwerth newydd y doll yw {2}.
+adjustmentDutyDue.repackaged.bulletList.4 = Mae {0} (toll newydd)  llai {1} (toll wreiddiol) yn golygu y bydd arnoch {2}.
 
 checkYourAnswers.subHeading = Manylion yr addasiad
 

@@ -41,7 +41,7 @@ class repackagedTaxTypeSummaryListHelperSpec extends SpecBase {
       repackagedRateBand = fullRepackageAdjustmentEntry.repackagedRateBand
     )
 
-    val application: Application = applicationBuilder(userAnswers = None).build()
+    val application: Application    = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
 
     val row1: SummaryListRow = SummaryListRow(
@@ -52,8 +52,8 @@ class repackagedTaxTypeSummaryListHelperSpec extends SpecBase {
     val row2: SummaryListRow = SummaryListRow(key = Key(Text("Row2Key")), value = Value(Text("Row2Value")))
     val row3: SummaryListRow = SummaryListRow(key = Key(Text("Row3Key")), value = Value(Text("Row3Value")))
 
-    val mockDraughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary = mock[DraughtTaxTypeCodeSummary]
-    val mockNonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary = mock[NonDraughtTaxTypeCodeSummary]
+    val mockDraughtTaxTypeCodeSummary: DraughtTaxTypeCodeSummary               = mock[DraughtTaxTypeCodeSummary]
+    val mockNonDraughtTaxTypeCodeSummary: NonDraughtTaxTypeCodeSummary         = mock[NonDraughtTaxTypeCodeSummary]
     val mockNonDraughtTaxTypeCodeDescSummary: NonDraughtTaxTypeCodeDescSummary = mock[NonDraughtTaxTypeCodeDescSummary]
 
     when(mockDraughtTaxTypeCodeSummary.row(adjustmentEntry.rateBand.get)).thenReturn(row1)

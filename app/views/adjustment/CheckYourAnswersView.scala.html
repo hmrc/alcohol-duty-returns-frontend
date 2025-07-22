@@ -16,6 +16,7 @@
 
 @import config.Constants.Css
 @import components.{Caption, PageHeading, ReturnToTaskList, SubHeading}
+@import models.adjustment.AdjustmentType
 
 @this(
     layout: templates.Layout,
@@ -28,14 +29,14 @@
     returnToTaskList: ReturnToTaskList
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
      @formHelper(action = controllers.adjustment.routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
 
          @caption(
-             id = "check-your-answers-section",
-             text = messages("section.adjustment.checkAnswers"),
+             id = "adjustment-duty-due-section",
+             text = messages(s"section.adjustment.$adjustmentType"),
          )
 
          @pageHeading(messages("checkYourAnswers.heading"))

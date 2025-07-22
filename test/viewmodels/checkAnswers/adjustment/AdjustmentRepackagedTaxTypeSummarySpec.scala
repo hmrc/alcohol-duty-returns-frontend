@@ -27,7 +27,7 @@ class AdjustmentRepackagedTaxTypeSummarySpec extends SpecBase {
     "must return a row if the period and adjustment type can be fetched" in new SetUp(true) {
       adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
-          Key(Text("New tax type")),
+          Key(Text("Non-draught tax type code")),
           Value(Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")),
           "",
           Some(
@@ -36,7 +36,7 @@ class AdjustmentRepackagedTaxTypeSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/change/repackaged/confirm-tax-type-code",
                   Text("Change"),
-                  Some("new tax type")
+                  Some("non-draught tax type code")
                 )
               )
             )

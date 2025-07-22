@@ -55,7 +55,11 @@ class CheckYourAnswersController @Inject() (
                              checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
                            )
         _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList))
-      } yield Ok(view(summaryList))
+        adjustmentType   =
+          adjustmentEntry.adjustmentType.getOrElse(
+            throw new IllegalArgumentException("Could not get the adjustment type from the adjustment entry")
+          )
+      } yield Ok(view(summaryList, adjustmentType))
 
       result.getOrElse {
         logger.warn("Couldn't create the summaryList from user answers")

@@ -21,6 +21,7 @@ import connectors.UserAnswersConnector
 import generators.ModelGenerators
 import models.adjustment.AdjustmentEntry
 import models.UserAnswers
+import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.adjustment._
@@ -316,7 +317,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   class SetUp {
     val index = 0
 
-    val adjustmentEntry = AdjustmentEntry()
+    val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(RepackagedDraughtProducts))
     val summaryList     = SummaryList()
 
     val completedAdjustmentEntry = fullRepackageAdjustmentEntry.copy(index = None)
@@ -334,7 +335,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     val content = Html("blah")
 
-    when(mockView.apply(any())(any(), any())).thenReturn(content)
+    when(mockView.apply(any(), any())(any(), any())).thenReturn(content)
 
     val mockUserAnswersConnector = mock[UserAnswersConnector]
   }

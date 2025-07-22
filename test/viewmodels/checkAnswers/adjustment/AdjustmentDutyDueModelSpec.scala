@@ -69,7 +69,8 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
         pureAlcoholVolume,
         rate,
         repackagedRate,
-        repackagedDuty
+        repackagedDuty,
+        Some("311")
       )
 
       dutyDueModel.dutyToShow mustBe newDuty
@@ -83,18 +84,30 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
         pureAlcoholVolume,
         rate,
         repackagedRate,
-        repackagedDuty
+        repackagedDuty,
+        Some("311")
       )
 
       dutyDueModel.dutyDueInfo mustBe
         Seq(
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate))),
-          Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(dutyDue))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.3")),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty)))
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(dutyDue))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.2", messages("site.4DP", pureAlcoholVolume))),
+          Text(
+            messages(
+              "adjustmentDutyDue.repackaged.bulletList.3",
+              "311",
+              Money.format(repackagedRate),
+              Money.format(repackagedDuty)
+            )
+          ),
+          Text(
+            messages(
+              "adjustmentDutyDue.repackaged.bulletList.4",
+              Money.format(repackagedDuty),
+              Money.format(dutyDue),
+              Money.format(newDuty)
+            )
+          )
         )
     }
 

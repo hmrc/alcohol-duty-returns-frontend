@@ -75,7 +75,8 @@ class AdjustmentDutyDueController @Inject() (
           pureAlcoholVolume,
           rate,
           repackagedRate,
-          repackagedDuty
+          repackagedDuty,
+          adjustmentEntry.rateBand.flatMap(x => x.repackagedTaxTypeCode)
         ),
         adjustmentType
       )

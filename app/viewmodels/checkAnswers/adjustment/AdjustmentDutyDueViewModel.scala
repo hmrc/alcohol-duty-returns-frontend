@@ -36,7 +36,8 @@ class AdjustmentDutyDueViewModelCreator {
     pureAlcoholVolume: BigDecimal,
     rate: BigDecimal,
     repackagedRate: BigDecimal,
-    repackagedDuty: BigDecimal
+    repackagedDuty: BigDecimal,
+    repackagedTaxTypeCode: Option[String] = None
   )(implicit messages: Messages): AdjustmentDutyDueViewModel =
     AdjustmentDutyDueViewModel(
       adjustmentType,
@@ -46,13 +47,26 @@ class AdjustmentDutyDueViewModelCreator {
       },
       dutyDueInfo = if (adjustmentType == RepackagedDraughtProducts) {
         Seq(
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate))),
-          Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(duty))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.3")),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty)))
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(duty))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.2", messages("site.4DP", pureAlcoholVolume))),
+          Text(
+            messages(
+              "adjustmentDutyDue.repackaged.bulletList.3",
+              repackagedTaxTypeCode.getOrElse(
+                throw new IllegalArgumentException("Could not locate repackaged tax code type")
+              ),
+              Money.format(repackagedRate),
+              Money.format(repackagedDuty)
+            )
+          ),
+          Text(
+            messages(
+              "adjustmentDutyDue.repackaged.bulletList.4",
+              Money.format(repackagedDuty),
+              Money.format(duty),
+              Money.format(newDuty)
+            )
+          )
         )
       } else {
         Seq(
