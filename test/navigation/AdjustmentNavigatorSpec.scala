@@ -214,7 +214,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
-      "must go from the Adjustment Volume With SPR Page if adjustmentType is RepackagedDraughtProducts to the Adjustment Duty Due page" in {
+      "must go from the Adjustment Volume With SPR Page if adjustmentType is RepackagedDraughtProducts to the new SPR duty rate page" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentVolumeWithSPRPage,
           NormalMode,
@@ -226,10 +226,10 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value,
           Some(true)
-        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       }
 
-      "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtAndSmallProducerRelief" in {
+      "must go from the Repackaged Tax Type page to the Adjustment Volume With SPR page if RateType is DraughtAndSmallProducerRelief" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentRepackagedTaxTypePage,
           NormalMode,
@@ -241,10 +241,10 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value,
           Some(true)
-        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
-      "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is SmallProducerRelief" in {
+      "must go from the Repackaged Tax Type page to the Adjustment Volume With SPR page if RateType is SmallProducerRelief" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentRepackagedTaxTypePage,
           NormalMode,
@@ -256,10 +256,10 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value,
           Some(true)
-        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
-      "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtRelief" in {
+      "must go from the Repackaged Tax Type page to the Adjustment Volume page if RateType is Non SPR" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentRepackagedTaxTypePage,
           NormalMode,
@@ -271,7 +271,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value,
           Some(true)
-        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
 
       "must go from the Small Producer Relief Duty Rate page to the Duty Due page" in {
@@ -624,7 +624,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
 
-    "must go from the Adjustment Volume With SPR page if adjustmentType is RepackagedDraughtProducts to the Adjustment Duty Due page if answer has changed" in {
+    "must go from the Adjustment Volume With SPR page if adjustmentType is RepackagedDraughtProducts to the new SPR duty rate page if answer has changed" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentVolumeWithSPRPage,
         CheckMode,
@@ -636,7 +636,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           .success
           .value,
         Some(true)
-      ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode)
     }
 
     "must go from the Adjustment Volume With SPR page if adjustmentType is Spoilt to the Adjustment Duty Due page if answer has changed" in {
@@ -669,7 +669,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtAndSmallProducerRelief if answer has changed" in {
+    "must go from the Repackaged Tax Type page to the Adjustment Volume With SPR page if RateType is DraughtAndSmallProducerRelief if answer has changed" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentRepackagedTaxTypePage,
         CheckMode,
@@ -681,10 +681,10 @@ class AdjustmentNavigatorSpec extends SpecBase {
           .success
           .value,
         Some(true)
-      ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode)
+      ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode)
     }
 
-    "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtAndSmallProducerRelief if answer is the same" in {
+    "must go from the Repackaged Tax Type page to the Check Your Answers page if RateType is DraughtAndSmallProducerRelief if answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentRepackagedTaxTypePage,
         CheckMode,
@@ -699,7 +699,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
-    "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtRelief if answer has changed" in {
+    "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is Non SPR if answer has changed" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentRepackagedTaxTypePage,
         CheckMode,
@@ -711,7 +711,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           .success
           .value,
         Some(true)
-      ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(CheckMode)
     }
 
     "must go from the Repackaged Tax Type page to the Adjustment Small Producer Relief Duty Rate page if RateType is DraughtRelief if answer is the same" in {

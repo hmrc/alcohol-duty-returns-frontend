@@ -41,8 +41,7 @@ class AdjustmentNavigator @Inject() () {
       _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-    case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
-      _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+    case pages.adjustment.AdjustmentVolumeWithSPRPage               => userAnswers => adjustmentVolumeSprPageRoute(userAnswers)
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
@@ -96,7 +95,7 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
-      userAnswers =>
+      _ =>
         hasChanged =>
           if (hasChanged) {
             controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
@@ -107,7 +106,7 @@ class AdjustmentNavigator @Inject() () {
       userAnswers =>
         hasChanged =>
           if (hasChanged) {
-            controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+            adjustmentVolumeSprPageRoute(userAnswers, CheckMode)
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
           }
@@ -227,6 +226,20 @@ class AdjustmentNavigator @Inject() () {
           .onPageLoad(mode)
       case _                                                    =>
         controllers.adjustment.routes.AdjustmentReturnPeriodController.onPageLoad(mode)
+    }
+  }
+
+  private def adjustmentVolumeSprPageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
+    val adjustmentTypeOpt = for {
+      adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+      adjustmentType <- adjustment.adjustmentType
+    } yield adjustmentType
+
+    adjustmentTypeOpt match {
+      case Some(RepackagedDraughtProducts) =>
+        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode)
+      case _                               =>
+        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
 }
