@@ -34,8 +34,28 @@
         returnToTaskList: ReturnToTaskList
 )
 
-
 @(form: Form[_], adjustmentTable: TableViewModel, paginationViewModel: PaginationViewModel)(implicit request: Request[_], messages: Messages)
+
+@captionText = @{
+    if (adjustmentTable.rows.size == 1) {
+        adjustmentTable.rows.headOption.flatMap { row =>
+            row.cells.headOption.flatMap(_.content match {
+                case Text(text) =>
+                    text match {
+                        case s if s.contains("Under-declared") => Some("section.adjustment.under-declaration ")
+                        case s if s.contains("Over-declared") => Some("section.adjustment.over-declaration")
+                        case s if s.contains("Spoilt") => Some("section.adjustment.spoilt")
+                        case s if s.contains("Repackaged") => Some("section.adjustment.repackaged-draught-products")
+                        case s if s.contains("Drawback") => Some("section.adjustment.drawback")
+                        case _ => None
+                    }
+                case _ => None
+            })
+        }.getOrElse("section.alcoholDutyReturn")
+    } else {
+        "section.alcoholDutyReturn"
+    }
+}
 
 @layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false, fullWidth = true) {
 
@@ -47,7 +67,7 @@
 
         @caption(
             id = "adjustment-list-section",
-            text = messages("section.alcoholDutyReturn"),
+            text = messages(captionText),
         )
 
         @pageHeading(messages("adjustmentList.heading"))

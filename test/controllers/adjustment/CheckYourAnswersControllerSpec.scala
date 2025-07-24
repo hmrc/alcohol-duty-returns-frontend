@@ -334,7 +334,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     val content = Html("blah")
 
-    when(mockView.apply(any())(any(), any())).thenReturn(content)
+    when(mockView.apply(any(), any(), any())(any(), any())).thenReturn(content)
 
     val mockUserAnswersConnector = mock[UserAnswersConnector]
   }

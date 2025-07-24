@@ -16,6 +16,12 @@
 
 @import config.Constants.Css
 @import components.{Caption, PageHeading, ReturnToTaskList, SubHeading}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow, Key, Value, ActionItem, Actions}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukSummaryList
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+@import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 
 @this(
     layout: templates.Layout,
@@ -28,7 +34,7 @@
     returnToTaskList: ReturnToTaskList
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, rate: Option[BigDecimal], adjustmentEntry: models.adjustment.AdjustmentEntry)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
      @formHelper(action = controllers.adjustment.routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
@@ -42,7 +48,18 @@
 
          @subHeading(messages("checkYourAnswers.subHeading"), Css.headingLCssClass)
 
-         @govukSummaryList(list)
+        @if(!adjustmentEntry.adjustmentType.contains(RepackagedDraughtProducts)) {
+            @govukSummaryList(list.copy(rows = list.rows :+ SummaryListRow(
+                key = Key(content = Text(messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"))),
+                value = Value(content = HtmlContent(rate match {
+                case Some(r) => f"£$r%,.2f"
+                case None => messages("site.notProvided")
+            })),
+                actions = None
+            )))
+            } else {
+                @govukSummaryList(list)
+            }
 
          @govukButton(
              ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))

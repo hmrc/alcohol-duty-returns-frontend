@@ -55,7 +55,10 @@ class CheckYourAnswersController @Inject() (
                              checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
                            )
         _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList))
-      } yield Ok(view(summaryList))
+      } yield {
+        val dutyRate = adjustmentEntry.rate
+        Ok(view(summaryList, dutyRate, adjustmentEntry))
+      }
 
       result.getOrElse {
         logger.warn("Couldn't create the summaryList from user answers")
