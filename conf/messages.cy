@@ -8,7 +8,7 @@ site.yes = Iawn
 site.continue = Parhau
 site.saveAndContinue = Cadw a pharhau
 site.confirmAndContinue = Cadarnhau a pharhau
-site.saveAndReturn = Cadw a mynd yn ôl i’ch cyfrif treth busnes
+site.saveAndReturn = Cadw a dychwelyd yn nes ymlaen
 site.agreeAndSubmit = Cytuno ac anfon y Datganiad
 site.payNow = Talu nawr
 site.claimRefund = Hawlio ad-daliad
@@ -210,14 +210,14 @@ viewPastPayments.historic.paragraph = Mae ‘Taliadau wedi’u clirio’ yn goly
 viewPastPayments.visually-hidden.pay-now = swm o £{0} sy’n ddyledus ar {1}
 viewPastPayments.visually-hidden.claim-refund = o £{0}
 
-taskList.title = Cwblhau’ch Datganiad Toll Alcohol
+taskList.title = Cwblhau’ch datganiad Toll Alcohol
 taskList.period = Dyma’ch Datganiad Toll Alcohol ar gyfer y cyfnod {0} i {1}.
 taskList.completion.date = Cwblhewch yr holl dasgau ac anfonwch y Datganiad hwn ar neu cyn {0}.
 taskList.expiry.date = Byddwn yn cadw’ch atebion tan {0}.
 taskList.section.status.completed = Wedi cwblhau
 taskList.section.status.notStarted = Heb ddechrau eto
 taskList.section.status.inProgress = Ar y gweill
-taskList.section.status.cannotStart = Methu dechrau
+taskList.section.status.cannotStart = Methu dechrau ar hyn o bryd
 
 taskList.section.returns.heading = Datgan cynhyrchion alcoholaidd at ddiben toll
 taskList.section.returns.needToDeclare = Rhoi gwybod i ni a oes gennych gynhyrchion alcoholaidd i’w datgan
@@ -233,6 +233,7 @@ taskList.section.adjustment.needToDeclare = Rhoi gwybod i ni a oes gennych addas
 taskList.section.adjustment = Datgan addasiadau
 taskList.section.adjustment.under-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu tanddatgan
 taskList.section.adjustment.over-declaration = Rhoi gwybod i ni pam y cafodd cynhyrchion eu gorddatgan
+taskList.section.adjustment.hint = Gallwch addasu cynhyrchion alcoholaidd a ddatganwyd a allai bellach fod wedi’u difetha, eu hailbecynnu, eu gorddatgan, eu tanddatgan neu eu hallforio, ac sy’n gymwys i chi hawlio ad-daliad arnynt.
 
 taskList.section.dutySuspended.heading = Rhoi gwybod am ddosbarthiadau o alcohol o dan ohiriad tollau
 taskList.section.dutySuspended.needToDeclare = Rhoi gwybod i ni a ydych wedi dosbarthu neu dderbyn cynhyrchion gorffenedig o dan ohiriad tollau
@@ -275,8 +276,9 @@ alcoholType.title = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu dat
 alcoholType.heading = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan?
 alcoholType.error.required = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan
 alcoholType.p1 = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan yn y Datganiad hwn.
-alcoholType.p2 = Bydd eich Datganiad yn dangos gwerthoedd ‘dim’ ar gyfer y mathau nad ydych yn eu dewis.
+alcoholType.p2 = Bydd cynhyrchion alcoholaidd nad ydych yn eu dewis yn cael eu nodi fel ‘dim’ yn y datganiad hwn.
 alcoholType.hint = Dewiswch bob un sy’n berthnasol
+alcoholType.link.text = Cysylltu â CThEF os na allwch weld y cynhyrchion alcoholaidd y mae gennych gymeradwyaeth ar eu cyfer (yn agor tab newydd)
 
 return.journey.error.lessThanExpected = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
 
@@ -398,6 +400,19 @@ declareAlcoholDutyQuestion.cider.p2.l2 = seidr pefriog rhwng 5.6% ac 8.4%
 declareAlcoholDutyQuestion.h4 = A oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd?
 declareAlcoholDutyQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd
 
+declaringWineDuty.title = Datgan eich gwin am doll
+declaringWineDuty.heading = Datgan eich gwin am doll
+declaringWineDuty.p1 = Mae angen i ni wybod faint o win rydych chi wedi’i gynhyrchu a’r litrau o alcohol pur y mae’n ei gynnwys yn seiliedig ar ei fand alcohol yn ôl cyfaint (ABV).
+declaringWineDuty.subHeading1 = Mae’n rhaid i chi ddatgan eich cynhyrchion gwin yn ôl eu cryfder ABV
+declaringWineDuty.alcoholicStrength.link = Dysgwch ragor am yr hyn y mae cryfder alcoholaidd yn ei olygu wrth ddatgan eich toll (yn agor tab newydd)
+declaringWineDuty.p2 = Mae’n rhaid i chi nawr ddatgan eich gwin o dan un o’r bandiau ABV:
+declaringWineDuty.subHeading2 = Cyfrifo’ch litrau o alcohol pur
+declaringWineDuty.p3 = I gyfrifo’r litrau o alcohol pur, lluoswch y cyfanswm o win mewn litrau â chryfder yr ABV, yna rhannwch â 100.
+declaringWineDuty.details.summary = Enghraifft o gyfrifiad
+declaringWineDuty.details.p = Mae gennych 4,297.55 litr o win ar 13.5% ABV. I gyfrifo’r litrau o alcohol pur yn y gwin hwn, mae’n rhaid i chi wneud y canlynol:
+declaringWineDuty.details.calculation1 = 4,297.55 litr x 13.5% ABV = 58,016.925
+declaringWineDuty.details.calculation2 = 58,016.925 ÷ 100 = 580.1692 litr o alcohol pur
+
 whatDoYouNeedToDeclare.title = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.heading = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.hint = Dewiswch bob un sy’n berthnasol
@@ -406,6 +421,12 @@ whatDoYouNeedToDeclare.error.required.Cider = Dewiswch y seidr y mae angen i chi
 whatDoYouNeedToDeclare.error.required.Wine = Dewiswch y gwin y mae angen i chi ei ddatgan
 whatDoYouNeedToDeclare.error.required.Spirits = Dewiswch y gwirodydd y mae angen i chi eu datgan
 whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Dewiswch y cynhyrchion eplesedig eraill y mae angen i chi eu datgan
+
+whatDoYouNeedToDeclare.details.link.title = Nid yw’r cod sydd ei angen arnaf ar gyfer y math o dreth yn ymddangos ar y rhestr
+whatDoYouNeedToDeclare.details.link.heading = Gallwch wneud y canlynol:
+whatDoYouNeedToDeclare.details.link.p1 = gwirio pa fath o godau treth y dylech fod yn eu defnyddio (yn agor tab newydd)
+whatDoYouNeedToDeclare.details.link.p2 = cysylltu â CThEF os na allwch weld y cynhyrchion alcoholaidd y mae gennych gymeradwyaeth ar eu cyfer (yn agor tab newydd)
+whatDoYouNeedToDeclare.exciseHelp.url = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-customs-and-excise-and-duties-enquiries-for-welsh-speaking-customers
 
 whatDoYouNeedToDeclare.core.heading = {0} (cyfradd safonol)
 whatDoYouNeedToDeclare.draught.heading = {0} o’r gasgen (cyfradd is)
@@ -744,13 +765,13 @@ declareQuarterlySpirits.error.required = Dewiswch ‘Iawn’ os ydych chi wedi g
 
 declareSpiritsTotal.title = Beth yw cyfanswm yr holl wirodydd sydd wedi’u cymryd yn ystod y chwarter hwn?
 declareSpiritsTotal.heading = Beth yw cyfanswm yr holl wirodydd sydd wedi’u cymryd yn ystod y chwarter hwn?
-declareSpiritsTotal.subheading1 = Ynglŷn â ffeintiau
-declareSpiritsTotal.p1 = Ffeintiau yw’r ‘blaensiotiau’ (neu ‘pennau’) a’r ‘ffeintiau’ (neu ‘cynffonnau’) sy’n cael eu rhoi i mewn i dderbynnydd ffeintiau.
-declareSpiritsTotal.guidance.link.text = Darllenwch y Llawlyfr Cynhyrchu Gwirodydd am ragor o wybodaeth (yn agor ffenestr newydd)
-declareSpiritsTotal.subheading2 = Cyfanswm cyfaint yr holl wirodydd sydd wedi’u cymryd
-declareSpiritsTotal.p2 = Wrth roi gwybod i ni am y gwirodydd rydych wedi’u cynhyrchu:
-declareSpiritsTotal.para2.list1 = dylech gynnwys ffeintiau sy’n weddill ar ddiwedd y cyfnod presennol
-declareSpiritsTotal.para2.list2 = peidiwch â chynnwys ffeintiau sy’n weddill ar ddiwedd y cyfnod blaenorol
+declareSpiritsTotal.p1 = Wrth roi gwybod i ni am y gwirodydd rydych wedi’u cynhyrchu:
+declareSpiritsTotal.p1.list1 = dylech gynnwys ffeintiau sy’n weddill ar ddiwedd y cyfnod presennol
+declareSpiritsTotal.p1.list2 = peidiwch â chynnwys ffeintiau sy’n weddill ar ddiwedd y cyfnod blaenorol
+declareSpiritsTotal.details.summary = Dysgwch ragor am ffeintiau
+declareSpiritsTotal.details.p = Ffeintiau yw’r ‘blaensiotiau’ (neu ‘pennau’) a’r ‘ffeintiau’ (neu ‘cynffonnau’) sy’n cael eu rhoi i mewn i dderbynnydd ffeintiau.
+declareSpiritsTotal.guidance.link.text = Darllenwch y Llawlyfr Cynhyrchu Gwirodydd am ragor o wybodaeth (yn agor tab newydd)
+declareSpiritsTotal.subheading = Cyfanswm cyfaint yr holl wirodydd sydd wedi’u cymryd
 declareSpiritsTotal.checkYourAnswersLabel = Cyfanswm yr holl wirodydd
 declareSpiritsTotal.error.nonNumeric = Mae’n rhaid i gyfanswm cyfaint y gwirodydd fod yn rhif
 declareSpiritsTotal.error.required = Nodwch gyfanswm cyfaint y gwirodydd sydd wedi’u cymryd, mewn litrau o alcohol pur

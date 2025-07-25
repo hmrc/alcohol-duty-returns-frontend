@@ -18,13 +18,15 @@ package controllers.declareDuty
 
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
+import models.ErrorModel
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.declareDuty.DutyCalculationHelper
+import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, DutyCalculationHelper}
 import views.html.declareDuty.DutyCalculationView
 
 import scala.concurrent.Future
@@ -69,14 +71,16 @@ class DutyCalculationControllerSpec extends SpecBase {
   "DutyCalculation Controller" - {
 
     "must return OK and the correct view for a GET if No is selected for add Multiple SPR option" in {
+      val mockCheckYourAnswersHelper = mock[CheckYourAnswersSummaryListHelper]
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+      when(mockCheckYourAnswersHelper.checkDeclarationDetailsArePresent(any(), any())) thenReturn Right(rateBands)
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersHelper),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -99,20 +103,24 @@ class DutyCalculationControllerSpec extends SpecBase {
           request,
           getMessages(application)
         ).toString
+
+        verify(mockCheckYourAnswersHelper, times(1)).checkDeclarationDetailsArePresent(eqTo(regime), eqTo(userAnswers))
       }
     }
 
     "must return OK and the correct view for a GET if Yes is selected for add Multiple SPR option" in {
+      val updatedUserAnswers = userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
 
-      val updatedUserAnswer = userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
+      val mockCheckYourAnswersHelper = mock[CheckYourAnswersSummaryListHelper]
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+      when(mockCheckYourAnswersHelper.checkDeclarationDetailsArePresent(any(), any())) thenReturn Right(rateBands)
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application = applicationBuilder(userAnswers = Some(updatedUserAnswer))
+      val application = applicationBuilder(userAnswers = Some(updatedUserAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersHelper),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -126,7 +134,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val tableViewModel =
           DutyCalculationHelper
-            .dutyDueTableViewModel(alcoholDuty, updatedUserAnswer, regime)(getMessages(application))
+            .dutyDueTableViewModel(alcoholDuty, updatedUserAnswers, regime)(getMessages(application))
             .toOption
             .get
 
@@ -135,18 +143,23 @@ class DutyCalculationControllerSpec extends SpecBase {
           request,
           getMessages(application)
         ).toString
+
+        verify(mockCheckYourAnswersHelper, times(1))
+          .checkDeclarationDetailsArePresent(eqTo(regime), eqTo(updatedUserAnswers))
       }
     }
 
-    "must redirect in the Journey Recovery screen if the user answers are empty" in {
+    "must redirect to Journey Recovery for a GET if user answers do not exist" in {
+      val mockCheckYourAnswersHelper = mock[CheckYourAnswersSummaryListHelper]
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
+      when(mockCheckYourAnswersHelper.checkDeclarationDetailsArePresent(any(), any())) thenReturn Right(rateBands)
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersHelper),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -158,10 +171,40 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockCheckYourAnswersHelper, times(0)).checkDeclarationDetailsArePresent(any(), any())
       }
     }
 
-    "must redirect to the MultipleSPRList page if there is data for a POST" in {
+    "must redirect to Journey Recovery for a GET if the user answers do not contain required declaration details" in {
+      val mockCheckYourAnswersHelper = mock[CheckYourAnswersSummaryListHelper]
+      val mockUserAnswersConnector   = mock[UserAnswersConnector]
+
+      when(mockCheckYourAnswersHelper.checkDeclarationDetailsArePresent(any(), any())) thenReturn
+        Left(ErrorModel(BAD_REQUEST, "Error from helper"))
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersHelper),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.declareDuty.routes.DutyCalculationController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockCheckYourAnswersHelper, times(1)).checkDeclarationDetailsArePresent(eqTo(regime), eqTo(userAnswers))
+      }
+    }
+
+    "must redirect to the Task List for a POST if user answers contain duty data" in {
 
       val updatedUserAnswers = userAnswers.setByKey(DutyCalculationPage, regime, alcoholDuty).success.value
 
@@ -186,13 +229,36 @@ class DutyCalculationControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recover page if there is no data for a POST" in {
+    "must redirect to Journey Recovery for a POST if user answers do not contain duty data" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.declareDuty.routes.DutyCalculationController.onSubmit(regime).url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if user answers do not exist" in {
+
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)

@@ -217,14 +217,18 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
           }
 
-          s"the subtask for ${regime.entryName} must link to the what do you need to declare page for that regime" in {
+          s"the subtask for ${regime.entryName} must link to the first page of the journey for that regime" in {
             val maybeTask = result.taskList.items.find(
               _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
             )
 
-            maybeTask.get.href mustBe Some(
+            val firstPageWithinRegimeUrl = if (regime == Wine) {
+              controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad().url
+            } else {
               controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-            )
+            }
+
+            maybeTask.get.href mustBe Some(firstPageWithinRegimeUrl)
           }
         }
 
@@ -287,14 +291,18 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
             }
 
-            s"the sub task for ${regime.entryName} must link to the what do you need to declare page for that regime" in {
+            s"the sub task for ${regime.entryName} must link to the first page of the journey for that regime" in {
               val maybeTask = result.taskList.items.find(
                 _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
               )
 
-              maybeTask.get.href mustBe Some(
+              val firstPageWithinRegimeUrl = if (regime == Wine) {
+                controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad().url
+              } else {
                 controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-              )
+              }
+
+              maybeTask.get.href mustBe Some(firstPageWithinRegimeUrl)
             }
 
             "no hint must be displayed" in {
@@ -362,14 +370,18 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
             }
 
-            s"the sub task for ${regime.entryName} must link to the what do you need to declare page for that regime" in {
+            s"the sub task for ${regime.entryName} must link to the first page of the journey for that regime" in {
               val maybeTask = result.taskList.items.find(
                 _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
               )
 
-              maybeTask.get.href mustBe Some(
+              val firstPageWithinRegimeUrl = if (regime == Wine) {
+                controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad().url
+              } else {
                 controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-              )
+              }
+
+              maybeTask.get.href mustBe Some(firstPageWithinRegimeUrl)
             }
 
             "no hint must be displayed" in {
@@ -780,8 +792,13 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
       }
 
-      "no hint must be displayed" in {
-        result.taskList.items.head.hint.map(_.content) mustBe None
+      "hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe Some(
+          Text(
+            "You can adjust declared alcoholic products that may now be spoilt," +
+              " repackaged, over-declared, under-declared, or exported and eligible for you to claim drawback on."
+          )
+        )
       }
     }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, ReturnToTaskList, SubHeading, TableRowAction, TableRowActionList}
 @import config.Constants.{Css, Format}
 @import viewmodels.TableViewModel
 
@@ -27,8 +27,9 @@
         subHeading: SubHeading,
         pageHeading: PageHeading,
         govukTable: GovukTable,
-        tableRowActionList: components.TableRowActionList,
-        tableRowAction: components.TableRowAction
+        tableRowActionList: TableRowActionList,
+        tableRowAction: TableRowAction,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(regime: AlcoholRegime, dutyDueViewModel: TableViewModel, totalDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
@@ -67,5 +68,6 @@
     @govukButton(
       ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
     )
+    @returnToTaskList()
   }
 }

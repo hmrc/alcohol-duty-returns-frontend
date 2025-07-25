@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,27 @@
 
 package controllers.declareDuty
 
+import config.FrontendAppConfig
 import controllers.actions._
-import models.AlcoholRegime
-import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.declareDuty.CheckYourAnswersSummaryListHelper
-import views.html.declareDuty.CheckYourAnswersView
+import views.html.declareDuty.DeclaringWineDutyGuidanceView
 
 import javax.inject.Inject
 
-class CheckYourAnswersController @Inject() (
+class DeclaringWineDutyGuidanceController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  appConfig: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
-  checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper,
-  view: CheckYourAnswersView
+  view: DeclaringWineDutyGuidanceView
 ) extends FrontendBaseController
-    with I18nSupport
-    with Logging {
+    with I18nSupport {
 
-  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      checkYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
-        case Right(summaryList) => Ok(view(regime, summaryList))
-        case Left(error)        =>
-          val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
-          logger.warn(s"Error on declare duty CYA for appa id $appaId, period key $periodKey: ${error.message}")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Ok(view(appConfig.alcoholicStrengthGuidanceUrl))
   }
 }

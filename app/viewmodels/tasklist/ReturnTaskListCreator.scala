@@ -18,6 +18,7 @@ package viewmodels.tasklist
 
 import config.Constants
 import config.Constants.Css.marginBottom8CssClass
+import models.AlcoholRegime.Wine
 import models.TaskListSection.{AdjustmentSection, DutySuspendedSection, SpiritsSection}
 import models.adjustment.AdjustmentType
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, TaskListSection, UserAnswers}
@@ -49,7 +50,7 @@ class ReturnTaskListCreator @Inject() {
       case Some(_) =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))),
-          hint = addHints(section),
+          hint = if (section == AdjustmentSection) None else addHints(section),
           status = AlcoholDutyTaskListItemStatus.completed,
           href = Some(declarationController(CheckMode))
         )
@@ -80,11 +81,15 @@ class ReturnTaskListCreator @Inject() {
     messages: Messages
   ): Option[Hint] =
     section match {
-      case SpiritsSection =>
+      case SpiritsSection    =>
         Some(
           Hint(content = Text(messages(s"taskList.section.${section.name}.hint")))
         )
-      case _              => None
+      case AdjustmentSection =>
+        Some(
+          Hint(content = Text(messages(s"taskList.section.${section.name}.hint")))
+        )
+      case _                 => None
     }
 
   private def createDeclarationTask(
@@ -135,15 +140,21 @@ class ReturnTaskListCreator @Inject() {
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
               status = AlcoholDutyTaskListItemStatus.inProgress,
-              href =
+              href = if (regime == Wine) {
+                Some(controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad().url)
+              } else {
                 Some(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+              }
             )
           case _               =>
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
               status = AlcoholDutyTaskListItemStatus.notStarted,
-              href =
+              href = if (regime == Wine) {
+                Some(controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad().url)
+              } else {
                 Some(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+              }
             )
         }
       )
