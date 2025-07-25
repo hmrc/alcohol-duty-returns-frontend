@@ -22,6 +22,8 @@ sealed trait InputWidth
 
 object InputWidth {
 
+  case object Fixed3 extends WithCssClass(Css.inputWidth3CssClass) with InputWidth
+
   case object Fixed10 extends WithCssClass(Css.inputWidth10CssClass) with InputWidth
 
   case object TwoThirds extends WithCssClass(Css.twoThirdsCssClass) with InputWidth

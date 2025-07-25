@@ -151,6 +151,7 @@ object Constants {
     val paddingBottomCssClass = "govuk-body govuk-!-padding-bottom-3"
 
     val inputWidth2CssClass  = "govuk-input--width-2"
+    val inputWidth3CssClass  = "govuk-input--width-3"
     val inputWidth4CssClass  = "govuk-input--width-4"
     val inputWidth10CssClass = "govuk-input--width-10"
 

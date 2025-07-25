@@ -34,8 +34,7 @@
         returnToTaskList: ReturnToTaskList
 )
 
-
-@(form: Form[_], adjustmentTable: TableViewModel, paginationViewModel: PaginationViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], adjustmentTable: TableViewModel, paginationViewModel: PaginationViewModel, captionText: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false, fullWidth = true) {
 
@@ -47,7 +46,7 @@
 
         @caption(
             id = "adjustment-list-section",
-            text = messages("section.alcoholDutyReturn"),
+            text = messages(captionText)
         )
 
         @pageHeading(messages("adjustmentList.heading"))
