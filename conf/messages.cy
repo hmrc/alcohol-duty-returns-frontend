@@ -965,7 +965,7 @@ adjustmentVolume.change.hidden = cyfaint
 adjustmentVolume.totalLitresVolume.heading = Cyfanswm y litrau (i 2 le degol)
 adjustmentVolume.pureAlcoholVolume.heading = Litrau o alcohol pur (i 4 lle degol)
 adjustmentVolume.smallProducerReliefDutyRate.heading = Cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
-adjustmentVolume.pureAlcohol = o litrau o alcohol pur (LPA)
+adjustmentVolume.pureAlcohol = o litrau o alcohol pur
 adjustmentVolume.totalLitres = o litrau
 
 adjustmentRepackagedTaxType.title = Beth yw cod y math o dreth ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?

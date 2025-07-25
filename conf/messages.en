@@ -965,7 +965,7 @@ adjustmentVolume.change.hidden = volume
 adjustmentVolume.totalLitresVolume.heading = Total litres (to 2 decimal places)
 adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol (to 4 decimal places)
 adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
-adjustmentVolume.pureAlcohol = litres of pure alcohol (LPA)
+adjustmentVolume.pureAlcohol = litres of pure alcohol
 adjustmentVolume.totalLitres = litres
 
 adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?

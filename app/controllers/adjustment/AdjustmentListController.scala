@@ -29,7 +29,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.{AdjustmentListSummaryHelper, AdjustmentOverUnderDeclarationCalculationHelper}
 import play.api.Logging
-import viewmodels.{PaginatedViewModel, PaginationViewModel}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.{PaginatedViewModel, PaginationViewModel, TableViewModel}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,6 +53,28 @@ class AdjustmentListController @Inject() (
     with Logging {
 
   val form = formProvider()
+
+  private def getCaptionText(adjustmentTable: TableViewModel): String =
+    if (adjustmentTable.rows.size == 1) {
+      adjustmentTable.rows.headOption
+        .flatMap { row =>
+          row.cells.headOption.flatMap(_.content match {
+            case Text(text) =>
+              text match {
+                case s if s.contains("Under-declared") => Some("section.adjustment.under-declaration")
+                case s if s.contains("Over-declared")  => Some("section.adjustment.over-declaration")
+                case s if s.contains("Spoilt")         => Some("section.adjustment.spoilt")
+                case s if s.contains("Repackaged")     => Some("section.adjustment.repackaged-draught-products")
+                case s if s.contains("Drawback")       => Some("section.adjustment.drawback")
+                case _                                 => None
+              }
+            case _          => None
+          })
+        }
+        .getOrElse("section.alcoholDutyReturn")
+    } else {
+      "section.alcoholDutyReturn"
+    }
 
   def onPageLoad(pageNumber: Int = 1): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
@@ -80,7 +103,8 @@ class AdjustmentListController @Inject() (
                   paginatedViewModel.totalPages,
                   pageNumber,
                   controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
-                )
+                ),
+                getCaptionText(paginatedViewModel.tableViewModel)
               )
             )
           }
@@ -109,7 +133,8 @@ class AdjustmentListController @Inject() (
                     paginatedViewModel.totalPages,
                     pageNumber,
                     controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
-                  )
+                  ),
+                  getCaptionText(paginatedViewModel.tableViewModel)
                 )
               )
             ),
