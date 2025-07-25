@@ -18,9 +18,10 @@ package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Underdeclaration
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.all.SummaryListViewModel
 
@@ -31,7 +32,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     true
   ) {
     checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry) mustBe Some(
-      SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, row8))
+      SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, row8, dutyRateRow))
     )
   }
 
@@ -67,14 +68,18 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
 
-    val row1 = SummaryListRow(key = Key(Text("Row1Key")), value = Value(Text("Row1Value")))
-    val row2 = SummaryListRow(key = Key(Text("Row2Key")), value = Value(Text("Row2Value")))
-    val row3 = SummaryListRow(key = Key(Text("Row3Key")), value = Value(Text("Row3Value")))
-    val row4 = SummaryListRow(key = Key(Text("Row4Key")), value = Value(Text("Row4Value")))
-    val row5 = SummaryListRow(key = Key(Text("Row5Key")), value = Value(Text("Row5Value")))
-    val row6 = SummaryListRow(key = Key(Text("Row6Key")), value = Value(Text("Row6Value")))
-    val row7 = SummaryListRow(key = Key(Text("Row7Key")), value = Value(Text("Row7Value")))
-    val row8 = SummaryListRow(key = Key(Text("Row8Key")), value = Value(Text("Row8Value")))
+    val row1        = SummaryListRow(key = Key(Text("Row1Key")), value = Value(Text("Row1Value")))
+    val row2        = SummaryListRow(key = Key(Text("Row2Key")), value = Value(Text("Row2Value")))
+    val row3        = SummaryListRow(key = Key(Text("Row3Key")), value = Value(Text("Row3Value")))
+    val row4        = SummaryListRow(key = Key(Text("Row4Key")), value = Value(Text("Row4Value")))
+    val row5        = SummaryListRow(key = Key(Text("Row5Key")), value = Value(Text("Row5Value")))
+    val row6        = SummaryListRow(key = Key(Text("Row6Key")), value = Value(Text("Row6Value")))
+    val row7        = SummaryListRow(key = Key(Text("Row7Key")), value = Value(Text("Row7Value")))
+    val row8        = SummaryListRow(key = Key(Text("Row8Key")), value = Value(Text("Row8Value")))
+    val dutyRateRow = SummaryListRow(
+      key = Key(Text("Duty rate")),
+      value = Value(HtmlContent("£10.00"))
+    )
 
     val mockAdjustmentRepackagedTaxTypeSummary           = mock[AdjustmentRepackagedTaxTypeSummary]
     val mockAdjustmentSmallProducerReliefDutyRateSummary = mock[AdjustmentSmallProducerReliefDutyRateSummary]
@@ -85,7 +90,10 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     val mockAdjustmentVolumeSummary                      = mock[AdjustmentVolumeSummary]
     val mockAdjustmentDutyDueSummary                     = mock[AdjustmentDutyDueSummary]
 
-    val adjustmentEntry = AdjustmentEntry()
+    val adjustmentEntry = AdjustmentEntry(
+      adjustmentType = Some(Underdeclaration),
+      sprDutyRate = Some(BigDecimal("10.00"))
+    )
 
     when(mockAdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry)).thenReturn(Some(row1))
     when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry)).thenReturn(Some(row2))

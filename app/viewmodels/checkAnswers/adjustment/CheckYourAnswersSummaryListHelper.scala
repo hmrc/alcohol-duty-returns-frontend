@@ -16,9 +16,10 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
@@ -37,7 +38,6 @@ class CheckYourAnswersSummaryListHelper @Inject() (
   def currentAdjustmentEntrySummaryList(
     adjustmentEntry: AdjustmentEntry
   )(implicit messages: Messages): Option[SummaryList] = {
-
     val newTaxType        = adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry).toList
     val sprDutyRate       = adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry).toList
     val returnPeriod      = adjustmentReturnPeriodSummary.row(adjustmentEntry).toList
@@ -48,8 +48,8 @@ class CheckYourAnswersSummaryListHelper @Inject() (
       adjustmentType <- adjustmentTypeSummary.row(adjustmentEntry)
       volume         <- adjustmentVolumeSummary.row(adjustmentEntry)
       duty           <- adjustmentDutyDueSummary.row(adjustmentEntry)
-    } yield SummaryListViewModel(
-      rows = Seq(adjustmentType) ++
+    } yield {
+      val baseRows = Seq(adjustmentType) ++
         spoiltAlcoholType ++
         returnPeriod ++
         taxType ++
@@ -57,6 +57,26 @@ class CheckYourAnswersSummaryListHelper @Inject() (
         sprDutyRate ++
         Seq(volume) ++
         Seq(duty)
-    )
+
+      val rowsWithDutyRate = adjustmentEntry.adjustmentType match {
+        case Some(AdjustmentType.RepackagedDraughtProducts) => baseRows
+        case _                                              =>
+          baseRows :+ SummaryListRow(
+            key = Key(content = Text(messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"))),
+            value = Value(content =
+              HtmlContent(
+                adjustmentEntry.rate
+                  .getOrElse(
+                    throw new IllegalStateException("Duty rate is mandatory unless repackaged draught product")
+                  ) match {
+                  case r => f"£$r%,.2f"
+                }
+              )
+            ),
+            actions = None
+          )
+      }
+      SummaryListViewModel(rows = rowsWithDutyRate)
+    }
   }
 }
