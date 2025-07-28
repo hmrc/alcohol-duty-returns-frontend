@@ -33,7 +33,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     true
   ) {
     checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry) mustBe Some(
-      SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, row8, dutyRateRow))
+      SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, dutyRateRow, row8))
     )
   }
 
@@ -55,7 +55,7 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
       adjustmentEntry.copy(adjustmentType = Some(AdjustmentType.RepackagedDraughtProducts))
     )
 
-    result.get.rows must not contain dutyRateRow
+    result mustBe Some(SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, row8)))
   }
 
   "CheckYourAnswersSummaryListHelper must return no rows when adjustment type summary can't be fetched" in new SetUp(

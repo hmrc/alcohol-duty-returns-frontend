@@ -55,27 +55,31 @@ class CheckYourAnswersSummaryListHelper @Inject() (
         taxType ++
         newTaxType ++
         sprDutyRate ++
-        Seq(volume) ++
-        Seq(duty)
+        Seq(volume)
 
       val rowsWithDutyRate = adjustmentEntry.adjustmentType match {
-        case Some(AdjustmentType.RepackagedDraughtProducts) => baseRows
+        case Some(AdjustmentType.RepackagedDraughtProducts) =>
+          baseRows :+ duty
         case _                                              =>
-          baseRows :+ SummaryListRow(
-            key = Key(content = Text(messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"))),
-            value = Value(content =
-              HtmlContent(
-                adjustmentEntry.rate
-                  .getOrElse(
-                    throw new IllegalStateException("Duty rate is mandatory unless repackaged draught product")
-                  ) match {
-                  case r => messages("site.currency.2DP", r)
-                }
-              )
+          baseRows ++ Seq(
+            SummaryListRow(
+              key = Key(content = Text(messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"))),
+              value = Value(content =
+                HtmlContent(
+                  adjustmentEntry.rate
+                    .getOrElse(
+                      throw new IllegalStateException("Duty rate is mandatory unless repackaged draught product")
+                    ) match {
+                    case r => messages("site.currency.2DP", r)
+                  }
+                )
+              ),
+              actions = None
             ),
-            actions = None
+            duty
           )
       }
+
       SummaryListViewModel(rows = rowsWithDutyRate)
     }
   }

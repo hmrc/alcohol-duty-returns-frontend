@@ -138,9 +138,8 @@ class AdjustmentListControllerSpec extends SpecBase {
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
         )
 
-        val expectedCaptionText = "section.adjustment.spoilt"
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, adjustmentTable, paginationViewModel, expectedCaptionText)(
+        contentAsString(result) mustEqual view(form, adjustmentTable, paginationViewModel)(
           request,
           getMessages(app)
         ).toString
@@ -181,15 +180,8 @@ class AdjustmentListControllerSpec extends SpecBase {
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
         )
 
-        val expectedCaptionText = "section.adjustment.spoilt"
-
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(true),
-          adjustmentTable,
-          paginationViewModel,
-          expectedCaptionText
-        )(
+        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, paginationViewModel)(
           request,
           getMessages(app)
         ).toString
@@ -285,10 +277,8 @@ class AdjustmentListControllerSpec extends SpecBase {
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
         )
 
-        val expectedCaptionText = "section.adjustment.spoilt"
-
         status(result)          mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, adjustmentTable, paginationViewModel, expectedCaptionText)(
+        contentAsString(result) mustEqual view(boundForm, adjustmentTable, paginationViewModel)(
           request,
           getMessages(app)
         ).toString
