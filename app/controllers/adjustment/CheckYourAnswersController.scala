@@ -20,11 +20,12 @@ import cats.data.OptionT
 import connectors.UserAnswersConnector
 import controllers.actions._
 import models.UserAnswers
-import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import models.adjustment.AdjustmentEntry
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.CheckYourAnswersSummaryListHelper
 import views.html.adjustment.CheckYourAnswersView
@@ -49,22 +50,20 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(index: Option[Int] = None): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val result = for {
-        adjustmentEntry   <- OptionT.fromOption[Future](getAdjustmentEntry(request.userAnswers, index))
-        summaryList       <- OptionT.fromOption[Future](
-                               checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
-                             )
-        _                 <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry))
-        sectionMessageKey <- OptionT.fromOption[Future](adjustmentEntry.adjustmentType.map {
-                               case AdjustmentType.Underdeclaration          => "section.adjustment.under-declaration"
-                               case AdjustmentType.Overdeclaration           => "section.adjustment.over-declaration"
-                               case AdjustmentType.Spoilt                    => "section.adjustment.spoilt"
-                               case AdjustmentType.RepackagedDraughtProducts =>
-                                 "section.adjustment.repackaged-draught-products"
-                               case AdjustmentType.Drawback                  => "section.adjustment.drawback"
-                             })
-      } yield Ok(view(summaryList, sectionMessageKey))
+        adjustmentEntry <- OptionT.fromOption[Future](getAdjustmentEntry(request.userAnswers, index))
+        summaryList     <- OptionT.fromOption[Future](
+                             checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
+                           )
+        _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList))
+      } yield Ok(
+        view(
+          summaryList,
+          adjustmentType = adjustmentEntry.adjustmentType.map(_.toString).getOrElse("")
+        )
+      )
+
       result.getOrElse {
-        logger.warn("Couldn't create the summaryList from user answers or adjustment type is missing")
+        logger.warn("Couldn't create the summaryList from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
@@ -114,7 +113,8 @@ class CheckYourAnswersController @Inject() (
 
   private def setCurrentAdjustmentEntry(
     userAnswers: UserAnswers,
-    adjustmentEntry: AdjustmentEntry
+    adjustmentEntry: AdjustmentEntry,
+    summaryList: SummaryList
   )(implicit
     request: Request[_]
   ): Future[Unit] =
