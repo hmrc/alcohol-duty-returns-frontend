@@ -28,14 +28,14 @@
     returnToTaskList: ReturnToTaskList
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, sectionMessageKey: String = "section.adjustment.checkAnswers")(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
      @formHelper(action = controllers.adjustment.routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
 
          @caption(
              id = "check-your-answers-section",
-             text = messages("section.adjustment.checkAnswers"),
+             text = messages(sectionMessageKey),
          )
 
          @pageHeading(messages("checkYourAnswers.heading"))
