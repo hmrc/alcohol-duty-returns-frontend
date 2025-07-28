@@ -15,6 +15,7 @@
  *@
 
 @import config.Constants.Css
+@import models.adjustment.AdjustmentType
 @import components.{Caption, PageHeading, ReturnToTaskList, SubHeading}
 
 @this(
@@ -28,14 +29,14 @@
     returnToTaskList: ReturnToTaskList
 )
 
-@(list: SummaryList, sectionMessageKey: String = "section.adjustment.checkAnswers", adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
      @formHelper(action = controllers.adjustment.routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
 
          @caption(
              id = "check-your-answers-section",
-             text = messages(s"section.adjustment.$adjustmentType"),
+            text = messages(s"section.adjustment.${adjustmentType.toString.toLowerCase}"),
          )
 
          @pageHeading(messages("checkYourAnswers.heading"))
