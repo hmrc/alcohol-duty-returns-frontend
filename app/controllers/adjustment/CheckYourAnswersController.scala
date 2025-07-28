@@ -25,7 +25,6 @@ import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdj
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.CheckYourAnswersSummaryListHelper
 import views.html.adjustment.CheckYourAnswersView
@@ -108,8 +107,7 @@ class CheckYourAnswersController @Inject() (
 
   private def setCurrentAdjustmentEntry(
     userAnswers: UserAnswers,
-    adjustmentEntry: AdjustmentEntry,
-    summaryList: SummaryList = SummaryList()
+    adjustmentEntry: AdjustmentEntry
   )(implicit
     request: Request[_]
   ): Future[Unit] =
