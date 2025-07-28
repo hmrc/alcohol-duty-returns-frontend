@@ -17,8 +17,9 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.Underdeclaration
+import org.mockito.ArgumentMatchers.any
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
@@ -34,6 +35,27 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry) mustBe Some(
       SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, row8, dutyRateRow))
     )
+  }
+
+  "CheckYourAnswersSummaryListHelper must not include duty rate row for repackaged" in new SetUp(
+    true,
+    true,
+    true
+  ) {
+    when(mockAdjustmentRepackagedTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row1))
+    when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row2))
+    when(mockAdjustmentReturnPeriodSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row3))
+    when(mockSpoiltAlcoholicProductTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row4))
+    when(mockAdjustmentTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row5))
+    when(mockAdjustmentTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row6))
+    when(mockAdjustmentVolumeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row7))
+    when(mockAdjustmentDutyDueSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row8))
+
+    val result = checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(
+      adjustmentEntry.copy(adjustmentType = Some(AdjustmentType.RepackagedDraughtProducts))
+    )
+
+    result.get.rows must not contain dutyRateRow
   }
 
   "CheckYourAnswersSummaryListHelper must return no rows when adjustment type summary can't be fetched" in new SetUp(

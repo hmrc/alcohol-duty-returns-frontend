@@ -69,7 +69,7 @@ class CheckYourAnswersSummaryListHelper @Inject() (
                   .getOrElse(
                     throw new IllegalStateException("Duty rate is mandatory unless repackaged draught product")
                   ) match {
-                  case r => f"£$r%,.2f"
+                  case r => messages("site.currency.2DP", r)
                 }
               )
             ),
