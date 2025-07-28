@@ -16,7 +16,7 @@
 
 @import config.Constants.Css
 @import viewmodels.InputWidth._
-@import components.{BulletList, Caption, Link, PageHeading, ReturnToTaskList}
+@import components.{BulletList, Caption, Link, PageHeading, Paragraph, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -24,11 +24,11 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    govukDetails: GovukDetails,
     link: Link,
     caption: Caption,
     pageHeading: PageHeading,
-    subheading: components.SubHeading,
-    paragraph: components.Paragraph,
+    paragraph: Paragraph,
     bulletList: BulletList,
     returnToTaskList: ReturnToTaskList
 )
@@ -50,38 +50,42 @@
 
         @pageHeading(messages("declareSpiritsTotal.heading"))
 
-        @subheading(text = messages("declareSpiritsTotal.subheading1"), classes = Css.headingMCssClass)
-        <p class="@Css.bodyCssClass">
-            @messages("declareSpiritsTotal.p1")
-            @link(
-            id = "draught-relief-question-guidance-link",
-            text = messages("declareSpiritsTotal.guidance.link.text"),
-            href = messages(declareSpiritsGuidanceUrl),
-            newTab = true
-            )
-        </p>
-
-        @paragraph(messages("declareSpiritsTotal.p2"))
+        @paragraph(messages("declareSpiritsTotal.p1"))
         @bulletList(Seq(
-            messages("declareSpiritsTotal.para2.list1"),
-            messages("declareSpiritsTotal.para2.list2")
-            ))
+            messages("declareSpiritsTotal.p1.list1"),
+            messages("declareSpiritsTotal.p1.list2")
+        ))
+
+        @govukDetails(Details(
+            summary = messages("declareSpiritsTotal.details.summary"),
+            content = HtmlContent(
+                paragraph(HtmlContent(
+                    messages("declareSpiritsTotal.details.p") +
+                    link(
+                        id = "draught-relief-question-guidance-link",
+                        text = messages("declareSpiritsTotal.guidance.link.text"),
+                        href = messages(declareSpiritsGuidanceUrl),
+                        newTab = true
+                    ) + "."
+                ))
+            )
+        ))
 
         <br>
 
         @govukInput(
-        InputViewModel(
+            InputViewModel(
                 field = form("declare-spirits-total-input"),
-                label = LabelViewModel(messages("declareSpiritsTotal.subheading2")).withCssClass(Css.labelMCssClass)
+                label = LabelViewModel(messages("declareSpiritsTotal.subheading")).withCssClass(Css.labelMCssClass)
             )
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("declareSpiritsTotal.inputSuffix")))
-            .withHint(Hint(content =  messages("declareSpiritsTotal.hint")))
+            .withHint(Hint(content = messages("declareSpiritsTotal.hint")))
             .withAttribute("inputmode", "text")
         )
 
         @govukButton(
-        ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
         @returnToTaskList()
     }
