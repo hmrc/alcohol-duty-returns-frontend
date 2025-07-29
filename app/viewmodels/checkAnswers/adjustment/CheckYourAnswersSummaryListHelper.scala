@@ -54,13 +54,16 @@ class CheckYourAnswersSummaryListHelper @Inject() (
         returnPeriod ++
         taxType ++
         newTaxType ++
-        sprDutyRate ++
-        Seq(volume)
+        Seq(volume) ++
+        sprDutyRate
 
       val rowsWithDutyRate = adjustmentEntry.adjustmentType match {
-        case Some(AdjustmentType.RepackagedDraughtProducts) =>
+        case adjustmentType
+            if adjustmentType.contains(AdjustmentType.RepackagedDraughtProducts) ||
+              adjustmentEntry.sprDutyRate.isDefined ||
+              adjustmentType.contains(AdjustmentType.Spoilt) =>
           baseRows :+ duty
-        case _                                              =>
+        case _ =>
           baseRows ++ Seq(
             SummaryListRow(
               key = Key(content = Text(messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label"))),

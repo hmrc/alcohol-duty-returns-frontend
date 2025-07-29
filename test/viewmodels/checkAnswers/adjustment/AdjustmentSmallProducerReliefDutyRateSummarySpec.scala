@@ -30,7 +30,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
     ) {
       adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
-          Key(Text("SPR duty rate")),
+          Key(Text("Duty rate")),
           Value(Text("£3.45")),
           "",
           Some(
@@ -39,7 +39,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate",
                   Text("Change"),
-                  Some("SPR duty rate")
+                  Some("Duty rate")
                 )
               )
             )
@@ -51,7 +51,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
     "must return a row if only the SPR duty rate can be fetched" in new SetUp(true, false) {
       adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
-          Key(Text("SPR duty rate")),
+          Key(Text("Duty rate")),
           Value(Text("£1.23")),
           "",
           Some(
@@ -60,7 +60,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/spr/eligible-volume",
                   Text("Change"),
-                  Some("SPR duty rate")
+                  Some("Duty rate")
                 )
               )
             )
@@ -72,7 +72,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
     "must return a row if only the repackaged SPR duty rate can be fetched" in new SetUp(false, true) {
       adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
-          Key(Text("SPR duty rate")),
+          Key(Text("Duty rate")),
           Value(Text("£3.45")),
           "",
           Some(
@@ -81,7 +81,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate",
                   Text("Change"),
-                  Some("SPR duty rate")
+                  Some("Duty rate")
                 )
               )
             )
