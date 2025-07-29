@@ -340,11 +340,15 @@ return.journey.abv.interval.label.Spirits.draught = draught spirits
 return.journey.abv.interval.label.OtherFermentedProduct.draught = draught other fermented products
 
 return.journey.abv.interval.label.Beer.nondraught = non-draught beer
+return.journey.abv.interval.label.Beer.nondraught.nopackaging = Beer
 return.journey.abv.interval.label.Cider.nondraught = non-draught cider
 return.journey.abv.interval.label.SparklingCider.nondraught = non-draught sparkling cider
 return.journey.abv.interval.label.Wine.nondraught = non-draught wine
+return.journey.abv.interval.label.Wine.nondraught.nopackaging = Wine
 return.journey.abv.interval.label.Spirits.nondraught = non-draught spirits
+return.journey.abv.interval.label.Spirits.nondraught.nopackaging = Spirits
 return.journey.abv.interval.label.OtherFermentedProduct.nondraught = non-draught other fermented products
+return.journey.abv.interval.label.OtherFermentedProduct.nondraught.nopackaging = Other fermented products
 
 return.journey.abv.rangeKey.3 = between {0}% and {1}%
 return.journey.abv.rangeKey.4 = between {0}% and {1}%
@@ -471,11 +475,11 @@ howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to dec
 howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about other fermented products you need to declare and the pure alcohol in them at the following alcohol by volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.warning = We will ask about {0} eligible for Small Producer Relief on the next page.
 
-howMuchDoYouNeedToDeclare.core.heading.regime.beer = How much non-draught beer (standard rate) do you need to declare?
+howMuchDoYouNeedToDeclare.core.heading.regime.beer = How much beer (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.core.heading.regime.cider = How much non-draught cider (standard rate) do you need to declare?
-howMuchDoYouNeedToDeclare.core.heading.regime.wine = How much non-draught wine (standard rate) do you need to declare?
-howMuchDoYouNeedToDeclare.core.heading.regime.spirits = How much non-draught spirits (standard rate) do you need to declare?
-howMuchDoYouNeedToDeclare.core.heading.regime.otherfermentedproduct = How much non-draught other fermented products (standard rate) do you need to declare?
+howMuchDoYouNeedToDeclare.core.heading.regime.wine = How much wine (standard rate) do you need to declare?
+howMuchDoYouNeedToDeclare.core.heading.regime.spirits = How much spirits (standard rate) do you need to declare?
+howMuchDoYouNeedToDeclare.core.heading.regime.otherfermentedproduct = How much other fermented products (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading.regime.beer = How much draught beer (reduced rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading.regime.cider = How much draught cider (reduced rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading.regime.wine = How much draught wine (reduced rate) do you need to declare?
