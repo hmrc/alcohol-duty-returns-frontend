@@ -986,7 +986,7 @@ adjustmentSmallProducerReliefDutyRate.error.required = Enter your Small Producer
 adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be £0.00 or more
 adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be less than £1 billion
 adjustmentSmallProducerReliefDutyRate.error.decimalPlaces = Your Small Producer Relief duty rate must be to 2 decimal places
-adjustmentSmallProducerReliefDutyRate.change.hidden = Duty rate
+adjustmentSmallProducerReliefDutyRate.change.hidden = duty rate
 
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
 adjustmentDutyDue.heading = The duty value for this adjustment is

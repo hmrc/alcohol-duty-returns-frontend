@@ -39,7 +39,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate",
                   Text("Change"),
-                  Some("Duty rate")
+                  Some("duty rate")
                 )
               )
             )
@@ -60,7 +60,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/spr/eligible-volume",
                   Text("Change"),
-                  Some("Duty rate")
+                  Some("duty rate")
                 )
               )
             )
@@ -81,7 +81,7 @@ class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate",
                   Text("Change"),
-                  Some("Duty rate")
+                  Some("duty rate")
                 )
               )
             )

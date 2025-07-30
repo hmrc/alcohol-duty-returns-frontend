@@ -979,14 +979,14 @@ adjustmentRepackagedTaxType.hint = Cod 3 digid y math o dreth ar gyfer cynnyrch 
 
 adjustmentSmallProducerReliefDutyRate.title = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
 adjustmentSmallProducerReliefDutyRate.heading = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
-adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = Cyfradd doll SPR
+adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = Cyfradd doll
 adjustmentSmallProducerReliefDutyRate.hint = Dylech gynnwys punnoedd a cheiniogau
 adjustmentSmallProducerReliefDutyRate.error.nonNumeric = Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
 adjustmentSmallProducerReliefDutyRate.error.required = Nodwch eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
 adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
 adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
 adjustmentSmallProducerReliefDutyRate.error.decimalPlaces = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
-adjustmentSmallProducerReliefDutyRate.change.hidden = cyfradd doll SPR
+adjustmentSmallProducerReliefDutyRate.change.hidden = cyfradd doll
 
 adjustmentDutyDue.title = Gwerth y doll ar gyfer yr addasiad hwn yw {0}
 adjustmentDutyDue.heading = Gwerth y doll ar gyfer yr addasiad hwn yw
