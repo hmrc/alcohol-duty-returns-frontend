@@ -33,6 +33,7 @@ class AlcoholDutyAccountConnector @Inject() (
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances
     with Logging {
+
   def outstandingPayments(appaId: String)(implicit hc: HeaderCarrier): Future[OpenPayments] =
     httpClient
       .get(url"${config.adrGetOutstandingPaymentsUrl(appaId)}")

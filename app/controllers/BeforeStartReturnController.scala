@@ -45,42 +45,44 @@ class BeforeStartReturnController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView,
   beforeStartReturnViewModelFactory: BeforeStartReturnViewModelFactory,
-  returnPeriodViewModelFactory: ReturnPeriodViewModelFactory
+  returnPeriodViewModelFactory: ReturnPeriodViewModelFactory,
+  checkAccountStatus: CheckAccountStatusAction
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    val appaId       = request.appaId
-    val credentialId = request.userId
-    val groupId      = request.groupId
+  def onPageLoad(periodKey: String): Action[AnyContent] =
+    (identify andThen getData andThen checkAccountStatus).async { implicit request =>
+      val appaId       = request.appaId
+      val credentialId = request.userId
+      val groupId      = request.groupId
 
-    ReturnPeriod.fromPeriodKey(periodKey) match {
-      case None               =>
-        logger.warn("Period key is not valid")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case Some(returnPeriod) =>
-        val session = request.session + (periodKeySessionKey, periodKey)
-        userAnswersConnector.get(request.appaId, periodKey).flatMap {
-          case Right(ua)   =>
-            logger.info(s"Return $appaId/$periodKey retrieved by the user")
-            beforeStartReturnService.handleExistingUserAnswers(ua).map {
-              case Right(_)                            =>
-                userAnswersAuditHelper.auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
-                Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
-              case Left(ErrorModel(CONFLICT, message)) =>
-                logger.warn(s"Conflict: $message")
-                Redirect(controllers.routes.ServiceUpdatedController.onPageLoad).withSession(session)
-              case Left(ErrorModel(_, message))        =>
-                logger.warn(s"Unexpected error: $message")
-                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-            }
-          case Left(error) =>
-            Future.successful(handleGetUserAnswersError(appaId, periodKey, returnPeriod, session, error))
-        }
+      ReturnPeriod.fromPeriodKey(periodKey) match {
+        case None               =>
+          logger.warn("Period key is not valid")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(returnPeriod) =>
+          val session = request.session + (periodKeySessionKey, periodKey)
+          userAnswersConnector.get(request.appaId, periodKey).flatMap {
+            case Right(ua)   =>
+              logger.info(s"Return $appaId/$periodKey retrieved by the user")
+              beforeStartReturnService.handleExistingUserAnswers(ua).map {
+                case Right(_)                            =>
+                  userAnswersAuditHelper.auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
+                  Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+                case Left(ErrorModel(CONFLICT, message)) =>
+                  logger.warn(s"Conflict: $message")
+                  Redirect(controllers.routes.ServiceUpdatedController.onPageLoad).withSession(session)
+                case Left(ErrorModel(_, message))        =>
+                  logger.warn(s"Unexpected error: $message")
+                  Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+              }
+            case Left(error) =>
+              Future.successful(handleGetUserAnswersError(appaId, periodKey, returnPeriod, session, error))
+          }
+      }
     }
-  }
 
   private def handleGetUserAnswersError(
     appaId: String,

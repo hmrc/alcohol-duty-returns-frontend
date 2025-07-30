@@ -239,6 +239,78 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
     }
   }
 
+  "checkSubscriptionStatus" - {
+    val mockUrl = s"http://alcohol-duty-returns/subscriptionSummary/$appaId"
+
+    "successfully retrieve subscription and valid status" in new SetUp {
+      val alcoholRegimes = Set(Beer, Cider)
+      val jsonResponse   = Json.toJson(alcoholRegimes).toString()
+      val httpResponse   = HttpResponse(OK, jsonResponse)
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.checkSubscriptionStatus(appaId)) { result =>
+        result mustBe Right(true)
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when subscription approval status is invalid" in new SetUp {
+      val forbiddenResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", FORBIDDEN, FORBIDDEN, Map.empty))
+      )
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(forbiddenResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result mustBe Left("Forbidden: Subscription status is not Approved or Insolvent.")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when another unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result mustBe Left("Unexpected response. Status: 502")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+  }
+
   "getValidSubscriptionRegimes" - {
     val mockUrl = s"http://alcohol-duty-returns/subscriptionSummary/$appaId"
 

@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import connectors.UserAnswersConnector
+import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ErrorModel, ObligationData, ReturnPeriod, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -43,6 +43,9 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         "must redirect to the TaskList Page with audit event if subscription and obligation status are valid and regimes match the API" in new SetUp {
           when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+          when(mockAlcoholDutyReturnsConnector.checkSubscriptionStatus(any())(any())) thenReturn Future.successful(
+            Right(true)
+          )
           when(mockBeforeStartReturnService.handleExistingUserAnswers(any())(any())) thenReturn Future.successful(
             Right((): Unit)
           )
@@ -52,7 +55,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
               bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
               bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
               bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
-              bind(classOf[Clock]).toInstance(clock)
+              bind(classOf[Clock]).toInstance(clock),
+              bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector)
             )
             .build()
 
@@ -320,10 +324,11 @@ class BeforeStartReturnControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    val mockUserAnswersConnector     = mock[UserAnswersConnector]
-    val mockBeforeStartReturnService = mock[BeforeStartReturnService]
-    val mockUserAnswersAuditHelper   = mock[UserAnswersAuditHelper]
-    val mockUpstreamErrorResponse    = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector        = mock[UserAnswersConnector]
+    val mockBeforeStartReturnService    = mock[BeforeStartReturnService]
+    val mockUserAnswersAuditHelper      = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse       = mock[UpstreamErrorResponse]
+    val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
 
     implicit val messages: Messages = getMessages(app)
 

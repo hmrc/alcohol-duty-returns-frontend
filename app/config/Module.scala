@@ -35,6 +35,7 @@ class Module extends AbstractModule {
     bind(classOf[IdentifyWithoutEnrolmentAction])
       .to(classOf[IdentifyWithoutEnrolmentActionImpl])
       .asEagerSingleton()
+    bind(classOf[CheckAccountStatusAction]).to(classOf[CheckAccountStatusActionImpl]).asEagerSingleton()
 
     bind(classOf[ServiceEntryCheckAction]).to(classOf[ServiceEntryCheckActionImpl]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.system(ZoneId.of(Constants.ukTimeZoneStringId)))

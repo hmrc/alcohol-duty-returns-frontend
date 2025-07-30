@@ -38,6 +38,25 @@ class AlcoholDutyReturnsConnector @Inject() (
     extends HttpReadsInstances
     with Logging {
 
+  def checkSubscriptionStatus(
+    appaId: String
+  )(implicit hc: HeaderCarrier): Future[Either[String, Boolean]] =
+    httpClient
+      .get(url"${config.adrGetValidSubscriptionRegimes(appaId)}")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
+      .map {
+        case Right(_)                                                     =>
+          Right[String, Boolean](true)
+        case Left(errorResponse) if errorResponse.statusCode == FORBIDDEN =>
+          logger.warn(
+            s"Forbidden: Subscription status is not Approved or Insolvent. Status: ${errorResponse.statusCode}"
+          )
+          Left("Forbidden: Subscription status is not Approved or Insolvent.")
+        case Left(errorResponse)                                          =>
+          logger.warn(s"Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}")
+          Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
+      }
+
   def obligationDetails(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] =
     httpClient
       .get(url"${config.adrGetObligationDetailsUrl(appaId)}")

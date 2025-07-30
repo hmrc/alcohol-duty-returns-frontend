@@ -1108,3 +1108,7 @@ returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad h
 returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
 
 # End of Check and submit sub-journey
+
+# Account status check
+accountStatus.heading = TODO
+accountStatus.p = TODO

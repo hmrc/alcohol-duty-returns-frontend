@@ -11,6 +11,7 @@ GET         /refresh-session                             controllers.KeepAliveCo
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /return-locked                               controllers.ReturnLockedController.onPageLoad()
+GET         /subscription-status                         controllers.SubscriptionStatusController.onPageLoad()
 
 GET         /account/sign-out-survey                     controllers.auth.SignOutController.signOut()
 GET         /account/sign-out-log-in                     controllers.auth.SignOutController.signOutDuringEnrolment()
