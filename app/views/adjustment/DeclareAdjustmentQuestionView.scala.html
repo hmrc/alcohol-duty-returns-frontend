@@ -15,6 +15,7 @@
  *@
 
 @import config.Constants.Css
+@import config.Constants
 @import components.{BulletList, Caption, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
 
 @this(
@@ -63,6 +64,12 @@
         ))
 
         @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+    <p class="govuk-body">
+        @messages("declareAdjustmentInformation.link.p1")
+        <a href= "@messages("declareAdjustmentInformation.link.url")"
+        target="_blank"
+        class="@Constants.Css.linkNoVisitedStateCssClass">@messages("declareAdjustmentInformation.link.p2")</a>.</p>
 
         @formGroupWithError(form.errors.nonEmpty){
                 @subHeading(messages("declareAdjustmentQuestion.question.h2"), classes = Css.headingMCssClass)
