@@ -19,7 +19,7 @@ package controllers.adjustment
 import base.SpecBase
 import connectors.UserAnswersConnector
 import generators.ModelGenerators
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -316,7 +316,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   class SetUp {
     val index = 0
 
-    val adjustmentEntry = AdjustmentEntry()
+    val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(AdjustmentType.Underdeclaration))
     val summaryList     = SummaryList()
 
     val completedAdjustmentEntry = fullRepackageAdjustmentEntry.copy(index = None)
@@ -324,7 +324,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     val adjustmentEntryWithIndex          = adjustmentEntry.copy(index = Some(index))
     val completedAdjustmentEntryWithIndex = fullRepackageAdjustmentEntry
 
-    val checkYourAnswersRoute          = controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url
+    val checkYourAnswersRoute          = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url
     val checkYourAnswersRouteWithIndex =
       controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(index = Some(index)).url
 
@@ -334,7 +334,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     val content = Html("blah")
 
-    when(mockView.apply(any())(any(), any())).thenReturn(content)
+    when(mockView.apply(any[SummaryList], any[AdjustmentType])(any(), any())).thenReturn(content)
 
     val mockUserAnswersConnector = mock[UserAnswersConnector]
   }

@@ -17,10 +17,13 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
-import models.adjustment.AdjustmentEntry
+import models.{RateBand, RateType}
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import models.adjustment.AdjustmentType.Underdeclaration
+import org.mockito.ArgumentMatchers.any
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.all.SummaryListViewModel
 
@@ -31,8 +34,75 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     true
   ) {
     checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry) mustBe Some(
-      SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row2, row7, row8))
+      SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row7, row2, row8))
     )
+  }
+
+  "CheckYourAnswersSummaryListHelper must not include duty rate row for repackaged" in new SetUp(
+    true,
+    true,
+    true
+  ) {
+    when(mockAdjustmentRepackagedTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row1))
+    when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row2))
+    when(mockAdjustmentReturnPeriodSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row3))
+    when(mockSpoiltAlcoholicProductTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row4))
+    when(mockAdjustmentTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row5))
+    when(mockAdjustmentTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row6))
+    when(mockAdjustmentVolumeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row7))
+    when(mockAdjustmentDutyDueSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row8))
+
+    val result = checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(
+      adjustmentEntry.copy(adjustmentType = Some(AdjustmentType.RepackagedDraughtProducts))
+    )
+
+    result mustBe Some(SummaryListViewModel(rows = Seq(row6, row4, row3, row5, row1, row7, row2, row8)))
+  }
+
+  "CheckYourAnswersSummaryListHelper must not include duty rate row for spoilt" in new SetUp(
+    true,
+    true,
+    true
+  ) {
+    when(mockAdjustmentRepackagedTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockAdjustmentReturnPeriodSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockSpoiltAlcoholicProductTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row4))
+    when(mockAdjustmentTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockAdjustmentTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row6))
+    when(mockAdjustmentVolumeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row7))
+    when(mockAdjustmentDutyDueSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row8))
+
+    val result = checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(
+      adjustmentEntry.copy(adjustmentType = Some(AdjustmentType.Spoilt))
+    )
+
+    result mustBe Some(SummaryListViewModel(rows = Seq(row6, row4, row7, row8)))
+  }
+
+  "CheckYourAnswersSummaryListHelper must return correct rows for over declared" in new SetUp(
+    true,
+    true,
+    true
+  ) {
+    when(mockAdjustmentRepackagedTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockAdjustmentReturnPeriodSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row3))
+    when(mockSpoiltAlcoholicProductTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(None)
+    when(mockAdjustmentTaxTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row5))
+    when(mockAdjustmentTypeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row6))
+    when(mockAdjustmentVolumeSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row7))
+    when(mockAdjustmentDutyDueSummary.row(any[AdjustmentEntry])(any())).thenReturn(Some(row8))
+
+    val result = checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(
+      adjustmentEntry.copy(
+        adjustmentType = Some(AdjustmentType.Overdeclaration),
+        rateBand = Some(RateBand("", "", RateType.Core, Some(BigDecimal("10.00")), Set.empty)),
+        sprDutyRate = None
+      )
+    )
+
+    result mustBe Some(SummaryListViewModel(rows = Seq(row6, row3, row5, row7, dutyRateRow, row8)))
   }
 
   "CheckYourAnswersSummaryListHelper must return no rows when adjustment type summary can't be fetched" in new SetUp(
@@ -67,14 +137,18 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
 
-    val row1 = SummaryListRow(key = Key(Text("Row1Key")), value = Value(Text("Row1Value")))
-    val row2 = SummaryListRow(key = Key(Text("Row2Key")), value = Value(Text("Row2Value")))
-    val row3 = SummaryListRow(key = Key(Text("Row3Key")), value = Value(Text("Row3Value")))
-    val row4 = SummaryListRow(key = Key(Text("Row4Key")), value = Value(Text("Row4Value")))
-    val row5 = SummaryListRow(key = Key(Text("Row5Key")), value = Value(Text("Row5Value")))
-    val row6 = SummaryListRow(key = Key(Text("Row6Key")), value = Value(Text("Row6Value")))
-    val row7 = SummaryListRow(key = Key(Text("Row7Key")), value = Value(Text("Row7Value")))
-    val row8 = SummaryListRow(key = Key(Text("Row8Key")), value = Value(Text("Row8Value")))
+    val row1        = SummaryListRow(key = Key(Text("Row1Key")), value = Value(Text("Row1Value")))
+    val row2        = SummaryListRow(key = Key(Text("Row2Key")), value = Value(Text("Row2Value")))
+    val row3        = SummaryListRow(key = Key(Text("Row3Key")), value = Value(Text("Row3Value")))
+    val row4        = SummaryListRow(key = Key(Text("Row4Key")), value = Value(Text("Row4Value")))
+    val row5        = SummaryListRow(key = Key(Text("Row5Key")), value = Value(Text("Row5Value")))
+    val row6        = SummaryListRow(key = Key(Text("Row6Key")), value = Value(Text("Row6Value")))
+    val row7        = SummaryListRow(key = Key(Text("Row7Key")), value = Value(Text("Row7Value")))
+    val row8        = SummaryListRow(key = Key(Text("Row8Key")), value = Value(Text("Row8Value")))
+    val dutyRateRow = SummaryListRow(
+      key = Key(Text("Duty rate")),
+      value = Value(HtmlContent("£10.00"))
+    )
 
     val mockAdjustmentRepackagedTaxTypeSummary           = mock[AdjustmentRepackagedTaxTypeSummary]
     val mockAdjustmentSmallProducerReliefDutyRateSummary = mock[AdjustmentSmallProducerReliefDutyRateSummary]
@@ -85,7 +159,10 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
     val mockAdjustmentVolumeSummary                      = mock[AdjustmentVolumeSummary]
     val mockAdjustmentDutyDueSummary                     = mock[AdjustmentDutyDueSummary]
 
-    val adjustmentEntry = AdjustmentEntry()
+    val adjustmentEntry = AdjustmentEntry(
+      adjustmentType = Some(Underdeclaration),
+      sprDutyRate = Some(BigDecimal("10.00"))
+    )
 
     when(mockAdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry)).thenReturn(Some(row1))
     when(mockAdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry)).thenReturn(Some(row2))

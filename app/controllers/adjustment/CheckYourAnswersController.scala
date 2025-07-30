@@ -25,7 +25,6 @@ import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdj
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.CheckYourAnswersSummaryListHelper
 import views.html.adjustment.CheckYourAnswersView
@@ -51,14 +50,14 @@ class CheckYourAnswersController @Inject() (
     implicit request =>
       val result = for {
         adjustmentEntry <- OptionT.fromOption[Future](getAdjustmentEntry(request.userAnswers, index))
+        adjustmentType  <- OptionT.fromOption[Future](adjustmentEntry.adjustmentType)
         summaryList     <- OptionT.fromOption[Future](
                              checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
                            )
-        _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList))
-      } yield Ok(view(summaryList))
-
+        _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry))
+      } yield Ok(view(summaryList, adjustmentType))
       result.getOrElse {
-        logger.warn("Couldn't create the summaryList from user answers")
+        logger.warn("Couldn't create the summaryList from user answers or adjustment type is missing")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
@@ -108,8 +107,7 @@ class CheckYourAnswersController @Inject() (
 
   private def setCurrentAdjustmentEntry(
     userAnswers: UserAnswers,
-    adjustmentEntry: AdjustmentEntry,
-    summaryList: SummaryList
+    adjustmentEntry: AdjustmentEntry
   )(implicit
     request: Request[_]
   ): Future[Unit] =
