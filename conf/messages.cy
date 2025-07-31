@@ -848,6 +848,9 @@ declareAdjustmentQuestion.para1.list4 = cael eu hailbecynnu, ac nad ydynt yn gym
 declareAdjustmentQuestion.para1.list5 = cael eu hallforio, a bod angen i chi hawlio ad-daliad ar eu cyfer erbyn hyn
 declareAdjustmentQuestion.question.h2 = A oes gennych addasiadau i’w datgan?
 declareAdjustmentQuestion.error.required = Dewiswch ‘Iawn’ os oes gennych addasiadau i’w datgan
+declareAdjustmentInformation.link.p1 = Os ydych yn datgan ad-daliad, mae’n rhaid i chi roi gwybod i CThEF cyn defnyddio’r gwasanaeth ar-lein hwn.
+declareAdjustmentInformation.link.p2 = Dysgwch ragor am sut i roi gwybod i CThEF (yn agor tab newydd)
+declareAdjustmentInformation.link.url = https://www.gov.uk/government/publications/excise-movements-notice-of-intention-to-claim-drawback-ex75
 
 adjustmentType.title = Pa fath o addasiad rydych chi’n ei ddatgan?
 adjustmentType.heading = Pa fath o addasiad rydych chi’n ei ddatgan?

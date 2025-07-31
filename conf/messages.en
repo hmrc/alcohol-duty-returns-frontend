@@ -848,6 +848,9 @@ declareAdjustmentQuestion.para1.list4 = been repackaged and are no longer eligib
 declareAdjustmentQuestion.para1.list5 = been exported and you now need to claim drawback on
 declareAdjustmentQuestion.question.h2 = Do you have adjustments to declare?
 declareAdjustmentQuestion.error.required = Select yes if you have adjustments to declare
+declareAdjustmentInformation.link.p1 = If you are declaring drawback, you must notify HMRC before using this online service.
+declareAdjustmentInformation.link.p2 = Find out more about how to notify HMRC (opens in a new tab)
+declareAdjustmentInformation.link.url = https://www.gov.uk/government/publications/excise-movements-notice-of-intention-to-claim-drawback-ex75
 
 adjustmentType.title = What type of adjustment are you declaring?
 adjustmentType.heading = What type of adjustment are you declaring?

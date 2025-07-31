@@ -15,7 +15,7 @@
  *@
 
 @import config.Constants.Css
-@import components.{BulletList, Caption, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
+@import components.{BulletList, Caption, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading, Link}
 
 @this(
     layout: templates.Layout,
@@ -29,7 +29,8 @@
     bulletList: BulletList,
     paragraph: Paragraph,
     formGroupWithError: FormGroupWithError,
-    returnToTaskList: ReturnToTaskList
+    returnToTaskList: ReturnToTaskList,
+    link: Link
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -63,6 +64,17 @@
         ))
 
         @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @paragraph(
+            content = HtmlContent(
+            messages("declareAdjustmentInformation.link.p1") + " " +
+            link(
+                    id = "declare-adjustment-information-link",
+                    text = messages("declareAdjustmentInformation.link.p2"),
+                    href = messages("declareAdjustmentInformation.link.url"),
+                    newTab = true
+            ) + "."
+        ))
 
         @formGroupWithError(form.errors.nonEmpty){
                 @subHeading(messages("declareAdjustmentQuestion.question.h2"), classes = Css.headingMCssClass)
