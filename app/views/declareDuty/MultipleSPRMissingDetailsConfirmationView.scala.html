@@ -32,6 +32,17 @@
 @(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("multipleSPRMissingDetailsConfirmation.title"))) {
+<style>
+    /* Target the specific legend in this component */
+    #main-content .govuk-fieldset__legend--l,
+    #main-content .govuk-fieldset__legend {
+        position: relative !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        white-space: normal !important;
+    }
+</style>
 
     @formHelper(action = controllers.declareDuty.routes.MultipleSPRMissingDetailsConfirmationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
 
