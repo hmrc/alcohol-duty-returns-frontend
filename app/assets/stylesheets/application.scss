@@ -28,9 +28,12 @@
   white-space: nowrap;
 }
 
-.legend-fix {
-  .govuk-fieldset__legend--l,
-  .govuk-fieldset__legend {
-    white-space: normal !important;
-  }
-  }
+.govuk-form-group {
+    .govuk-fieldset {
+        .govuk-fieldset__legend {
+            &.govuk-visually-hidden {
+                white-space: normal!important;
+            }
+        }
+    }
+}
