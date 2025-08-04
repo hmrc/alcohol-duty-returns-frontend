@@ -15,7 +15,6 @@
  *@
 
 @import components.{BulletList, Caption, PageHeading, Paragraph, ReturnToTaskList}
-@import config.Constants.Css
 
 @this(
         layout: templates.Layout,
@@ -33,7 +32,7 @@
 @(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("multipleSPRMissingDetailsConfirmation.title"))) {
-    @Html(Css.legendFix)
+<div class="legend-fix">
 
     @formHelper(action = controllers.declareDuty.routes.MultipleSPRMissingDetailsConfirmationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
 
@@ -74,4 +73,5 @@
         )
         @returnToTaskList()
     }
+    </div>
 }

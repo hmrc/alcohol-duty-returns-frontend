@@ -174,13 +174,5 @@ object Constants {
     val formGroupErrorCssClass = "govuk-form-group--error"
 
     val errorMessageCssClass = "govuk-error-message"
-
-    val legendFix: String =
-      """<style>
-        |#main-content .govuk-fieldset__legend--l,
-        |#main-content .govuk-fieldset__legend {
-        |    white-space: normal !important;
-        |}
-        |</style>""".stripMargin
   }
 }

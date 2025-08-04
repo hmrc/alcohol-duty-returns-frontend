@@ -33,8 +33,7 @@
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareDutySuspendedDeliveriesQuestion.title"))) {
-@Html(Css.legendFix)
-
+<div class="legend-fix">
 
     @formHelper(action = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -58,7 +57,7 @@
                 RadiosViewModel.yesNo(
                     field = form("declare-duty-suspended-deliveries-input"),
                     legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asVisuallyHidden()
-                )
+                ).withCssClass("legend-fix")
             )
     }
 
@@ -67,4 +66,5 @@
         )
     @returnToTaskList()
     }
+    </div>
 }
