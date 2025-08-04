@@ -33,6 +33,8 @@
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareDutySuspendedDeliveriesQuestion.title"))) {
+@Html(Css.legendFix)
+
 
     @formHelper(action = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

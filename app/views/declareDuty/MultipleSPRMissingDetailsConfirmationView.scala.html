@@ -15,6 +15,7 @@
  *@
 
 @import components.{BulletList, Caption, PageHeading, Paragraph, ReturnToTaskList}
+@import config.Constants.Css
 
 @this(
         layout: templates.Layout,
@@ -32,16 +33,7 @@
 @(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("multipleSPRMissingDetailsConfirmation.title"))) {
-<style>
-    #main-content .govuk-fieldset__legend--l,
-    #main-content .govuk-fieldset__legend {
-        position: relative !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        white-space: normal !important;
-    }
-</style>
+    @Html(Css.legendFix)
 
     @formHelper(action = controllers.declareDuty.routes.MultipleSPRMissingDetailsConfirmationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
 
