@@ -27,3 +27,13 @@
 .no-wrap {
   white-space: nowrap;
 }
+
+.govuk-form-group {
+    .govuk-fieldset {
+        .govuk-fieldset__legend {
+            &.govuk-visually-hidden {
+                white-space: normal!important;
+            }
+        }
+    }
+}
