@@ -239,42 +239,42 @@ trait TestData extends ModelGenerators {
           Seq(
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.underDeclaredKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(1, periodDate)).toPeriodKey,
+              returnPeriodAffected = Some(ReturnPeriod.fromDateInPeriod(periodFrom(1, periodDate)).toPeriodKey),
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(150),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = Some(BigDecimal("21.01")),
               dutyValue = BigDecimal("3151.50")
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.overDeclaredKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(2, periodDate)).toPeriodKey,
+              returnPeriodAffected = Some(ReturnPeriod.fromDateInPeriod(periodFrom(2, periodDate)).toPeriodKey),
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(1150),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = Some(BigDecimal("21.01")),
               dutyValue = BigDecimal("-24161.50")
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.spoiltKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
+              returnPeriodAffected = None,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(1150),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = None,
               dutyValue = BigDecimal("-24161.50")
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.drawbackKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey,
+              returnPeriodAffected = Some(ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey),
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(75),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = Some(BigDecimal("21.01")),
               dutyValue = BigDecimal("-1575.50")
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.repackagedDraughtKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(5, periodDate)).toPeriodKey,
+              returnPeriodAffected = Some(ReturnPeriod.fromDateInPeriod(periodFrom(5, periodDate)).toPeriodKey),
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(150),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = Some(BigDecimal("21.01")),
               dutyValue = BigDecimal("3151.50")
             )
           )
@@ -367,18 +367,18 @@ trait TestData extends ModelGenerators {
           Seq(
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.spoiltKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
+              returnPeriodAffected = None,
               taxType = "333",
               litresOfPureAlcohol = BigDecimal(150),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = None,
               dutyValue = BigDecimal("-3151.50")
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.spoiltKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(1, periodDate)).toPeriodKey,
+              returnPeriodAffected = Some(ReturnPeriod.fromDateInPeriod(periodFrom(1, periodDate)).toPeriodKey),
               taxType = "123",
               litresOfPureAlcohol = BigDecimal(150),
-              dutyRate = BigDecimal("21.01"),
+              dutyRate = Some(BigDecimal("21.01")),
               dutyValue = BigDecimal("-3151.50")
             )
           )

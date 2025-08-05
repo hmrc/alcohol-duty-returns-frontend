@@ -66,7 +66,7 @@ object ReturnAlcoholDeclaredRow {
 
 case class ReturnAdjustments(adjustmentDetails: Option[Seq[ReturnAdjustmentsRow]], total: BigDecimal) {
   def returnPeriodsAndTaxCodes: Seq[(String, String)] = adjustmentDetails.fold[Seq[(String, String)]](Seq.empty)(
-    _.map(adjustmentRow => (adjustmentRow.returnPeriodAffected, adjustmentRow.taxType))
+    _.flatMap(adjustmentRow => adjustmentRow.returnPeriodAffected.map(period => (period, adjustmentRow.taxType)))
   )
 }
 
@@ -82,10 +82,10 @@ object ReturnAdjustments {
 
 case class ReturnAdjustmentsRow(
   adjustmentTypeKey: String,
-  returnPeriodAffected: String,
+  returnPeriodAffected: Option[String],
   taxType: String,
   litresOfPureAlcohol: BigDecimal,
-  dutyRate: BigDecimal,
+  dutyRate: Option[BigDecimal],
   dutyValue: BigDecimal
 )
 

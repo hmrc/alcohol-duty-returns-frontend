@@ -26,10 +26,10 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
     "must serialize to JSON correctly" in {
       val adjustmentRow = ReturnAdjustmentsRow(
         adjustmentTypeKey = "underdeclaration",
-        returnPeriodAffected = periodKey,
+        returnPeriodAffected = Some(periodKey),
         taxType = "311",
         litresOfPureAlcohol = BigDecimal(50),
-        dutyRate = BigDecimal(2.5),
+        dutyRate = Some(BigDecimal(2.5)),
         dutyValue = BigDecimal(125)
       )
 
@@ -58,21 +58,33 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
       json.validate[ReturnAdjustmentsRow] mustEqual JsSuccess(
         ReturnAdjustmentsRow(
           adjustmentTypeKey = "underdeclaration",
-          returnPeriodAffected = periodKey,
+          returnPeriodAffected = Some(periodKey),
           taxType = "311",
           litresOfPureAlcohol = BigDecimal(50),
-          dutyRate = BigDecimal(2.5),
+          dutyRate = Some(BigDecimal(2.5)),
           dutyValue = BigDecimal(125)
         )
       )
     }
 
     "must sort adjustments rows correctly by adjustmentTypeKey and then by taxType" in {
-      val row1 =
-        ReturnAdjustmentsRow("underdeclaration", periodKeyJan, "311", BigDecimal(50), BigDecimal(2.5), BigDecimal(125))
-      val row2 =
-        ReturnAdjustmentsRow("overdeclaration", periodKeyFeb, "312", BigDecimal(30), BigDecimal(3.0), BigDecimal(90))
-      val row3 = ReturnAdjustmentsRow("spoilt", periodKeyMar, "313", BigDecimal(20), BigDecimal(4.0), BigDecimal(80))
+      val row1 = ReturnAdjustmentsRow(
+        "underdeclaration",
+        Some(periodKeyJan),
+        "311",
+        BigDecimal(50),
+        Some(BigDecimal(2.5)),
+        BigDecimal(125)
+      )
+      val row2 = ReturnAdjustmentsRow(
+        "overdeclaration",
+        Some(periodKeyFeb),
+        "312",
+        BigDecimal(30),
+        Some(BigDecimal(3.0)),
+        BigDecimal(90)
+      )
+      val row3 = ReturnAdjustmentsRow("spoilt", None, "313", BigDecimal(20), None, BigDecimal(80))
 
       val rows       = Seq(row1, row2, row3)
       val sortedRows = rows.sorted
