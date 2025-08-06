@@ -184,7 +184,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
     ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
   )(implicit messages: Messages): Seq[TableRowViewModel] =
     returnAdjustments.map { returnAdjustmentsRow =>
-      val maybeRatePeriod         = ReturnPeriod.fromPeriodKey(returnAdjustmentsRow.returnPeriodAffected).map(_.period)
+      val maybeRatePeriod         = returnAdjustmentsRow.returnPeriodAffected.flatMap(ReturnPeriod.fromPeriodKey).map(_.period)
       val taxType                 = returnAdjustmentsRow.taxType
       val (description, dutyRate) = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
         (
@@ -197,7 +197,10 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       } else {
         (
           getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType),
-          Money.format(returnAdjustmentsRow.dutyRate)
+          returnAdjustmentsRow.dutyRate match {
+            case Some(rate) => Money.format(rate)
+            case None       => messages("viewReturn.notApplicable")
+          }
         )
       }
       TableRowViewModel(
