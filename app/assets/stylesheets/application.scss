@@ -39,10 +39,6 @@
   }
 }
 
-.govuk-visually-hidden:before {
-  content: " ";
-}
-
-.govuk-visually-hidden:after {
-  content: " ";
+span.govuk-visually-hidden {
+  max-width: 0 !important;
 }
