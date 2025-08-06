@@ -163,7 +163,6 @@ object Constants {
     val bulletListCssClass = "govuk-list govuk-list--bullet"
 
     val visuallyHiddenCssClass    = "govuk-visually-hidden"
-    val visuallyHiddenDisplayNone = "visually-hidden-display-none"
 
     val inputErrorCssClass = "govuk-input--error"
 
