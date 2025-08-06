@@ -34,7 +34,7 @@
 
 @(regime: AlcoholRegime, dutyDueViewModel: TableViewModel, totalDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyCalculation.title", totalDuty))) {
+@layout(pageTitle = titleNoForm(messages("dutyCalculation.title", totalDuty)), fullWidth = true) {
 
   @formHelper(action = controllers.declareDuty.routes.DutyCalculationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
     @caption(
