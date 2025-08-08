@@ -4,7 +4,7 @@ object AppDependencies {
 
   private val bootstrapVersion = "10.1.0"
   private val hmrcMongoVersion = "2.7.0"
-  val mockitoScalaVersion = "1.17.37"
+  val mockitoScalaVersion = "2.0.0"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
