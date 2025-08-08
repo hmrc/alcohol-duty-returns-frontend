@@ -1,6 +1,7 @@
 .js-visible {
   display: none !important;
 }
+
 .js-enabled .js-visible {
   display: inline-block !important;
 }
@@ -10,8 +11,8 @@
 }
 
 .text-align-right {
-    text-align: right;
-    white-space: nowrap;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .text-align-right-wrap {
@@ -29,11 +30,15 @@
 }
 
 .govuk-form-group {
-    .govuk-fieldset {
-        .govuk-fieldset__legend {
-            &.govuk-visually-hidden {
-                white-space: normal!important;
-            }
-        }
+  .govuk-fieldset {
+    .govuk-fieldset__legend {
+      &.govuk-visually-hidden {
+        white-space: normal !important;
+      }
     }
+  }
+}
+
+span.govuk-visually-hidden {
+  max-width: 0 !important;
 }
