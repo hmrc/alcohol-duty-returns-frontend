@@ -15,7 +15,7 @@
  *@
 
 @import config.Constants.Css
-@import components.{Caption, FormGroupWithError, Link, PageHeading, ReturnToTaskList}
+@import components.{Caption, FormGroupWithError, Link, PageHeading, Paragraph, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -27,6 +27,7 @@
     caption: Caption,
     pageHeading: PageHeading,
     formGroupWithError: FormGroupWithError,
+    paragraph: Paragraph,
     returnToTaskList: ReturnToTaskList
 )
 
@@ -48,9 +49,7 @@
     @formGroupWithError(form.errors.nonEmpty){
         @pageHeading(messages("declareDutySuspendedDeliveriesQuestion.heading"))
 
-        <p class="@Css.bodyCssClass">
-            @messages("declareDutySuspendedDeliveriesQuestion.p1")
-        </p>
+            @paragraph(messages("declareDutySuspendedDeliveriesQuestion.hint"), classes = Css.hintCssClass)
 
             @govukRadios(
                 RadiosViewModel.yesNo(
