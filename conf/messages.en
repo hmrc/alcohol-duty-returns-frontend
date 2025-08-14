@@ -636,10 +636,10 @@ productList.caption = Duty due
 
 # Beginning of duty suspended deliveries sub-journey
 
-declareDutySuspendedDeliveriesQuestion.title = Have you delivered or received any duty suspended finished alcoholic product?
-declareDutySuspendedDeliveriesQuestion.heading = Have you delivered or received any duty suspended finished alcoholic product?
+declareDutySuspendedDeliveriesQuestion.title = Have you delivered or received finished alcoholic products under duty suspense?
+declareDutySuspendedDeliveriesQuestion.heading = Have you delivered or received finished alcoholic products under duty suspense?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to tell us about any duty suspended alcohol
-declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered finished alcoholic product to a duty suspended warehouse or received finished alcoholic product in duty suspense.
+declareDutySuspendedDeliveriesQuestion.hint = Finished alcoholic products are ready to be sold or consumed, do not declare raw alcoholic products like neutral grain spirits that still need processing.
 
 dutySuspendedDeliveriesGuidance.title = Calculate the volume of duty suspended finished alcoholic products
 dutySuspendedDeliveriesGuidance.heading = Calculate the volume of duty suspended finished alcoholic products

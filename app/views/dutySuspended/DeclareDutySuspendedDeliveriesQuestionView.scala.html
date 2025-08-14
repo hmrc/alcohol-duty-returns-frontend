@@ -15,7 +15,7 @@
  *@
 
 @import config.Constants.Css
-@import components.{Caption, FormGroupWithError, Link, PageHeading, ReturnToTaskList}
+@import components.{Caption, FormGroupWithError, Link, Paragraph, ReturnToTaskList}
 
 @this(
     layout: templates.Layout,
@@ -25,8 +25,8 @@
     govukButton: GovukButton,
     link: Link,
     caption: Caption,
-    pageHeading: PageHeading,
     formGroupWithError: FormGroupWithError,
+    paragraph: Paragraph,
     returnToTaskList: ReturnToTaskList
 )
 
@@ -46,17 +46,12 @@
     )
 
     @formGroupWithError(form.errors.nonEmpty){
-        @pageHeading(messages("declareDutySuspendedDeliveriesQuestion.heading"))
-
-        <p class="@Css.bodyCssClass">
-            @messages("declareDutySuspendedDeliveriesQuestion.p1")
-        </p>
 
             @govukRadios(
                 RadiosViewModel.yesNo(
                     field = form("declare-duty-suspended-deliveries-input"),
-                    legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asVisuallyHidden()
-                )
+                    legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asPageHeading()
+                ).withHint(HintViewModel(messages("declareDutySuspendedDeliveriesQuestion.hint")))
             )
     }
 
