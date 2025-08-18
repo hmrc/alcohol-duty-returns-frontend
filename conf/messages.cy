@@ -636,10 +636,10 @@ productList.caption = Toll sy’n ddyledus
 
 # Beginning of duty suspended deliveries sub-journey
 
-declareDutySuspendedDeliveriesQuestion.title = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
-declareDutySuspendedDeliveriesQuestion.heading = A ydych chi wedi dosbarthu neu dderbyn unrhyw gynnyrch alcoholaidd gorffenedig y gohiriwyd tollau arno?
+declareDutySuspendedDeliveriesQuestion.title = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
+declareDutySuspendedDeliveriesQuestion.heading = A ydych wedi dosbarthu neu dderbyn cynhyrchion alcoholaidd gorffenedig o dan ohiriad tollau?
 declareDutySuspendedDeliveriesQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi roi gwybod i ni am unrhyw alcohol y gohiriwyd tollau arno
-declareDutySuspendedDeliveriesQuestion.p1 = Mae angen i chi roi gwybod i ni a wnaethoch ddosbarthu cynnyrch alcoholaidd gorffenedig i warws lle mae tollau wedi’u gohirio, neu a wnaethoch dderbyn cynnyrch alcoholaidd gorffenedig o dan ohiriad tollau.
+declareDutySuspendedDeliveriesQuestion.hint = Mae cynhyrchion alcoholaidd gorffenedig yn gynhyrchion sy’n barod i gael eu gwerthu neu eu defnyddio – peidiwch â datgan cynhyrchion alcoholaidd amrwd fel gwirodydd grawn niwtral y mae angen eu prosesu o hyd.
 
 dutySuspendedDeliveriesGuidance.title = Cyfrifwch gyfaint y cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
 dutySuspendedDeliveriesGuidance.heading = Cyfrifwch gyfaint y cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
