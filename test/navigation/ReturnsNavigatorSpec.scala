@@ -18,13 +18,12 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.AlcoholRegime.Beer
+import models.AlcoholRegime.{Beer, Cider, Wine}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import models.{AlcoholRegimes, CheckMode, NormalMode}
+import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.Page
-import pages.declareDuty.DeclareAlcoholDutyQuestionPage
 import viewmodels.declareDuty.MissingSPRRateBandHelper
 
 class ReturnsNavigatorSpec extends SpecBase {
@@ -50,16 +49,16 @@ class ReturnsNavigatorSpec extends SpecBase {
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from the Alcohol to declare to the task list page if the answer is Yes" in {
+        "must go from the DeclareAlcoholDutyQuestion page to the Alcohol Type page if the answer is Yes and the user has more than 1 approval" in {
           navigator.nextPage(
-            DeclareAlcoholDutyQuestionPage,
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
             emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value,
             Some(false)
           ) mustBe controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(NormalMode)
         }
 
-        "must go from the Alcohol to declare to the task list page if the user has only 1 approval" in {
+        "must go from the DeclareAlcoholDutyQuestion page to the first page of the regime's journey if the user has only 1 approval (not wine)" in {
           navigator.nextPage(
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
@@ -69,10 +68,23 @@ class ReturnsNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer)
         }
 
-        "must go from the Alcohol to declare to the task list page if the answer is No" in {
+        "must go from the DeclareAlcoholDutyQuestion page to the first page of the regime's journey if the user has only 1 approval (wine)" in {
+          navigator.nextPage(
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
+            NormalMode,
+            emptyUserAnswers
+              .copy(regimes = AlcoholRegimes(Set(Wine)))
+              .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
+              .success
+              .value,
+            Some(false)
+          ) mustBe controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad()
+        }
+
+        "must go from the DeclareAlcoholDutyQuestion page to the task list page if the answer is No" in {
           navigator.nextPage(
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
@@ -81,9 +93,45 @@ class ReturnsNavigatorSpec extends SpecBase {
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from the Alcohol to declare to the Journey recovery page if the answer is missing" in {
+        "must go from the DeclareAlcoholDutyQuestion page to the Journey recovery page if the answer is missing" in {
           navigator.nextPage(
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
+            NormalMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
+
+        "must go from the Alcohol Type page to the task list page if multiple regimes are selected" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            NormalMode,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Beer, Cider)).success.value,
+            Some(false)
+          ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the Alcohol Type page to the first page of the regime's journey if only 1 regime is selected (not wine)" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            NormalMode,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Cider)).success.value,
+            Some(false)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Cider)
+        }
+
+        "must go from the Alcohol Type page to the first page of the regime's journey if only 1 regime is selected (wine)" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            NormalMode,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Wine)).success.value,
+            Some(false)
+          ) mustBe controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad()
+        }
+
+        "must go from the Alcohol Type page to the Journey recovery page if the answer is missing" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
             NormalMode,
             emptyUserAnswers,
             Some(false)
@@ -441,25 +489,16 @@ class ReturnsNavigatorSpec extends SpecBase {
           ) mustBe routes.TaskListController.onPageLoad
         }
 
-        "must go from the DeclareAlcoholDutyQuestion page to the Task List page" in {
+        "must go from the DeclareAlcoholDutyQuestion page to the Alcohol Type page if the answer is Yes and the user has more than 1 approval" in {
           navigator.nextPage(
-            DeclareAlcoholDutyQuestionPage,
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             CheckMode,
             emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value,
             Some(false)
           ) mustBe controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(CheckMode)
         }
 
-        "must go from the DeclareAlcoholDutyQuestion page to the Task List page when answer is No" in {
-          navigator.nextPage(
-            DeclareAlcoholDutyQuestionPage,
-            CheckMode,
-            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value,
-            Some(false)
-          ) mustBe routes.TaskListController.onPageLoad
-        }
-
-        "must go from the Alcohol to declare to the task list page if the user has only 1 approval in CheckMode" in {
+        "must go from the DeclareAlcoholDutyQuestion page to the first page of the regime's journey if the user has only 1 approval (not wine)" in {
           navigator.nextPage(
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             CheckMode,
@@ -469,7 +508,74 @@ class ReturnsNavigatorSpec extends SpecBase {
               .success
               .value,
             Some(false)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer)
+        }
+
+        "must go from the DeclareAlcoholDutyQuestion page to the first page of the regime's journey if the user has only 1 approval (wine)" in {
+          navigator.nextPage(
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
+            CheckMode,
+            emptyUserAnswers
+              .copy(regimes = AlcoholRegimes(Set(Wine)))
+              .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
+              .success
+              .value,
+            Some(false)
+          ) mustBe controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad()
+        }
+
+        "must go from the DeclareAlcoholDutyQuestion page to the Task List page when answer is No" in {
+          navigator.nextPage(
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
+            CheckMode,
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value,
+            Some(false)
           ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the DeclareAlcoholDutyQuestion page to the Journey recovery page if the answer is missing" in {
+          navigator.nextPage(
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
+            CheckMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
+
+        "must go from the Alcohol Type page to the task list page if multiple regimes are selected" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Beer, Cider)).success.value,
+            Some(false)
+          ) mustBe routes.TaskListController.onPageLoad
+        }
+
+        "must go from the Alcohol Type page to the first page of the regime's journey if only 1 regime is selected (not wine)" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Cider)).success.value,
+            Some(false)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Cider)
+        }
+
+        "must go from the Alcohol Type page to the first page of the regime's journey if only 1 regime is selected (wine)" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Wine)).success.value,
+            Some(false)
+          ) mustBe controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad()
+        }
+
+        "must go from the Alcohol Type page to the Journey recovery page if the answer is missing" in {
+          navigator.nextPage(
+            pages.declareDuty.AlcoholTypePage,
+            CheckMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
 
