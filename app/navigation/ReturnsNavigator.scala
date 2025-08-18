@@ -242,18 +242,18 @@ class ReturnsNavigator @Inject() (
 
   private def declareAlcoholQuestionRoute(userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
-      case Some(true) if userAnswers.regimes.regimes.size > 1 =>
+      case Some(true) if userAnswers.regimes.regimes.size > 1  =>
         controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(mode)
-      case Some(true)                                         => firstPageForRegime(userAnswers.regimes.regimes.head)
-      case Some(false)                                        => routes.TaskListController.onPageLoad
-      case _                                                  => routes.JourneyRecoveryController.onPageLoad()
+      case Some(true) if userAnswers.regimes.regimes.size == 1 => firstPageForRegime(userAnswers.regimes.regimes.head)
+      case Some(false)                                         => routes.TaskListController.onPageLoad
+      case _                                                   => routes.JourneyRecoveryController.onPageLoad()
     }
 
   private def selectAlcoholTypesRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(AlcoholTypePage) match {
-      case Some(regimes) if regimes.size > 1 => routes.TaskListController.onPageLoad
-      case Some(regimes)                     => firstPageForRegime(regimes.head)
-      case None                              => routes.JourneyRecoveryController.onPageLoad()
+      case Some(regimes) if regimes.size > 1  => routes.TaskListController.onPageLoad
+      case Some(regimes) if regimes.size == 1 => firstPageForRegime(regimes.head)
+      case _                                  => routes.JourneyRecoveryController.onPageLoad()
     }
 
   private def firstPageForRegime(regime: AlcoholRegime): Call =
