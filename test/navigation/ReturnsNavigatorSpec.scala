@@ -18,11 +18,12 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.AlcoholRegime.{Beer, Cider, Wine}
+import models.AlcoholRegime._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import org.scalacheck.Gen
 import pages.Page
 import viewmodels.declareDuty.MissingSPRRateBandHelper
 
@@ -33,6 +34,8 @@ class ReturnsNavigatorSpec extends SpecBase {
   val navigator = new ReturnsNavigator(mockMissingSPRRateBandHelper)
   val regime    = regimeGen.sample.value
   val rateBands = genListOfRateBandForRegime(regime).sample.value
+
+  val regimeNotWine = Gen.oneOf(Seq(Beer, Cider, Spirits, OtherFermentedProduct)).sample.value
 
   "ReturnsNavigator" - {
 
@@ -63,12 +66,12 @@ class ReturnsNavigatorSpec extends SpecBase {
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
             emptyUserAnswers
-              .copy(regimes = AlcoholRegimes(Set(Beer)))
+              .copy(regimes = AlcoholRegimes(Set(regimeNotWine)))
               .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
               .success
               .value,
             Some(false)
-          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regimeNotWine)
         }
 
         "must go from the DeclareAlcoholDutyQuestion page to the first page of the regime's journey if the user has only 1 approval (wine)" in {
@@ -115,9 +118,9 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.declareDuty.AlcoholTypePage,
             NormalMode,
-            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Cider)).success.value,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](regimeNotWine)).success.value,
             Some(false)
-          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Cider)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regimeNotWine)
         }
 
         "must go from the Alcohol Type page to the first page of the regime's journey if only 1 regime is selected (wine)" in {
@@ -503,12 +506,12 @@ class ReturnsNavigatorSpec extends SpecBase {
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             CheckMode,
             emptyUserAnswers
-              .copy(regimes = AlcoholRegimes(Set(Beer)))
+              .copy(regimes = AlcoholRegimes(Set(regimeNotWine)))
               .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
               .success
               .value,
             Some(false)
-          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regimeNotWine)
         }
 
         "must go from the DeclareAlcoholDutyQuestion page to the first page of the regime's journey if the user has only 1 approval (wine)" in {
@@ -555,9 +558,9 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.declareDuty.AlcoholTypePage,
             CheckMode,
-            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](Cider)).success.value,
+            emptyUserAnswers.set(pages.declareDuty.AlcoholTypePage, Set[AlcoholRegime](regimeNotWine)).success.value,
             Some(false)
-          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Cider)
+          ) mustBe controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regimeNotWine)
         }
 
         "must go from the Alcohol Type page to the first page of the regime's journey if only 1 regime is selected (wine)" in {
