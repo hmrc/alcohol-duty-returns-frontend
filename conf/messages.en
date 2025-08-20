@@ -74,10 +74,10 @@ unauthorised.not-org.p2.second = create an organisation account
 unauthorised.not-org.p2.third = if you do not already have one.
 unauthorised.not-org.button-text = Sign in as an organisation
 
-doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
-doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?
+doYouHaveAnAppaId.title = Do you have an alcoholic products producer approval ID?
+doYouHaveAnAppaId.heading = Do you have an alcoholic products producer approval ID?
 doYouHaveAnAppaId.hint = This is 15 characters, for example XMADP0123456789
-doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products Producer approval ID
+doYouHaveAnAppaId.error.required = Select yes if you have an alcoholic products producer approval ID
 
 noAppaId.title = You need an alcoholic products producer approval (APPA) ID to access this service
 noAppaId.heading = You need an alcoholic products producer approval (APPA) ID to access this service
