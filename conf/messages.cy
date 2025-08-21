@@ -74,10 +74,10 @@ unauthorised.not-org.p2.second = Gallwch greu cyfrif sefydliad
 unauthorised.not-org.p2.third = os nad oes gennych un eisoes.
 unauthorised.not-org.button-text = Mewngofnodwch fel sefydliad
 
-doYouHaveAnAppaId.title = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
-doYouHaveAnAppaId.heading = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
+doYouHaveAnAppaId.title = A oes gennych ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd?
+doYouHaveAnAppaId.heading = A oes gennych ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd?
 doYouHaveAnAppaId.hint = Mae hwn yn 15 o gymeriadau, er enghraifft XMADP0123456789
-doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd
+doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd
 
 noAppaId.title = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.heading = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
