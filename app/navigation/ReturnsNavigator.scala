@@ -19,6 +19,7 @@ package navigation
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import controllers.routes
+import models.AlcoholRegime.Wine
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
@@ -32,6 +33,7 @@ class ReturnsNavigator @Inject() (
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DeclareAlcoholDutyQuestionPage => userAnswers => declareAlcoholQuestionRoute(userAnswers, NormalMode)
+    case AlcoholTypePage                => userAnswers => selectAlcoholTypesRoute(userAnswers)
     case _                              => _ => routes.TaskListController.onPageLoad
   }
 
@@ -207,9 +209,9 @@ class ReturnsNavigator @Inject() (
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
-    case pages.declareDuty.DeclareAlcoholDutyQuestionPage =>
-      userAnswers => _ => declareAlcoholQuestionRoute(userAnswers, CheckMode)
-    case _                                                => _ => _ => routes.TaskListController.onPageLoad
+    case DeclareAlcoholDutyQuestionPage => userAnswers => _ => declareAlcoholQuestionRoute(userAnswers, CheckMode)
+    case AlcoholTypePage                => userAnswers => _ => selectAlcoholTypesRoute(userAnswers)
+    case _                              => _ => _ => routes.TaskListController.onPageLoad
   }
 
   def nextPageWithRegime(
@@ -240,9 +242,21 @@ class ReturnsNavigator @Inject() (
 
   private def declareAlcoholQuestionRoute(userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
-      case Some(true) if userAnswers.regimes.regimes.size > 1 =>
+      case Some(true) if userAnswers.regimes.regimes.size > 1  =>
         controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(mode)
-      case Some(_)                                            => routes.TaskListController.onPageLoad
-      case _                                                  => routes.JourneyRecoveryController.onPageLoad()
+      case Some(true) if userAnswers.regimes.regimes.size == 1 => firstPageForRegime(userAnswers.regimes.regimes.head)
+      case Some(false)                                         => routes.TaskListController.onPageLoad
+      case _                                                   => routes.JourneyRecoveryController.onPageLoad()
     }
+
+  private def selectAlcoholTypesRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(AlcoholTypePage) match {
+      case Some(regimes) if regimes.size > 1  => routes.TaskListController.onPageLoad
+      case Some(regimes) if regimes.size == 1 => firstPageForRegime(regimes.head)
+      case _                                  => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  private def firstPageForRegime(regime: AlcoholRegime): Call =
+    if (regime == Wine) { controllers.declareDuty.routes.DeclaringWineDutyGuidanceController.onPageLoad() }
+    else { controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime) }
 }
