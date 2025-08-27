@@ -119,22 +119,21 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
   }
 
   "historic payments" - {
-    val year    = 2024
-    val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/historic/$year"
+    val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/historic"
 
     "successfully retrieve historic payments" in new SetUp {
-      val historicPaymentsResponse = historicPayments
+      val historicPaymentsResponse = historicPaymentsData
       val jsonResponse             = Json.toJson(historicPaymentsResponse).toString()
       val httpResponse             = Right(HttpResponse(OK, jsonResponse))
 
-      when(mockConfig.adrGetHistoricPaymentsUrl(eqTo(appaId), eqTo(year))).thenReturn(mockUrl)
+      when(mockConfig.adrGetHistoricPaymentsUrl(eqTo(appaId))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(httpResponse))
 
       when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      whenReady(connector.historicPayments(appaId, year)) { result =>
+      whenReady(connector.historicPayments(appaId)) { result =>
         result mustBe historicPaymentsResponse
 
         verify(connector.httpClient, atLeastOnce)
@@ -148,14 +147,14 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
     "fail when invalid JSON is returned" in new SetUp {
       val invalidJsonResponse = Right(HttpResponse(OK, """{ "invalid": "json" }"""))
 
-      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
+      when(mockConfig.adrGetHistoricPaymentsUrl(appaId)).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(invalidJsonResponse))
 
       when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      whenReady(connector.historicPayments(appaId, year).failed) { e =>
+      whenReady(connector.historicPayments(appaId).failed) { e =>
         e.getMessage must include("Invalid JSON format")
 
         verify(connector.httpClient, atLeastOnce)
@@ -171,14 +170,14 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
         Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
       )
 
-      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
+      when(mockConfig.adrGetHistoricPaymentsUrl(appaId)).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(upstreamErrorResponse)
 
       when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      whenReady(connector.historicPayments(appaId, year).failed) { e =>
+      whenReady(connector.historicPayments(appaId).failed) { e =>
         e.getMessage must include("Unexpected response")
 
         verify(connector.httpClient, times(1))
@@ -192,14 +191,14 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
     "fail when unexpected status code returned" in new SetUp {
       val invalidStatusCodeResponse = Right(HttpResponse(CREATED, ""))
 
-      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
+      when(mockConfig.adrGetHistoricPaymentsUrl(appaId)).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(invalidStatusCodeResponse))
 
       when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      whenReady(connector.historicPayments(appaId, year).failed) { e =>
+      whenReady(connector.historicPayments(appaId).failed) { e =>
         e.getMessage mustBe "Unexpected status code: 201"
 
         verify(connector.httpClient, atLeastOnce)

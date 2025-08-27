@@ -216,7 +216,6 @@ pastYearPayments.title = Past payments
 pastYearPayments.heading = Past payments
 pastYearPayments.p = Your payments which have been received by HMRC will appear here.
 
-
 taskList.title = Complete your Alcohol Duty return
 taskList.period = This is your alcohol return for the period {0} to {1}.
 taskList.completion.date = Complete all the tasks and send this return on or before the {0}.

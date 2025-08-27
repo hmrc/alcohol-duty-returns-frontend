@@ -73,9 +73,10 @@ class ViewPastPaymentsController @Inject() (
         val currentYearHistoricPayments = historicPaymentsData
           .find(_.year == currentYear)
           .getOrElse(throw new IllegalStateException("Current year historic payments list not found"))
+        println(s"*****$currentYearHistoricPayments")
         val historicPaymentsTable       = helper.getHistoricPaymentsTable(currentYearHistoricPayments.payments)
         val historicYears               =
-          historicPaymentsData.filter(p => p.year != currentYear && p.payments.nonEmpty).map(_.year)
+          historicPaymentsData.filter(p => p.year != currentYear && p.payments.nonEmpty).map(_.year).sorted.reverse
         (historicPaymentsTable, historicYears)
       }
 
