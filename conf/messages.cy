@@ -209,6 +209,12 @@ viewPastPayments.historic.LPI.description = Taliadau llog am dalu’n hwyr sydd 
 viewPastPayments.historic.paragraph = Mae ‘Taliadau wedi’u clirio’ yn golygu achosion pan fo arian wedi dod i law CThEF, neu pan fo balans credyd presennol wedi’i ddefnyddio i dalu unrhyw doll berthnasol.
 viewPastPayments.visually-hidden.pay-now = swm o £{0} sy’n ddyledus ar {1}
 viewPastPayments.visually-hidden.claim-refund = o £{0}
+viewPastPayments.pastPayments.h2 = NOT_FOUND
+viewPastPayments.pastYears.link = View {0} payments
+
+pastYearPayments.title = NOT_FOUND
+pastYearPayments.heading = NOT_FOUND
+pastYearPayments.p = NOT_FOUND
 
 taskList.title = Cwblhau’ch datganiad Toll Alcohol
 taskList.period = Dyma’ch Datganiad Toll Alcohol ar gyfer y cyfnod {0} i {1}.

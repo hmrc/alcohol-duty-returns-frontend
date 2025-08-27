@@ -21,9 +21,6 @@
 
 @this(
         layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        govukErrorSummary: GovukErrorSummary,
-        govukButton: GovukButton,
         pageHeading: PageHeading,
         govukTable: GovukTable,
         paragraph: Paragraph,
@@ -123,6 +120,19 @@
         @if(historicPaymentsTable.rows.isEmpty) {
             @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", viewModel.year)), Css.headingMCssClass)
             @paragraph(messages("viewPastPayments.historic.noPayments"))
+        }
+
+        @if(viewModel.historicYears.nonEmpty) {
+            @subHeading(messages("viewPastPayments.pastYears.h2"), Css.headingMCssClass)
+            @paragraph(HtmlContent(
+                viewModel.historicYears.map{ year =>
+                    link(
+                        id = s"past-payments-link-$year",
+                        text = messages("viewPastPayments.pastYears.link", messages("site.year", year)),
+                        href = controllers.payments.routes.PastYearPaymentsController.onPageLoad(year).url
+                    )
+                }.mkString("<br>")
+            ))
         }
 
     }
