@@ -414,7 +414,7 @@ declaringWineDuty.subHeading2 = Calculating your litres of pure alcohol
 declaringWineDuty.p3 = To calculate the litres of pure alcohol, multiply the total volume of wine in litres by the ABV strength, then divide by 100.
 declaringWineDuty.details.summary = Example of a calculation
 declaringWineDuty.details.p = You have 4,297.55 litres of wine at 13.5% ABV. To calculate the litres of pure alcohol in this wine, you must:
-declaringWineDuty.details.calculation1 = 4,297.55 litres x 13.5% ABV = 58,016.925
+declaringWineDuty.details.calculation1 = 4,297.55 litres x 13.5 ABV = 58,016.925
 declaringWineDuty.details.calculation2 = 58,016.925 ÷ 100 = 580.1692 litres of pure alcohol
 
 whatDoYouNeedToDeclare.title = What do you need to declare?
