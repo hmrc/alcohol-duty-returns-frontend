@@ -74,15 +74,15 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
     "Historic Payments" - {
 
       "must successfully retrieve historic payment details" in new SetUp {
-        val jsonResponse = Json.toJson(historicPayments).toString()
+        val jsonResponse = Json.toJson(historicPaymentsData).toString()
 
         server.stubFor(get(urlMatching(historicUrl))
           .willReturn(aResponse()
             .withStatus(OK)
             .withBody(jsonResponse)))
 
-        whenReady(connector.historicPayments(appaId, year)) { result =>
-          result mustBe historicPayments
+        whenReady(connector.historicPayments(appaId)) { result =>
+          result mustBe historicPaymentsData
         }
       }
 
@@ -93,7 +93,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
             .withStatus(OK)
             .withBody(invalidJsonResponse)))
 
-        whenReady(connector.historicPayments(appaId, year).failed) { e =>
+        whenReady(connector.historicPayments(appaId).failed) { e =>
           e.getMessage must include("Invalid JSON format")
         }
       }
@@ -103,7 +103,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
           .willReturn(aResponse()
             .withStatus(BAD_GATEWAY)))
 
-        whenReady(connector.historicPayments(appaId, year).failed) { e =>
+        whenReady(connector.historicPayments(appaId).failed) { e =>
           e.getMessage must include("Unexpected response")
         }
       }
@@ -113,7 +113,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
           .willReturn(aResponse()
             .withStatus(CREATED)))
 
-        whenReady(connector.historicPayments(appaId, year).failed) { e =>
+        whenReady(connector.historicPayments(appaId).failed) { e =>
           e.getMessage must include("Unexpected status code: 201")
         }
       }
@@ -121,8 +121,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
   }
 
   class SetUp {
-    val year = 2024
-    val historicUrl = s"/alcohol-duty-account/producers/$appaId/payments/historic/$year"
+    val historicUrl = s"/alcohol-duty-account/producers/$appaId/payments/historic"
     val openPayments = s"/alcohol-duty-account/producers/$appaId/payments/open"
     val connector = app.injector.instanceOf[AlcoholDutyAccountConnector]
   }

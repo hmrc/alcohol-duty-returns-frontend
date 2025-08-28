@@ -37,7 +37,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
   val instant   = LocalDate.of(2025, 8, 22).atStartOfDay(ZoneId.of(ukTimeZoneStringId)).toInstant
   val clock2025 = Clock.fixed(instant, ZoneId.of(ukTimeZoneStringId))
 
-  "ViewPastPaymentsController Controller" - {
+  "ViewPastPayments Controller" - {
     "must return OK and the correct view for a GET when the claim refund gform feature toggle is disabled" in {
       val testConfiguration  = app.injector.instanceOf[Configuration]
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
@@ -241,19 +241,26 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery if there is an Exception due to a failed Future" in {
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
-      val application                      = applicationBuilder(userAnswers = None).build()
-      running(application) {
-        when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
-          new Exception("test Exception")
-        )
-        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
+        new Exception("test Exception")
+      )
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+        historicPaymentsData
+      )
 
-        val result = route(application, request).value
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+        val result  = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
-
 }
