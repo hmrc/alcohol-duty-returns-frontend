@@ -73,4 +73,8 @@ class TestOnlyController @Inject() (
         }
     }
   }
+
+  def clearPastPaymentsData(): Action[AnyContent] = Action.async { implicit request =>
+    testOnlyConnector.clearPastPaymentsData().map(httpResponse => Ok(httpResponse.body))
+  }
 }

@@ -49,4 +49,6 @@ class TestOnlyUserAnswersConnector @Inject() (
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
+  def clearPastPaymentsData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.delete(url"${appConfig.adrClearPastPaymentsUrl()}").execute[HttpResponse]
 }

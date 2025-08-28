@@ -123,6 +123,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   ): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/$beer/$cider/$wine/$spirits/$OFP"
 
+  def adrClearPastPaymentsUrl(): String =
+    s"$adrAccountHost/alcohol-duty-account/test-only/clear-user-historic-payments"
+
   def adrGetObligationDetailsUrl(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
 
