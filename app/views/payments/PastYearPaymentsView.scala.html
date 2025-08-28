@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph}
+@import components.{PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
@@ -22,7 +22,8 @@
         layout: templates.Layout,
         govukTable: GovukTable,
         pageHeading: PageHeading,
-        paragraph: Paragraph
+        paragraph: Paragraph,
+        subHeading: SubHeading
 )
 
 @(year: Int, historicPaymentsTable: TableViewModel)(implicit request: Request[_], messages: Messages)
@@ -32,11 +33,10 @@
     @pageHeading(messages("pastYearPayments.heading"))
 
     @paragraph(messages("pastYearPayments.p"))
-    <br>
+
+    @subHeading(messages("site.year", year), Css.headingMCssClass)
 
     @govukTable(Table(
-        caption = Some(messages("site.year", year)),
-        captionClasses = Css.tableCaptionMCssClass,
         head = Some(historicPaymentsTable.head),
         rows = historicPaymentsTable.rows.map(_.cells),
     ))

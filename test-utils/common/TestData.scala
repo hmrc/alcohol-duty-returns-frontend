@@ -537,6 +537,8 @@ trait TestData extends ModelGenerators {
   val historicRefundPayment =
     HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.JULY)), Return, Some(chargeReference), BigDecimal(-1236.45))
 
+  val emptyHistoricPayments = HistoricPayments(2024, Seq.empty)
+
   val historicPayments2025 =
     HistoricPayments(2025, Seq(historicReturnPayment, historicLPIPayment, historicRPIPayment, historicRefundPayment))
   val historicPayments2024 = HistoricPayments(
@@ -546,15 +548,14 @@ trait TestData extends ModelGenerators {
       historicLPIPayment.copy(period = ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)))
     )
   )
+  val historicPayments2023 = emptyHistoricPayments.copy(year = 2023)
   val historicPayments2022 = HistoricPayments(
     2022,
     Seq(historicReturnPayment.copy(period = ReturnPeriod(YearMonth.of(2022, Month.DECEMBER))))
   )
 
-  val emptyHistoricPayments = HistoricPayments(2024, Seq.empty)
-
-  val historicPaymentsData  = Seq(historicPayments2025, historicPayments2024, historicPayments2022)
-  val historicPaymentsData2 = Seq(historicPayments2025, emptyHistoricPayments)
+  val historicPaymentsData  = Seq(historicPayments2022, historicPayments2023, historicPayments2024, historicPayments2025)
+  val historicPaymentsData2 = Seq(emptyHistoricPayments, historicPayments2025)
 
   val currentDate    = LocalDate.now(clock)
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
