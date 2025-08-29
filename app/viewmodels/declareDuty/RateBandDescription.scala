@@ -129,7 +129,7 @@ object RateBandDescription {
     showDraughtStatus: Boolean,
     useNoPackagingSuffix: Boolean
   )(implicit messages: Messages): String = {
-    val messageKey = if (messages.lang.code == "cy" && abvRange.maxABV.value == 100) {
+    val messageKey = if (abvRange.maxABV.value == 100) {
       "return.journey.abv.single.interval.100"
     } else {
       "return.journey.abv.single.interval"
