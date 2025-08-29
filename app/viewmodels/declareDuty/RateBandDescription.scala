@@ -128,15 +128,20 @@ object RateBandDescription {
     rateType: RateType,
     showDraughtStatus: Boolean,
     useNoPackagingSuffix: Boolean
-  )(implicit
-    messages: Messages
-  ): String =
+  )(implicit messages: Messages): String = {
+    val messageKey = if (messages.lang.code == "cy" && abvRange.maxABV.value == 100) {
+      "return.journey.abv.single.interval.100"
+    } else {
+      "return.journey.abv.single.interval"
+    }
+
     messages(
-      s"return.journey.abv.single.interval",
+      messageKey,
       getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus, taxTypeCode, useNoPackagingSuffix),
       getAbvRange(abvRange.minABV.value, abvRange.maxABV.value),
       getTaxType(taxTypeCode, rateType)
     )
+  }
 
   private def multipleIntervalsText(
     abvRange1: ABVRange,
