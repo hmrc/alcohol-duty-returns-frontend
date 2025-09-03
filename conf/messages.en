@@ -361,6 +361,7 @@ return.journey.abv.taxTypeCode = tax type code {0}
 return.journey.abv.taxTypeCode.SPR = tax type code {0} SPR
 
 return.journey.abv.single.interval = {0} {1} ABV ({2})
+return.journey.abv.single.interval.100 = {0} {1} ABV ({2})
 return.journey.abv.multi.interval.Beer = {0} {1} ABV and beer {2} ABV ({3})
 return.journey.abv.multi.interval.Cider = {0} {1} ABV and cider {2} ABV ({3})
 return.journey.abv.multi.interval.SparklingCider = {0} {1} ABV and sparkling cider {2} ABV ({3})
