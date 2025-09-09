@@ -529,22 +529,33 @@ trait TestData extends ModelGenerators {
   )
 
   val historicReturnPayment =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.DECEMBER)), Return, Some(chargeReference), BigDecimal(123.45))
+    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.APRIL)), Return, Some(chargeReference), BigDecimal(123.45))
   val historicLPIPayment    =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)), LPI, Some(chargeReference), BigDecimal(12.45))
+    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.JUNE)), LPI, Some(chargeReference), BigDecimal(12.45))
   val historicRPIPayment    =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)), RPI, Some(chargeReference), BigDecimal(-123.45))
-  val historicRefundPayment = HistoricPayment(
-    ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
-    Return,
-    Some(chargeReference),
-    BigDecimal(-1236.45)
+    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.MAY)), RPI, Some(chargeReference), BigDecimal(-123.45))
+  val historicRefundPayment =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.JULY)), Return, Some(chargeReference), BigDecimal(-1236.45))
+
+  val emptyHistoricPayments = HistoricPayments(2024, Seq.empty)
+
+  val historicPayments2025 =
+    HistoricPayments(2025, Seq(historicReturnPayment, historicLPIPayment, historicRPIPayment, historicRefundPayment))
+  val historicPayments2024 = HistoricPayments(
+    2024,
+    Seq(
+      historicReturnPayment.copy(period = ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))),
+      historicLPIPayment.copy(period = ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)))
+    )
+  )
+  val historicPayments2023 = emptyHistoricPayments.copy(year = 2023)
+  val historicPayments2022 = HistoricPayments(
+    2022,
+    Seq(historicReturnPayment.copy(period = ReturnPeriod(YearMonth.of(2022, Month.DECEMBER))))
   )
 
-  val historicPayments =
-    HistoricPayments(2024, Seq(historicReturnPayment, historicLPIPayment, historicRPIPayment, historicRefundPayment))
-
-  val emptyHistoricPayment = HistoricPayments(2024, Seq.empty)
+  val historicPaymentsData  = Seq(historicPayments2022, historicPayments2023, historicPayments2024, historicPayments2025)
+  val historicPaymentsData2 = Seq(emptyHistoricPayments, historicPayments2025)
 
   val currentDate    = LocalDate.now(clock)
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)

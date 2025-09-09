@@ -46,7 +46,9 @@ class ViewPastPaymentsController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
-    val appaId                    = request.appaId
+    val appaId      = request.appaId
+    val currentYear = Year.now(clock).getValue
+
     val outstandingPaymentsFuture =
       alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
         val sortedOutstandingPaymentsData =
@@ -67,20 +69,25 @@ class ViewPastPaymentsController @Inject() (
       }
 
     val historicPaymentsFuture =
-      alcoholDutyAccountConnector.historicPayments(appaId, Year.now(clock).getValue).map { historicPaymentsData =>
-        val historicPaymentsTable = helper.getHistoricPaymentsTable(historicPaymentsData.payments)
-        (historicPaymentsTable, historicPaymentsData.year)
+      alcoholDutyAccountConnector.historicPayments(appaId).map { historicPaymentsData =>
+        val currentYearHistoricPayments = historicPaymentsData
+          .find(_.year == currentYear)
+          .getOrElse(throw new IllegalStateException("Current year historic payments list not found"))
+        val historicPaymentsTable       = helper.getHistoricPaymentsTable(currentYearHistoricPayments.payments)
+        val historicYears               =
+          historicPaymentsData.filter(p => p.year != currentYear && p.payments.nonEmpty).map(_.year).sorted.reverse
+        (historicPaymentsTable, historicYears)
       }
 
     val openAndHistoricPaymentsFuture = for {
-      pastPaymentsData              <- outstandingPaymentsFuture
-      (historicPaymentsTable, year) <- historicPaymentsFuture
+      pastPaymentsData                       <- outstandingPaymentsFuture
+      (historicPaymentsTable, historicYears) <- historicPaymentsFuture
     } yield Ok(
       view(
         pastPaymentsData.outstandingPaymentsTable,
         pastPaymentsData.unallocatedPaymentsTable,
         historicPaymentsTable,
-        helper.getViewPastPaymentsViewModel(pastPaymentsData.totalOpenPaymentsAmount, year)
+        helper.getViewPastPaymentsViewModel(pastPaymentsData.totalOpenPaymentsAmount, currentYear, historicYears)
       )
     ).withSession(pastPaymentsData.session)
 

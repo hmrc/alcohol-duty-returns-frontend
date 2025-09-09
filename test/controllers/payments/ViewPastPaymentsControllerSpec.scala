@@ -17,6 +17,7 @@
 package controllers.payments
 
 import base.SpecBase
+import config.Constants.ukTimeZoneStringId
 import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import org.mockito.ArgumentMatchers.any
@@ -28,12 +29,15 @@ import viewmodels.payments.ViewPastPaymentsHelper
 import viewmodels.payments.ViewPastPaymentsViewModel
 import views.html.payments.ViewPastPaymentsView
 
-import java.time.{Clock, LocalDate}
+import java.time.{Clock, LocalDate, ZoneId}
 import scala.concurrent.Future
 
 class ViewPastPaymentsControllerSpec extends SpecBase {
 
-  "ViewPastPaymentsController Controller" - {
+  val instant   = LocalDate.of(2025, 8, 22).atStartOfDay(ZoneId.of(ukTimeZoneStringId)).toInstant
+  val clock2025 = Clock.fixed(instant, ZoneId.of(ukTimeZoneStringId))
+
+  "ViewPastPayments Controller" - {
     "must return OK and the correct view for a GET when the claim refund gform feature toggle is disabled" in {
       val testConfiguration  = app.injector.instanceOf[Configuration]
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
@@ -42,20 +46,20 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = false
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock)
+      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock2025)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
       )
-      when(mockAlcoholDutyAccountsConnector.historicPayments(any(), any())(any())) thenReturn Future.successful(
-        historicPayments
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+        historicPaymentsData
       )
 
       val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
           bind[FrontendAppConfig].toInstance(testAppConfig),
-          bind[Clock].toInstance(clock)
+          bind[Clock].toInstance(clock2025)
         )
         .build()
 
@@ -71,9 +75,13 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         val unallocatedPaymentsTable      =
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         val historicPaymentsTable         =
-          viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
-        val viewModel                     =
-          ViewPastPaymentsViewModel(openPaymentsData.totalOpenPaymentsAmount, 2024, claimARefundGformEnabled = false)
+          viewModelHelper.getHistoricPaymentsTable(historicPayments2025.payments)(getMessages(application))
+        val viewModel                     = ViewPastPaymentsViewModel(
+          openPaymentsData.totalOpenPaymentsAmount,
+          2025,
+          Seq(2024, 2022),
+          claimARefundGformEnabled = false
+        )
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
@@ -88,7 +96,117 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       }
     }
 
-    "must return OK and the correct view for a GET when the claim refund gform feature toggle is enabled" in {
+    "must return OK and the correct view for a GET when the claim refund gform feature toggle is enabled" - {
+      "and there are payments from past years" in {
+        val testConfiguration  = app.injector.instanceOf[Configuration]
+        val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+
+        val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
+          override val claimARefundGformEnabled = true
+        }
+
+        val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock2025)
+        val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+        when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
+          openPaymentsData
+        )
+        when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+          historicPaymentsData
+        )
+
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
+            bind[Clock].toInstance(clock2025)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          val view                          = application.injector.instanceOf[ViewPastPaymentsView]
+          val sortedOutstandingPaymentsData =
+            openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          val outstandingPaymentsTable      =
+            viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
+          val unallocatedPaymentsTable      =
+            viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
+          val historicPaymentsTable         =
+            viewModelHelper.getHistoricPaymentsTable(historicPayments2025.payments)(getMessages(application))
+          val viewModel                     = ViewPastPaymentsViewModel(
+            openPaymentsData.totalOpenPaymentsAmount,
+            2025,
+            Seq(2024, 2022),
+            claimARefundGformEnabled = true
+          )
+
+          status(result)          mustEqual OK
+          contentAsString(result) mustEqual view(
+            outstandingPaymentsTable,
+            unallocatedPaymentsTable,
+            historicPaymentsTable,
+            viewModel
+          )(request, getMessages(application)).toString
+        }
+      }
+
+      "and there are no payments from past years" in {
+        val testConfiguration  = app.injector.instanceOf[Configuration]
+        val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+
+        val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
+          override val claimARefundGformEnabled = true
+        }
+
+        val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock2025)
+        val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+        when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
+          openPaymentsData
+        )
+        when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+          historicPaymentsData2
+        )
+
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
+            bind[Clock].toInstance(clock2025)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          val view                          = application.injector.instanceOf[ViewPastPaymentsView]
+          val sortedOutstandingPaymentsData =
+            openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          val outstandingPaymentsTable      =
+            viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
+          val unallocatedPaymentsTable      =
+            viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
+          val historicPaymentsTable         =
+            viewModelHelper.getHistoricPaymentsTable(historicPayments2025.payments)(getMessages(application))
+          val viewModel                     = ViewPastPaymentsViewModel(
+            openPaymentsData.totalOpenPaymentsAmount,
+            2025,
+            Seq.empty,
+            claimARefundGformEnabled = true
+          )
+
+          status(result)          mustEqual OK
+          contentAsString(result) mustEqual view(
+            outstandingPaymentsTable,
+            unallocatedPaymentsTable,
+            historicPaymentsTable,
+            viewModel
+          )(request, getMessages(application)).toString
+        }
+      }
+    }
+
+    "must redirect to Journey Recovery if there is an Exception due to the historic payments list being absent for the current year" in {
       val testConfiguration  = app.injector.instanceOf[Configuration]
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
 
@@ -96,19 +214,19 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = true
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
       )
-      when(mockAlcoholDutyAccountsConnector.historicPayments(any(), any())(any())) thenReturn Future.successful(
-        historicPayments
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+        Seq(historicPayments2024)
       )
 
       val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
-          bind[Clock].toInstance(clock)
+          bind[FrontendAppConfig].toInstance(testAppConfig),
+          bind[Clock].toInstance(clock2025)
         )
         .build()
 
@@ -116,46 +234,33 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
         val result  = route(application, request).value
 
-        val view                          = application.injector.instanceOf[ViewPastPaymentsView]
-        val sortedOutstandingPaymentsData =
-          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-        val outstandingPaymentsTable      =
-          viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
-        val unallocatedPaymentsTable      =
-          viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
-        val historicPaymentsTable         =
-          viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
-        val viewModel                     =
-          ViewPastPaymentsViewModel(openPaymentsData.totalOpenPaymentsAmount, 2024, claimARefundGformEnabled = true)
-
-        status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          outstandingPaymentsTable,
-          unallocatedPaymentsTable,
-          historicPaymentsTable,
-          viewModel
-        )(
-          request,
-          getMessages(application)
-        ).toString
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "must redirect to Journey Recovery for a GET on Exception" in {
+    "must redirect to Journey Recovery if there is an Exception due to a failed Future" in {
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
-      val application                      = applicationBuilder(userAnswers = None).build()
-      running(application) {
-        when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
-          new Exception("test Exception")
-        )
-        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
+        new Exception("test Exception")
+      )
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+        historicPaymentsData
+      )
 
-        val result = route(application, request).value
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+        val result  = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
-
 }

@@ -47,13 +47,13 @@ class AlcoholDutyAccountConnector @Inject() (
         case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
       }
 
-  def historicPayments(appaId: String, year: Int)(implicit hc: HeaderCarrier): Future[HistoricPayments] =
+  def historicPayments(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[HistoricPayments]] =
     httpClient
-      .get(url"${config.adrGetHistoricPaymentsUrl(appaId, year)}")
+      .get(url"${config.adrGetHistoricPaymentsUrl(appaId)}")
       .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .flatMap {
         case Right(response) if response.status == OK =>
-          Try(response.json.as[HistoricPayments]) match {
+          Try(response.json.as[Seq[HistoricPayments]]) match {
             case Success(data)      => Future.successful(data)
             case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
           }

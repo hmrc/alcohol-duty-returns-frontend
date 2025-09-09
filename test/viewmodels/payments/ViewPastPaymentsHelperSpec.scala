@@ -84,9 +84,9 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       }
 
       "must return a table with the correct number of rows and head for historic payments" in {
-        val table = viewPastPaymentsHelper.getHistoricPaymentsTable(historicPayments.payments)
+        val table = viewPastPaymentsHelper.getHistoricPaymentsTable(historicPayments2025.payments)
         table.head.size mustBe 3
-        table.rows.size mustBe historicPayments.payments.size
+        table.rows.size mustBe historicPayments2025.payments.size
       }
 
       "must not return a table when outstanding payments are not present" in {
@@ -105,9 +105,9 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
 
       "must not return a table when historic payments are not present" in {
         val table =
-          viewPastPaymentsHelper.getHistoricPaymentsTable(emptyHistoricPayment.payments)
+          viewPastPaymentsHelper.getHistoricPaymentsTable(emptyHistoricPayments.payments)
         table.head.size mustBe 0
-        table.rows.size mustBe emptyHistoricPayment.payments.size
+        table.rows.size mustBe emptyHistoricPayments.payments.size
       }
 
       "must return the Due status for an outstanding payment which is Due" in {
@@ -194,13 +194,13 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       }
 
       "must return a sorted table by return period in descending order for historic payments" in {
-        val table = viewPastPaymentsHelper.getHistoricPaymentsTable(historicPayments.payments)
-        table.rows.size                                                 mustBe historicPayments.payments.size
+        val table = viewPastPaymentsHelper.getHistoricPaymentsTable(historicPayments2025.payments)
+        table.rows.size                                                 mustBe historicPayments2025.payments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
-          Text("December 2024").asHtml.toString(),
-          Text("November 2024").asHtml.toString(),
-          Text("October 2024").asHtml.toString(),
-          Text("September 2024").asHtml.toString()
+          Text("July 2025").asHtml.toString(),
+          Text("June 2025").asHtml.toString(),
+          Text("May 2025").asHtml.toString(),
+          Text("April 2025").asHtml.toString()
         )
       }
     }
@@ -234,9 +234,9 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       }
 
       "must return a table with the correct number of rows and head for historic payments" in {
-        val table = viewPastPaymentsHelperToggleOn.getHistoricPaymentsTable(historicPayments.payments)
+        val table = viewPastPaymentsHelperToggleOn.getHistoricPaymentsTable(historicPayments2025.payments)
         table.head.size mustBe 3
-        table.rows.size mustBe historicPayments.payments.size
+        table.rows.size mustBe historicPayments2025.payments.size
       }
 
       "must not return a table when outstanding payments are not present" in {
@@ -257,9 +257,9 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
 
       "must not return a table when historic payments are not present" in {
         val table =
-          viewPastPaymentsHelperToggleOn.getHistoricPaymentsTable(emptyHistoricPayment.payments)
+          viewPastPaymentsHelperToggleOn.getHistoricPaymentsTable(emptyHistoricPayments.payments)
         table.head.size mustBe 0
-        table.rows.size mustBe emptyHistoricPayment.payments.size
+        table.rows.size mustBe emptyHistoricPayments.payments.size
       }
 
       "must return the Due status for an outstanding payment which is Due" in {
@@ -346,13 +346,13 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       }
 
       "must return a sorted table by return period in descending order for historic payments" in {
-        val table = viewPastPaymentsHelperToggleOn.getHistoricPaymentsTable(historicPayments.payments)
-        table.rows.size                                                 mustBe historicPayments.payments.size
+        val table = viewPastPaymentsHelperToggleOn.getHistoricPaymentsTable(historicPayments2025.payments)
+        table.rows.size                                                 mustBe historicPayments2025.payments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
-          Text("December 2024").asHtml.toString(),
-          Text("November 2024").asHtml.toString(),
-          Text("October 2024").asHtml.toString(),
-          Text("September 2024").asHtml.toString()
+          Text("July 2025").asHtml.toString(),
+          Text("June 2025").asHtml.toString(),
+          Text("May 2025").asHtml.toString(),
+          Text("April 2025").asHtml.toString()
         )
       }
     }

@@ -123,6 +123,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   ): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/$beer/$cider/$wine/$spirits/$OFP"
 
+  def adrClearPastPaymentsUrl(): String =
+    s"$adrAccountHost/alcohol-duty-account/test-only/clear-user-historic-payments"
+
   def adrGetObligationDetailsUrl(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
 
@@ -141,8 +144,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrGetOutstandingPaymentsUrl(appaId: String): String =
     s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/open"
 
-  def adrGetHistoricPaymentsUrl(appaId: String, year: Int): String =
-    s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/historic/$year"
+  def adrGetHistoricPaymentsUrl(appaId: String): String =
+    s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/historic"
 
   def claimRefundGformUrl(amount: String): String =
     s"$gformPrefix$gformClaimARefundUrl$amount"

@@ -53,6 +53,16 @@ When running the frontend microservice, allow routes in test.routes to be called
 
 > `sbt "run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"`
 
+#### Clear user answers
+
+This endpoint clears all data in the user answers repository (in alcohol-duty-returns):
+http://localhost:16000/manage-alcohol-duty/test-only/clear-all
+
+#### Clear historic payments data
+
+This endpoint clears all data in the user historic payments repository (in alcohol-duty-account):
+http://localhost:16000/manage-alcohol-duty/test-only/clear-user-historic-payments
+
 #### Create existing user answers
 To create existing user answers with specific alcohol regimes before starting the returns journey, change the following
 fields on the auth-login-stub:
