@@ -233,6 +233,14 @@ manageCentralAssessment.submitReturn = Submit my return
 manageCentralAssessment.payCharge = Pay central assessment charge
 manageCentralAssessment.error.required = Select what you need to do
 
+payCentralAssessment.title = NOT_FOUND
+payCentralAssessment.heading = NOT_FOUND
+payCentralAssessment.guidance1 = NOT_FOUND
+payCentralAssessment.guidance2 = NOT_FOUND
+payCentralAssessment.bullet1 = NOT_FOUND
+payCentralAssessment.bullet2 = NOT_FOUND
+payCentralAssessment.submitReturn = NOT_FOUND
+
 taskList.title = Cwblhau’ch datganiad Toll Alcohol
 taskList.period = Dyma’ch Datganiad Toll Alcohol ar gyfer y cyfnod {0} i {1}.
 taskList.completion.date = Cwblhewch yr holl dasgau ac anfonwch y Datganiad hwn ar neu cyn {0}.

@@ -17,56 +17,31 @@
 package controllers.payments
 
 import controllers.actions._
-import forms.payments.ManageCentralAssessmentFormProvider
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.payments.ManageCentralAssessmentHelper
-import views.html.payments.ManageCentralAssessmentView
+import views.html.payments.PayCentralAssessmentChargeView
 
 import javax.inject.Inject
 
-class ManageCentralAssessmentController @Inject() (
+class PayCentralAssessmentChargeController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
-  formProvider: ManageCentralAssessmentFormProvider,
   helper: ManageCentralAssessmentHelper,
   val controllerComponents: MessagesControllerComponents,
-  view: ManageCentralAssessmentView
+  view: PayCentralAssessmentChargeView
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  val form = formProvider()
-
   def onPageLoad(chargeRef: String): Action[AnyContent] = identify { implicit request =>
     helper.getCentralAssessmentChargeFromSession(request.session, chargeRef) match {
-      case Some((charge, _)) =>
+      case Some((charge, index)) =>
         val viewModel = helper.getCentralAssessmentViewModel(charge)
-        Ok(view(form, viewModel))
-      case None              =>
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
-  }
-
-  def onSubmit(chargeRef: String): Action[AnyContent] = identify { implicit request =>
-    helper.getCentralAssessmentChargeFromSession(request.session, chargeRef) match {
-      case Some((charge, _)) =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => {
-              val viewModel = helper.getCentralAssessmentViewModel(charge)
-              BadRequest(view(formWithErrors, viewModel))
-            },
-            if (_) {
-              Redirect(controllers.returns.routes.ViewPastReturnsController.onPageLoad)
-            } else {
-              Redirect(controllers.payments.routes.PayCentralAssessmentChargeController.onPageLoad(chargeRef: String))
-            }
-          )
-      case None              =>
+        Ok(view(viewModel, index))
+      case None                  =>
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

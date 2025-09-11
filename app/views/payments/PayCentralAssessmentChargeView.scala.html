@@ -1,0 +1,54 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{BulletList, Link, Paragraph, PageHeading}
+@import viewmodels.payments.ManageCentralAssessmentViewModel
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        pageHeading: PageHeading,
+        paragraph: Paragraph,
+        link: Link,
+        bulletList: BulletList
+)
+
+@(viewModel: ManageCentralAssessmentViewModel, paymentIndex: Int)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("payCentralAssessment.title"))) {
+
+    @pageHeading(messages("payCentralAssessment.heading"))
+
+    @paragraph(messages("payCentralAssessment.guidance1", viewModel.dateFrom, viewModel.dateTo))
+
+    @paragraph(messages("payCentralAssessment.guidance2"))
+    @bulletList(Seq(
+        messages("payCentralAssessment.bullet1"),
+        messages("payCentralAssessment.bullet2")
+    ))
+    <br>
+
+    @govukButton(
+        ButtonViewModel("payNowButton", messages("site.payNow"))
+        .asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(paymentIndex).url)
+    )
+    <br>
+    @link(
+        id = "submit-return-link",
+        text = messages("payCentralAssessment.submitReturn"),
+        href = controllers.returns.routes.ViewPastReturnsController.onPageLoad.url
+    )
+}

@@ -17,12 +17,55 @@
 package viewmodels.payments
 
 import base.SpecBase
+import config.Constants.pastPaymentsSessionKey
 import play.api.i18n.Messages
+import play.api.libs.json.Json
+import play.api.mvc.Session
 
 class ManageCentralAssessmentHelperSpec extends SpecBase {
 
   implicit val messages: Messages   = getMessages(app)
   val manageCentralAssessmentHelper = new ManageCentralAssessmentHelper(createDateTimeHelper())
+
+  "getCentralAssessmentChargeFromSession must" - {
+    "return the required Central Assessment charge and its index" in {
+      val outstandingPayments = Seq(
+        outstandingDuePayment.copy(chargeReference = Some("AAA")),
+        outstandingLPIPayment.copy(chargeReference = Some("BBB")),
+        outstandingCAPayment.copy(chargeReference = Some("CCC")),
+        outstandingCAPayment,
+        outstandingCAIPayment.copy(chargeReference = Some("EEE"))
+      )
+
+      val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(outstandingPayments).toString))
+
+      val result = manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference)
+
+      result mustBe Some((outstandingCAPayment, 3))
+    }
+
+    "return None if pastPaymentsSessionKey is not present in the session" in {
+      manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(Session(), chargeReference) mustBe None
+    }
+
+    "return None if the session data cannot be parsed as Seq[OutstandingPayment]" in {
+      val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(historicPayments2025).toString))
+
+      manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
+    }
+
+    "return None if the session data does not contain a Central Assessment with the required charge reference" in {
+      val outstandingPayments = Seq(
+        outstandingDuePayment.copy(chargeReference = Some("AAA")),
+        outstandingLPIPayment.copy(chargeReference = Some("BBB")),
+        outstandingCAPayment.copy(chargeReference = Some("CCC"))
+      )
+
+      val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(outstandingPayments).toString))
+
+      manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
+    }
+  }
 
   "getCentralAssessmentViewModel must" - {
     "return a ManageCentralAssessmentViewModel given an OutstandingPayment for a Central Assessment" in {

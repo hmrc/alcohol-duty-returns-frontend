@@ -36,6 +36,7 @@ GET         /past-payments/:year                         controllers.payments.Pa
 
 GET         /manage-central-assessment/:chargeRef        controllers.payments.ManageCentralAssessmentController.onPageLoad(chargeRef: String)
 POST        /manage-central-assessment/:chargeRef        controllers.payments.ManageCentralAssessmentController.onSubmit(chargeRef: String)
+GET         /pay-central-assessment/:chargeRef           controllers.payments.PayCentralAssessmentChargeController.onPageLoad(chargeRef: String)
 
 GET         /complete-return/task-list                   controllers.TaskListController.onPageLoad
 

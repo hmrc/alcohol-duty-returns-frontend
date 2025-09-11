@@ -16,8 +16,13 @@
 
 package viewmodels.payments
 
+import config.Constants.pastPaymentsSessionKey
+import models.TransactionType.CA
 import models.{OutstandingPayment, ReturnPeriod}
+import play.api.Logging
 import play.api.i18n.Messages
+import play.api.libs.json.Json
+import play.api.mvc.Session
 import viewmodels.DateTimeHelper
 
 import javax.inject.Inject
@@ -30,7 +35,27 @@ case class ManageCentralAssessmentViewModel(
   amount: BigDecimal
 )
 
-class ManageCentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) {
+class ManageCentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
+
+  def getCentralAssessmentChargeFromSession(session: Session, chargeRef: String): Option[(OutstandingPayment, Int)] =
+    session.get(pastPaymentsSessionKey) match {
+      case None                 =>
+        logger.warn("Outstanding payment details not present in session")
+        None
+      case Some(paymentDetails) =>
+        Json.parse(paymentDetails).asOpt[Seq[OutstandingPayment]] match {
+          case Some(outstandingPayments) =>
+            outstandingPayments.find(p => p.chargeReference.contains(chargeRef) && p.transactionType == CA) match {
+              case Some(charge) => Some((charge, outstandingPayments.indexOf(charge)))
+              case None         =>
+                logger.warn("Could not find required Central Assessment charge in session")
+                None
+            }
+          case None                      =>
+            logger.warn("Could not parse outstanding payment details in session")
+            None
+        }
+    }
 
   def getCentralAssessmentViewModel(
     charge: OutstandingPayment

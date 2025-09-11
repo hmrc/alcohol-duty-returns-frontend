@@ -233,6 +233,14 @@ manageCentralAssessment.submitReturn = Submit my return
 manageCentralAssessment.payCharge = Pay central assessment charge
 manageCentralAssessment.error.required = Select what you need to do
 
+payCentralAssessment.title = Pay central assessment charge
+payCentralAssessment.heading = Pay central assessment charge
+payCentralAssessment.guidance1 = You must still submit your return for {0} to {1} after making this payment.
+payCentralAssessment.guidance2 = If your return shows a different amount than this central assessment, you will
+payCentralAssessment.bullet1 = get credit back if you owe less duty
+payCentralAssessment.bullet2 = need to pay the difference if you owe more duty
+payCentralAssessment.submitReturn = Submit return
+
 taskList.title = Complete your Alcohol Duty return
 taskList.period = This is your alcohol return for the period {0} to {1}.
 taskList.completion.date = Complete all the tasks and send this return on or before the {0}.

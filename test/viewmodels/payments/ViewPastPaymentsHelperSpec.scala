@@ -186,6 +186,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Text("25 July 9998").asHtml.toString(),
           Text("25 August 9997").asHtml.toString(),
           Text("25 October 2024").asHtml.toString(),
+          Text("25 September 2024").asHtml.toString(),
           Text("25 August 2024").asHtml.toString(),
           Text("25 July 2024").asHtml.toString(),
           Text("25 September 2022").asHtml.toString()
@@ -347,6 +348,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Text("25 July 9998").asHtml.toString(),
           Text("25 August 9997").asHtml.toString(),
           Text("25 October 2024").asHtml.toString(),
+          Text("25 September 2024").asHtml.toString(),
           Text("25 August 2024").asHtml.toString(),
           Text("25 July 2024").asHtml.toString(),
           Text("25 September 2022").asHtml.toString()
