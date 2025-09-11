@@ -19,20 +19,18 @@ package controllers.payments
 import config.Constants.pastPaymentsSessionKey
 import controllers.actions._
 import forms.payments.ManageCentralAssessmentFormProvider
+import models.OutstandingPayment
 import models.TransactionType.CA
-import models.{NormalMode, OutstandingPayment}
-import pages.declareDuty.MultipleSPRMissingDetailsPage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Session}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.DateTimeHelper
 import viewmodels.payments.ManageCentralAssessmentHelper
 import views.html.payments.ManageCentralAssessmentView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class ManageCentralAssessmentController @Inject() (
   override val messagesApi: MessagesApi,
@@ -49,59 +47,53 @@ class ManageCentralAssessmentController @Inject() (
   val form = formProvider()
 
   def onPageLoad(chargeRef: String): Action[AnyContent] = identify { implicit request =>
-    request.session.get(pastPaymentsSessionKey) match {
-      case None                 =>
-        logger.warn("Outstanding payment details not present in session")
+    getCentralAssessmentChargeFromSession(request.session, chargeRef) match {
+      case Some(charge) =>
+        val viewModel = helper.getCentralAssessmentViewModel(charge)
+        Ok(view(form, viewModel))
+      case None         =>
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(paymentDetails) =>
-        Json.parse(paymentDetails).asOpt[Seq[OutstandingPayment]] match {
-          case Some(outstandingPayments) =>
-            outstandingPayments.find(p => p.chargeReference.contains(chargeRef) && p.transactionType == CA) match {
-              case Some(charge) =>
-                val viewModel = helper.getCentralAssessmentViewModel(charge)
-                Ok(view(form, viewModel))
-              case None         =>
-                logger.warn("Could not find required Central Assessment charge in session")
-                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-            }
-          case None                      =>
-            logger.warn("Could not parse outstanding payment details in session")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        }
     }
   }
 
   def onSubmit(chargeRef: String): Action[AnyContent] = identify { implicit request =>
-    request.session.get(pastPaymentsSessionKey) match {
+    getCentralAssessmentChargeFromSession(request.session, chargeRef) match {
+      case Some(charge) =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => {
+              val viewModel = helper.getCentralAssessmentViewModel(charge)
+              BadRequest(view(formWithErrors, viewModel))
+            },
+            if (_) {
+              Redirect(controllers.returns.routes.ViewPastReturnsController.onPageLoad)
+            } else {
+              Ok("Going to 'Pay central assessment charge'")
+            }
+          )
+      case None         =>
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
+  }
+
+  private def getCentralAssessmentChargeFromSession(session: Session, chargeRef: String): Option[OutstandingPayment] =
+    session.get(pastPaymentsSessionKey) match {
       case None                 =>
         logger.warn("Outstanding payment details not present in session")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        None
       case Some(paymentDetails) =>
         Json.parse(paymentDetails).asOpt[Seq[OutstandingPayment]] match {
           case Some(outstandingPayments) =>
             outstandingPayments.find(p => p.chargeReference.contains(chargeRef) && p.transactionType == CA) match {
-              case Some(charge) =>
-                form
-                  .bindFromRequest()
-                  .fold(
-                    formWithErrors => {
-                      val viewModel = helper.getCentralAssessmentViewModel(charge)
-                      BadRequest(view(formWithErrors, viewModel))
-                    },
-                    if (_) {
-                      Redirect(controllers.returns.routes.ViewPastReturnsController.onPageLoad)
-                    } else {
-                      Ok("Going to 'Pay central assessment charge'")
-                    }
-                  )
+              case Some(charge) => Some(charge)
               case None         =>
                 logger.warn("Could not find required Central Assessment charge in session")
-                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+                None
             }
           case None                      =>
             logger.warn("Could not parse outstanding payment details in session")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            None
         }
     }
-  }
 }
