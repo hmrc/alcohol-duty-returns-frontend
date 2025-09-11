@@ -21,7 +21,7 @@ import config.Constants.ukTimeZoneStringId
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
-import models.TransactionType.{LPI, RPI, Return}
+import models.TransactionType._
 import models._
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.checkAndSubmit._
@@ -442,6 +442,8 @@ trait TestData extends ModelGenerators {
   val chargeReference = chargeReferenceGen.sample.get
 
   val outstandingPartialPayment = OutstandingPayment(
+    Some(LocalDate.of(9998, 6, 1)),
+    Some(LocalDate.of(9998, 6, 30)),
     Return,
     LocalDate.of(9998, 7, 25),
     Some(chargeReference),
@@ -449,6 +451,8 @@ trait TestData extends ModelGenerators {
   )
 
   val outstandingDuePayment = OutstandingPayment(
+    Some(LocalDate.of(9999, 5, 1)),
+    Some(LocalDate.of(9999, 5, 31)),
     Return,
     LocalDate.of(9999, 6, 25),
     Some(chargeReference),
@@ -456,6 +460,8 @@ trait TestData extends ModelGenerators {
   )
 
   val outstandingOverduePartialPayment = OutstandingPayment(
+    Some(LocalDate.of(2022, 8, 1)),
+    Some(LocalDate.of(2022, 8, 31)),
     Return,
     LocalDate.of(2022, 9, 25),
     Some(chargeReference),
@@ -463,6 +469,8 @@ trait TestData extends ModelGenerators {
   )
 
   val outstandingCreditPayment = OutstandingPayment(
+    Some(LocalDate.of(2024, 9, 1)),
+    Some(LocalDate.of(2024, 9, 30)),
     Return,
     LocalDate.of(2024, 10, 25),
     Some(chargeReference),
@@ -470,13 +478,26 @@ trait TestData extends ModelGenerators {
   )
 
   val outstandingLPIPayment = OutstandingPayment(
+    Some(LocalDate.of(9997, 6, 1)),
+    Some(LocalDate.of(9997, 6, 30)),
     LPI,
     LocalDate.of(9997, 8, 25),
     Some(chargeReference),
     BigDecimal(3234.18)
   )
 
+  val outstandingCAPayment = OutstandingPayment(
+    Some(LocalDate.of(2024, 7, 1)),
+    Some(LocalDate.of(2024, 7, 31)),
+    CA,
+    LocalDate.of(2024, 8, 25),
+    Some(chargeReference),
+    BigDecimal(3234.18)
+  )
+
   val RPIPayment = OutstandingPayment(
+    None,
+    None,
     RPI,
     LocalDate.of(2024, 7, 25),
     Some(chargeReference),
@@ -488,6 +509,7 @@ trait TestData extends ModelGenerators {
       outstandingCreditPayment,
       outstandingPartialPayment,
       outstandingLPIPayment,
+      outstandingCAPayment,
       RPIPayment,
       outstandingOverduePartialPayment,
       outstandingDuePayment
@@ -514,6 +536,8 @@ trait TestData extends ModelGenerators {
   )
 
   val outstandingPaymentMissingChargeReference = OutstandingPayment(
+    Some(LocalDate.of(9999, 5, 1)),
+    Some(LocalDate.of(9999, 5, 31)),
     Return,
     LocalDate.of(9999, 6, 25),
     None,
@@ -528,30 +552,36 @@ trait TestData extends ModelGenerators {
     totalOutstandingPayments = BigDecimal(0)
   )
 
-  val historicReturnPayment =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.APRIL)), Return, Some(chargeReference), BigDecimal(123.45))
-  val historicLPIPayment    =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.JUNE)), LPI, Some(chargeReference), BigDecimal(12.45))
-  val historicRPIPayment    =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.MAY)), RPI, Some(chargeReference), BigDecimal(-123.45))
-  val historicRefundPayment =
-    HistoricPayment(ReturnPeriod(YearMonth.of(2025, Month.JULY)), Return, Some(chargeReference), BigDecimal(-1236.45))
+  def historicPayment(yearMonth: YearMonth, transactionType: TransactionType, amount: BigDecimal): HistoricPayment =
+    HistoricPayment(
+      period = ReturnPeriod(yearMonth),
+      taxPeriodFrom = ReturnPeriod(yearMonth).periodFromDate(),
+      taxPeriodTo = ReturnPeriod(yearMonth).periodToDate(),
+      transactionType = transactionType,
+      chargeReference = Some(chargeReference),
+      amountPaid = amount
+    )
+
+  val historicReturnPayment  = historicPayment(YearMonth.of(2025, Month.APRIL), Return, BigDecimal(123.45))
+  val historicLPIPayment     = historicPayment(YearMonth.of(2025, Month.JUNE), LPI, BigDecimal(12.45))
+  val historicCAPayment      = historicPayment(YearMonth.of(2025, Month.MAY), CA, BigDecimal(234.45))
+  val historicReturnPayment2 = historicPayment(YearMonth.of(2025, Month.JULY), Return, BigDecimal(1236.45))
 
   val emptyHistoricPayments = HistoricPayments(2024, Seq.empty)
 
   val historicPayments2025 =
-    HistoricPayments(2025, Seq(historicReturnPayment, historicLPIPayment, historicRPIPayment, historicRefundPayment))
+    HistoricPayments(2025, Seq(historicReturnPayment, historicLPIPayment, historicCAPayment, historicReturnPayment2))
   val historicPayments2024 = HistoricPayments(
     2024,
     Seq(
-      historicReturnPayment.copy(period = ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))),
-      historicLPIPayment.copy(period = ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)))
+      historicPayment(YearMonth.of(2024, Month.DECEMBER), Return, BigDecimal(123.45)),
+      historicPayment(YearMonth.of(2024, Month.NOVEMBER), LPI, BigDecimal(12.45))
     )
   )
   val historicPayments2023 = emptyHistoricPayments.copy(year = 2023)
   val historicPayments2022 = HistoricPayments(
     2022,
-    Seq(historicReturnPayment.copy(period = ReturnPeriod(YearMonth.of(2022, Month.DECEMBER))))
+    Seq(historicPayment(YearMonth.of(2022, Month.DECEMBER), Return, BigDecimal(123.45)))
   )
 
   val historicPaymentsData  = Seq(historicPayments2022, historicPayments2023, historicPayments2024, historicPayments2025)

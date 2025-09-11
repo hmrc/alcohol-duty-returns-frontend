@@ -168,6 +168,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         }
       }
 
+      "must have the correct 'Manage' action link for Central Assessment" in {
+        val table = viewPastPaymentsHelper.getOutstandingPaymentsTable(Seq(outstandingCAPayment))
+        table.rows.map { row =>
+          row.actions.head.href mustBe controllers.payments.routes.ManageCentralAssessmentController
+            .onPageLoad(chargeReference)
+        }
+      }
+
       "must return a sorted table by due date in descending order for outstanding payments" in {
         val table = viewPastPaymentsHelper.getOutstandingPaymentsTable(
           openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
@@ -178,6 +186,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Text("25 July 9998").asHtml.toString(),
           Text("25 August 9997").asHtml.toString(),
           Text("25 October 2024").asHtml.toString(),
+          Text("25 August 2024").asHtml.toString(),
           Text("25 July 2024").asHtml.toString(),
           Text("25 September 2022").asHtml.toString()
         )
@@ -320,6 +329,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         }
       }
 
+      "must have the correct 'Manage' action link for Central Assessment" in {
+        val table = viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(Seq(outstandingCAPayment))
+        table.rows.map { row =>
+          row.actions.head.href mustBe controllers.payments.routes.ManageCentralAssessmentController
+            .onPageLoad(chargeReference)
+        }
+      }
+
       "must return a sorted table by due date in descending order for outstanding payments" in {
         val table = viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(
           openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
@@ -330,6 +347,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Text("25 July 9998").asHtml.toString(),
           Text("25 August 9997").asHtml.toString(),
           Text("25 October 2024").asHtml.toString(),
+          Text("25 August 2024").asHtml.toString(),
           Text("25 July 2024").asHtml.toString(),
           Text("25 September 2022").asHtml.toString()
         )

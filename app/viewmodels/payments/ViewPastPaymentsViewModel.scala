@@ -106,7 +106,8 @@ class ViewPastPaymentsHelper @Inject() (
           index,
           outstandingPaymentsData.remainingAmount,
           outstandingPaymentsData.dueDate,
-          outstandingPaymentsData.transactionType
+          outstandingPaymentsData.transactionType,
+          outstandingPaymentsData.chargeReference
         )
       )
     }
@@ -238,7 +239,8 @@ class ViewPastPaymentsHelper @Inject() (
     index: Int,
     amount: BigDecimal,
     paymentDate: LocalDate,
-    transactionType: TransactionType
+    transactionType: TransactionType,
+    chargeReference: Option[String]
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
       if (frontendAppConfig.claimARefundGformEnabled) {
@@ -256,7 +258,11 @@ class ViewPastPaymentsHelper @Inject() (
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastPayments.manage.linkText"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
+          href = controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(
+            chargeReference.getOrElse(
+              throw new IllegalStateException("Charge reference is required for Central Assessment")
+            )
+          ),
           visuallyHiddenText = Some(getManageCentralAssessmentHiddenText(amount = amount))
         )
       )

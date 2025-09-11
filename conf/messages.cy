@@ -220,6 +220,17 @@ pastYearPayments.title = Taliadau blaenorol
 pastYearPayments.heading = Taliadau blaenorol
 pastYearPayments.p = Os yw CThEF wedi cael unrhyw daliadau oddi wrthych, bydd y taliadau hyn yn ymddangos yma.
 
+manageCentralAssessment.title = Manage central assessment
+manageCentralAssessment.heading = Manage central assessment
+manageCentralAssessment.guidance1 = We did not receive your return from {0} to {1} (due on {2}).
+manageCentralAssessment.guidance2 = We assessed you owe £{0} for that period.
+manageCentralAssessment.guidance3 = You must submit your return today and pay any duty owed.
+manageCentralAssessment.guidance4 = If your completed return shows a different amount, we'll update this charge automatically.
+manageCentralAssessment.legend = What do you need to do?
+manageCentralAssessment.submitReturn = Submit my return
+manageCentralAssessment.payCharge = Pay central assessment charge
+manageCentralAssessment.error.required = Select what you need to do
+
 taskList.title = Cwblhau’ch datganiad Toll Alcohol
 taskList.period = Dyma’ch Datganiad Toll Alcohol ar gyfer y cyfnod {0} i {1}.
 taskList.completion.date = Cwblhewch yr holl dasgau ac anfonwch y Datganiad hwn ar neu cyn {0}.
