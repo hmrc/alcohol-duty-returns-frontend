@@ -239,6 +239,7 @@ payCentralAssessment.guidance1 = NOT_FOUND
 payCentralAssessment.guidance2 = NOT_FOUND
 payCentralAssessment.bullet1 = NOT_FOUND
 payCentralAssessment.bullet2 = NOT_FOUND
+payCentralAssessment.guidance3 = NOT_FOUND
 payCentralAssessment.submitReturn = NOT_FOUND
 
 taskList.title = Cwblhau’ch datganiad Toll Alcohol
