@@ -15,7 +15,7 @@
  *@
 
 @import components.{PageHeading, Paragraph}
-@import viewmodels.payments.ManageCentralAssessmentViewModel
+@import viewmodels.payments.CentralAssessmentViewModel
 
 @this(
         layout: templates.Layout,
@@ -27,7 +27,7 @@
         paragraph: Paragraph
 )
 
-@(form: Form[_], viewModel: ManageCentralAssessmentViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], viewModel: CentralAssessmentViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("manageCentralAssessment.title"))) {
 

@@ -22,7 +22,7 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.payments.ManageCentralAssessmentHelper
+import viewmodels.payments.CentralAssessmentHelper
 import views.html.payments.ManageCentralAssessmentView
 
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class ManageCentralAssessmentController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   formProvider: ManageCentralAssessmentFormProvider,
-  helper: ManageCentralAssessmentHelper,
+  helper: CentralAssessmentHelper,
   val controllerComponents: MessagesControllerComponents,
   view: ManageCentralAssessmentView
 ) extends FrontendBaseController
@@ -63,7 +63,7 @@ class ManageCentralAssessmentController @Inject() (
             if (_) {
               Redirect(controllers.returns.routes.ViewPastReturnsController.onPageLoad)
             } else {
-              Redirect(controllers.payments.routes.PayCentralAssessmentChargeController.onPageLoad(chargeRef: String))
+              Redirect(controllers.payments.routes.PayCentralAssessmentController.onPageLoad(chargeRef: String))
             }
           )
       case None              =>

@@ -22,10 +22,10 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.Session
 
-class ManageCentralAssessmentHelperSpec extends SpecBase {
+class CentralAssessmentHelperSpec extends SpecBase {
 
-  implicit val messages: Messages   = getMessages(app)
-  val manageCentralAssessmentHelper = new ManageCentralAssessmentHelper(createDateTimeHelper())
+  implicit val messages: Messages = getMessages(app)
+  val centralAssessmentHelper     = new CentralAssessmentHelper(createDateTimeHelper())
 
   "getCentralAssessmentChargeFromSession must" - {
     "return the required Central Assessment charge and its index" in {
@@ -39,19 +39,19 @@ class ManageCentralAssessmentHelperSpec extends SpecBase {
 
       val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(outstandingPayments).toString))
 
-      val result = manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference)
+      val result = centralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference)
 
       result mustBe Some((outstandingCAPayment, 3))
     }
 
     "return None if pastPaymentsSessionKey is not present in the session" in {
-      manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(Session(), chargeReference) mustBe None
+      centralAssessmentHelper.getCentralAssessmentChargeFromSession(Session(), chargeReference) mustBe None
     }
 
     "return None if the session data cannot be parsed as Seq[OutstandingPayment]" in {
       val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(historicPayments2025).toString))
 
-      manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
+      centralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
     }
 
     "return None if the session data does not contain a Central Assessment with the required charge reference" in {
@@ -63,15 +63,15 @@ class ManageCentralAssessmentHelperSpec extends SpecBase {
 
       val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(outstandingPayments).toString))
 
-      manageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
+      centralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
     }
   }
 
   "getCentralAssessmentViewModel must" - {
     "return a ManageCentralAssessmentViewModel given an OutstandingPayment for a Central Assessment" in {
-      val result = manageCentralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment)
+      val result = centralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment)
 
-      result mustBe ManageCentralAssessmentViewModel(
+      result mustBe CentralAssessmentViewModel(
         chargeReference = chargeReference,
         dateFrom = "1 July 2024",
         dateTo = "31 July 2024",
@@ -82,21 +82,21 @@ class ManageCentralAssessmentHelperSpec extends SpecBase {
 
     "throw an exception if charge reference is missing" in {
       val exception = intercept[IllegalStateException] {
-        manageCentralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment.copy(chargeReference = None))
+        centralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment.copy(chargeReference = None))
       }
       exception.getMessage mustBe "Charge reference is required for Central Assessment"
     }
 
     "throw an exception if taxPeriodFrom is missing" in {
       val exception = intercept[IllegalStateException] {
-        manageCentralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment.copy(taxPeriodFrom = None))
+        centralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment.copy(taxPeriodFrom = None))
       }
       exception.getMessage mustBe "taxPeriodFrom is required for Central Assessment"
     }
 
     "throw an exception if taxPeriodTo is missing" in {
       val exception = intercept[IllegalStateException] {
-        manageCentralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment.copy(taxPeriodTo = None))
+        centralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment.copy(taxPeriodTo = None))
       }
       exception.getMessage mustBe "taxPeriodTo is required for Central Assessment"
     }

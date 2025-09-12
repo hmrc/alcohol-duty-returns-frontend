@@ -25,7 +25,7 @@ import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Session
 import play.api.test.Helpers._
-import viewmodels.payments.{ManageCentralAssessmentHelper, ManageCentralAssessmentViewModel}
+import viewmodels.payments.{CentralAssessmentHelper, CentralAssessmentViewModel}
 import views.html.payments.ManageCentralAssessmentView
 
 class ManageCentralAssessmentControllerSpec extends SpecBase {
@@ -41,7 +41,7 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
 
   val sessionData = (pastPaymentsSessionKey, Json.toJson(openPaymentsData.outstandingPayments).toString)
 
-  val viewModel = ManageCentralAssessmentViewModel(
+  val viewModel = CentralAssessmentViewModel(
     chargeReference = chargeReference,
     dateFrom = "1 July 2024",
     dateTo = "31 July 2024",
@@ -51,15 +51,15 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
 
   "ManageCentralAssessment Controller" - {
     "must return OK and the correct view for a GET" in {
-      val mockManageCentralAssessmentHelper = mock[ManageCentralAssessmentHelper]
+      val mockCentralAssessmentHelper = mock[CentralAssessmentHelper]
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
+      when(mockCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
         Some((outstandingCAPayment, 3))
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentViewModel(any())(any())) thenReturn viewModel
+      when(mockCentralAssessmentHelper.getCentralAssessmentViewModel(any())(any())) thenReturn viewModel
 
       val application = applicationBuilder()
-        .overrides(bind[ManageCentralAssessmentHelper].toInstance(mockManageCentralAssessmentHelper))
+        .overrides(bind[CentralAssessmentHelper].toInstance(mockCentralAssessmentHelper))
         .build()
 
       running(application) {
@@ -72,22 +72,22 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, viewModel)(request, getMessages(application)).toString
 
-        verify(mockManageCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
+        verify(mockCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
           argThat[Session](_.data.get(sessionData._1).contains(sessionData._2)),
           eqTo(chargeReference)
         )
-        verify(mockManageCentralAssessmentHelper, times(1))
+        verify(mockCentralAssessmentHelper, times(1))
           .getCentralAssessmentViewModel(eqTo(outstandingCAPayment))(any())
       }
     }
 
     "must redirect to Journey Recovery for a GET if the helper returns None" in {
-      val mockManageCentralAssessmentHelper = mock[ManageCentralAssessmentHelper]
+      val mockCentralAssessmentHelper = mock[CentralAssessmentHelper]
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn None
+      when(mockCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn None
 
       val application = applicationBuilder()
-        .overrides(bind[ManageCentralAssessmentHelper].toInstance(mockManageCentralAssessmentHelper))
+        .overrides(bind[CentralAssessmentHelper].toInstance(mockCentralAssessmentHelper))
         .build()
 
       running(application) {
@@ -98,22 +98,22 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        verify(mockManageCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
+        verify(mockCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
           argThat[Session](!_.data.contains(sessionData._1)),
           eqTo(chargeReference)
         )
-        verify(mockManageCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
+        verify(mockCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
       }
     }
 
     "must redirect to the Check Your Returns page on submit" in {
-      val mockManageCentralAssessmentHelper = mock[ManageCentralAssessmentHelper]
+      val mockCentralAssessmentHelper = mock[CentralAssessmentHelper]
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
+      when(mockCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
         Some((outstandingCAPayment, 3))
 
       val application = applicationBuilder()
-        .overrides(bind[ManageCentralAssessmentHelper].toInstance(mockManageCentralAssessmentHelper))
+        .overrides(bind[CentralAssessmentHelper].toInstance(mockCentralAssessmentHelper))
         .build()
 
       running(application) {
@@ -126,22 +126,22 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.returns.routes.ViewPastReturnsController.onPageLoad.url
 
-        verify(mockManageCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
+        verify(mockCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
           argThat[Session](_.data.get(sessionData._1).contains(sessionData._2)),
           eqTo(chargeReference)
         )
-        verify(mockManageCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
+        verify(mockCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
       }
     }
 
     "must redirect to the Pay central assessment charge page on submit" in {
-      val mockManageCentralAssessmentHelper = mock[ManageCentralAssessmentHelper]
+      val mockCentralAssessmentHelper = mock[CentralAssessmentHelper]
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
+      when(mockCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
         Some((outstandingCAPayment, 3))
 
       val application = applicationBuilder()
-        .overrides(bind[ManageCentralAssessmentHelper].toInstance(mockManageCentralAssessmentHelper))
+        .overrides(bind[CentralAssessmentHelper].toInstance(mockCentralAssessmentHelper))
         .build()
 
       running(application) {
@@ -153,26 +153,26 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual
-          controllers.payments.routes.PayCentralAssessmentChargeController.onPageLoad(chargeReference).url
+          controllers.payments.routes.PayCentralAssessmentController.onPageLoad(chargeReference).url
 
-        verify(mockManageCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
+        verify(mockCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
           argThat[Session](_.data.get(sessionData._1).contains(sessionData._2)),
           eqTo(chargeReference)
         )
-        verify(mockManageCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
+        verify(mockCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-      val mockManageCentralAssessmentHelper = mock[ManageCentralAssessmentHelper]
+      val mockCentralAssessmentHelper = mock[CentralAssessmentHelper]
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
+      when(mockCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn
         Some((outstandingCAPayment, 3))
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentViewModel(any())(any())) thenReturn viewModel
+      when(mockCentralAssessmentHelper.getCentralAssessmentViewModel(any())(any())) thenReturn viewModel
 
       val application = applicationBuilder()
-        .overrides(bind[ManageCentralAssessmentHelper].toInstance(mockManageCentralAssessmentHelper))
+        .overrides(bind[CentralAssessmentHelper].toInstance(mockCentralAssessmentHelper))
         .build()
 
       running(application) {
@@ -189,22 +189,22 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, viewModel)(request, getMessages(application)).toString
 
-        verify(mockManageCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
+        verify(mockCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
           argThat[Session](_.data.get(sessionData._1).contains(sessionData._2)),
           eqTo(chargeReference)
         )
-        verify(mockManageCentralAssessmentHelper, times(1))
+        verify(mockCentralAssessmentHelper, times(1))
           .getCentralAssessmentViewModel(eqTo(outstandingCAPayment))(any())
       }
     }
 
     "must redirect to Journey Recovery for a POST if the helper returns None" in {
-      val mockManageCentralAssessmentHelper = mock[ManageCentralAssessmentHelper]
+      val mockCentralAssessmentHelper = mock[CentralAssessmentHelper]
 
-      when(mockManageCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn None
+      when(mockCentralAssessmentHelper.getCentralAssessmentChargeFromSession(any(), any())) thenReturn None
 
       val application = applicationBuilder()
-        .overrides(bind[ManageCentralAssessmentHelper].toInstance(mockManageCentralAssessmentHelper))
+        .overrides(bind[CentralAssessmentHelper].toInstance(mockCentralAssessmentHelper))
         .build()
 
       running(application) {
@@ -216,11 +216,11 @@ class ManageCentralAssessmentControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        verify(mockManageCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
+        verify(mockCentralAssessmentHelper, times(1)).getCentralAssessmentChargeFromSession(
           argThat[Session](!_.data.contains(sessionData._1)),
           eqTo(chargeReference)
         )
-        verify(mockManageCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
+        verify(mockCentralAssessmentHelper, times(0)).getCentralAssessmentViewModel(any())(any())
       }
     }
   }

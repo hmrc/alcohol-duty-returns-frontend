@@ -27,7 +27,7 @@ import viewmodels.DateTimeHelper
 
 import javax.inject.Inject
 
-case class ManageCentralAssessmentViewModel(
+case class CentralAssessmentViewModel(
   chargeReference: String,
   dateFrom: String,
   dateTo: String,
@@ -35,7 +35,7 @@ case class ManageCentralAssessmentViewModel(
   amount: BigDecimal
 )
 
-class ManageCentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
+class CentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
 
   def getCentralAssessmentChargeFromSession(session: Session, chargeRef: String): Option[(OutstandingPayment, Int)] =
     session.get(pastPaymentsSessionKey) match {
@@ -59,7 +59,7 @@ class ManageCentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) e
 
   def getCentralAssessmentViewModel(
     charge: OutstandingPayment
-  )(implicit messages: Messages): ManageCentralAssessmentViewModel = {
+  )(implicit messages: Messages): CentralAssessmentViewModel = {
     val chargeReference = charge.chargeReference.getOrElse(
       throw new IllegalStateException("Charge reference is required for Central Assessment")
     )
@@ -74,6 +74,6 @@ class ManageCentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) e
     val dateTo          = dateTimeHelper.formatDateMonthYear(taxPeriodTo)
     val returnDueDate   = dateTimeHelper.formatDateMonthYear(ReturnPeriod.fromDateInPeriod(taxPeriodTo).periodDueDate())
 
-    ManageCentralAssessmentViewModel(chargeReference, dateFrom, dateTo, returnDueDate, charge.remainingAmount)
+    CentralAssessmentViewModel(chargeReference, dateFrom, dateTo, returnDueDate, charge.remainingAmount)
   }
 }

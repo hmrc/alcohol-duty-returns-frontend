@@ -15,7 +15,7 @@
  *@
 
 @import components.{BulletList, Link, Paragraph, PageHeading}
-@import viewmodels.payments.ManageCentralAssessmentViewModel
+@import viewmodels.payments.CentralAssessmentViewModel
 
 @this(
         layout: templates.Layout,
@@ -26,7 +26,7 @@
         bulletList: BulletList
 )
 
-@(viewModel: ManageCentralAssessmentViewModel, paymentIndex: Int)(implicit request: Request[_], messages: Messages)
+@(viewModel: CentralAssessmentViewModel, paymentIndex: Int)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("payCentralAssessment.title"))) {
 

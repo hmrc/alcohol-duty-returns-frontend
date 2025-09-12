@@ -21,17 +21,17 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.payments.ManageCentralAssessmentHelper
-import views.html.payments.PayCentralAssessmentChargeView
+import viewmodels.payments.CentralAssessmentHelper
+import views.html.payments.PayCentralAssessmentView
 
 import javax.inject.Inject
 
-class PayCentralAssessmentChargeController @Inject() (
+class PayCentralAssessmentController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
-  helper: ManageCentralAssessmentHelper,
+  helper: CentralAssessmentHelper,
   val controllerComponents: MessagesControllerComponents,
-  view: PayCentralAssessmentChargeView
+  view: PayCentralAssessmentView
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
