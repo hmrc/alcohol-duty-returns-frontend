@@ -38,6 +38,7 @@ import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
+import viewmodels.payments.CentralAssessmentViewModel
 import viewmodels.returns.ReturnSubmittedViewModel
 import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 
@@ -560,6 +561,15 @@ trait TestData extends ModelGenerators {
     totalOpenPaymentsAmount = BigDecimal(0),
     totalUnallocatedPayments = BigDecimal(0),
     totalOutstandingPayments = BigDecimal(0)
+  )
+
+  // linked to outstandingCAPayment
+  val centralAssessmentViewModel = CentralAssessmentViewModel(
+    chargeReference = chargeReference,
+    dateFrom = "1 July 2024",
+    dateTo = "31 July 2024",
+    returnDueDate = "15 August 2024",
+    amount = BigDecimal(3234.18)
   )
 
   def historicPayment(yearMonth: YearMonth, transactionType: TransactionType, amount: BigDecimal): HistoricPayment =

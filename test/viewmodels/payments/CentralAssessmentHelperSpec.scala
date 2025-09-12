@@ -68,16 +68,8 @@ class CentralAssessmentHelperSpec extends SpecBase {
   }
 
   "getCentralAssessmentViewModel must" - {
-    "return a ManageCentralAssessmentViewModel given an OutstandingPayment for a Central Assessment" in {
-      val result = centralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment)
-
-      result mustBe CentralAssessmentViewModel(
-        chargeReference = chargeReference,
-        dateFrom = "1 July 2024",
-        dateTo = "31 July 2024",
-        returnDueDate = "15 August 2024",
-        amount = BigDecimal(3234.18)
-      )
+    "return a CentralAssessmentViewModel given an OutstandingPayment for a Central Assessment" in {
+      centralAssessmentHelper.getCentralAssessmentViewModel(outstandingCAPayment) mustBe centralAssessmentViewModel
     }
 
     "throw an exception if charge reference is missing" in {
