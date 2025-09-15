@@ -14,20 +14,17 @@
  * limitations under the License.
  *@
 
-@import views.html.components.{Link, Paragraph}
+@import views.html.components.Link
 @import controllers.payments.routes
 
 @this(
-        link: Link,
-        paragraph: Paragraph
+        link: Link
 )
 
 @()(implicit messages: Messages)
 
-@paragraph(content = HtmlContent(
-  link(
-        id = "back-to-payments-link",
-        text = messages("backToPayments.Link.text"),
-        href = controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url
-    )
-))
+@link(
+    id = "back-to-payments-link",
+    text = messages("backToPayments.Link.text"),
+    href = controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url
+)
