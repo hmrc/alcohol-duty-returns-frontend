@@ -211,6 +211,7 @@ viewPastPayments.visually-hidden.pay-now = swm o £{0} sy’n ddyledus ar {1}
 viewPastPayments.visually-hidden.claim-refund = o £{0}
 viewPastPayments.pastYears.h2 = Taliadau blaenorol
 viewPastPayments.pastYears.link = Bwrw golwg dros daliadau {0}
+backToPayments.Link.text = Yn ôl i daliadau
 
 pastYearPayments.title = Taliadau blaenorol
 pastYearPayments.heading = Taliadau blaenorol
