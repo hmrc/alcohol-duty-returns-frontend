@@ -48,10 +48,13 @@ class CentralAssessmentHelperSpec extends SpecBase {
       centralAssessmentHelper.getCentralAssessmentChargeFromSession(Session(), chargeReference) mustBe None
     }
 
-    "return None if the session data cannot be parsed as Seq[OutstandingPayment]" in {
+    "throw an exception if the session data cannot be parsed as Seq[OutstandingPayment]" in {
       val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(historicPayments2025).toString))
 
-      centralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference) mustBe None
+      val exception = intercept[RuntimeException] {
+        centralAssessmentHelper.getCentralAssessmentChargeFromSession(session, chargeReference)
+      }
+      exception.getMessage mustBe "Could not parse outstanding payment details in session"
     }
 
     "return None if the session data does not contain a Central Assessment with the required charge reference" in {

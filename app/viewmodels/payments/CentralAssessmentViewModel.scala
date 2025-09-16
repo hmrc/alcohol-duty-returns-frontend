@@ -52,8 +52,7 @@ class CentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends
                 None
             }
           case None                      =>
-            logger.warn("Could not parse outstanding payment details in session")
-            None
+            throw new RuntimeException("Could not parse outstanding payment details in session")
         }
     }
 
