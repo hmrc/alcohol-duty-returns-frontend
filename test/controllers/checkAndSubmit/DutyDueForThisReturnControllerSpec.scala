@@ -20,9 +20,7 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyReturnsConnector
 import models.ErrorModel
-import models.audit.AuditReturnSubmitted
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
 import play.api.test.Helpers._
 import services.AuditService
@@ -110,7 +108,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
       when(
-        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+        alcoholDutyReturnsConnector.submitReturn(any(), any())(any())
       ).thenReturn(
         EitherT.rightT(adrReturnCreatedDetails)
       )
@@ -138,8 +136,6 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedController
           .onPageLoad()
           .url
-
-        verify(auditService, times(1)).audit(eqTo(expectedAuditEvent))(any(), any())
       }
     }
 
@@ -147,7 +143,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
       when(
-        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+        alcoholDutyReturnsConnector.submitReturn(any(), any())(any())
       ).thenReturn(
         EitherT.leftT(ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
       )
@@ -175,8 +171,6 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController
           .onPageLoad()
           .url
-
-        verify(auditService, times(0)).audit(eqTo(expectedAuditEvent))(any(), any())
       }
     }
 
@@ -184,7 +178,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(false)
 
       when(
-        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+        alcoholDutyReturnsConnector.submitReturn(any(), any())(any())
       ).thenReturn(
         EitherT.rightT(adrReturnCreatedDetails)
       )
@@ -247,7 +241,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         EitherT.rightT(adrReturnSubmission)
       )
 
-      when(alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())).thenReturn(
+      when(alcoholDutyReturnsConnector.submitReturn(any(), any())(any())).thenReturn(
         EitherT.leftT(ErrorModel(INTERNAL_SERVER_ERROR, "Error message"))
       )
 
@@ -293,8 +287,6 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       youveAlsoDeclaredSummaryList = emptyYouveAlsoDeclaredSummaryList,
       totalDue = BigDecimal(1)
     )
-
-    val expectedAuditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, submissionTime)
 
     val adrReturnSubmission = fullReturn
   }
