@@ -217,6 +217,7 @@ viewPastPayments.visually-hidden.claim-refund = of £{0}
 viewPastPayments.visually-hidden.manage-CA = central assessment charge of £{0}
 viewPastPayments.pastYears.h2 = Past payments
 viewPastPayments.pastYears.link = View {0} payments
+backToPayments.Link.text = Back to payments
 
 pastYearPayments.title = Past payments
 pastYearPayments.heading = Past payments
