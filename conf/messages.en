@@ -225,10 +225,11 @@ pastYearPayments.p = Your payments which have been received by HMRC will appear 
 
 manageCentralAssessment.title = Manage central assessment
 manageCentralAssessment.heading = Manage central assessment
-manageCentralAssessment.guidance1 = We did not receive your return from {0} to {1} (due on {2}).
+manageCentralAssessment.guidance1 = We did not receive your return for {0} to {1} (due on {2}).
 manageCentralAssessment.guidance2 = We assessed you owe {0} for that period.
-manageCentralAssessment.guidance3 = You must submit your return today and pay any duty owed.
-manageCentralAssessment.guidance4 = If your completed return shows a different amount, we’ll update this charge automatically.
+manageCentralAssessment.guidance3 = If you:
+manageCentralAssessment.bullet1 = submit your return and pay any duty owed, this assessed charge will be cancelled
+manageCentralAssessment.bullet2 = pay the charge now, you must still submit your missed return
 manageCentralAssessment.legend = What do you need to do?
 manageCentralAssessment.submitReturn = Submit my return
 manageCentralAssessment.payCharge = Pay central assessment charge

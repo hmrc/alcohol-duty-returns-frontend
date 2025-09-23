@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph}
+@import components.{PageHeading, Paragraph, BulletList}
 @import viewmodels.payments.CentralAssessmentViewModel
 
 @this(
@@ -24,7 +24,8 @@
         govukRadios: GovukRadios,
         govukButton: GovukButton,
         pageHeading: PageHeading,
-        paragraph: Paragraph
+        paragraph: Paragraph,
+        bulletList: BulletList
 )
 
 @(form: Form[_], viewModel: CentralAssessmentViewModel)(implicit request: Request[_], messages: Messages)
@@ -44,9 +45,10 @@
             messages("manageCentralAssessment.guidance2", messages("site.currency.2DP", viewModel.amount))
         ))
 
-        @paragraph(HtmlContent(
-            messages("manageCentralAssessment.guidance3") + "<br>" +
-            messages("manageCentralAssessment.guidance4")
+        @paragraph(messages("manageCentralAssessment.guidance3"))
+        @bulletList(Seq(
+            messages("manageCentralAssessment.bullet1"),
+            messages("manageCentralAssessment.bullet2")
         ))
 
         @govukRadios(
