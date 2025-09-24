@@ -24,6 +24,10 @@ site.nil = Dim
 site.returnToBusinessAccount = Yn ôl i’ch cyfrif treth busnes
 site.year = {0,number,####}
 site.warning = Rhybudd
+site.error.pageNotFound404.title = Heb ddod o hyd i’r dudalen
+site.error.pageNotFound404.heading = Heb ddod o hyd i’r dudalen
+site.error.pageNotFound404.message.1 = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+site.error.pageNotFound404.message.2 = Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 
 date.day = Diwrnod
 date.month = Mis

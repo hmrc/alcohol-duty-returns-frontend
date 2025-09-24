@@ -24,6 +24,10 @@ site.nil = Nil
 site.returnToBusinessAccount = Return to your business tax account
 site.year = {0,number,####}
 site.warning = Warning
+site.error.pageNotFound404.title = Page not found
+site.error.pageNotFound404.heading = Page not found
+site.error.pageNotFound404.message.1 = If you typed the web address, check it is correct.
+site.error.pageNotFound404.message.2 = If you pasted the web address, check you copied the entire address.
 
 date.day = Day
 date.month = Month
