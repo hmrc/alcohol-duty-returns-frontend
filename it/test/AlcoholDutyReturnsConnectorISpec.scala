@@ -105,7 +105,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
         val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
 
         server.stubFor(
-          post(urlMatching(submitReturnUrl))
+          post(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(CREATED)
@@ -113,7 +113,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) {
+        whenReady(connector.submitReturn(fullUserAnswers, fullReturn).value) {
           case Right(details) =>
             details.processingDate  mustBe adrReturnCreatedDetails.processingDate
             details.amount          mustBe adrReturnCreatedDetails.amount
@@ -136,7 +136,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
           ErrorModel(INTERNAL_SERVER_ERROR, s"Unable to submit return. Unexpected status code: $OK")
 
         server.stubFor(
-          post(urlMatching(submitReturnUrl))
+          post(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(OK)
@@ -144,7 +144,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) {
+        whenReady(connector.submitReturn(fullUserAnswers, fullReturn).value) {
           case Left(errorModel) =>
             errorModel mustBe expectedErrorModel
           case _                => fail("Test failed: result did not match expected value")
@@ -154,7 +154,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
       "must fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(
-          post(urlMatching(submitReturnUrl))
+          post(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(CREATED)
@@ -162,7 +162,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+        whenReady(connector.submitReturn(fullUserAnswers, nilReturn).value) { result =>
           result.swap.toOption.get.status mustBe INTERNAL_SERVER_ERROR
           result.swap.toOption.get.message  must include("Invalid JSON format")
         }
@@ -170,7 +170,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
 
       "must return an ErrorModel when a duplicate submission response is returned" in new SetUp {
         server.stubFor(
-          post(urlMatching(submitReturnUrl))
+          post(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(UNPROCESSABLE_ENTITY)
@@ -178,7 +178,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+        whenReady(connector.submitReturn(fullUserAnswers, nilReturn).value) { result =>
           result.swap.toOption.get.status mustBe UNPROCESSABLE_ENTITY
           result.swap.toOption.get.message mustBe "Return already submitted"
         }
@@ -186,13 +186,13 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
 
       "must fail when submit return returns an error" in new SetUp {
         server.stubFor(
-          post(urlMatching(submitReturnUrl))
+          post(urlMatching(returnUrl))
             .withRequestBody(equalToJson(Json.stringify(Json.toJson(nilReturn))))
             .willReturn(aResponse().withBody("upstreamErrorResponse").withStatus(BAD_GATEWAY))
         )
 
         recoverToExceptionIf[Exception] {
-          connector.submitReturn(appaId, periodKey, nilReturn).value
+          connector.submitReturn(fullUserAnswers, nilReturn).value
         } map { ex =>
           ex.getMessage must include("Unexpected response")
         }
@@ -200,12 +200,12 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
 
       "must fail when an unexpected status code is returned" in new SetUp {
         server.stubFor(
-          post(urlMatching(submitReturnUrl))
+          post(urlMatching(returnUrl))
             .withRequestBody(equalToJson(Json.stringify(Json.toJson(nilReturn))))
             .willReturn(aResponse().withBody("invalidStatusCodeResponse").withStatus(BAD_REQUEST))
         )
         recoverToExceptionIf[Exception] {
-          connector.submitReturn(appaId, periodKey, nilReturn).value
+          connector.submitReturn(fullUserAnswers, nilReturn).value
         } map { ex =>
           ex.getMessage must include("Unexpected status code: 201")
         }
@@ -214,11 +214,11 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
 
     "getReturn" - {
       "must successfully get a return" in new SetUp {
-        val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now(clock))
+        val adrReturnDetails = exampleReturnDetails(fullUserAnswers.returnId.periodKey, Instant.now(clock))
         val jsonResponse     = Json.toJson(adrReturnDetails).toString()
 
         server.stubFor(
-          get(urlMatching(submitReturnUrl))
+          get(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(OK)
@@ -226,14 +226,14 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.getReturn(appaId, periodKey)) { result =>
+        whenReady(connector.getReturn(fullUserAnswers.returnId.appaId, fullUserAnswers.returnId.periodKey)) { result =>
           result mustBe adrReturnDetails
         }
       }
 
       "must fail when invalid JSON is returned" in new SetUp {
         server.stubFor(
-          get(urlMatching(submitReturnUrl))
+          get(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(OK)
@@ -241,14 +241,14 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
+        whenReady(connector.getReturn(fullUserAnswers.returnId.appaId, fullUserAnswers.returnId.periodKey).failed) { e =>
           e.getMessage must include("Invalid JSON format")
         }
       }
 
       "must fail when an unexpected response is returned" in new SetUp {
         server.stubFor(
-          get(urlMatching(submitReturnUrl))
+          get(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(BAD_GATEWAY)
@@ -262,14 +262,14 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
 
       "must fail when an unexpected  status code is returned" in new SetUp {
         server.stubFor(
-          get(urlMatching(submitReturnUrl))
+          get(urlMatching(returnUrl))
             .willReturn(
               aResponse()
                 .withStatus(CREATED)
             )
         )
 
-        whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
+        whenReady(connector.getReturn(fullUserAnswers.returnId.appaId, fullUserAnswers.returnId.periodKey).failed) { e =>
           e.getMessage must include("Unexpected status code: 201")
         }
       }
@@ -279,6 +279,6 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
   class SetUp {
     val connector            = app.injector.instanceOf[AlcoholDutyReturnsConnector]
     val obligationDeatilsUrl = s"/alcohol-duty-returns/obligationDetails/$appaId"
-    val submitReturnUrl      = s"/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
+    val returnUrl      = s"/alcohol-duty-returns/producers/${fullUserAnswers.returnId.appaId}/returns/${fullUserAnswers.returnId.periodKey}"
   }
 }

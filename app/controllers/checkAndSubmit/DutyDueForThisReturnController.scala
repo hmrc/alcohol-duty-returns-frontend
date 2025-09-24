@@ -21,24 +21,18 @@ import cats.implicits._
 import config.Constants.{noDetailsValue, returnCreatedDetailsKey}
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
-import models.{ErrorModel, UserAnswers}
-import models.audit.AuditReturnSubmitted
-import models.checkAndSubmit.AdrReturnSubmission
+import models.ErrorModel
 import play.api.Logging
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import viewmodels.tasklist.TaskListViewModel
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
-import java.time.{Clock, Instant}
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DutyDueForThisReturnController @Inject() (
@@ -47,12 +41,10 @@ class DutyDueForThisReturnController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
-  auditService: AuditService,
   adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
   dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
   taskListViewModel: TaskListViewModel,
-  clock: Clock,
   view: DutyDueForThisReturnView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -105,14 +97,14 @@ class DutyDueForThisReturnController @Inject() (
                                        .getAdrReturnSubmission(userAnswers, returnPeriod)
                                        .leftMap(err => ErrorModel(BAD_REQUEST, err))
       adrSubmissionCreatedDetails <-
-        alcoholDutyReturnsConnector.submitReturn(appaId, periodKey, adrReturnSubmission)
-      _                           <- EitherT.rightT[Future, ErrorModel](auditReturnSubmitted(userAnswers, adrReturnSubmission))
+        alcoholDutyReturnsConnector.submitReturn(userAnswers, adrReturnSubmission)
     } yield adrSubmissionCreatedDetails
     result.foldF(
       error =>
         if (error.status == UNPROCESSABLE_ENTITY) {
           logger.info(error.message)
           val session = request.session + (returnCreatedDetailsKey -> noDetailsValue)
+
           Future.successful(
             Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController.onPageLoad())
               .withSession(session)
@@ -129,12 +121,5 @@ class DutyDueForThisReturnController @Inject() (
         )
       }
     )
-  }
-
-  private def auditReturnSubmitted(userAnswers: UserAnswers, adrReturnSubmission: AdrReturnSubmission)(implicit
-    hc: HeaderCarrier
-  ): Unit = {
-    val event = AuditReturnSubmitted(userAnswers, adrReturnSubmission, Instant.now(clock))
-    auditService.audit(event)
   }
 }
