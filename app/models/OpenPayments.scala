@@ -31,11 +31,17 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
   case object LPI extends TransactionType
 
   case object RPI extends TransactionType
+
+  case object CA extends TransactionType
+
+  case object CAI extends TransactionType
 }
 
 sealed trait OpenPayment
 
 case class OutstandingPayment(
+  taxPeriodFrom: Option[LocalDate],
+  taxPeriodTo: Option[LocalDate],
   transactionType: TransactionType,
   dueDate: LocalDate,
   chargeReference: Option[String],

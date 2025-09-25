@@ -27,8 +27,8 @@ object AppDependencies {
     "com.beachape"            %% "enumeratum-scalacheck"   % "1.9.0",
     "org.scalatestplus"       %% "mockito-3-4"             % "3.2.10.0",
     "org.mockito"             %% "mockito-scala"           % mockitoScalaVersion,
-    "org.scalacheck"          %% "scalacheck"              % "1.18.1",
-    "org.jsoup"               %  "jsoup"                   % "1.21.1",
+    "org.scalacheck"          %% "scalacheck"              % "1.19.0",
+    "org.jsoup"               %  "jsoup"                   % "1.21.2",
     "com.vladsch.flexmark"    %  "flexmark-all"            % "0.64.8"
   ).map(_ % Test)
 

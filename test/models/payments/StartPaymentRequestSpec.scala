@@ -48,8 +48,10 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
   )
 
   val outstandingPayment = OutstandingPayment(
+    Some(LocalDate.of(2024, 5, 1)),
+    Some(LocalDate.of(2024, 5, 31)),
     Return,
-    LocalDate.of(9999, 6, 25),
+    LocalDate.of(2024, 6, 25),
     Some(chargeReference),
     BigDecimal(4773.34)
   )
