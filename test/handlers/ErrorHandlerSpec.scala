@@ -37,13 +37,14 @@ class ErrorHandlerSpec extends SpecBase {
   "ErrorHandler" - {
     "must return the correct error page for a not found" in {
 
-      when(notFoundTemplate.apply(
-        eqTo("site.error.pageNotFound404.title"),
-        eqTo("site.error.pageNotFound404.heading"),
-        eqTo("site.error.pageNotFound404.message.1"),
-        eqTo("site.error.pageNotFound404.message.2")
-      )
-      (any(), any())).thenReturn(Html("<h1>not found template</h1>"))
+      when(
+        notFoundTemplate.apply(
+          eqTo("site.error.pageNotFound404.title"),
+          eqTo("site.error.pageNotFound404.heading"),
+          eqTo("site.error.pageNotFound404.message.1"),
+          eqTo("site.error.pageNotFound404.message.2")
+        )(any(), any())
+      ).thenReturn(Html("<h1>not found template</h1>"))
 
       val errorHandler = new ErrorHandler(messagesApi, errorTemplate, notFoundTemplate)
 
