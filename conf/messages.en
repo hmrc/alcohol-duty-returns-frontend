@@ -134,6 +134,12 @@ viewPastReturns.status.due = Due
 viewPastReturns.status.overdue = Overdue
 viewPastReturns.status.completed = Completed
 viewPastReturns.noReturns = No outstanding returns
+backToReturns.Link.text = Back to current returns
+viewPastReturns.selectYear.Link.text = View {0} returns
+viewPastReturns.selectYear.title = Completed returns from previous years
+
+completedReturns.title = Completed returns
+completedReturns.heading = Completed returns
 
 viewReturn.heading = {0} Alcohol Duty Return
 viewReturn.title = {0} Alcohol Duty Return
@@ -861,7 +867,7 @@ declareAdjustmentQuestion.para1.list5 = been exported and you now need to claim 
 declareAdjustmentQuestion.question.h2 = Do you have adjustments to declare?
 declareAdjustmentQuestion.error.required = Select yes if you have adjustments to declare
 declareAdjustmentInformation.link.p1 = If you are declaring drawback, you must notify HMRC before using this online service.
-declareAdjustmentInformation.link.p2 = Find out more about how to notify HMRC (opens in a new tab)
+declareAdjustmentInformation.link.p2 = Find out more about how to notify HMRC (opens in new tab)
 declareAdjustmentInformation.link.url = https://www.gov.uk/government/publications/excise-movements-notice-of-intention-to-claim-drawback-ex75
 
 adjustmentType.title = What type of adjustment are you declaring?

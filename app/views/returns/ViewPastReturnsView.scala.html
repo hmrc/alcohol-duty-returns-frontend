@@ -17,6 +17,8 @@
 @import components.{PageHeading, SubHeading}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
+@import java.time.Year
+@import views.html.components.YearNavigation
 
 @this(
     layout: templates.Layout,
@@ -28,11 +30,12 @@
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
-    subHeading: SubHeading
+    subHeading: SubHeading,
+    yearNavigation: YearNavigation
 )
 
 
-@(outstandingReturns: TableViewModel, completedReturns: TableViewModel)(implicit request: Request[_], messages: Messages)
+@(outstandingReturns: TableViewModel, completedReturns: TableViewModel, availableYears: Seq[Int] = Seq(Year.now().getValue))(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastReturns.title"))){
 
@@ -83,5 +86,9 @@
         @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty) {
             @subHeading(messages("viewPastReturns.noReturns"))
         }
-
+        @subHeading(messages("viewPastReturns.selectYear.title"))
+        @yearNavigation(
+            availableYears = availableYears,
+            yearLink = year => controllers.returns.routes.CompletedReturnsController.onPageLoad(year)
+        )
 }

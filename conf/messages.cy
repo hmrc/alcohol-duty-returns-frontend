@@ -134,6 +134,12 @@ viewPastReturns.status.due = I’w gyflwyno
 viewPastReturns.status.overdue = Yn hwyr
 viewPastReturns.status.completed = Wedi cwblhau
 viewPastReturns.noReturns = Does dim Datganiadau sydd heb eu cyflwyno
+backToReturns.Link.text = Back to current returns
+viewPastReturns.selectYear.Link.text = View {0} returns
+viewPastReturns.selectYear.title = Datganiadau wedi’u cwblhau o flynyddoedd blaenorol
+
+completedReturns.title = Datganiadau wedi’u cwblhau
+completedReturns.heading = Datganiadau wedi’u cwblhau
 
 viewReturn.heading = Datganiad Toll Alcohol ar gyfer {0}
 viewReturn.title = Datganiad Toll Alcohol ar gyfer {0}

@@ -17,51 +17,46 @@
 package controllers.returns
 
 import connectors.AlcoholDutyReturnsConnector
-import controllers.actions._
+import controllers.actions.IdentifyWithEnrolmentAction
 import models.ObligationData
-import models.ObligationStatus.{Fulfilled, Open}
+import models.ObligationStatus.Fulfilled
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ViewPastReturnsHelper
-import views.html.returns.ViewPastReturnsView
+import views.html.returns.CompletedReturnsView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class ViewPastReturnsController @Inject() (
+class CompletedReturnsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   viewModelHelper: ViewPastReturnsHelper,
-  view: ViewPastReturnsView,
+  view: CompletedReturnsView,
   alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+  def onPageLoad(year: Int): Action[AnyContent] = identify.async { implicit request =>
     alcoholDutyReturnsConnector
       .obligationDetails(request.appaId)
       .map { obligations: Seq[ObligationData] =>
-        val currentYear    = java.time.Year.now().getValue
-        val availableYears = obligations
-          .map(_.fromDate.getYear)
-          .distinct
-          .filterNot(_ == currentYear)
-          .sorted(Ordering[Int].reverse)
+        val completedReturns = obligations
+          .filter(_.status == Fulfilled)
+          .filter(_.toDate.getYear == year)
+          .sortBy(_.toDate.toEpochDay)(Ordering[Long].reverse)
 
-        val currentYearObligations  = obligations.filter(_.fromDate.getYear == currentYear)
-        val fulfilledObligations    = currentYearObligations.filter(_.status == Fulfilled)
-        val openObligations         = currentYearObligations.filter(_.status == Open)
-        val outstandingReturnsTable = viewModelHelper.getReturnsTable(openObligations)
-        val completedReturnsTable   = viewModelHelper.getReturnsTable(fulfilledObligations)
-        Ok(view(outstandingReturnsTable, completedReturnsTable, availableYears))
+        val completedReturnsTable = viewModelHelper.getReturnsTable(completedReturns)
+
+        Ok(view(completedReturnsTable, year))
       }
-      .recover { case _ =>
-        logger.warn("Unable to fetch obligation data")
+      .recover { case ex =>
+        logger.warn(s"Error fetching completed returns data for year $year", ex)
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
