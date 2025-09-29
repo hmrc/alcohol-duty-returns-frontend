@@ -34,6 +34,10 @@ GET         /view-your-return/:periodKey                 controllers.returns.Vie
 GET         /view-payments                               controllers.payments.ViewPastPaymentsController.onPageLoad
 GET         /past-payments/:year                         controllers.payments.PastYearPaymentsController.onPageLoad(year: Int)
 
+GET         /manage-central-assessment/:chargeRef        controllers.payments.ManageCentralAssessmentController.onPageLoad(chargeRef: String)
+POST        /manage-central-assessment/:chargeRef        controllers.payments.ManageCentralAssessmentController.onSubmit(chargeRef: String)
+GET         /pay-central-assessment/:chargeRef           controllers.payments.PayCentralAssessmentController.onPageLoad(chargeRef: String)
+
 GET         /complete-return/task-list                   controllers.TaskListController.onPageLoad
 
 GET         /clear-return                                controllers.ClearReturnAreYouSureQuestionController.onPageLoad()

@@ -19,7 +19,7 @@ package viewmodels.payments
 import config.Constants.Css
 import config.FrontendAppConfig
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
-import models.TransactionType.RPI
+import models.TransactionType.{CA, RPI}
 import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import play.api.Logging
 import play.api.i18n.Messages
@@ -105,7 +105,9 @@ class ViewPastPaymentsHelper @Inject() (
           status,
           index,
           outstandingPaymentsData.remainingAmount,
-          outstandingPaymentsData.dueDate
+          outstandingPaymentsData.dueDate,
+          outstandingPaymentsData.transactionType,
+          outstandingPaymentsData.chargeReference
         )
       )
     }
@@ -236,7 +238,9 @@ class ViewPastPaymentsHelper @Inject() (
     status: OutstandingPaymentStatusToDisplay,
     index: Int,
     amount: BigDecimal,
-    paymentDate: LocalDate
+    paymentDate: LocalDate,
+    transactionType: TransactionType,
+    chargeReference: Option[String]
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
       if (frontendAppConfig.claimARefundGformEnabled) {
@@ -250,6 +254,18 @@ class ViewPastPaymentsHelper @Inject() (
       } else {
         Seq.empty
       }
+    } else if (transactionType == CA) {
+      Seq(
+        TableRowActionViewModel(
+          label = messages("viewPastPayments.manage.linkText"),
+          href = controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(
+            chargeReference.getOrElse(
+              throw new IllegalStateException("Charge reference is required for Central Assessment")
+            )
+          ),
+          visuallyHiddenText = Some(getManageCentralAssessmentHiddenText(amount = amount))
+        )
+      )
     } else {
       Seq(
         TableRowActionViewModel(
@@ -343,4 +359,7 @@ class ViewPastPaymentsHelper @Inject() (
 
   private def getPayNowHiddenText(amount: BigDecimal, paymentDate: LocalDate)(implicit messages: Messages): String =
     messages("viewPastPayments.visually-hidden.pay-now", amount, dateTimeHelper.formatDateMonthYear(paymentDate))
+
+  private def getManageCentralAssessmentHiddenText(amount: BigDecimal)(implicit messages: Messages): String =
+    messages("viewPastPayments.visually-hidden.manage-CA", amount)
 }
