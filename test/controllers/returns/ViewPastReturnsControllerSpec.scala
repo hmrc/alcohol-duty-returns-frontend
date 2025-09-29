@@ -32,10 +32,21 @@ class ViewPastReturnsControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET" in {
       val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
       val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-      when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
-        Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)
+      val currentYear                     = java.time.Year.now().getValue
+      val currentYearOpen                 = obligationDataSingleOpen.copy(
+        fromDate = java.time.LocalDate.of(currentYear, 1, 1),
+        toDate = java.time.LocalDate.of(currentYear, 12, 31)
       )
-      val application                     = applicationBuilder(userAnswers = None)
+      val currentYearFulfilled            = obligationDataSingleFulfilled.copy(
+        fromDate = java.time.LocalDate.of(currentYear, 1, 1),
+        toDate = java.time.LocalDate.of(currentYear, 12, 31)
+      )
+
+      when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
+        Seq(currentYearOpen, currentYearFulfilled, obligationDataSingleOpen, obligationDataSingleFulfilled)
+      )
+
+      val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
           bind[Clock].toInstance(clock)
@@ -47,12 +58,12 @@ class ViewPastReturnsControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[ViewPastReturnsView]
 
-        val outstandingReturnsTable =
-          viewModelHelper.getReturnsTable(Seq(obligationDataSingleOpen))(getMessages(application))
-        val completedReturnsTable   =
-          viewModelHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(getMessages(application))
+        val outstandingReturnsTable = viewModelHelper.getReturnsTable(Seq(currentYearOpen))(getMessages(application))
+        val completedReturnsTable   = viewModelHelper.getReturnsTable(Seq(currentYearFulfilled))(getMessages(application))
+        val availableYears          = Seq(currentYear - 1)
+
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable)(
+        contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable, availableYears)(
           request,
           getMessages(application)
         ).toString
