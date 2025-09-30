@@ -18,8 +18,12 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.time.LocalDate
+
 case class HistoricPayment(
   period: ReturnPeriod,
+  taxPeriodFrom: LocalDate,
+  taxPeriodTo: LocalDate,
   transactionType: TransactionType,
   chargeReference: Option[String],
   amountPaid: BigDecimal
