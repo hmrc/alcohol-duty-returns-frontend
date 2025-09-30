@@ -23,7 +23,6 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import viewmodels.returns.ViewPastReturnsHelper
 import views.html.returns.CompletedReturnsView
-
 import java.time.{Clock, LocalDate}
 import scala.concurrent.Future
 
@@ -31,7 +30,7 @@ class CompletedReturnsControllerSpec extends SpecBase {
   "CompletedReturnsController" - {
     "must return OK and the correct view for a GET" in {
       val viewModelHelper = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
-      val mockConnector = mock[AlcoholDutyReturnsConnector]
+      val mockConnector   = mock[AlcoholDutyReturnsConnector]
 
       val previousYear = java.time.Year.now().getValue - 1
 
@@ -59,12 +58,12 @@ class CompletedReturnsControllerSpec extends SpecBase {
 
       running(application) {
         val request = FakeRequest(GET, routes.CompletedReturnsController.onPageLoad(previousYear).url)
-        val result = route(application, request).value
-        val view = application.injector.instanceOf[CompletedReturnsView]
+        val result  = route(application, request).value
+        val view    = application.injector.instanceOf[CompletedReturnsView]
 
         val expectedTable = viewModelHelper.getReturnsTable(Seq(sepReturn, janReturn))(getMessages(application))
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(expectedTable, previousYear)(
           request,
           getMessages(application)
@@ -86,9 +85,9 @@ class CompletedReturnsControllerSpec extends SpecBase {
 
       running(application) {
         val request = FakeRequest(GET, routes.CompletedReturnsController.onPageLoad(2024).url)
-        val result = route(application, request).value
+        val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
