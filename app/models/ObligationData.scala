@@ -17,7 +17,7 @@
 package models
 
 import enumeratum.{Enum, EnumEntry, PlayEnum, PlayJsonEnum}
-import play.api.libs.json.{Format, JsPath, Json}
+import play.api.libs.json.{Format, JsPath, Json, OFormat}
 import queries.{Gettable, Settable}
 
 import java.time.LocalDate
@@ -38,11 +38,21 @@ case class ObligationData(
   dueDate: LocalDate,
   periodKey: String
 )
+
 object ObligationData extends Gettable[ObligationData] with Settable[ObligationData] {
   implicit val format: Format[ObligationData] = Json.format[ObligationData]
 
   override def toString     = "obligationData"
   override def path: JsPath = JsPath \ toString
+}
+
+case class FulfilledObligations(
+  year: Int,
+  obligations: Seq[ObligationData]
+)
+
+object FulfilledObligations {
+  implicit val fulfilledObligationsFormat: OFormat[FulfilledObligations] = Json.format[FulfilledObligations]
 }
 
 sealed trait ObligationStatusToDisplay extends EnumEntry

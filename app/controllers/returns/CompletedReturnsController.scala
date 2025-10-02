@@ -43,21 +43,23 @@ class CompletedReturnsController @Inject() (
     with Logging {
 
   def onPageLoad(year: Int): Action[AnyContent] = identify.async { implicit request =>
-    alcoholDutyReturnsConnector
-      .obligationDetails(request.appaId)
-      .map { obligations: Seq[ObligationData] =>
-        val completedReturns = obligations
-          .filter(_.status == Fulfilled)
-          .filter(_.toDate.getYear == year)
-          .sortBy(_.toDate.toEpochDay)(Ordering[Long].reverse)
+    val appaId = request.appaId
 
-        val completedReturnsTable = viewModelHelper.getReturnsTable(completedReturns)
+    val fulfilledObligationsFuture =
+      alcoholDutyReturnsConnector.fulfilledObligations(appaId).map { fulfilledObligationsData =>
+        fulfilledObligationsData.find(_.year == year) match {
+          case Some(fulfilledObligations) if fulfilledObligations.obligations.nonEmpty =>
+            val fulfilledObligationsTable = viewModelHelper.getReturnsTable(fulfilledObligations.obligations)
+            Ok(view(fulfilledObligationsTable, year))
+          case _                                                                       =>
+            logger.warn(s"No fulfilled obligations available for year $year (appaId: $appaId)")
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        }
+      }
 
-        Ok(view(completedReturnsTable, year))
-      }
-      .recover { case ex =>
-        logger.warn(s"Error fetching completed returns data for year $year", ex)
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      }
+    fulfilledObligationsFuture.recover { case ex =>
+      logger.warn(s"Error fetching fulfilled obligations for $appaId, year $year", ex)
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }

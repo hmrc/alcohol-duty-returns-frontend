@@ -14,11 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SubHeading}
+@import components.{Link, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
-@import java.time.Year
-@import views.html.components.YearNavigation
 
 @this(
     layout: templates.Layout,
@@ -31,11 +29,12 @@
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
     subHeading: SubHeading,
-    yearNavigation: YearNavigation
+    paragraph: Paragraph,
+    link: Link
 )
 
 
-@(outstandingReturns: TableViewModel, completedReturns: TableViewModel, availableYears: Seq[Int] = Seq(Year.now().getValue))(implicit request: Request[_], messages: Messages)
+@(outstandingReturns: TableViewModel, completedReturns: TableViewModel, pastYears: Seq[Int])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastReturns.title"))){
 
@@ -86,9 +85,17 @@
         @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty) {
             @subHeading(messages("viewPastReturns.noReturns"))
         }
-        @subHeading(messages("viewPastReturns.selectYear.title"))
-        @yearNavigation(
-            availableYears = availableYears,
-            yearLink = year => controllers.returns.routes.CompletedReturnsController.onPageLoad(year)
-        )
+
+        @if(pastYears.nonEmpty) {
+            @subHeading(messages("viewPastReturns.pastYears.h2"), Css.headingMCssClass)
+            @paragraph(HtmlContent(
+                pastYears.map{ year =>
+                    link(
+                        id = s"past-returns-link-$year",
+                        text = messages("viewPastReturns.pastYears.link", messages("site.year", year)),
+                        href = controllers.returns.routes.CompletedReturnsController.onPageLoad(year).url
+                    )
+                }.mkString("<br>")
+            ))
+        }
 }
