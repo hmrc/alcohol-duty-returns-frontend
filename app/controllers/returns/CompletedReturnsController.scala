@@ -18,8 +18,6 @@ package controllers.returns
 
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions.IdentifyWithEnrolmentAction
-import models.ObligationData
-import models.ObligationStatus.Fulfilled
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SubHeading, Link}
+@import components.{PageHeading, Link}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
@@ -33,30 +33,31 @@
 
     @pageHeading(messages("completedReturns.heading", year))
 
-        @govukTable(Table(
-            caption = Some(year.toString),
-            captionClasses = Css.tableCaptionMCssClass,
-            head = Some(completedReturns.head),
-            rows = completedReturns.rows.map { row =>
-                val actions = TableRow(
-                    content = HtmlContent(tableRowActionList(
-                        id = "completedReturnsActions",
-                        actions = row.actions.map { action =>
-                            tableRowAction(
-                                id = "",
-                                text = action.label,
-                                href = action.href,
-                                visuallyHiddenContent = action.visuallyHiddenText
-                            )
-                        }
-                    ))
-                )
-                row.cells :+ actions
-            }
-        ))
-@link(
-id = "back-to-returns-link",
-text = messages("backToReturns.Link.text"),
-href = controllers.returns.routes.ViewPastReturnsController.onPageLoad.url
-)
+    @govukTable(Table(
+        caption = Some(messages("site.year", year)),
+        captionClasses = Css.tableCaptionMCssClass,
+        head = Some(completedReturns.head),
+        rows = completedReturns.rows.map { row =>
+            val actions = TableRow(
+                content = HtmlContent(tableRowActionList(
+                    id = "completedReturnsId",
+                    actions = row.actions.map { action =>
+                        tableRowAction(
+                            id = "",
+                            text = action.label,
+                            href = action.href,
+                            visuallyHiddenContent = action.visuallyHiddenText
+                        )
+                    }
+                ))
+            )
+            row.cells :+ actions
+        }
+    ))
+
+    @link(
+        id = "back-to-returns-link",
+        text = messages("backToReturns.Link.text"),
+        href = controllers.returns.routes.ViewPastReturnsController.onPageLoad.url
+    )
 }

@@ -23,58 +23,87 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import viewmodels.returns.ViewPastReturnsHelper
 import views.html.returns.CompletedReturnsView
-import java.time.{Clock, LocalDate}
+
 import scala.concurrent.Future
 
 class CompletedReturnsControllerSpec extends SpecBase {
+
+  val year = 2024
+
+  lazy val completedReturnsRoute = routes.CompletedReturnsController.onPageLoad(year).url
+
   "CompletedReturnsController" - {
     "must return OK and the correct view for a GET" in {
       val viewModelHelper = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
       val mockConnector   = mock[AlcoholDutyReturnsConnector]
 
-      val previousYear = java.time.Year.now().getValue - 1
-
-      val janReturn = obligationDataSingleFulfilled.copy(
-        fromDate = LocalDate.of(previousYear, 1, 1),
-        toDate = LocalDate.of(previousYear, 1, 31),
-        periodKey = s"${previousYear.toString.takeRight(2)}AA"
-      )
-
-      val sepReturn = obligationDataSingleFulfilled.copy(
-        fromDate = LocalDate.of(previousYear, 9, 1),
-        toDate = LocalDate.of(previousYear, 9, 28),
-        periodKey = s"${previousYear.toString.takeRight(2)}AI"
-      )
-
-      when(mockConnector.obligationDetails(any())(any()))
-        .thenReturn(Future.successful(Seq(janReturn, sepReturn)))
+      when(mockConnector.fulfilledObligations(any())(any()))
+        .thenReturn(Future.successful(fulfilledObligationData))
 
       val application = applicationBuilder(userAnswers = None)
         .overrides(
-          bind[AlcoholDutyReturnsConnector].toInstance(mockConnector),
-          bind[Clock].toInstance(clock)
+          bind[AlcoholDutyReturnsConnector].toInstance(mockConnector)
         )
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CompletedReturnsController.onPageLoad(previousYear).url)
+        val request = FakeRequest(GET, completedReturnsRoute)
         val result  = route(application, request).value
         val view    = application.injector.instanceOf[CompletedReturnsView]
 
-        val expectedTable = viewModelHelper.getReturnsTable(Seq(sepReturn, janReturn))(getMessages(application))
+        val expectedTable = viewModelHelper.getReturnsTable(multipleFulfilledObligations)(getMessages(application))
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(expectedTable, previousYear)(
-          request,
-          getMessages(application)
-        ).toString
+        contentAsString(result) mustEqual view(expectedTable, year)(request, getMessages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET on Exception" in {
+    "must redirect to Journey Recovery if the year has no completed returns" in {
       val mockConnector = mock[AlcoholDutyReturnsConnector]
 
-      when(mockConnector.obligationDetails(any())(any()))
+      when(mockConnector.fulfilledObligations(any())(any()))
+        .thenReturn(Future.successful(fulfilledObligationData))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyReturnsConnector].toInstance(mockConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.CompletedReturnsController.onPageLoad(2023).url)
+        val result  = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery if the year is out of range" in {
+      val mockConnector = mock[AlcoholDutyReturnsConnector]
+
+      when(mockConnector.fulfilledObligations(any())(any()))
+        .thenReturn(Future.successful(fulfilledObligationData))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyReturnsConnector].toInstance(mockConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.CompletedReturnsController.onPageLoad(2020).url)
+        val result  = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery if there is an Exception due to a failed Future" in {
+      val mockConnector = mock[AlcoholDutyReturnsConnector]
+
+      when(mockConnector.fulfilledObligations(any())(any()))
         .thenReturn(Future.failed(new Exception("test Exception")))
 
       val application = applicationBuilder(userAnswers = None)
@@ -84,7 +113,7 @@ class CompletedReturnsControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CompletedReturnsController.onPageLoad(2024).url)
+        val request = FakeRequest(GET, completedReturnsRoute)
         val result  = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
