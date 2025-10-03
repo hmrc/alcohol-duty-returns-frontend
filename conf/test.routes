@@ -2,3 +2,4 @@ GET        /clear-all                             testonly.controllers.TestOnlyC
 GET        /create-user-answers/:periodKey        testonly.controllers.TestOnlyController.createUserAnswers(periodKey: String, beer: Boolean ?= false, cider: Boolean ?= false, wine: Boolean ?= false, spirits: Boolean ?= false, OFP: Boolean ?= false)
 
 GET        /clear-user-historic-payments          testonly.controllers.TestOnlyController.clearPastPaymentsData()
+GET        /clear-user-fulfilled-obligations      testonly.controllers.TestOnlyController.clearFulfilledObligationData()
