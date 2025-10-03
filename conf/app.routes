@@ -28,7 +28,7 @@ POST        /enrol/no-approval-id                        controllers.auth.NoAppa
 GET         /enrol/approval-id/claim                     controllers.auth.RequestAccessController.onPageLoad()
 
 GET         /check-your-returns                          controllers.returns.ViewPastReturnsController.onPageLoad
-GET        /completed-returns/:year                 controllers.returns.CompletedReturnsController.onPageLoad(year: Int)
+GET         /completed-returns/:year                     controllers.returns.CompletedReturnsController.onPageLoad(year: Int)
 
 GET         /view-your-return/:periodKey                 controllers.returns.ViewReturnController.onPageLoad(periodKey: String)
 
