@@ -20,10 +20,6 @@
 
 @this(
     layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
     pageHeading: PageHeading,
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
@@ -34,7 +30,7 @@
 )
 
 
-@(outstandingReturns: TableViewModel, completedReturns: TableViewModel, pastYears: Seq[Int])(implicit request: Request[_], messages: Messages)
+@(outstandingReturns: TableViewModel, completedReturns: TableViewModel, currentYear: Int, pastYears: Seq[Int])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastReturns.title"))){
 
@@ -63,7 +59,7 @@
 
         @if(completedReturns.rows.nonEmpty) {
             @govukTable(Table(
-                caption = Some(messages("viewPastReturns.completedReturns.caption")),
+                caption = Some(messages("viewPastReturns.completedReturns.caption", messages("site.year", currentYear))),
                 captionClasses = Css.tableCaptionMCssClass,
                 head = Some(completedReturns.head),
                 rows = completedReturns.rows.map(row => {

@@ -68,7 +68,7 @@ class ViewPastReturnsController @Inject() (
     val obligationsFuture = for {
       openObligationsTable                   <- openObligationsFuture
       (fulfilledObligationsTable, pastYears) <- fulfilledObligationsFuture
-    } yield Ok(view(openObligationsTable, fulfilledObligationsTable, pastYears))
+    } yield Ok(view(openObligationsTable, fulfilledObligationsTable, currentYear, pastYears))
 
     obligationsFuture.recover { case ex =>
       logger.warn(s"Error fetching obligation data for $appaId", ex)

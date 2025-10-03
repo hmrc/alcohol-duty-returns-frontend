@@ -29,6 +29,9 @@ import java.time.Clock
 import scala.concurrent.Future
 
 class ViewPastReturnsControllerSpec extends SpecBase {
+
+  val clockYear = 2024
+
   "ViewPastReturns Controller" - {
     "must return OK and the correct view for a GET" - {
       "if there are completed returns from past years" in {
@@ -62,7 +65,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
           val pastYears               = Seq(2022)
 
           status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable, pastYears)(
+          contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable, clockYear, pastYears)(
             request,
             getMessages(application)
           ).toString
@@ -100,7 +103,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
           val pastYears               = Seq.empty
 
           status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable, pastYears)(
+          contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable, clockYear, pastYears)(
             request,
             getMessages(application)
           ).toString
