@@ -119,21 +119,27 @@ section.adjustment.checkAnswers = Adjustment from previous return
 section.dutySuspended = Report duty suspended alcohol deliveries
 section.checkAndSubmit = Send return
 
-viewPastReturns.heading = Your returns
 viewPastReturns.title = Your returns
+viewPastReturns.heading = Your returns
 viewPastReturns.outstandingReturns.caption = Outstanding returns
-viewPastReturns.completedReturns.caption = Completed returns
+viewPastReturns.completedReturns.caption = Completed returns in {0}
 viewPastReturns.period = Period
 viewPastReturns.status = Status
 viewPastReturns.action = Action
 viewPastReturns.submitReturn = Complete return
-viewPastReturns.submitReturn.hidden = Complete return for {0}
+viewPastReturns.submitReturn.hidden = for {0}
 viewPastReturns.viewReturn = View return
-viewPastReturns.viewReturn.hidden = View return for {0}
+viewPastReturns.viewReturn.hidden = for {0}
 viewPastReturns.status.due = Due
 viewPastReturns.status.overdue = Overdue
 viewPastReturns.status.completed = Completed
 viewPastReturns.noReturns = No outstanding returns
+viewPastReturns.pastYears.h2 = Completed returns from previous years
+viewPastReturns.pastYears.link = View {0} returns
+
+completedReturns.title = Completed returns
+completedReturns.heading = Completed returns
+backToReturns.Link.text = Back to current returns
 
 viewReturn.heading = {0} Alcohol Duty Return
 viewReturn.title = {0} Alcohol Duty Return

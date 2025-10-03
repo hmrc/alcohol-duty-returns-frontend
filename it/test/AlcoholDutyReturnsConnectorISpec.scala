@@ -30,13 +30,12 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
     applicationBuilder(None).configure("microservice.services.alcohol-duty-returns.port" -> server.port()).build()
 
   "AlcoholDutyReturnsConnector" - {
-    "obligationDetails" - {
-      "must successfully retrieve obligation details" in new SetUp {
-        val obligationDataResponse = Seq(obligationDataSingleOpen)
-        val jsonResponse           = Json.toJson(obligationDataResponse).toString()
+    "openObligations" - {
+      "must successfully retrieve open obligation details" in new SetUp {
+        val jsonResponse = Json.toJson(multipleOpenObligations).toString()
 
         server.stubFor(
-          get(urlMatching(obligationDeatilsUrl))
+          get(urlMatching(openObligationsUrl))
             .willReturn(
               aResponse()
                 .withStatus(OK)
@@ -44,15 +43,15 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.obligationDetails(appaId)) { result =>
-          result mustBe obligationDataResponse
+        whenReady(connector.openObligations(appaId)) { result =>
+          result mustBe multipleOpenObligations
         }
       }
 
       "must fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(
-          get(urlMatching(obligationDeatilsUrl))
+          get(urlMatching(openObligationsUrl))
             .willReturn(
               aResponse()
                 .withStatus(OK)
@@ -60,36 +59,164 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
             )
         )
 
-        whenReady(connector.obligationDetails(appaId).failed) { e =>
+        whenReady(connector.openObligations(appaId).failed) { e =>
           e.getMessage must include("Invalid JSON format")
         }
       }
 
       "must fail when an unexpected response is returned" in new SetUp {
         server.stubFor(
-          get(urlMatching(obligationDeatilsUrl))
+          get(urlMatching(openObligationsUrl))
             .willReturn(
               aResponse()
                 .withStatus(BAD_GATEWAY)
             )
         )
 
-        whenReady(connector.obligationDetails(appaId).failed) { e =>
+        whenReady(connector.openObligations(appaId).failed) { e =>
           e.getMessage must include("Unexpected response")
         }
       }
 
       "must fail when an unexpected status code is returned" in new SetUp {
         server.stubFor(
-          get(urlMatching(obligationDeatilsUrl))
+          get(urlMatching(openObligationsUrl))
             .willReturn(
               aResponse()
                 .withStatus(CREATED)
             )
         )
 
-        whenReady(connector.obligationDetails(appaId).failed) { e =>
+        whenReady(connector.openObligations(appaId).failed) { e =>
           e.getMessage must include("Unexpected status code: 201")
+        }
+      }
+    }
+
+    "fulfilledObligations" - {
+      "must successfully retrieve fulfilled obligations by year" in new SetUp {
+        val jsonResponse = Json.toJson(fulfilledObligationData).toString()
+
+        server.stubFor(
+          get(urlMatching(fulfilledObligationsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(jsonResponse)
+            )
+        )
+
+        whenReady(connector.fulfilledObligations(appaId)) { result =>
+          result mustBe fulfilledObligationData
+        }
+      }
+
+      "must fail when invalid JSON is returned" in new SetUp {
+        val invalidJsonResponse = """{ "invalid": "json" }"""
+        server.stubFor(
+          get(urlMatching(fulfilledObligationsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(invalidJsonResponse)
+            )
+        )
+
+        whenReady(connector.fulfilledObligations(appaId).failed) { e =>
+          e.getMessage must include("Invalid JSON format")
+        }
+      }
+
+      "must fail when an unexpected response is returned" in new SetUp {
+        server.stubFor(
+          get(urlMatching(fulfilledObligationsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(BAD_GATEWAY)
+            )
+        )
+
+        whenReady(connector.fulfilledObligations(appaId).failed) { e =>
+          e.getMessage must include("Unexpected response")
+        }
+      }
+
+      "must fail when an unexpected status code is returned" in new SetUp {
+        server.stubFor(
+          get(urlMatching(fulfilledObligationsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(CREATED)
+            )
+        )
+
+        whenReady(connector.fulfilledObligations(appaId).failed) { e =>
+          e.getMessage must include("Unexpected status code: 201")
+        }
+      }
+    }
+
+    "getOpenObligation" - {
+      "must successfully retrieve an open obligation for the period key" in new SetUp {
+        val jsonResponse = Json.toJson(obligationDataSingleOpen).toString()
+
+        server.stubFor(
+          get(urlMatching(openObligationForPeriodUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(jsonResponse)
+            )
+        )
+
+        whenReady(connector.getOpenObligation(appaId, periodKeyAug).value) { result =>
+          result mustBe Right(obligationDataSingleOpen)
+        }
+      }
+
+      "must fail when invalid JSON is returned" in new SetUp {
+        val invalidJsonResponse = """{ "invalid": "json" }"""
+        server.stubFor(
+          get(urlMatching(openObligationForPeriodUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(invalidJsonResponse)
+            )
+        )
+
+        whenReady(connector.getOpenObligation(appaId, periodKeyAug).value) {
+          case Left(e)  => e must include("Invalid JSON format")
+          case Right(_) => fail("Expected a Left")
+        }
+      }
+
+      "must fail when an unexpected response is returned" in new SetUp {
+        server.stubFor(
+          get(urlMatching(openObligationForPeriodUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(BAD_GATEWAY)
+            )
+        )
+
+        whenReady(connector.getOpenObligation(appaId, periodKeyAug).value) {
+          case Left(e)  => e must include("Unexpected response")
+          case Right(_) => fail("Expected a Left")
+        }
+      }
+
+      "must fail when an unexpected status code is returned" in new SetUp {
+        server.stubFor(
+          get(urlMatching(openObligationForPeriodUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(CREATED)
+            )
+        )
+
+        whenReady(connector.getOpenObligation(appaId, periodKeyAug).value) { result =>
+          result mustBe Left("Unexpected status code: 201")
         }
       }
     }
@@ -277,8 +404,11 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
   }
 
   class SetUp {
-    val connector            = app.injector.instanceOf[AlcoholDutyReturnsConnector]
-    val obligationDeatilsUrl = s"/alcohol-duty-returns/obligationDetails/$appaId"
-    val returnUrl      = s"/alcohol-duty-returns/producers/${fullUserAnswers.returnId.appaId}/returns/${fullUserAnswers.returnId.periodKey}"
+    val connector                  = app.injector.instanceOf[AlcoholDutyReturnsConnector]
+    val openObligationsUrl         = s"/alcohol-duty-returns/obligationDetails/open/$appaId"
+    val fulfilledObligationsUrl    = s"/alcohol-duty-returns/obligationDetails/fulfilled/$appaId"
+    val openObligationForPeriodUrl = s"/alcohol-duty-returns/openObligation/$appaId/$periodKeyAug"
+    val returnUrl                  =
+      s"/alcohol-duty-returns/producers/${fullUserAnswers.returnId.appaId}/returns/${fullUserAnswers.returnId.periodKey}"
   }
 }

@@ -51,4 +51,7 @@ class TestOnlyUserAnswersConnector @Inject() (
 
   def clearPastPaymentsData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient.delete(url"${appConfig.adrClearPastPaymentsUrl()}").execute[HttpResponse]
+
+  def clearFulfilledObligationData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.delete(url"${appConfig.adrClearFulfilledObligationsUrl()}").execute[HttpResponse]
 }
