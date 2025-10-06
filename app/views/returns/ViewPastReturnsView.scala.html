@@ -78,7 +78,7 @@
             )
         }
 
-        @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty) {
+        @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty && pastYears.isEmpty) {
             @subHeading(messages("viewPastReturns.noReturns"))
         }
 
