@@ -19,7 +19,7 @@ package connectors
 import cats.data.EitherT
 import config.FrontendAppConfig
 import models.audit.AuditReturnSubmitted
-import models.{AlcoholRegime, ErrorModel, ObligationData, UserAnswers}
+import models.{AlcoholRegime, ErrorModel, FulfilledObligations, ObligationData, UserAnswers}
 import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import models.returns.ReturnDetails
 import play.api.Logging
@@ -44,13 +44,27 @@ class AlcoholDutyReturnsConnector @Inject() (
     extends HttpReadsInstances
     with Logging {
 
-  def obligationDetails(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] =
+  def openObligations(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] =
     httpClient
-      .get(url"${config.adrGetObligationDetailsUrl(appaId)}")
+      .get(url"${config.adrGetOpenObligationDetailsUrl(appaId)}")
       .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .flatMap {
         case Right(response) if response.status == OK =>
           Try(response.json.as[Seq[ObligationData]]) match {
+            case Success(data)      => Future.successful(data)
+            case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
+          }
+        case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
+        case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
+      }
+
+  def fulfilledObligations(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[FulfilledObligations]] =
+    httpClient
+      .get(url"${config.adrGetFulfilledObligationDetailsUrl(appaId)}")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
+      .flatMap {
+        case Right(response) if response.status == OK =>
+          Try(response.json.as[Seq[FulfilledObligations]]) match {
             case Success(data)      => Future.successful(data)
             case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
           }

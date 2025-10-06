@@ -63,7 +63,14 @@ http://localhost:16000/manage-alcohol-duty/test-only/clear-all
 This endpoint clears all data in the user historic payments repository (in alcohol-duty-account):
 http://localhost:16000/manage-alcohol-duty/test-only/clear-user-historic-payments
 
+#### Clear fulfilled obligation data
+
+This endpoint clears all data in the user fulfilled obligations repository (in alcohol-duty-account, for completed
+returns):
+http://localhost:16000/manage-alcohol-duty/test-only/clear-user-fulfilled-obligations
+
 #### Create existing user answers
+
 To create existing user answers with specific alcohol regimes before starting the returns journey, change the following
 fields on the auth-login-stub:
 

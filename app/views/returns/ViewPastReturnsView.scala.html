@@ -14,25 +14,23 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SubHeading}
+@import components.{Link, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
 @this(
     layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
     pageHeading: PageHeading,
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
-    subHeading: SubHeading
+    subHeading: SubHeading,
+    paragraph: Paragraph,
+    link: Link
 )
 
 
-@(outstandingReturns: TableViewModel, completedReturns: TableViewModel)(implicit request: Request[_], messages: Messages)
+@(outstandingReturns: TableViewModel, completedReturns: TableViewModel, currentYear: Int, pastYears: Seq[Int])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastReturns.title"))){
 
@@ -61,7 +59,7 @@
 
         @if(completedReturns.rows.nonEmpty) {
             @govukTable(Table(
-                caption = Some(messages("viewPastReturns.completedReturns.caption")),
+                caption = Some(messages("viewPastReturns.completedReturns.caption", messages("site.year", currentYear))),
                 captionClasses = Css.tableCaptionMCssClass,
                 head = Some(completedReturns.head),
                 rows = completedReturns.rows.map(row => {
@@ -80,8 +78,20 @@
             )
         }
 
-        @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty) {
+        @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty && pastYears.isEmpty) {
             @subHeading(messages("viewPastReturns.noReturns"))
         }
 
+        @if(pastYears.nonEmpty) {
+            @subHeading(messages("viewPastReturns.pastYears.h2"), Css.headingMCssClass)
+            @paragraph(HtmlContent(
+                pastYears.map{ year =>
+                    link(
+                        id = s"past-returns-link-$year",
+                        text = messages("viewPastReturns.pastYears.link", messages("site.year", year)),
+                        href = controllers.returns.routes.CompletedReturnsController.onPageLoad(year).url
+                    )
+                }.mkString("<br>")
+            ))
+        }
 }
