@@ -1290,8 +1290,7 @@ trait TestData extends ModelGenerators {
     periodEndDate = returnPeriodViewModel(dateTimeHelper).toDate,
     formattedProcessingDate = "27 August 2019",
     formattedPaymentDueDate = "27 August 2020",
-    paymentDueText =
-      "You can pay your duty now or later from your business tax account, but you must pay it by 27 August 2020. You will be charged interest if you do not pay by this date.",
+    isOverdue = false,
     periodKey = periodKey,
     businessTaxAccountUrl = "http://localhost:9020/business-account/",
     claimRefundUrl = "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=1",
