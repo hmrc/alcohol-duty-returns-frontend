@@ -110,6 +110,7 @@ class DutyDueForThisReturnController @Inject() (
               .withSession(session)
           )
         } else {
+          logger.error(s"Failed to submit return: $error")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         },
       adrSubmissionCreatedDetails => {

@@ -73,7 +73,7 @@ class BeforeStartReturnController @Inject() (
                 logger.warn(s"Conflict: $message")
                 Redirect(controllers.routes.ServiceUpdatedController.onPageLoad).withSession(session)
               case Left(ErrorModel(_, message))        =>
-                logger.warn(s"Unexpected error: $message")
+                logger.error(s"Unexpected error: $message")
                 Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
             }
           case Left(error) =>
