@@ -1124,7 +1124,7 @@ dutyDueForThisReturn.spirits.nothingToDeclare = Dim byd i’w ddatgan
 
 returnSubmitted.title = Datganiad wedi’i anfon
 returnSubmitted.heading = Datganiad wedi’i anfon
-returnSubmitted.panel.body.reference = Cyfeirnod eich Datganiad yw {0}
+returnSubmitted.panel.body.reference = Cyfeirnod eich Datganiad yw
 returnSubmitted.panel.body.nil = Does gennych chi ddim byd i’w dalu
 returnSubmitted.panel.body.balanceDue = Mae angen i chi dalu
 returnSubmitted.panel.body.dutyOwed = Dyma faint sy’n ddyledus i chi
@@ -1132,13 +1132,16 @@ returnSubmitted.p1 = Gwnaethoch chi anfon eich Datganiad Toll Alcohol ar {0} ar 
 returnSubmitted.viewReturnLink.text = Bwrw golwg dros eich Datganiad
 returnSubmitted.whatHappensNext = Yr hyn sy’n digwydd nesaf
 returnSubmitted.positive.p1.notOverdue = Gallwch dalu’ch toll nawr neu’n hwyrach drwy’ch Cyfrif Treth Busnes, ond bydd yn rhaid i chi ei thalu erbyn {0}. Codir llog arnoch os na fyddwch yn talu erbyn y dyddiad hwn.
+returnSubmitted.positive.p2.notOverdue = Mae’n rhaid i chi ddefnyddio’ch cyfeirnod fel cyfeirnod talu pan fyddwch chi’n talu’r Datganiad hwn.
+returnSubmitted.returnSubmittedLate = Mae’ch datganiad wedi’i gyflwyno’n hwyr
+returnSubmitted.whatYouNeedToDo = Yr hyn y mae angen i chi ei wneud
 returnSubmitted.positive.p1.overdue = Roedd disgwyl i chi wneud taliad ar gyfer y Datganiad hwn ar {0} ond mae’r taliad yn hwyr. Codir llog arnoch ar gyfer y cyfnod sy’n dechrau ar {0} ac sy’n dod i ben ar y dyddiad y gwnewch y taliad.
-returnSubmitted.positive.p2 = Mae’n rhaid i chi ddefnyddio’ch cyfeirnod fel cyfeirnod talu pan fyddwch chi’n talu’r Datganiad hwn.
+returnSubmitted.positive.p2.overdue = Mae’n rhaid i chi wneud eich taliad cyn gynted â phosibl. Defnyddiwch eich cyfeirnod fel cyfeirnod talu pan fyddwch yn talu.
 returnSubmitted.direct.debit.p1 = Gallwch hefyd dalu toll yn awtomatig drwy Ddebyd Uniongyrchol.
 returnSubmitted.direct.debit.setupOrManageLink.text = Sefydlwch neu rheolwch eich Debyd Uniongyrchol
 returnSubmitted.negative.link = Gallwch hawlio toll sy’n ddyledus nawr neu’n hwyrach drwy’ch cyfrif Toll Alcohol.
 returnSubmitted.negative.guidance = Os na fyddwch yn ei hawlio’n ôl, bydd yn cael ei defnyddio tuag at unrhyw doll sy’n ddyledus yn sgil eich Datganiad nesaf.
-returnSubmitted.warningText = Mae ein manylion banc wedi newid. Dewiswch ‘Talu nawr’ ac yna ‘Trosglwyddiad banc (BACS/CHAPS)’ er mwyn gweld y manylion newydd.
+returnSubmitted.warningText = Mae ein manylion banc wedi newid. Talwch nawr a dewiswch ‘Trosglwyddiad banc’ i’w gweld.
 returnSubmitted.warningFallbackText = Rhybudd
 
 returnSubmitted.noDetails.p1 = Mae eich datganiad wedi dod i law, ond ni allwn ddangos y manylion llawn ar hyn o bryd. Gallai hyn fod o ganlyniad i broblem dros dro gyda’r gwasanaeth.
