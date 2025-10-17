@@ -1141,7 +1141,7 @@ returnSubmitted.direct.debit.p1 = You can also pay duty automatically by direct 
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
 returnSubmitted.negative.link = You can claim duty owed now or later in your Alcohol Duty account.
 returnSubmitted.negative.guidance = If you do not claim it back then it will be used toward any duty due from your next return.
-returnSubmitted.warningText = Our bank details have changed. Pay now and choose Bank transfer (BACS/CHAPS) to see them.
+returnSubmitted.warningText = Our bank details have changed. Pay now and choose ‘Bank transfer’ to see them.
 returnSubmitted.warningFallbackText = Warning
 
 returnSubmitted.noDetails.p1 = We’ve received your return, but we’re unable to show the full details right now. This may be due to a temporary problem with the service.
