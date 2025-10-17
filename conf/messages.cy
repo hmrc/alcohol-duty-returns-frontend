@@ -119,21 +119,27 @@ section.adjustment.checkAnswers = Addasiad o ddatganiad blaenorol
 section.dutySuspended = Rhoi gwybod am ddosbarthiadau o alcohol o dan ohiriad tollau
 section.checkAndSubmit = Anfon Datganiad
 
-viewPastReturns.heading = Eich Datganiadau
 viewPastReturns.title = Eich Datganiadau
+viewPastReturns.heading = Eich Datganiadau
 viewPastReturns.outstandingReturns.caption = Datganiadau sydd heb eu cyflwyno
-viewPastReturns.completedReturns.caption = Datganiadau wedi’u cwblhau
+viewPastReturns.completedReturns.caption = Datganiadau wedi’u cwblhau yn {0}
 viewPastReturns.period = Cyfnod
 viewPastReturns.status = Statws
 viewPastReturns.action = Camau
-viewPastReturns.submitReturn = Cyflwyno Datganiad
-viewPastReturns.submitReturn.hidden = Cyflwyno Datganiad {0}
+viewPastReturns.submitReturn = Cwblhau Datganiad
+viewPastReturns.submitReturn.hidden = ar gyfer {0}
 viewPastReturns.viewReturn = Gweld Datganiad
-viewPastReturns.viewReturn.hidden = Gweld Datganiad {0}
+viewPastReturns.viewReturn.hidden = ar gyfer {0}
 viewPastReturns.status.due = I’w gyflwyno
 viewPastReturns.status.overdue = Yn hwyr
 viewPastReturns.status.completed = Wedi cwblhau
 viewPastReturns.noReturns = Does dim Datganiadau sydd heb eu cyflwyno
+viewPastReturns.pastYears.h2 = Datganiadau wedi’u cwblhau o flynyddoedd blaenorol
+viewPastReturns.pastYears.link = Bwrw golwg dros Ddatganiadau ar gyfer {0}
+
+completedReturns.title = Datganiadau wedi’u cwblhau
+completedReturns.heading = Datganiadau wedi’u cwblhau
+backToReturns.Link.text = Yn ôl at y Datganiadau presennol
 
 viewReturn.heading = Datganiad Toll Alcohol ar gyfer {0}
 viewReturn.title = Datganiad Toll Alcohol ar gyfer {0}

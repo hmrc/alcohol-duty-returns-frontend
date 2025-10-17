@@ -18,8 +18,6 @@ package controllers.returns
 
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
-import models.ObligationData
-import models.ObligationStatus.{Fulfilled, Open}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,6 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ViewPastReturnsHelper
 import views.html.returns.ViewPastReturnsView
 
+import java.time.{Clock, Year}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -36,25 +35,44 @@ class ViewPastReturnsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   viewModelHelper: ViewPastReturnsHelper,
   view: ViewPastReturnsView,
-  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector
+  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
+  clock: Clock
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with Logging {
 
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
-    alcoholDutyReturnsConnector
-      .obligationDetails(request.appaId)
-      .map { obligations: Seq[ObligationData] =>
-        val fulfilledObligations    = obligations.filter(_.status == Fulfilled)
-        val openObligations         = obligations.filter(_.status == Open)
-        val outstandingReturnsTable = viewModelHelper.getReturnsTable(openObligations)
-        val completedReturnsTable   = viewModelHelper.getReturnsTable(fulfilledObligations)
-        Ok(view(outstandingReturnsTable, completedReturnsTable))
+    val appaId      = request.appaId
+    val currentYear = Year.now(clock).getValue
+
+    val openObligationsFuture = alcoholDutyReturnsConnector.openObligations(appaId).map { openObligations =>
+      viewModelHelper.getReturnsTable(openObligations)
+    }
+
+    val fulfilledObligationsFuture =
+      alcoholDutyReturnsConnector.fulfilledObligations(appaId).map { fulfilledObligationsData =>
+        val currentYearFulfilledObligations = fulfilledObligationsData
+          .find(_.year == currentYear)
+          .getOrElse(throw new IllegalStateException("Current year fulfilled obligations list not found"))
+        val fulfilledObligationsTable       = viewModelHelper.getReturnsTable(currentYearFulfilledObligations.obligations)
+        val pastYears                       =
+          fulfilledObligationsData
+            .filter(o => o.year != currentYear && o.obligations.nonEmpty)
+            .map(_.year)
+            .sorted
+            .reverse
+        (fulfilledObligationsTable, pastYears)
       }
-      .recover { case _ =>
-        logger.warn("Unable to fetch obligation data")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      }
+
+    val obligationsFuture = for {
+      openObligationsTable                   <- openObligationsFuture
+      (fulfilledObligationsTable, pastYears) <- fulfilledObligationsFuture
+    } yield Ok(view(openObligationsTable, fulfilledObligationsTable, currentYear, pastYears))
+
+    obligationsFuture.recover { case ex =>
+      logger.warn(s"Error fetching obligation data for $appaId", ex)
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }

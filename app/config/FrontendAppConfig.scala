@@ -126,8 +126,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrClearPastPaymentsUrl(): String =
     s"$adrAccountHost/alcohol-duty-account/test-only/clear-user-historic-payments"
 
-  def adrGetObligationDetailsUrl(appaId: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
+  def adrClearFulfilledObligationsUrl(): String =
+    s"$adrAccountHost/alcohol-duty-account/test-only/clear-user-fulfilled-obligations"
+
+  def adrGetOpenObligationDetailsUrl(appaId: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/open/$appaId"
+
+  def adrGetFulfilledObligationDetailsUrl(appaId: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/fulfilled/$appaId"
 
   def adrGetOpenObligationUrl(appaId: String, periodKey: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/openObligation/$appaId/$periodKey"
