@@ -35,7 +35,7 @@
 
 @posPanelContent = {
     @paragraph(HtmlContent(
-        messages("returnSubmitted.panel.body.referenceText") +
+        messages("returnSubmitted.panel.body.reference") +
         strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
     ), classes = "")
     @paragraphWithMonetaryValue(messages("returnSubmitted.panel.body.balanceDue"), viewModel.returnDetails.amount, classes = Css.marginBottom0CssClass)
@@ -49,7 +49,7 @@
 
 @negPanelContent = {
     @paragraph(HtmlContent(
-        messages("returnSubmitted.panel.body.referenceText") +
+        messages("returnSubmitted.panel.body.reference") +
         strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
     ), classes = "")
     @paragraphWithMonetaryValue(messages("returnSubmitted.panel.body.dutyOwed"), -viewModel.returnDetails.amount, classes = "")
@@ -137,7 +137,7 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.whatHappensNext"))
+        @subHeading(messages("returnSubmitted.whatHappensNext"), classes = Css.headingMCssClass)
         @paragraph(content =
             HtmlContent(
                 Seq(link(
