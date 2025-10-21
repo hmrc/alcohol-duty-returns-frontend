@@ -74,24 +74,17 @@
 
 @beforeContent = {
 
-<div class="@Css.gridRowCssClass">
-    <div class="@Css.gridColumnTwoThirds">
-        @if(showBackLink) {
-            @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
-        }
-    </div>
-
-    <div class="@Css.gridColumnOneThird">
-        @if(appConfig.languageTranslationEnabled) {
-            @hmrcLanguageSelect(LanguageSelect(
-                if (messages.lang.code == "cy") Cy else En,
-                (En, routes.LanguageSwitchController.switchToLanguage("en").url),
+    @hmrcLanguageSelect(LanguageSelect(
+        if (messages.lang.code == "cy") Cy else En,
+            (En, routes.LanguageSwitchController.switchToLanguage("en").url),
                 (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
-            ))
-        }
-    </div>
-</div>
+    ))
+
+    @if(showBackLink) {
+        @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible").withAttribute(("id" -> "back-link")))
+    }
 }
+
 
 @content = {
     @contentBlock
