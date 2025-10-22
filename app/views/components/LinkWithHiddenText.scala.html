@@ -20,7 +20,4 @@
 
 @(id: String, text: String, href: String, visuallyHiddenContent: String, newTab: Boolean = false, classes: String = Css.linkNoVisitedStateCssClass)
 
-<a class="@classes" href="@href" @if(newTab) { target="_blank" rel="noopener noreferrer" } id="@id">
-    @text
-    <span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span>
-</a>
+<a class="@classes" href="@href" @if(newTab) { target="_blank" rel="noopener noreferrer" } id="@id">@text<span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span></a>

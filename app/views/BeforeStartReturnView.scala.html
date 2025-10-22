@@ -15,9 +15,7 @@
  *@
 
 @import components.{BulletList, Caption, LinkWithHiddenText, PageHeading}
-@import config.Constants.Css
-@import viewmodels.BeforeStartReturnViewModel
-@import viewmodels.ReturnPeriodViewModel
+@import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
 
 @this(
         layout: templates.Layout,
@@ -96,7 +94,7 @@
                                     href = messages("beforeStartReturn.details.ex46.url"),
                                     visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
                                     newTab = true
-                                ) + messages("beforeStartReturn.details.ex46.text")
+                                ) + " " + messages("beforeStartReturn.details.ex46.text")
                             ),
                             HtmlContent(
                                 linkWithHiddenText(
@@ -105,7 +103,8 @@
                                     href = messages("beforeStartReturn.details.w5.url"),
                                     visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
                                     newTab = true
-                                ) + messages("beforeStartReturn.details.w5.text")
+                                ) + messages("beforeStartReturn.details.w5.commaForWelsh") +
+                                        " " + messages("beforeStartReturn.details.w5.text")
                             ),
                         ))
             )

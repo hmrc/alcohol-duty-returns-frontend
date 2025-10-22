@@ -319,6 +319,7 @@ beforeStartReturn.details.ex46.url = https://www.gov.uk/government/publications/
 beforeStartReturn.details.ex46.text = if you declare and pay your alcohol duty using this service
 beforeStartReturn.details.w5.link = use the W5 Alcohol Remittance Warrant form or the W5D Alcohol Deferment Warrant form
 beforeStartReturn.details.w5.url = https://www.gov.uk/guidance/alcohol-and-tobacco-warehousing-declarations
+beforeStartReturn.details.w5.commaForWelsh =
 beforeStartReturn.details.w5.text = if you use the Alcohol and Tobacco Warehousing Declarations (ATWD) service to declare and pay your alcohol duty
 beforeStartReturn.details.hidden = (opens in new tab)
 beforeStartReturn.text.dueWarning = The deadline for completing this return is today
