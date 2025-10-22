@@ -57,7 +57,7 @@ class BigDecimalFieldFormatter(
 
     baseFormatter
       .bind(key, data)
-      .map(_.replace(",", ""))
+      .map(_.replace(",", "").replaceAll("\\s", ""))
       .flatMap { s =>
         nonFatalCatch
           .either(BigDecimal(s))
