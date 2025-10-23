@@ -61,8 +61,7 @@ case class DutyDueForThisReturnViewModel(
 
 class DutyDueForThisReturnHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  adrReturnSubmissionService: AdrReturnSubmissionService,
-  appConfig: FrontendAppConfig
+  adrReturnSubmissionService: AdrReturnSubmissionService
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 

@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.checkAndSubmit
 import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyCalculatorConnector
+import models.AlcoholRegime._
 import models.adjustment.AdjustmentDuty
 import models.checkAndSubmit.{AdrDutySuspended, AdrDutySuspendedProduct, AdrSpirits}
 import models.{NormalMode, UserAnswers}
@@ -26,92 +27,131 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
 import services.checkAndSubmit.AdrReturnSubmissionService
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 
 import scala.concurrent.Future
 
 class DutyDueForThisReturnHelperSpec extends SpecBase {
   "DutyDueForThisReturnHelper" - {
-    "must total both duty due and adjustments" in new SetUp {
-      val userAnswers = declareAdjustmentTotalPage(
-        declareAdjustmentQuestionPage(
-          declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
-          true
-        ),
-        adjustmentTotal
-      )
-
-      when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesAndAdjustments))(any))
-        .thenReturn(Future.successful(totalDuty))
-
-      when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
-      when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(emptySpiritsModel)
-
-      whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
-        result.toOption.get.totalDue mustBe totalDuty.duty
-
-        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
-          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
-        val expectedDutyAndAdjustmentTotals  = totalDutiesAndAdjustments.map(total => f"$total%.2f")
-
-        dutiesBreakdownSummaryListValues mustBe expectedDutyAndAdjustmentTotals
-      }
-    }
-
-    "must total duty due where no adjustments" in new SetUp {
-      val userAnswers =
-        declareAdjustmentQuestionPage(
-          declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
-          false
+    "must return a duties breakdown summary list with the correct content and duty total" - {
+      "when both declarations and adjustments are present" in new SetUp {
+        val userAnswers = declareAdjustmentTotalPage(
+          declareAdjustmentQuestionPage(
+            declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
+            true
+          ),
+          adjustmentTotal
         )
 
-      when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesNoAdjustments))(any))
-        .thenReturn(Future.successful(totalDutyWithoutAdjustments))
+        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesAndAdjustments))(any))
+          .thenReturn(Future.successful(totalDuty))
 
-      when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
-      when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(emptySpiritsModel)
+        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
+        when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(emptySpiritsModel)
 
-      whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
-        result.toOption.get.totalDue mustBe totalDutyWithoutAdjustments.duty
+        val viewModel = dutyDueForThisReturnHelper
+          .getDutyDueViewModel(userAnswers, returnPeriod)
+          .value
+          .futureValue
+          .toOption
+          .get
 
-        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
-          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
-        val expectedDutyTotals               = totalDuties.map(total => f"$total%.2f") :+ ""
+        val summaryList = viewModel.dutiesBreakdownSummaryList
 
-        dutiesBreakdownSummaryListValues mustBe expectedDutyTotals
+        val expectedKeys = Seq(
+          "Beer declared",
+          "Cider declared",
+          "Wine declared",
+          "Spirits declared",
+          "Other fermented products declared",
+          "Adjustments to previous returns"
+        )
+
+        val expectedValues = List("£1,225.50", "£278.10", "£39,900.00", "£12,650.00", "£8,670.00", "£2,400.00")
+
+        viewModel.totalDue                                    mustBe totalDuty.duty
+        summaryList.rows.map(_.key.content.asHtml.toString)   mustBe expectedKeys
+        summaryList.rows.map(_.value.content.asHtml.toString) mustBe expectedValues
+        summaryList.rows.map(_.actions.get.items.head)        mustBe declarationActionItems :+ adjustmentsDeclaredActionItem
+      }
+
+      "when no adjustments are present" in new SetUp {
+        val userAnswers =
+          declareAdjustmentQuestionPage(
+            declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
+            false
+          )
+
+        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesNoAdjustments))(any))
+          .thenReturn(Future.successful(totalDutyWithoutAdjustments))
+
+        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
+        when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(emptySpiritsModel)
+
+        val viewModel = dutyDueForThisReturnHelper
+          .getDutyDueViewModel(userAnswers, returnPeriod)
+          .value
+          .futureValue
+          .toOption
+          .get
+
+        val summaryList = viewModel.dutiesBreakdownSummaryList
+
+        val expectedKeys = Seq(
+          "Beer declared",
+          "Cider declared",
+          "Wine declared",
+          "Spirits declared",
+          "Other fermented products declared",
+          "Adjustments to previous returns"
+        )
+
+        val expectedValues = List("£1,225.50", "£278.10", "£39,900.00", "£12,650.00", "£8,670.00", "Nil")
+
+        viewModel.totalDue                                    mustBe totalDutyWithoutAdjustments.duty
+        summaryList.rows.map(_.key.content.asHtml.toString)   mustBe expectedKeys
+        summaryList.rows.map(_.value.content.asHtml.toString) mustBe expectedValues
+        summaryList.rows.map(_.actions.get.items.head)        mustBe declarationActionItems :+ adjustmentsNotDeclaredActionItem
+      }
+
+      "when no declarations are present" in new SetUp {
+        val userAnswers = declareAdjustmentTotalPage(
+          declareAdjustmentQuestionPage(
+            declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
+            true
+          ),
+          adjustmentTotal
+        )
+
+        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
+          .thenReturn(Future.successful(totalAdjustments))
+
+        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
+        when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(emptySpiritsModel)
+
+        val viewModel = dutyDueForThisReturnHelper
+          .getDutyDueViewModel(userAnswers, returnPeriod)
+          .value
+          .futureValue
+          .toOption
+          .get
+
+        val summaryList = viewModel.dutiesBreakdownSummaryList
+
+        val expectedKeys   = Seq("Declared duty", "Adjustments to previous returns")
+        val expectedValues = Seq("Nil", "£2,400.00")
+
+        viewModel.totalDue                                    mustBe totalAdjustments.duty
+        summaryList.rows.map(_.key.content.asHtml.toString)   mustBe expectedKeys
+        summaryList.rows.map(_.value.content.asHtml.toString) mustBe expectedValues
+        summaryList.rows.map(_.actions.get.items.head)        mustBe
+          Seq(nilDeclarationActionItem, adjustmentsDeclaredActionItem)
       }
     }
 
-    "must return adjustments where no duty due" in new SetUp {
-      val userAnswers = declareAdjustmentTotalPage(
-        declareAdjustmentQuestionPage(
-          declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
-          true
-        ),
-        adjustmentTotal
-      )
-
-      when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
-        .thenReturn(Future.successful(totalAdjustments))
-
-      when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
-      when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(emptySpiritsModel)
-
-      whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
-        result.toOption.get.totalDue mustBe totalAdjustments.duty
-
-        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
-          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
-        val expectedAdjustmentTotals         = "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
-
-        dutiesBreakdownSummaryListValues mustBe expectedAdjustmentTotals
-      }
-    }
-
-    "must return a You've Also Answered Table View Model" - {
+    "must return a You've Also Answered summary list with the correct content" - {
       "when no spirits" - {
-        "and declared, with the correct label, declared content, and redirect to the appropriate check your answers page" in new SetUp {
+        "and DSD is declared" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -119,9 +159,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             ),
             adjustmentTotal
           )
-
-          val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -137,12 +174,12 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size                             mustBe 1
-          result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Duty suspended alcohol")
+          result.rows.map(_.value.content.asHtml.toString) mustBe Seq("Declared")
+          result.rows.map(_.actions.get.items.head)        mustBe Seq(dutySuspendedDeclaredActionItem)
         }
 
-        "and DSD not declared, with the correct label, nothing to declare content, and redirect to the appropriate declaration page" in new SetUp {
+        "and DSD is not declared" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -150,9 +187,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             ),
             adjustmentTotal
           )
-
-          val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -168,14 +202,14 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size                             mustBe 1
-          result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Duty suspended alcohol")
+          result.rows.map(_.value.content.asHtml.toString) mustBe Seq("Nothing to declare")
+          result.rows.map(_.actions.get.items.head)        mustBe Seq(dutySuspendedNotDeclaredActionItem)
         }
       }
 
       "when spirits declared" - {
-        "and DSD declared, with the correct labels, declared content, and redirect to the appropriate check your answers pages" in new SetUp {
+        "and DSD is declared" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -183,11 +217,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             ),
             adjustmentTotal
           )
-
-          val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-          val expectedSpiritsRedirectUrl: String                 =
-            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -203,14 +232,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size                           mustBe 2
-          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
-          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Duty suspended alcohol", "Spirits production")
+          result.rows.map(_.value.content.asHtml.toString) mustBe Seq("Declared", "Declared")
+          result.rows.map(_.actions.get.items.head)        mustBe
+            Seq(dutySuspendedDeclaredActionItem, spiritsDeclaredActionItem)
         }
 
-        "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate pages" in new SetUp {
+        "and DSD is not declared" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -218,11 +246,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             ),
             adjustmentTotal
           )
-
-          val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
-          val expectedSpiritsRedirectUrl: String                 =
-            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -238,16 +261,15 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size                           mustBe 2
-          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
-          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Duty suspended alcohol", "Spirits production")
+          result.rows.map(_.value.content.asHtml.toString) mustBe Seq("Nothing to declare", "Declared")
+          result.rows.map(_.actions.get.items.head)        mustBe
+            Seq(dutySuspendedNotDeclaredActionItem, spiritsDeclaredActionItem)
         }
       }
 
       "when spirits not declared" - {
-        "and DSD declared, with the correct labels, declared content, and redirect to the appropriate pages" in new SetUp {
+        "and DSD is declared" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -255,11 +277,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             ),
             adjustmentTotal
           )
-
-          val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-          val expectedSpiritsRedirectUrl: String                 =
-            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -275,14 +292,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size                           mustBe 2
-          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
-          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Duty suspended alcohol", "Spirits production")
+          result.rows.map(_.value.content.asHtml.toString) mustBe Seq("Declared", "Nothing to declare")
+          result.rows.map(_.actions.get.items.head)        mustBe
+            Seq(dutySuspendedDeclaredActionItem, spiritsNotDeclaredActionItem)
         }
 
-        "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate declarations pages" in new SetUp {
+        "and DSD not declared" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -290,11 +306,6 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             ),
             adjustmentTotal
           )
-
-          val expectedDutySuspendedDeliveriesRedirectUrl: String =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
-          val expectedSpiritsRedirectUrl: String                 =
-            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -310,11 +321,10 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size                           mustBe 2
-          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
-          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Duty suspended alcohol", "Spirits production")
+          result.rows.map(_.value.content.asHtml.toString) mustBe Seq("Nothing to declare", "Nothing to declare")
+          result.rows.map(_.actions.get.items.head)        mustBe
+            Seq(dutySuspendedNotDeclaredActionItem, spiritsNotDeclaredActionItem)
         }
       }
     }
@@ -357,53 +367,17 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           .futureValue
       result mustBe Left(s"Failed to calculate total duty due: $errorMessage")
     }
-
-    "when everything is declared" - {
-      "the duties must be shown in the correct order (Beer, Cider, Wine, Spirits, OFP, Adjustments)" in new SetUp {
-        val userAnswers: UserAnswers = declareAdjustmentTotalPage(
-          declareAdjustmentQuestionPage(
-            declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
-            true
-          ),
-          adjustmentTotal
-        )
-
-        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesAndAdjustments))(any))
-          .thenReturn(Future.successful(totalDuty))
-
-        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(dutySuspendedDeclaredModel)
-        when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(spiritsDeclaredModel)
-
-        val result: SummaryList = dutyDueForThisReturnHelper
-          .getDutyDueViewModel(userAnswers, returnPeriod)
-          .value
-          .futureValue
-          .toOption
-          .get
-          .dutiesBreakdownSummaryList
-
-        result.rows.size             mustBe 6
-        result.rows.head.key.content mustBe Text("Beer declared")
-        result.rows(1).key.content   mustBe Text("Cider declared")
-        result.rows(2).key.content   mustBe Text("Wine declared")
-        result.rows(3).key.content   mustBe Text("Spirits declared")
-        result.rows(4).key.content   mustBe Text("Other fermented products declared")
-        result.rows(5).key.content   mustBe Text("Adjustments to previous returns")
-      }
-    }
   }
 
   class SetUp {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val adjustmentTotal = BigDecimal(2400)
 
     val totalDuties               = Seq(beerDuty, ciderDuty, wineDuty, spiritsDuty, otherFermentedProductDuty).map(_.totalDuty)
     val totalDutiesNoAdjustments  = totalDuties :+ BigDecimal(0)
     val adjustmentsNoDuties       = Seq(adjustmentTotal)
-    val totalDutiesAndAdjustments =
-      totalDuties :+ adjustmentTotal
+    val totalDutiesAndAdjustments = totalDuties :+ adjustmentTotal
 
     val emptyDutySuspendedSuccessModel: EitherT[Future, String, AdrDutySuspended] = EitherT.rightT[Future, String](
       AdrDutySuspended(declared = false, dutySuspendedProducts = Seq.empty[AdrDutySuspendedProduct])
@@ -430,6 +404,77 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
     val mockCalculatorConnector        = mock[AlcoholDutyCalculatorConnector]
     val mockAdrReturnSubmissionService = mock[AdrReturnSubmissionService]
     val dutyDueForThisReturnHelper     =
-      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService, appConfig)
+      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService)
+
+    val declarationActionItems = Seq(
+      ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Beer).url,
+        visuallyHiddenText = Some("Beer declared")
+      ),
+      ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Cider).url,
+        visuallyHiddenText = Some("Cider declared")
+      ),
+      ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Wine).url,
+        visuallyHiddenText = Some("Wine declared")
+      ),
+      ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Spirits).url,
+        visuallyHiddenText = Some("Spirits declared")
+      ),
+      ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(OtherFermentedProduct).url,
+        visuallyHiddenText = Some("Other fermented products declared")
+      )
+    )
+
+    val nilDeclarationActionItem = ActionItem(
+      content = Text("Change"),
+      href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url,
+      visuallyHiddenText = Some("Declared duty")
+    )
+
+    val adjustmentsDeclaredActionItem = ActionItem(
+      content = Text("Change"),
+      href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url,
+      visuallyHiddenText = Some("Adjustments to previous returns")
+    )
+
+    val adjustmentsNotDeclaredActionItem = ActionItem(
+      content = Text("Change"),
+      href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url,
+      visuallyHiddenText = Some("Adjustments to previous returns")
+    )
+
+    val dutySuspendedDeclaredActionItem = ActionItem(
+      content = Text("Change"),
+      href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url,
+      visuallyHiddenText = Some("Duty suspended alcohol")
+    )
+
+    val dutySuspendedNotDeclaredActionItem = ActionItem(
+      content = Text("Change"),
+      href =
+        controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url,
+      visuallyHiddenText = Some("Duty suspended alcohol")
+    )
+
+    val spiritsDeclaredActionItem = ActionItem(
+      content = Text("Change"),
+      href = controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url,
+      visuallyHiddenText = Some("Spirits production")
+    )
+
+    val spiritsNotDeclaredActionItem = ActionItem(
+      content = Text("Change"),
+      href = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url,
+      visuallyHiddenText = Some("Spirits production")
+    )
   }
 }
