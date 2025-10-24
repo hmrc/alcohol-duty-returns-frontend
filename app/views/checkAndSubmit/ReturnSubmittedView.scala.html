@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, ParagraphWithMonetaryValue, SubHeading}
-@import viewmodels.Money
+@import components.{Link, PageHeading, Paragraph, ParagraphWithMonetaryValue, StrongPanelText, SubHeading}
+@import config.Constants.Css
 @import viewmodels.returns.ReturnSubmittedViewModel
 
 @this(
@@ -26,6 +26,7 @@
         govukPanel: GovukPanel,
         paragraph: Paragraph,
         paragraphWithMonetaryValue: ParagraphWithMonetaryValue,
+        strongPanelText: StrongPanelText,
         link: Link,
         govukWarningText: GovukWarningText
 )
@@ -33,18 +34,28 @@
 @(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
 
 @posPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.map(_.value).getOrElse("")), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${Money.format(viewModel.returnDetails.amount)}", classes = "")
+    @paragraph(HtmlContent(
+        messages("returnSubmitted.panel.body.reference") +
+        strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
+    ), classes = "")
+    @paragraphWithMonetaryValue(messages("returnSubmitted.panel.body.balanceDue"), viewModel.returnDetails.amount, classes = Css.marginBottom0CssClass)
 }
 
 @nilPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
+    @paragraph(HtmlContent(
+        strongPanelText(messages("returnSubmitted.panel.body.nil"))
+    ), classes = Css.marginBottom0CssClass)
 }
 
 @negPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.map(_.value).getOrElse("")), classes = "")
-    @paragraphWithMonetaryValue(s"${messages("returnSubmitted.panel.body.dutyOwed")}", -viewModel.returnDetails.amount, classes = "")
-    @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
+    @paragraph(HtmlContent(
+        messages("returnSubmitted.panel.body.reference") +
+        strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
+    ), classes = "")
+    @paragraphWithMonetaryValue(messages("returnSubmitted.panel.body.dutyOwed"), -viewModel.returnDetails.amount, classes = "")
+    @paragraph(HtmlContent(
+        strongPanelText(messages("returnSubmitted.panel.body.nil"))
+    ), classes = Css.marginBottom0CssClass)
 }
 
 @layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false, showUserResearchBanner = true) {
@@ -65,11 +76,17 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.whatHappensNext"))
+        @if(viewModel.isOverdue) {
+            @subHeading(messages("returnSubmitted.returnSubmittedLate"), classes = Css.headingMCssClass)
+            @paragraph(messages("returnSubmitted.positive.p1.overdue", viewModel.formattedPaymentDueDate))
 
-        @paragraph(viewModel.paymentDueText)
-
-        @paragraph(messages("returnSubmitted.positive.p2"))
+            @subHeading(messages("returnSubmitted.whatYouNeedToDo"), classes = Css.headingMCssClass)
+            @paragraph(messages("returnSubmitted.positive.p2.overdue", viewModel.formattedPaymentDueDate))
+        } else {
+            @subHeading(messages("returnSubmitted.whatHappensNext"), classes = Css.headingMCssClass)
+            @paragraph(messages("returnSubmitted.positive.p1.notOverdue", viewModel.formattedPaymentDueDate))
+            @paragraph(messages("returnSubmitted.positive.p2.notOverdue"))
+        }
 
         @govukWarningText(viewModel.warningText)
 
@@ -84,14 +101,6 @@
                     id = "direct-debit-start",
                     text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
                     href = controllers.payments.routes.StartDirectDebitController.initiateAndRedirect().url
-        )))
-
-        @paragraph(content =
-            HtmlContent(
-                link(
-                    id = "business-tax-account-link",
-                    text = messages("site.returnToBusinessAccount"),
-                    href = viewModel.businessTaxAccountUrl
         )))
     }
 
@@ -109,14 +118,6 @@
                     id = "view-return-link",
                     text = messages("returnSubmitted.viewReturnLink.text"),
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
-        )))
-
-        @paragraph(content =
-            HtmlContent(
-                link(
-                    id = "business-tax-account-link",
-                    text = messages("site.returnToBusinessAccount"),
-                    href = viewModel.businessTaxAccountUrl
         )))
     }
 
@@ -136,7 +137,7 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.whatHappensNext"))
+        @subHeading(messages("returnSubmitted.whatHappensNext"), classes = Css.headingMCssClass)
         @paragraph(content =
             HtmlContent(
                 Seq(link(
@@ -151,13 +152,13 @@
             ButtonViewModel("claimRefundButton", messages("site.claimRefund"))
             .asLink(viewModel.claimRefundUrl)
         )
-
-        @paragraph(content =
-            HtmlContent(
-                link(
-                    id = "business-tax-account-link",
-                    text = messages("site.returnToBusinessAccount"),
-                    href = viewModel.businessTaxAccountUrl
-        )))
     }
+
+    @paragraph(content =
+        HtmlContent(
+            link(
+                id = "business-tax-account-link",
+                text = messages("site.returnToBusinessAccount"),
+                href = viewModel.businessTaxAccountUrl
+            )))
 }
