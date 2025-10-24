@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
 import config.Constants.Css
-import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.{AdrDutySuspended, AdrSpirits}
