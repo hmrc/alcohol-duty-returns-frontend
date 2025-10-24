@@ -117,7 +117,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
         Seq("July 2024", completedTag.toString),
         Seq("June 2024", completedTag.toString),
         Seq("May 2024", completedTag.toString),
-        Seq("April 2024", completedTag.toString),
+        Seq("April 2024", completedTag.toString)
       )
 
       val expectedActions = Seq(
