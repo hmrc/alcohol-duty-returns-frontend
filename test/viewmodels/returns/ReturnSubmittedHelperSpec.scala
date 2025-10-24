@@ -22,9 +22,10 @@ import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.requests.IdentifierRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 
 import java.time.{Instant, LocalDate}
@@ -38,8 +39,7 @@ class ReturnSubmittedHelperSpec extends SpecBase {
   val returnSubmittedHelper =
     new ReturnSubmittedHelper(mockDateTimeHelper, mockAppConfig, mockReturnPeriodViewModelFactory)
 
-  val application: Application                         = applicationBuilder().build()
-  val messages: Messages                               = getMessages(application)
+  val messages: Messages                               = getMessages(app)
   val identifierRequest: IdentifierRequest[AnyContent] =
     IdentifierRequest(
       FakeRequest(),
@@ -54,6 +54,13 @@ class ReturnSubmittedHelperSpec extends SpecBase {
   val formattedProcessingDate: String    = "11 June 2024"
   val formattedDueDateNotOverdue: String = "25 June 2024"
   val formattedDueDateOverdue: String    = "25 May 2024"
+  val dummyStartDate: String             = "Period start date"
+  val dummyEndDate: String               = "Period end date"
+
+  val warningText = WarningText(
+    iconFallbackText = Some(messages("returnSubmitted.warningFallbackText")),
+    content = Text(messages("returnSubmitted.warningText"))
+  )
 
   val testReturnDetailsNotOverdue: AdrReturnCreatedDetails     = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
@@ -80,7 +87,7 @@ class ReturnSubmittedHelperSpec extends SpecBase {
   when(mockDateTimeHelper.formatDateMonthYear(eqTo(dueDateNotOverdue))(any())).thenReturn(formattedDueDateNotOverdue)
   when(mockDateTimeHelper.formatDateMonthYear(eqTo(dueDateOverdue))(any())).thenReturn(formattedDueDateOverdue)
   when(mockReturnPeriodViewModelFactory.apply(any())(any()))
-    .thenReturn(ReturnPeriodViewModel("TEST DATE 1", "TEST DATE 2", "TEST DATE 3"))
+    .thenReturn(ReturnPeriodViewModel(dummyStartDate, dummyEndDate, "Return due date"))
 
   "ReturnSubmittedHelper" - {
     "must return a ReturnSubmittedViewModel with the correct details" - {
@@ -88,24 +95,32 @@ class ReturnSubmittedHelperSpec extends SpecBase {
         val result =
           returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetailsNotOverdue)(identifierRequest, messages)
 
-        result.businessTaxAccountUrl mustBe btaUrl
+        result.returnDetails         mustBe testReturnDetailsNotOverdue
+        result.periodStartDate       mustBe dummyStartDate
+        result.periodEndDate         mustBe dummyEndDate
         result.periodKey             mustBe periodKey
+        result.businessTaxAccountUrl mustBe btaUrl
+        result.warningText           mustBe warningText
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe formattedDueDateNotOverdue
-        result.paymentDueText          mustBe messages("returnSubmitted.positive.p1.notOverdue", formattedDueDateNotOverdue)
+        result.isOverdue               mustBe false
       }
 
       "when given return details with a positive amount and processing date is after payment due date" in {
         val result =
           returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetailsOverdue)(identifierRequest, messages)
 
-        result.businessTaxAccountUrl mustBe btaUrl
+        result.returnDetails         mustBe testReturnDetailsOverdue
+        result.periodStartDate       mustBe dummyStartDate
+        result.periodEndDate         mustBe dummyEndDate
         result.periodKey             mustBe periodKey
+        result.businessTaxAccountUrl mustBe btaUrl
+        result.warningText           mustBe warningText
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe formattedDueDateOverdue
-        result.paymentDueText          mustBe messages("returnSubmitted.positive.p1.overdue", formattedDueDateOverdue)
+        result.isOverdue               mustBe true
       }
 
       "when given return details with a negative amount (and claim refund url is needed)" in {
@@ -119,11 +134,16 @@ class ReturnSubmittedHelperSpec extends SpecBase {
           messages
         )
 
-        result.businessTaxAccountUrl mustBe btaUrl
+        result.returnDetails         mustBe testReturnDetailsNegativeAmount
+        result.periodStartDate       mustBe dummyStartDate
+        result.periodEndDate         mustBe dummyEndDate
         result.periodKey             mustBe periodKey
+        result.businessTaxAccountUrl mustBe btaUrl
+        result.warningText           mustBe warningText
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe ""
+        result.isOverdue               mustBe false
         result.claimRefundUrl          mustBe expectedClaimRefundUrl
       }
     }

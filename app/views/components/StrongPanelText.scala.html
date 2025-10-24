@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,9 @@
  * limitations under the License.
  *@
 
-@import config.Constants.Css
-@import viewmodels.Money
-
 @this()
 
-@(content: Content, amount: BigDecimal, classes: String = Css.bodyCssClass, id: Option[String] = None)(implicit messages: Messages)
-
-<p class="@classes" @id.map{id => id="@id"}>@content.asHtml <span class=@{s"break ${Css.noWrap}"}><strong>@Money.format(amount)</strong></span></p>
+@(text: String)
+<span class="break">
+    <strong>@text</strong>
+</span>
