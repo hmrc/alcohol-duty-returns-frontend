@@ -297,7 +297,7 @@ class ViewPastPaymentsHelper @Inject() (
         logger.warn("Couldn't fetch chargeReference for outstanding payment")
         (messages(s"viewPastPayments.$transactionType.description"), "")
     }
-    Html(s"$description<br>$reference")
+    Html(s"<span class='break'>$description</span><span class='break'>$reference</span>")
   }
 
   private def formatHistoricPaymentsDescription(transactionType: TransactionType, chargeReference: Option[String])(
@@ -312,7 +312,7 @@ class ViewPastPaymentsHelper @Inject() (
         messages("viewPastPayments.ref", chargeReference)
       )
     }
-    Html(s"$description<br>$reference")
+    Html(s"<span class='break'>$description</span><span class='break'>$reference</span>")
   }
 
   private def getOutstandingPaymentStatus(
