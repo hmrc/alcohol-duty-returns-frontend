@@ -161,8 +161,8 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
         )
       )
 
-      summaryList.rows.map(_.key.content.asHtml.toString)   mustBe expectedKeys.take(2)
-      summaryList.rows.map(_.value.content.asHtml.toString) mustBe expectedValues.take(2)
+      summaryList.rows.map(_.key.content.asHtml.toString)   mustBe expectedKeys
+      summaryList.rows.map(_.value.content.asHtml.toString) mustBe expectedValues
       summaryList.rows.map(_.actions.get.items.head)        mustBe expectedActions
     }
   }
