@@ -20,16 +20,15 @@ import base.SpecBase
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.AlcoholRegime.Beer
 import pages.declareDuty.WhatDoYouNeedToDeclarePage
+import viewmodels.TableRowActionViewModel
 
 class DutyCalculationHelperSpec extends SpecBase {
 
   "dutyDueTableViewModel" - {
     val regime = Beer
     "must return a TableViewModel with correct rows when user answers are valid" in {
-
-      val volumesAndRates = arbitraryVolumeAndRateByTaxType(
-        allRateBands.toSeq
-      ).arbitrary.sample.value
+      val volumesAndRates =
+        Seq(volumeAndRateByTaxType5, volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3)
 
       val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
         val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
@@ -52,13 +51,48 @@ class DutyCalculationHelperSpec extends SpecBase {
         .success
         .value
 
+      val expectedHeader =
+        List("Description", "Litres of pure alcohol (LPA)", "Duty rate (per litre)", "Duty value", "Action")
+
+      val expectedRows = List(
+        List("Non-draught beer between 1% and 3% ABV (tax type code 123)", "4.1100", "£1.86", "£7.64"),
+        List("Draught beer between 2% and 3% ABV (tax type code 124)", "2.5000", "£1.26", "£3.15"),
+        List("Non-draught beer between 3% and 4% ABV (tax type code 125 SPR)", "3.5000", "£1.46", "£5.11"),
+        List("Draught beer between 4% and 5% ABV (tax type code 126 SPR)", "4.5000", "£1.66", "£7.47")
+      )
+
+      val expectedActions = Seq(
+        TableRowActionViewModel(
+          label = "Change",
+          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          visuallyHiddenText = Some("non-draught beer between 1% and 3% ABV (tax type code 123)")
+        ),
+        TableRowActionViewModel(
+          label = "Change",
+          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          visuallyHiddenText = Some("draught beer between 2% and 3% ABV (tax type code 124)")
+        ),
+        TableRowActionViewModel(
+          label = "Change",
+          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          visuallyHiddenText = Some("non-draught beer between 3% and 4% ABV (tax type code 125 SPR)")
+        ),
+        TableRowActionViewModel(
+          label = "Change",
+          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          visuallyHiddenText = Some("draught beer between 4% and 5% ABV (tax type code 126 SPR)")
+        )
+      )
+
       val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
 
       result.isRight mustBe true
 
       val tableViewModel = result.getOrElse(fail("Expected Right(TableViewModel) but got Left"))
-      tableViewModel.head.size mustBe 5
-      tableViewModel.rows.size mustBe allRateBands.size
+
+      tableViewModel.head.map(_.content.asHtml.toString)              mustBe expectedHeader
+      tableViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+      tableViewModel.rows.map(_.actions.head)                         mustBe expectedActions
     }
 
     "must return a Left with error message when no rate bands found" in {
