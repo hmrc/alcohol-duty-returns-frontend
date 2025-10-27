@@ -26,14 +26,12 @@ import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.dutySuspended._
 import pages.spiritsQuestions._
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class ReturnTaskListCreatorSpec extends SpecBase {
-  val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = getMessages(application)
+  implicit val messages: Messages = getMessages(app)
   val returnTaskListCreator       = new ReturnTaskListCreator
   val pageNumber                  = 1
 
@@ -188,7 +186,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
 
         "a subtask for each regime must be available in addition to the declaration subtask" in {
-          result.taskList.items.size mustBe 1 + AlcoholRegime.values.size
+          result.taskList.items.size mustBe 6
         }
 
         "the declaration subtask's title must be correct" in {
@@ -262,7 +260,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               result.completedTask mustBe false
             }
 
-            "a subtask for the regime must must be available in addition to the declaration subtask" in {
+            "a subtask for the regime must be available in addition to the declaration subtask" in {
               result.taskList.items.size mustBe 2
             }
 
@@ -341,7 +339,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               result.completedTask mustBe false
             }
 
-            "a subtask for the regime must must be available in addition to the declaration subtask" in {
+            "a subtask for the regime must be available in addition to the declaration subtask" in {
               result.taskList.items.size mustBe 2
             }
 
@@ -444,7 +442,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               result.completedTask mustBe true
             }
 
-            "a subtask for the regime must must be available in addition to the declaration subtask" in {
+            "a subtask for the regime must be available in addition to the declaration subtask" in {
               result.taskList.items.size mustBe 2
             }
 
@@ -494,7 +492,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
       }
 
-      "and has selected a two regimes to declare duty on and finished one of the tasks and started the other" - {
+      "and has selected two regimes to declare duty on and finished one of the tasks and started the other" - {
         val rateBandsBeer = genListOfRateBandForRegime(Beer).sample.value
 
         val rateBandsCider       = genListOfRateBandForRegime(Cider).sample.value
@@ -548,7 +546,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the regime must must be available in addition to the declaration subtasks" in {
+        "a subtask for the regime must be available in addition to the declaration subtasks" in {
           result.taskList.items.size mustBe 3
         }
 
@@ -615,7 +613,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
       }
 
-      "and has selected a two regimes to declare duty on and finished both tasks" - {
+      "and has selected two regimes to declare duty on and finished both tasks" - {
         val rateBandsBeer       = genListOfRateBandForRegime(Beer).sample.value
         val volumesAndRatesBeer = arbitraryVolumeAndRateByTaxType(
           rateBandsBeer
@@ -691,7 +689,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the regime must must be available in addition to the declaration subtasks" in {
+        "a subtask for the regime must be available in addition to the declaration subtasks" in {
           result.taskList.items.size mustBe 3
         }
 
@@ -794,10 +792,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "hint must be displayed" in {
         result.taskList.items.head.hint.map(_.content) mustBe Some(
-          Text(
-            "You can adjust declared alcoholic products that may now be spoilt," +
-              " repackaged, over-declared, under-declared, or exported and eligible for you to claim drawback on."
-          )
+          Text(messages("taskList.section.adjustment.hint"))
         )
       }
     }
@@ -859,7 +854,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -888,7 +883,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
-        "the sub task for the adjustments must link to the what do you need to declare page" in {
+        "the sub task for the adjustments must link to the adjustment type page" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
@@ -927,7 +922,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -956,7 +951,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
-        "the sub task for the adjustments must link to the what do you need to declare page" in {
+        "the sub task for the adjustments must link to the adjustment type page" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
@@ -998,7 +993,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -1027,7 +1022,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
-        "the sub task for the adjustments must link to the what do you need to declare page" in {
+        "the sub task for the adjustments must link to the adjustment type page" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
@@ -1065,7 +1060,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -1138,7 +1133,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments and under-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and under-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 3
         }
 
@@ -1230,7 +1225,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments and over-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and over-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 3
         }
 
@@ -1325,7 +1320,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and under and over-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 4
         }
 
@@ -1442,7 +1437,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and under and over-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 4
         }
 
@@ -1559,7 +1554,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and under and over-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 4
         }
 
@@ -1667,7 +1662,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -1739,7 +1734,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the adjustments and under-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and under-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 3
         }
 
@@ -1834,7 +1829,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the adjustments and over-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and over-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 3
         }
 
@@ -1935,7 +1930,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+        "a subtask for the adjustments and under and over-declaration reason must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 4
         }
 
@@ -2058,6 +2053,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       "no hint must be displayed" in {
         result.taskList.items.head.hint.map(_.content) mustBe None
       }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "dutySuspended"
+      }
     }
 
     "when the user answers no to the DSD question" - {
@@ -2120,7 +2119,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "only both subtasks must be available" in {
+        "a subtask for the details must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -2140,8 +2139,31 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
         }
 
+        "the details subtask must be found and not be started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask            mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the details subtask must link to the duty suspended guidance controller" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
+          )
+        }
+
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "dutySuspended"
         }
       }
 
@@ -2171,7 +2193,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+        "a subtask for the details must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -2191,7 +2213,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
         }
 
-        "the sub task must found and be completed" in {
+        "the details subtask must be found and be completed" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
@@ -2200,7 +2222,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
-        "the sub task must link to the CYA duty suspended guidance controller" in {
+        "the details subtask must link to the CYA page" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
@@ -2257,7 +2279,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe false
         }
 
-        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+        "a subtask for the details must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -2271,13 +2293,13 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
-        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+        "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
           result.taskList.items.head.href mustBe Some(
             controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
           )
         }
 
-        "the sub task must found and be in progress" in {
+        "the details subtask must be found and be in progress" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
@@ -2286,7 +2308,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
-        "the sub task must link to the duty suspended guidance controller" in {
+        "the details subtask must link to the duty suspended guidance controller" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
@@ -2347,7 +2369,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.completedTask mustBe true
         }
 
-        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+        "a subtask for the details must be available in addition to the declaration subtask" in {
           result.taskList.items.size mustBe 2
         }
 
@@ -2367,7 +2389,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
         }
 
-        "the sub task must found and be completed" in {
+        "the details subtask must be found and be completed" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
@@ -2376,7 +2398,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
-        "the sub task must link to the CYA duty suspended guidance controller" in {
+        "the details subtask must link to the CYA page" in {
           val maybeTask = result.taskList.items.find(
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )

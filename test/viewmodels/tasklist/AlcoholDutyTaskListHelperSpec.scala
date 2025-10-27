@@ -40,8 +40,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
       )
 
-      val result =
-        taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)(getMessages(application))
+      val result = taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
@@ -80,10 +79,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
           returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
         )
 
-      val result =
-        taskListViewModel.getTaskList(userAnswersAllOtherSectionsCompleted, validUntil, returnPeriod)(
-          getMessages(application)
-        )
+      val result = taskListViewModel.getTaskList(userAnswersAllOtherSectionsCompleted, validUntil, returnPeriod)
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
@@ -114,11 +110,10 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         returnTaskListCreator.returnCheckAndSubmitSection(0, 3)
       )
 
-      forAll(periodKeyGen) { case periodKey =>
+      forAll(periodKeyGen) { periodKey =>
         val returnPeriod = ReturnPeriod.fromPeriodKey(periodKey).get
 
-        val result =
-          taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)(getMessages(application))
+        val result = taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)
 
         val periodQuarterChars = Set('C', 'F', 'I', 'L')
         val lastChar           = periodKey.last
@@ -133,8 +128,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
   }
 
   class SetUp {
-    val application: Application    = applicationBuilder().build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
     private val periodKey           = periodKeyDec23
     val userAnswers                 = emptyUserAnswers.copy(returnId = emptyUserAnswers.returnId.copy(periodKey = periodKey))
     val returnPeriod                = ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
