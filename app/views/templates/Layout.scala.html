@@ -29,7 +29,6 @@
     hmrcStandardHeader: HmrcStandardHeader,
     hmrcStandardFooter: HmrcStandardFooter,
     hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-    hmrcLanguageSelect: HmrcLanguageSelect,
     hmrcTimeoutDialog: HmrcTimeoutDialog,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcScripts: HmrcScripts,
@@ -74,12 +73,6 @@
 
 @beforeContent = {
 
-    @hmrcLanguageSelect(LanguageSelect(
-        if (messages.lang.code == "cy") Cy else En,
-            (En, routes.LanguageSwitchController.switchToLanguage("en").url),
-                (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
-    ))
-
     @if(showBackLink) {
         @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript)
     }
@@ -102,6 +95,7 @@
         serviceUrl  = Some(routes.ServiceEntryController.onPageLoad.url),
         signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None,
         phaseBanner = Some(betaBanner(appConfig.feedbackUrl)),
+        isWelshTranslationAvailable = true,
         additionalBannersBlock = if (showUserResearchBanner) Some(hmrcUserResearchBanner(UserResearchBanner(
             language = if (messages.lang.code == "cy") Cy else En,
             url = if (messages.lang.code == "cy") appConfig.userResearchSurveyUrlWelsh else appConfig.userResearchSurveyUrl,
