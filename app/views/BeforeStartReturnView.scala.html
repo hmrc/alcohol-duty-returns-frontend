@@ -14,18 +14,17 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading}
-@import config.Constants.Css
-@import viewmodels.BeforeStartReturnViewModel
-@import viewmodels.ReturnPeriodViewModel
-
-@import java.time.LocalDate
+@import components.{BulletList, Caption, LinkWithHiddenText, PageHeading}
+@import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
+        govukDetails: GovukDetails,
+        bulletList: BulletList,
         caption: Caption,
+        linkWithHiddenText: LinkWithHiddenText,
         pageHeading: PageHeading,
         paragraph: components.Paragraph,
         govukWarningText: GovukWarningText
@@ -49,15 +48,67 @@
 
         @paragraph(messages("beforeStartReturn.text.guidance3"))
 
-        <ul class="@Css.bulletListCssClass">
-            <li>@messages("beforeStartReturn.text.guidance3.usecase1")</li>
-            <li>@messages("beforeStartReturn.text.guidance3.usecase2")</li>
-            <li>@messages("beforeStartReturn.text.guidance3.usecase3")</li>
-            <li>@messages("beforeStartReturn.text.guidance3.usecase4")</li>
-            <li>@messages("beforeStartReturn.text.guidance3.usecase5")</li>
-        </ul>
+        @bulletList(Seq(
+            messages("beforeStartReturn.text.guidance3.usecase1"),
+            messages("beforeStartReturn.text.guidance3.usecase2"),
+            messages("beforeStartReturn.text.guidance3.usecase3"),
+            messages("beforeStartReturn.text.guidance3.usecase4"),
+            messages("beforeStartReturn.text.guidance3.usecase5")
+        ))
 
         @paragraph(messages("beforeStartReturn.text.guidance4"))
+
+        @paragraph(messages("beforeStartReturn.text.guidance5"))
+
+        @govukDetails(Details(
+            summary = messages("beforeStartReturn.details.summary"),
+            content = HtmlContent(
+                paragraph(HtmlContent(
+                    Seq(
+                        linkWithHiddenText(
+                            id = "technical-guide-link",
+                            text = messages("beforeStartReturn.details.p1.technicalGuide.link"),
+                            href = messages("beforeStartReturn.details.p1.technicalGuide.url"),
+                            visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
+                            newTab = true
+                        ),
+                        messages("beforeStartReturn.details.p1.text1"),
+                        linkWithHiddenText(
+                            id = "vat-notice-link",
+                            text = messages("beforeStartReturn.details.p1.vatNotice.link"),
+                            href = messages("beforeStartReturn.details.p1.vatNotice.url"),
+                            visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
+                            newTab = true
+                        ),
+                        messages("beforeStartReturn.details.p1.text2")
+                    ).mkString(" ")
+                ))
+                        +
+                        paragraph(messages("beforeStartReturn.details.p2")).toString
+                        +
+                        bulletList(Seq(
+                            HtmlContent(
+                                linkWithHiddenText(
+                                    id = "ex46-form-link",
+                                    text = messages("beforeStartReturn.details.ex46.link"),
+                                    href = messages("beforeStartReturn.details.ex46.url"),
+                                    visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
+                                    newTab = true
+                                ) + " " + messages("beforeStartReturn.details.ex46.text")
+                            ),
+                            HtmlContent(
+                                linkWithHiddenText(
+                                    id = "w5-form-link",
+                                    text = messages("beforeStartReturn.details.w5.link"),
+                                    href = messages("beforeStartReturn.details.w5.url"),
+                                    visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
+                                    newTab = true
+                                ) + messages("beforeStartReturn.details.w5.commaForWelsh") +
+                                        " " + messages("beforeStartReturn.details.w5.text")
+                            ),
+                        ))
+            )
+        ))
 
         @govukWarningText(viewModel.warningText)
 
