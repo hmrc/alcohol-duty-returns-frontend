@@ -23,12 +23,13 @@ import models.adjustment.AdjustmentType._
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.AdjustmentEntryListPage
+import play.api.i18n.Messages
 import viewmodels.TableRowActionViewModel
 
 import java.time.YearMonth
 
 class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
-  implicit val messages = getMessages(app)
+  implicit val messages: Messages = getMessages(app)
 
   val dutyDue             = BigDecimal(34.2)
   val rate                = BigDecimal(9.27)

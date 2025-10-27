@@ -23,7 +23,6 @@ import pages.adjustment.DeclareAdjustmentQuestionPage
 import pages.declareDuty.DeclareAlcoholDutyQuestionPage
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
-import play.api.Application
 import play.api.i18n.Messages
 import viewmodels.tasklist.TaskListStatus.Incomplete
 

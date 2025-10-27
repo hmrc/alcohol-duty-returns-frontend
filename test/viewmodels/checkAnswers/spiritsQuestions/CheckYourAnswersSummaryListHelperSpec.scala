@@ -20,12 +20,13 @@ import base.SpecBase
 import models.spiritsQuestions.Whisky
 import models.{CheckMode, SpiritType}
 import pages.spiritsQuestions.{DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
 
 class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
-  implicit val messages = getMessages(app)
+  implicit val messages: Messages = getMessages(app)
 
   val completedUserAnswers = emptyUserAnswers
     .set(SpiritTypePage, Set[SpiritType](SpiritType.Other))

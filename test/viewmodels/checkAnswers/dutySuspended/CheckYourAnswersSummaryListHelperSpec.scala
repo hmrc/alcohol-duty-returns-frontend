@@ -21,12 +21,13 @@ import models.AlcoholRegime.Beer
 import models.dutySuspended._
 import models.{AlcoholRegimes, CheckMode}
 import pages.dutySuspended._
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
 
 class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
-  implicit val messages = getMessages(app)
+  implicit val messages: Messages = getMessages(app)
 
   val helper = new CheckYourAnswersSummaryListHelper
 
