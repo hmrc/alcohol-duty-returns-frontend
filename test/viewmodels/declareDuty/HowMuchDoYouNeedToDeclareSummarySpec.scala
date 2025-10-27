@@ -18,8 +18,9 @@ package viewmodels.declareDuty
 
 import base.SpecBase
 import models.AlcoholRegime.Beer
+import models.CheckMode
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 
 class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
   "HowMuchDoYouNeedToDeclareSummary" - {
@@ -34,7 +35,13 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
     "must summarise declarations" in new SetUp {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
+      val expectedCardAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url
+      )
+
       val summaryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
+
       summaryList.get.rows.map(_.key.content)   mustBe
         Seq(
           Text("Description"),
@@ -53,6 +60,9 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
           Text("100.00 litres"),
           Text("2.5000 litres")
         )
+
+      summaryList.get.card.get.title.get.content      mustBe Text("Beer duty")
+      summaryList.get.card.get.actions.get.items.head mustBe expectedCardAction
     }
 
     "must return no rows if no ratebands" in new SetUp {
@@ -79,8 +89,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
   }
 
   class SetUp {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val howMuchDoYouNeedToDeclareSummary = new HowMuchDoYouNeedToDeclareSummary
   }

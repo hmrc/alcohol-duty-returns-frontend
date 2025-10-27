@@ -18,31 +18,35 @@ package viewmodels.declareDuty
 
 import base.SpecBase
 import models.AlcoholRegime.Beer
+import models.CheckMode
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, HtmlContent, Text}
 
 class WhatDoYouNeedToDeclareSummarySpec extends SpecBase {
   "WhatDoYouNeedToDeclareSummary" - {
     "must summarise the ratebands for a regime" in new SetUp {
       val summaryList = whatDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands)
 
-      summaryList.rows.map(_.key.content)   mustBe
-        Seq(
-          Text("Selected beer to declare")
+      val expectedValue = Seq(
+        HtmlContent(
+          "<ul><li>Non-draught beer between 1% and 3% ABV (tax type code 123)</li><li>Draught beer between 2% and 3% ABV (tax type code 124)</li></ul>"
         )
-      summaryList.rows.map(_.value.content) mustBe
-        Seq(
-          HtmlContent(
-            "<ul><li>Non-draught beer between 1% and 3% ABV (tax type code 123)</li><li>Draught beer between 2% and 3% ABV (tax type code 124)</li></ul>"
-          )
-        )
+      )
+
+      val expectedCardAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url
+      )
+
+      summaryList.rows.map(_.key.content)         mustBe Seq(Text("Selected beer to declare"))
+      summaryList.rows.map(_.value.content)       mustBe expectedValue
+      summaryList.card.get.title.get.content      mustBe Text("Beer to declare")
+      summaryList.card.get.actions.get.items.head mustBe expectedCardAction
     }
   }
 
   class SetUp {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val whatDoYouNeedToDeclareSummary = new WhatDoYouNeedToDeclareSummary
   }
