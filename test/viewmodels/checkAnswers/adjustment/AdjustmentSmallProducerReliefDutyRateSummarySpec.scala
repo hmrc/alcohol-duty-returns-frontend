@@ -17,87 +17,68 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
 
 class AdjustmentSmallProducerReliefDutyRateSummarySpec extends SpecBase {
   "AdjustmentSmallProducerReliefDutyRateSummary" - {
-    "must return a the repackaged SPR duty rate row if the SPR duty rate and repackaged SPR duty rate can be fetched" in new SetUp(
+    "must return a row with the repackaged SPR duty rate if both SPR duty rate and repackaged SPR duty rate can be fetched" in new SetUp(
       true,
       true
     ) {
-      adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Duty rate")),
-          Value(Text("£3.45")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate",
-                  Text("Change"),
-                  Some("duty rate")
-                )
-              )
-            )
-          )
-        )
+      val row = adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("duty rate")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Duty rate"
+      row.get.value.content.asHtml.toString mustBe "£3.45"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return a row if only the SPR duty rate can be fetched" in new SetUp(true, false) {
-      adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Duty rate")),
-          Value(Text("£1.23")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/spr/eligible-volume",
-                  Text("Change"),
-                  Some("duty rate")
-                )
-              )
-            )
-          )
-        )
+      val row = adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("duty rate")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Duty rate"
+      row.get.value.content.asHtml.toString mustBe "£1.23"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return a row if only the repackaged SPR duty rate can be fetched" in new SetUp(false, true) {
-      adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Duty rate")),
-          Value(Text("£3.45")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate",
-                  Text("Change"),
-                  Some("duty rate")
-                )
-              )
-            )
-          )
-        )
+      val row = adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("duty rate")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Duty rate"
+      row.get.value.content.asHtml.toString mustBe "£3.45"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
-    "must return no row if neither the repackaged SPR duty rate can be fetched" in new SetUp(false, false) {
+    "must return no row if neither SPR duty rate nor repackaged SPR duty rate can be fetched" in new SetUp(
+      false,
+      false
+    ) {
       adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry) mustBe None
     }
   }
 
   class SetUp(hasSPRDutyRate: Boolean, hasRepackagedSPRDutyRate: Boolean) {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val maybeSPRDutyRate           = if (hasSPRDutyRate) {
       Some(BigDecimal("1.23"))

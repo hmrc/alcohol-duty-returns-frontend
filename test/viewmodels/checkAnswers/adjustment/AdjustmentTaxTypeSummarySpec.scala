@@ -17,45 +17,62 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Drawback, RepackagedDraughtProducts, Spoilt}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
 
 class AdjustmentTaxTypeSummarySpec extends SpecBase {
   "AdjustmentTaxTypeSummary" - {
     "must create the summary list row view model from the rateBands" in new SetUp {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Drawback), rateBand = Some(coreRateBand))
-      val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
+      val result          = adjustmentTaxTypeSummary.row(adjustmentEntry).get
 
-      result.key.content   mustBe Text("Tax type")
-      result.value.content mustBe Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("tax type")
+      )
+
+      result.key.content            mustBe Text("Tax type")
+      result.value.content          mustBe Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")
+      result.actions.get.items.head mustBe expectedAction
     }
 
     "must create the summary list row view model from the rateBands where adjustmentType is RepackagedDraughtProducts" in new SetUp {
       val adjustmentEntry =
         AdjustmentEntry(adjustmentType = Some(RepackagedDraughtProducts), rateBand = Some(coreRateBand))
-      val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
+      val result          = adjustmentTaxTypeSummary.row(adjustmentEntry).get
 
-      result.key.content   mustBe Text("Original tax type")
-      result.value.content mustBe Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("original tax type")
+      )
+
+      result.key.content            mustBe Text("Original tax type")
+      result.value.content          mustBe Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")
+      result.actions.get.items.head mustBe expectedAction
     }
 
     "must not create the summary list row view model from the rateBands for Spoilt adjustment" in new SetUp {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), rateBand = Some(coreRateBand))
-      val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry)
+      val result          = adjustmentTaxTypeSummary.row(adjustmentEntry)
 
       result mustBe None
     }
 
     "must throw an exception if unable to get the adjustment type" in new SetUp {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = None, rateBand = Some(coreRateBand))
-      a[RuntimeException] mustBe thrownBy(new AdjustmentTaxTypeSummary().row(adjustmentEntry).get)
+      a[RuntimeException] mustBe thrownBy(adjustmentTaxTypeSummary.row(adjustmentEntry).get)
     }
   }
 
   class SetUp {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
+
+    val adjustmentTaxTypeSummary = new AdjustmentTaxTypeSummary
   }
 }
