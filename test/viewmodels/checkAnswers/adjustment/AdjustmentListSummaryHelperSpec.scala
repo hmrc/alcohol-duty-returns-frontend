@@ -18,18 +18,18 @@ package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
-import generators.ModelGenerators
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.AdjustmentType._
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.AdjustmentEntryListPage
-import viewmodels.Money
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import viewmodels.TableRowActionViewModel
 
 import java.time.YearMonth
 
-class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
+class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
+  implicit val messages = getMessages(app)
+
   val dutyDue             = BigDecimal(34.2)
   val rate                = BigDecimal(9.27)
   val pureAlcoholVolume   = BigDecimal(3.69)
@@ -37,11 +37,11 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
   val volume              = BigDecimal(10)
   val repackagedRate      = BigDecimal(10)
   val repackagedDuty      = BigDecimal(33.2)
-  val newDuty             = BigDecimal(1)
+  val newDuty             = BigDecimal(10)
   val rateBand            = RateBand(
-    "310",
+    taxCode,
     "some band",
-    RateType.DraughtRelief,
+    RateType.Core,
     Some(rate),
     Set(
       RangeDetailsByRegime(
@@ -56,6 +56,24 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
       )
     )
   )
+  val rateBand2           = RateBand(
+    "351",
+    "some band",
+    RateType.DraughtRelief,
+    Some(BigDecimal(8.42)),
+    Set(
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(1.3),
+            AlcoholByVolume(3.4)
+          )
+        )
+      )
+    )
+  )
   val adjustmentEntry     = AdjustmentEntry(
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(volume),
@@ -64,48 +82,75 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
     adjustmentType = Some(Spoilt),
     period = Some(YearMonth.of(24, 1))
   )
-  val adjustmentEntry2    = adjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), newDuty = Some(BigDecimal(10)))
+  val adjustmentEntry2    = adjustmentEntry.copy(
+    adjustmentType = Some(RepackagedDraughtProducts),
+    rateBand = Some(rateBand2),
+    repackagedRateBand = Some(rateBand),
+    pureAlcoholVolume = Some(BigDecimal(10)),
+    repackagedDuty = Some(repackagedDuty),
+    newDuty = Some(newDuty)
+  )
   val adjustmentEntryList = List(adjustmentEntry, adjustmentEntry2)
   val total               = BigDecimal(44.2)
   val pageNumber          = 1
+
   "AdjustmentListSummaryHelper" - {
 
-    "must return a table with the correct head" in {
-      val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.head.size mustBe 4
-    }
+    "must return a table with the correct content" in {
+      val userAnswers      = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
+      val table            = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
+      val totalSummaryList = table.total.get
 
-    "must return a table with the correct rows" in {
-      val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.rows.size mustBe adjustmentEntryList.size
-      table.rows.zipWithIndex.foreach { case (row, index) =>
-        row.actions.head.href mustBe controllers.adjustment.routes.CheckYourAnswersController
-          .onPageLoad(Some(index))
-        row.actions(1).href   mustBe controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index)
-      }
-    }
-
-    "must return the correct total" in {
-      val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.total.map(_.rows.head.value).get.content mustBe Text(
-        Money.format(
-          adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
-        )(getMessages(app))
+      val expectedHeader  = List("Adjustment type", "Description", "Duty value", "Action")
+      val expectedRows    = List(
+        List("Spoilt", "Non-draught beer between 0.1% and 5.8% ABV (tax type code 311)", "£34.20"),
+        List("Repackaged", "Draught beer between 1.3% and 3.4% ABV (tax type code 351)", "£10.00")
       )
+      val expectedActions = Seq(
+        Seq(
+          TableRowActionViewModel(
+            label = "Change",
+            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(0)),
+            visuallyHiddenText = Some("Spoilt adjustment with duty value £34.20")
+          ),
+          TableRowActionViewModel(
+            label = "Remove",
+            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(0),
+            visuallyHiddenText = Some("Spoilt adjustment with duty value £34.20")
+          )
+        ),
+        Seq(
+          TableRowActionViewModel(
+            label = "Change",
+            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(1)),
+            visuallyHiddenText = Some("Repackaged adjustment with duty value £10.00")
+          ),
+          TableRowActionViewModel(
+            label = "Remove",
+            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(1),
+            visuallyHiddenText = Some("Repackaged adjustment with duty value £10.00")
+          )
+        )
+      )
+
+      table.head.map(_.content.asHtml.toString)              mustBe expectedHeader
+      table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+      table.rows.map(_.actions)                              mustBe expectedActions
+
+      totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total due")
+      totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq("£44.20")
     }
 
     "must return the correct total if one of the adjustment entries has an undefined duty" in {
-      val expectedSum                  = adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
       val undefinedDutyAdjustmentEntry = adjustmentEntry.copy(duty = Some(BigDecimal(0)))
 
-      val userAnswers =
+      val userAnswers      =
         emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList :+ undefinedDutyAdjustmentEntry).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+      val table            = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
+      val totalSummaryList = table.total.get
 
-      table.total.map(_.rows.head.value).get.content mustBe Text(Money.format(expectedSum)(getMessages(app)))
+      totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total due")
+      totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq("£44.20")
     }
 
     "must throw an exception if adjustment type is missing" in {
@@ -113,7 +158,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
       val adjustmentEntryListMissingType = List(adjustmentEntryWithoutType)
       val userAnswers                    = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryListMissingType).success.value
       val exception                      = intercept[RuntimeException] {
-        AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+        AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
       }
       exception.getMessage mustBe "Couldn't fetch adjustment type value from user answers"
     }
