@@ -33,32 +33,55 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with data when alcohol declared" in new SetUp {
         val alcoholDeclaredViewModel =
           viewModel.createAlcoholDeclaredViewModel(returnDetails, exampleRateBands(periodKey))
+        val totalSummaryList         = alcoholDeclaredViewModel.total.get
 
-        alcoholDeclaredViewModel.rows.size                         mustBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
-        alcoholDeclaredViewModel.total.get.rows.head.value.content mustBe Text(
-          messages(
-            "site.currency.2DP",
-            returnDetails.alcoholDeclared.total
-          )
+        val expectedRows = List(
+          List("311", "450.0000", "£9.27", "£4,171.50"),
+          List("Non-draught beer between 1% and 3% ABV (tax type code 125)", "450.0000", "£21.01", "£9,454.50"),
+          List("Non-draught beer between 1% and 3% ABV (tax type code 124)", "450.0000", "£28.50", "£12,825.00"),
+          List("Non-draught beer between 1% and 3% ABV (tax type code 123)", "450.0000", "£31.64", "£14,238.00"),
+          List("351", "450.0000", "£8.42", "£3,789.00"),
+          List("356", "450.0000", "£19.08", "£8,586.00"),
+          List("361", "450.0000", "£8.40", "£3,780.00"),
+          List("366", "450.0000", "£16.47", "£7,411.50"),
+          List("371", "450.0000", "£8.20", "£3,960.00"),
+          List("376", "450.0000", "£15.63", "£7,033.50")
         )
-        alcoholDeclaredViewModel.rows.head.cells.head.content      mustBe Text("311")
-        alcoholDeclaredViewModel.rows(3).cells.head.content        mustBe Text(
-          "Non-draught beer between 1% and 3% ABV (tax type code 123)"
-        )
+
+        alcoholDeclaredViewModel.head.map(_.content.asHtml.toString)              mustBe expectedDeclarationHeader
+        alcoholDeclaredViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        alcoholDeclaredViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total declared duty value")
+        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq("£75,249.00")
       }
 
       "must return a model with no entries when a nil return" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(nilReturn, emptyRateBands)
 
-        alcoholDeclaredViewModel.rows.size                  mustBe 1
-        alcoholDeclaredViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
+        val expectedRows = Seq(
+          Seq("No alcohol declared", "Nil")
+        )
+
+        alcoholDeclaredViewModel.head.map(_.content.asHtml.toString)              mustBe expectedNilHeader
+        alcoholDeclaredViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        alcoholDeclaredViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        alcoholDeclaredViewModel.total mustBe None
       }
 
       "must return a model with no entries when a nil return with empty sections" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(emptyReturnDetails, emptyRateBands)
 
-        alcoholDeclaredViewModel.rows.size                  mustBe 1
-        alcoholDeclaredViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
+        val expectedRows = Seq(
+          Seq("No alcohol declared", "Nil")
+        )
+
+        alcoholDeclaredViewModel.head.map(_.content.asHtml.toString)              mustBe expectedNilHeader
+        alcoholDeclaredViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        alcoholDeclaredViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        alcoholDeclaredViewModel.total mustBe None
       }
     }
 
@@ -67,18 +90,28 @@ class ViewReturnViewModelSpec extends SpecBase {
         when(appConfig.getRegimeNameByTaxTypeCode("321")).thenReturn(None) // Needed for the Spoilt row we don't check
 
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
+        val totalSummaryList     = adjustmentsViewModel.total.get
 
-        adjustmentsViewModel.rows.size                         mustBe 5
-        adjustmentsViewModel.total.get.rows.head.value.content mustBe Text(
-          s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
+        val expectedRows = List(
+          List("Under-declared", "321", "150.0000", "£21.01", "£3,151.50"),
+          List("Over-declared", "321", "1,150.0000", "£21.01", "−£24,161.50"),
+          List("Repackaged", "321", "150.0000", "£21.01", "£3,151.50"),
+          List("Spoilt", "321", "1,150.0000", "not applicable", "−£24,161.50"),
+          List(
+            "Drawback",
+            "Non-draught beer between 1% and 3% ABV (tax type code 125)",
+            "75.0000",
+            "£21.01",
+            "−£1,575.50"
+          )
         )
 
-        adjustmentsViewModel.rows.head.cells(1).content mustBe Text("321")
+        adjustmentsViewModel.head.map(_.content.asHtml.toString)              mustBe expectedAdjustmentsHeader
+        adjustmentsViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        adjustmentsViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
 
-        adjustmentsViewModel.rows(4).cells(1).content mustBe Text(
-          "Non-draught beer between 1% and 3% ABV (tax type code 125)"
-        )
-        adjustmentsViewModel.rows(4).cells(3).content mustBe Text("£21.01")
+        totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total adjustments duty value")
+        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq(minus + "£19,434.00")
       }
 
       "must return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
@@ -90,29 +123,47 @@ class ViewReturnViewModelSpec extends SpecBase {
           returnDetailWithSpoilt,
           exampleRateBands(periodKey2)
         )
+        val totalSummaryList     = adjustmentsViewModel.total.get
 
-        adjustmentsViewModel.rows.size                         mustBe 2
-        adjustmentsViewModel.total.get.rows.head.value.content mustBe Text(
-          s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
+        val expectedRows = List(
+          List("Spoilt", "123", "150.0000", "not applicable", "−£3,151.50"),
+          List("Spoilt", "Wine", "150.0000", "not applicable", "−£3,151.50")
         )
-        adjustmentsViewModel.rows.head.cells(1).content        mustBe Text("123")
-        adjustmentsViewModel.rows.head.cells(3).content        mustBe Text("not applicable")
-        adjustmentsViewModel.rows(1).cells(1).content          mustBe Text("Wine")
-        adjustmentsViewModel.rows(1).cells(3).content          mustBe Text("not applicable")
+
+        adjustmentsViewModel.head.map(_.content.asHtml.toString)              mustBe expectedAdjustmentsHeader
+        adjustmentsViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        adjustmentsViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total adjustments duty value")
+        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq(minus + "£3,151.50")
       }
 
       "must return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 
-        adjustmentsViewModel.rows.size                  mustBe 1
-        adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
+        val expectedRows = Seq(
+          Seq("No adjustments declared", "Nil")
+        )
+
+        adjustmentsViewModel.head.map(_.content.asHtml.toString)              mustBe expectedNilHeader
+        adjustmentsViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        adjustmentsViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        adjustmentsViewModel.total mustBe None
       }
 
       "must return a model with no entries when a nil return with empty sections (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, emptyRateBands)
 
-        adjustmentsViewModel.rows.size                  mustBe 1
-        adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
+        val expectedRows = Seq(
+          Seq("No adjustments declared", "Nil")
+        )
+
+        adjustmentsViewModel.head.map(_.content.asHtml.toString)              mustBe expectedNilHeader
+        adjustmentsViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        adjustmentsViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        adjustmentsViewModel.total mustBe None
       }
     }
 
@@ -120,15 +171,15 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a summary list with a total when a total exists" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(returnDetails)
 
-        totalSummaryList.rows.head.value.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
-        )
+        totalSummaryList.rows.map(_.key.content)   mustBe Seq(Text("Total duty value"))
+        totalSummaryList.rows.map(_.value.content) mustBe Seq(Text("£55,815.00"))
       }
 
       "must return a summary list with value 'Nil' when a nil return" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(nilReturn)
 
-        totalSummaryList.rows.head.value.content mustBe Text(messages("site.nil"))
+        totalSummaryList.rows.map(_.key.content)   mustBe Seq(Text("Total duty value"))
+        totalSummaryList.rows.map(_.value.content) mustBe Seq(Text("Nil"))
       }
 
       "must return a summary list with a total when a total exists even if no declarations" in new SetUp {
@@ -136,7 +187,8 @@ class ViewReturnViewModelSpec extends SpecBase {
           emptyReturnDetails.copy(totalDutyDue = ReturnTotalDutyDue(totalDue = nonZeroAmount))
         )
 
-        totalSummaryList.rows.head.value.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
+        totalSummaryList.rows.map(_.key.content)   mustBe Seq(Text("Total duty value"))
+        totalSummaryList.rows.map(_.value.content) mustBe Seq(Text("£12,345.67"))
       }
 
       "must return a summary list with a total when a total exists even if no alcohol is declared" in new SetUp {
@@ -146,9 +198,8 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        totalSummaryList.rows.head.value.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
-        )
+        totalSummaryList.rows.map(_.key.content)   mustBe Seq(Text("Total duty value"))
+        totalSummaryList.rows.map(_.value.content) mustBe Seq(Text("£55,815.00"))
       }
 
       "must return a summary list with a total when a total exists when no adjustments exist" in new SetUp {
@@ -158,9 +209,8 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        totalSummaryList.rows.head.value.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
-        )
+        totalSummaryList.rows.map(_.key.content)   mustBe Seq(Text("Total duty value"))
+        totalSummaryList.rows.map(_.value.content) mustBe Seq(Text("£55,815.00"))
       }
     }
 
@@ -168,11 +218,17 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with data when duty suspension is declared" in new SetUp {
         val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(returnDetails)
 
-        netDutySuspensionViewModel.head.size mustBe 3
-        netDutySuspensionViewModel.rows.size mustBe 5
-        netDutySuspensionViewModel.rows.foreach { row =>
-          row.cells.size mustBe 3
-        }
+        val expectedRows = List(
+          List("Beer", "0.15", "0.4248"),
+          List("Cider", "0.38", "0.0379"),
+          List("Wine", "0.44", "0.5965"),
+          List("Spirits", "0.02", "0.2492"),
+          List("Other fermented products", "0.02", "0.1894")
+        )
+
+        netDutySuspensionViewModel.head.map(_.content.asHtml.toString)              mustBe expectedDutySuspendedHeader
+        netDutySuspensionViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        netDutySuspensionViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
 
       "must return a model excluding the alcohol types not declared in the return" in new SetUp {
@@ -188,18 +244,28 @@ class ViewReturnViewModelSpec extends SpecBase {
 
         val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(returnDetailsWithoutCider)
 
-        netDutySuspensionViewModel.head.size mustBe 3
-        netDutySuspensionViewModel.rows.size mustBe 4
+        val expectedRows = List(
+          List("Beer", "0.15", "0.4248"),
+          List("Wine", "0.44", "0.5965"),
+          List("Spirits", "0.02", "0.2492"),
+          List("Other fermented products", "0.02", "0.1894")
+        )
 
+        netDutySuspensionViewModel.head.map(_.content.asHtml.toString)              mustBe expectedDutySuspendedHeader
+        netDutySuspensionViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        netDutySuspensionViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
 
       "must return a model with the right label when nothing declared" in new SetUp {
         val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(nilReturn)
 
-        netDutySuspensionViewModel.rows.size                    mustBe 1
-        netDutySuspensionViewModel.rows.head.cells.head.content mustBe Text(
-          messages("viewReturn.netDutySuspension.noneDeclared")
+        val expectedRows = List(
+          List("Nothing declared")
         )
+
+        netDutySuspensionViewModel.head.map(_.content.asHtml.toString)              mustBe Seq("Description")
+        netDutySuspensionViewModel.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedRows
+        netDutySuspensionViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
     }
 
@@ -211,39 +277,27 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        spiritsViewModels.size                                mustBe 2
-        spiritsViewModels.head.head.size                      mustBe 2
-        spiritsViewModels.head.head.map(_.content)            mustBe Seq(
-          Text(messages("viewReturn.table.description.legend")),
-          Text(messages("viewReturn.table.totalVolume.lpa.legend"))
+        spiritsViewModels.size mustBe 2
+
+        val spiritVolumesTable = spiritsViewModels.head
+        val spiritTypesTable   = spiritsViewModels.last
+
+        val expectedVolumeRows =
+          List(List("Total volume of spirits", "0.05"), List("Scotch Whisky", "0.26"), List("Irish Whiskey", "0.16"))
+
+        val expectedTypeRows = List(
+          List(
+            "Malt spirit, Grain spirit, Neutral spirit (agricultural origin), Neutral spirit (industrial origin), Beer-based spirit, Cider or perry-based spirit, Wine or made-wine-based spirit, Coco Pops Vodka"
+          )
         )
-        spiritsViewModels.head.rows.size                      mustBe 3
-        spiritsViewModels.head.rows.foreach { row =>
-          row.cells.size mustBe 2
-        }
-        spiritsViewModels.head.rows.map(_.cells.head.content) mustBe Seq(
-          Text(messages("viewReturn.spirits.totalVolume")),
-          Text(messages("viewReturn.spirits.scotchWhisky")),
-          Text(messages("viewReturn.spirits.irishWhiskey"))
-        )
-        spiritsViewModels.head.caption                        mustBe Some(messages("viewReturn.spirits.caption"))
-        spiritsViewModels.last.head.size                      mustBe 1
-        spiritsViewModels.last.head.map(_.content)            mustBe Seq(Text(messages("viewReturn.table.typesOfSpirits.legend")))
-        spiritsViewModels.last.rows.size                      mustBe 1
-        spiritsViewModels.last.rows.head.cells.size           mustBe 1
-        spiritsViewModels.last.rows.head.cells.head.content   mustBe Text(
-          Seq(
-            messages("viewReturn.spirits.type.malt"),
-            messages("viewReturn.spirits.type.grain"),
-            messages("viewReturn.spirits.type.neutralAgricultural"),
-            messages("viewReturn.spirits.type.neutralIndustrial"),
-            messages("viewReturn.spirits.type.beer"),
-            messages("viewReturn.spirits.type.cider"),
-            messages("viewReturn.spirits.type.wine"),
-            "Coco Pops Vodka"
-          ).mkString(", ")
-        )
-        spiritsViewModels.last.caption                        mustBe None
+
+        spiritVolumesTable.head.map(_.content.asHtml.toString)              mustBe expectedSpiritsHeader
+        spiritVolumesTable.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedVolumeRows
+        spiritVolumesTable.rows.flatMap(_.actions)                          mustBe Seq.empty
+
+        spiritTypesTable.head.map(_.content.asHtml.toString)              mustBe Seq("Types of spirits produced")
+        spiritTypesTable.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedTypeRows
+        spiritTypesTable.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
 
       "must return a model with data when quarterly spirits is declared and handling missing other spirits type name gracefully" in new SetUp {
@@ -255,28 +309,35 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        spiritsViewModels.last.rows.head.cells.head.content mustBe Text(
-          Seq(
-            messages("viewReturn.spirits.type.malt"),
-            messages("viewReturn.spirits.type.grain"),
-            messages("viewReturn.spirits.type.neutralAgricultural"),
-            messages("viewReturn.spirits.type.neutralIndustrial"),
-            messages("viewReturn.spirits.type.beer"),
-            messages("viewReturn.spirits.type.cider"),
-            messages("viewReturn.spirits.type.wine")
-          ).mkString(", ")
+        spiritsViewModels.size mustBe 2
+
+        val spiritTypesTable = spiritsViewModels.last
+
+        val expectedTypeRows = List(
+          List(
+            "Malt spirit, Grain spirit, Neutral spirit (agricultural origin), Neutral spirit (industrial origin), Beer-based spirit, Cider or perry-based spirit, Wine or made-wine-based spirit"
+          )
         )
+
+        spiritTypesTable.head.map(_.content.asHtml.toString)              mustBe Seq("Types of spirits produced")
+        spiritTypesTable.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedTypeRows
+        spiritTypesTable.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
 
       "must return a model with the right label when nothing declared" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(nilReturn)
 
-        spiritsViewModels.size                              mustBe 1
-        spiritsViewModels.head.rows.size                    mustBe 1
-        spiritsViewModels.head.rows.head.cells.head.content mustBe Text(
-          messages("viewReturn.spirits.noneDeclared")
+        spiritsViewModels.size mustBe 1
+
+        val spiritVolumesTable = spiritsViewModels.head
+
+        val expectedVolumeRows = List(
+          List("Nothing declared")
         )
-        spiritsViewModels.head.caption                      mustBe Some(messages("viewReturn.spirits.caption"))
+
+        spiritVolumesTable.head.map(_.content.asHtml.toString)              mustBe Seq("Description")
+        spiritVolumesTable.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedVolumeRows
+        spiritVolumesTable.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
     }
   }
@@ -294,6 +355,14 @@ class ViewReturnViewModelSpec extends SpecBase {
     val returnDetails                = exampleReturnDetails(periodKey, Instant.now(clock))
     val nilReturn                    = nilReturnDetails(periodKey, Instant.now(clock))
     val emptyReturnDetails           = nilReturnDetailsWithEmptySections(periodKey, Instant.now(clock))
+
+    val expectedNilHeader           = Seq("Description", "Duty value")
+    val expectedDeclarationHeader   =
+      Seq("Description", "Litres of pure alcohol (LPA)", "Duty rate (per litre)", "Duty value")
+    val expectedAdjustmentsHeader   =
+      Seq("Adjustment", "Description", "Litres of pure alcohol (LPA)", "Duty rate (per litre)", "Duty value")
+    val expectedDutySuspendedHeader = Seq("Description", "Total volume (litres)", "Litres of pure alcohol (LPA)")
+    val expectedSpiritsHeader       = Seq("Description", "Total volume (LPA)")
   }
 
 }

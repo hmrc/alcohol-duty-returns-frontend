@@ -66,7 +66,7 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
       TellUsAboutSingleSPRRateSummary.rows(Beer, answers) mustBe Seq.empty
     }
 
-    "must return no rows if MultipleSPRListPage page doesn't have an answer" in new SetUp {
+    "must return no rows if TellUsAboutSingleSPRRate page doesn't have an answer" in new SetUp {
       val answers = whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands)
 
       TellUsAboutSingleSPRRateSummary.rows(Beer, answers) mustBe Seq.empty

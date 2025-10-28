@@ -17,11 +17,11 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
 
 class AdjustmentDutyDueSummarySpec extends SpecBase {
   "AdjustmentDutyDueSummary" - {
@@ -30,51 +30,33 @@ class AdjustmentDutyDueSummarySpec extends SpecBase {
       true,
       false
     ) {
-      adjustmentDutyDueSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(Key(Text("Duty value")), Value(Text("£1.20")), "", Some(Actions(items = List())))
-      )
+      val row = adjustmentDutyDueSummary.row(adjustmentEntry)
+
+      row.get.key.content.asHtml.toString   mustBe "Duty value"
+      row.get.value.content.asHtml.toString mustBe "£1.20"
+      row.get.actions.get.items             mustBe Seq.empty
     }
 
-    "must return a row with an action and prioritise new duty over duty if Spoilt" in new SetUp(true, true, false) {
-      adjustmentDutyDueSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Duty value")),
-          Value(Text("£1.20")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/spoilt-product/volume",
-                  Text("Change"),
-                  Some("duty value")
-                )
-              )
-            )
-          )
-        )
-      )
+    "must return a row without actions, and use duty if no new duty, if not Spoilt" in new SetUp(false, false, true) {
+      val row = adjustmentDutyDueSummary.row(adjustmentEntry)
+
+      row.get.key.content.asHtml.toString   mustBe "Duty value"
+      row.get.value.content.asHtml.toString mustBe "£2.30"
+      row.get.actions.get.items             mustBe Seq.empty
     }
 
-    "must return a row with an action and duty if no new duty, and Spoilt" in new SetUp(true, false, true) {
-      adjustmentDutyDueSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Duty value")),
-          Value(Text("£2.30")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/spoilt-product/volume",
-                  Text("Change"),
-                  Some("duty value")
-                )
-              )
-            )
-          )
-        )
+    "must return a row with an action (and use duty) if Spoilt" in new SetUp(true, false, true) {
+      val row = adjustmentDutyDueSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("duty value")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Duty value"
+      row.get.value.content.asHtml.toString mustBe "£2.30"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return no row if neither duty can be fetched" in new SetUp(true, false, false) {
@@ -83,8 +65,7 @@ class AdjustmentDutyDueSummarySpec extends SpecBase {
   }
 
   class SetUp(isSpoilt: Boolean, hasNewDuty: Boolean, hasDuty: Boolean) {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val maybeAdjustmentType = if (isSpoilt) {
       Some(Spoilt)

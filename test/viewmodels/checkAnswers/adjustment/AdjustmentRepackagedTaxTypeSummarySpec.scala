@@ -17,32 +17,25 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
 
 class AdjustmentRepackagedTaxTypeSummarySpec extends SpecBase {
   "AdjustmentRepackagedTaxTypeSummary" - {
     "must return a row if the period and adjustment type can be fetched" in new SetUp(true) {
-      adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("New tax type")),
-          Value(Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/change/repackaged/new-tax-type-code",
-                  Text("Change"),
-                  Some("new tax type")
-                )
-              )
-            )
-          )
-        )
+      val row = adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("new tax type")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "New tax type"
+      row.get.value.content.asHtml.toString mustBe "Non-draught beer between 1% and 3% ABV (tax type code 123)"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return no row if no repackaged rate band can be fetched" in new SetUp(false) {
@@ -51,8 +44,7 @@ class AdjustmentRepackagedTaxTypeSummarySpec extends SpecBase {
   }
 
   class SetUp(hasRepackagedRateBand: Boolean) {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val maybeRepackagedRateBand = if (hasRepackagedRateBand) { Some(coreRateBand) }
     else { None }

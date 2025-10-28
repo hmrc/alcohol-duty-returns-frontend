@@ -18,32 +18,25 @@ package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
 import models.AlcoholRegime.Beer
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, HtmlContent, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 
 class SpoiltAlcoholicProductTypeSummarySpec extends SpecBase {
   "SpoiltAlcoholicProductTypeSummary" - {
     "must return a row if the spoilt regime can be fetched" in new SetUp(true) {
-      spoiltAlcoholicProductTypeSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Description")),
-          Value(HtmlContent("Beer")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type",
-                  Text("Change"),
-                  Some("description")
-                )
-              )
-            )
-          )
-        )
+      val row = spoiltAlcoholicProductTypeSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.SpoiltAlcoholicProductTypeController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("description")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Description"
+      row.get.value.content.asHtml.toString mustBe "Beer"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return no row if no spoilt regime can be fetched" in new SetUp(false) {
@@ -52,8 +45,7 @@ class SpoiltAlcoholicProductTypeSummarySpec extends SpecBase {
   }
 
   class SetUp(hasSpoiltRegime: Boolean) {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val maybeSpoiltRegime = if (hasSpoiltRegime) {
       Some(Beer)

@@ -17,10 +17,10 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, HtmlContent, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 
 class AdjustmentVolumeSummarySpec extends SpecBase {
   "AdjustmentVolumeSummary" - {
@@ -28,24 +28,17 @@ class AdjustmentVolumeSummarySpec extends SpecBase {
       true,
       true
     ) {
-      adjustmentVolumeSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Volume")),
-          Value(HtmlContent("12.20 litres<br/>1.2000 litres of pure alcohol")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/volume",
-                  Text("Change"),
-                  Some("volume")
-                )
-              )
-            )
-          )
-        )
+      val row = adjustmentVolumeSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("volume")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Volume"
+      row.get.value.content.asHtml.toString mustBe "<span class='break'>12.20 litres</span><span class='break'>1.2000 litres of pure alcohol</span>"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return no row if the total litres volume type can't be fetched" in new SetUp(true, false) {
@@ -62,8 +55,7 @@ class AdjustmentVolumeSummarySpec extends SpecBase {
   }
 
   class SetUp(hasTotalLitresVolume: Boolean, hasPureAlcoholVolume: Boolean) {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val maybeTotalLitresVolume = if (hasTotalLitresVolume) {
       Some(BigDecimal("12.2"))

@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
 import config.Constants.Css
-import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.{AdrDutySuspended, AdrSpirits}
@@ -61,8 +60,7 @@ case class DutyDueForThisReturnViewModel(
 
 class DutyDueForThisReturnHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  adrReturnSubmissionService: AdrReturnSubmissionService,
-  appConfig: FrontendAppConfig
+  adrReturnSubmissionService: AdrReturnSubmissionService
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 

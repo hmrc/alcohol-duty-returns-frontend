@@ -17,33 +17,26 @@
 package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Underdeclaration
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, HtmlContent, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 
 class AdjustmentTypeSummarySpec extends SpecBase {
   "AdjustmentTypeSummary" - {
     "must return a row if the adjustment type can be fetched" in new SetUp(true) {
-      adjustmentTypeSummary.row(adjustmentEntry) mustBe Some(
-        SummaryListRow(
-          Key(Text("Adjustment")),
-          Value(HtmlContent("Under-declared")),
-          "",
-          Some(
-            Actions(items =
-              List(
-                ActionItem(
-                  "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/type",
-                  Text("Change"),
-                  Some("adjustment")
-                )
-              )
-            )
-          )
-        )
+      val row = adjustmentTypeSummary.row(adjustmentEntry)
+
+      val expectedAction = ActionItem(
+        content = Text("Change"),
+        href = controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(CheckMode).url,
+        visuallyHiddenText = Some("adjustment")
       )
+
+      row.get.key.content.asHtml.toString   mustBe "Adjustment"
+      row.get.value.content.asHtml.toString mustBe "Under-declared"
+      row.get.actions.get.items.head        mustBe expectedAction
     }
 
     "must return no row if no adjustment type can be fetched" in new SetUp(false) {
@@ -52,8 +45,7 @@ class AdjustmentTypeSummarySpec extends SpecBase {
   }
 
   class SetUp(hasAdjustmentType: Boolean) {
-    val application                 = applicationBuilder(userAnswers = None).build()
-    implicit val messages: Messages = getMessages(application)
+    implicit val messages: Messages = getMessages(app)
 
     val maybeAdjustmentType = if (hasAdjustmentType) {
       Some(Underdeclaration)
