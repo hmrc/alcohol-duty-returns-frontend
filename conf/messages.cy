@@ -139,6 +139,7 @@ viewPastReturns.pastYears.link = Bwrw golwg dros Ddatganiadau ar gyfer {0}
 
 completedReturns.title = Datganiadau wedi’u cwblhau
 completedReturns.heading = Datganiadau wedi’u cwblhau
+completedReturns.tableCaption = Datganiadau wedi’u cwblhau yn {0}
 backToReturns.Link.text = Yn ôl at y Datganiadau presennol
 
 viewReturn.heading = Datganiad Toll Alcohol ar gyfer {0}
@@ -232,6 +233,7 @@ backToPayments.Link.text = Yn ôl i daliadau
 pastYearPayments.title = Taliadau blaenorol
 pastYearPayments.heading = Taliadau blaenorol
 pastYearPayments.p = Os yw CThEF wedi cael unrhyw daliadau oddi wrthych, bydd y taliadau hyn yn ymddangos yma.
+pastYearPayments.tableCaption = Past payments in {0}
 
 manageCentralAssessment.title = Rheoli asesiad canolog
 manageCentralAssessment.heading = Rheoli asesiad canolog
