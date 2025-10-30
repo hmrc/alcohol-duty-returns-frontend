@@ -82,9 +82,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val exitSurveyBaseUrl: String = configuration.get[String]("urls.feedbackFrontendBase")
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend"
 
-  val languageTranslationEnabled: Boolean =
-    configuration.get[Boolean]("features.welsh-translation")
-
   val claimARefundGformEnabled: Boolean =
     configuration.get[Boolean]("features.claim-a-refund-gform")
 
