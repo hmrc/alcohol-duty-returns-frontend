@@ -53,6 +53,8 @@
         @pageHeading(messages("adjustmentList.heading"))
 
         @govukTable(Table(
+            caption = Some(messages("adjustmentList.heading")),
+            captionClasses = Css.visuallyHiddenCssClass,
             head = Some(adjustmentTable.head),
             rows = adjustmentTable.rows.map(row => {
                 val actions = TableRow(content = HtmlContent(tableRowActionList(

@@ -15,7 +15,8 @@
  *@
 
 @import viewmodels.TableViewModel
-@import components.{Caption, PageHeading, ReturnToTaskList, SubHeading, TableRowAction, TableRowActionList}
+@import components.{Caption, PageHeading, ReturnToTaskList, TableRowAction, TableRowActionList}
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout,
@@ -25,7 +26,6 @@
     govukButton: GovukButton,
     govukTable: GovukTable,
     pageHeading: PageHeading,
-    subHeading: SubHeading,
     caption: Caption,
     tableRowActionList: TableRowActionList,
     tableRowAction: TableRowAction,
@@ -49,6 +49,8 @@
         @pageHeading(messages(s"multipleSPRList.heading.${regime.regimeMessageKey}"))
 
         @govukTable(Table(
+          caption = Some(messages(s"multipleSPRList.heading.${regime.regimeMessageKey}")),
+          captionClasses = Css.visuallyHiddenCssClass,
           head = Some(sprTable.head),
           rows = sprTable.rows.map(row => {
             val actionList = TableRow(content = HtmlContent(tableRowActionList(
