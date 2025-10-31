@@ -233,7 +233,7 @@ backToPayments.Link.text = Yn ôl i daliadau
 pastYearPayments.title = Taliadau blaenorol
 pastYearPayments.heading = Taliadau blaenorol
 pastYearPayments.p = Os yw CThEF wedi cael unrhyw daliadau oddi wrthych, bydd y taliadau hyn yn ymddangos yma.
-pastYearPayments.tableCaption = Past payments in {0}
+pastYearPayments.tableCaption = Taliadau blaenorol yn {0}
 
 manageCentralAssessment.title = Rheoli asesiad canolog
 manageCentralAssessment.heading = Rheoli asesiad canolog
