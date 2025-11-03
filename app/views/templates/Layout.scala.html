@@ -81,7 +81,7 @@
     ))
 
     @if(showBackLink) {
-        @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript)
+        @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible").withAttribute(("id" -> "back-link")))
     }
 }
 
