@@ -671,13 +671,13 @@ multipleSPRMissingDetails.addDetails = 	Ychwanegu manylion ar gyfer y datganiada
 multipleSPRMissingDetails.removeDeclarations = Dileu’r datganiadau yma o’r ffurflen hon
 multipleSPRMissingDetails.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
 
-multipleSPRMissingDetailsConfirmation.title = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
-multipleSPRMissingDetailsConfirmation.heading = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
-multipleSPRMissingDetailsConfirmation.guidance = Byddwn yn dileu’ch datganiadau ar gyfer y canlynol:
-multipleSPRMissingDetailsConfirmation.hidden = A ydych yn siŵr eich bod am ddileu cynnwys y datganiadau hyn o’ch ffurflen?
-multipleSPRMissingDetailsConfirmation.yes = Iawn, dileu’r datganiadau hyn
-multipleSPRMissingDetailsConfirmation.no = Na, Hoffwn fynd yn ôl ac ychwanegu manylion ar gyfer y datganiadau hyn
-multipleSPRMissingDetailsConfirmation.error.required = Dewiswch yr hyn sydd angen i chi ei wneud
+multipleSPRMissingDetailsConfirmation.title = Dileu alcohol
+multipleSPRMissingDetailsConfirmation.heading = Dileu alcohol
+multipleSPRMissingDetailsConfirmation.p.singular = Rydych chi ar fin dileu’r cynnyrch alcoholaidd hwn o’ch Ffurflen Dreth:
+multipleSPRMissingDetailsConfirmation.p.plural = Rydych chi ar fin dileu’r cynhyrchion alcoholaidd hyn o’ch Ffurflen Dreth:
+multipleSPRMissingDetailsConfirmation.label.singular = A ydych yn siŵr eich bod am ei ddileu?
+multipleSPRMissingDetailsConfirmation.label.plural = A ydych yn siŵr eich bod am eu dileu?
+multipleSPRMissingDetailsConfirmation.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddileu’r cynhyrchion alcoholaidd hyn
 
 deleteMultipleSPREntry.title = Tynnu’r cofnod {0} hwn?
 deleteMultipleSPREntry.heading = Tynnu’r cofnod {0} hwn?

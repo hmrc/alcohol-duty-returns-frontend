@@ -15,6 +15,7 @@
  *@
 
 @import components.{BulletList, Caption, PageHeading, Paragraph, ReturnToTaskList}
+@import viewmodels.LegendSize.Medium
 
 @this(
         layout: templates.Layout,
@@ -29,7 +30,7 @@
         returnToTaskList: ReturnToTaskList
 )
 
-@(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime: AlcoholRegime, missingRateBandDescriptions: Seq[HtmlContent], hasMultipleRateBands: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("multipleSPRMissingDetailsConfirmation.title"))) {
 
@@ -45,25 +46,19 @@
 
         @pageHeading(messages("multipleSPRMissingDetailsConfirmation.heading"))
 
-        @paragraph(messages("multipleSPRMissingDetailsConfirmation.guidance"))
+        @paragraph(
+            if (hasMultipleRateBands) messages("multipleSPRMissingDetailsConfirmation.p.plural")
+            else messages("multipleSPRMissingDetailsConfirmation.p.singular")
+        )
         @bulletList(missingRateBandDescriptions)
 
         @govukRadios(
-            RadiosViewModel(
+            RadiosViewModel.yesNo(
                 field = form("deleteMissingDeclarations"),
-                legend = LegendViewModel(messages("multipleSPRMissingDetailsConfirmation.hidden")).asVisuallyHidden(),
-                items = Seq(
-                    RadioItem(
-                        id = Some("deleteMissingDeclarations"),
-                        value = Some("true"),
-                        content = Text(messages("multipleSPRMissingDetailsConfirmation.yes"))
-                    ),
-                    RadioItem(
-                        id = Some("deleteMissingDeclarations-no"),
-                        value = Some("false"),
-                        content = Text(messages("multipleSPRMissingDetailsConfirmation.no"))
-                    )
-                )
+                legend = LegendViewModel(
+                    if (hasMultipleRateBands) messages("multipleSPRMissingDetailsConfirmation.label.plural")
+                    else messages("multipleSPRMissingDetailsConfirmation.label.singular")
+                ).withSize(Medium)
             )
         )
 

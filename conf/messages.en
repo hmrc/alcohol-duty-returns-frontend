@@ -671,13 +671,13 @@ multipleSPRMissingDetails.addDetails = Add details for these declarations
 multipleSPRMissingDetails.removeDeclarations = Delete these declarations from this return
 multipleSPRMissingDetails.error.required = Select what you need to do
 
-multipleSPRMissingDetailsConfirmation.title = Are you sure you want to delete these declarations from your return?
-multipleSPRMissingDetailsConfirmation.heading = Are you sure you want to delete these declarations from your return?
-multipleSPRMissingDetailsConfirmation.guidance = We will delete your declarations for:
-multipleSPRMissingDetailsConfirmation.hidden = Are you sure you want to delete these declarations from your return?
-multipleSPRMissingDetailsConfirmation.yes = Yes, delete these declarations
-multipleSPRMissingDetailsConfirmation.no = No, I want to go back and add details for these declarations
-multipleSPRMissingDetailsConfirmation.error.required = Select what you need to do
+multipleSPRMissingDetailsConfirmation.title = Delete alcohol
+multipleSPRMissingDetailsConfirmation.heading = Delete alcohol
+multipleSPRMissingDetailsConfirmation.p.singular = You’re about to delete this alcoholic product from your return:
+multipleSPRMissingDetailsConfirmation.p.plural = You’re about to delete these alcoholic products from your return:
+multipleSPRMissingDetailsConfirmation.label.singular = Are you sure you want to delete it?
+multipleSPRMissingDetailsConfirmation.label.plural = Are you sure you want to delete them?
+multipleSPRMissingDetailsConfirmation.error.required = Select yes if you need to delete these alcoholic products
 
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?

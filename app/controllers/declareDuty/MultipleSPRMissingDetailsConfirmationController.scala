@@ -56,7 +56,8 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
         case Some(missingRateBands) if missingRateBands.nonEmpty =>
           val missingRateBandDescriptions =
             missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
-          Ok(view(form, regime, missingRateBandDescriptions))
+          val hasMultipleRateBands        = missingRateBands.size > 1
+          Ok(view(form, regime, missingRateBandDescriptions, hasMultipleRateBands))
         case _                                                   =>
           logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
@@ -73,7 +74,10 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
               formWithErrors => {
                 val missingRateBandDescriptions =
                   missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
-                Future.successful(BadRequest(view(formWithErrors, regime, missingRateBandDescriptions)))
+                val hasMultipleRateBands        = missingRateBands.size > 1
+                Future.successful(
+                  BadRequest(view(formWithErrors, regime, missingRateBandDescriptions, hasMultipleRateBands))
+                )
               },
               value =>
                 for {
