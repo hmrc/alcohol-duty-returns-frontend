@@ -81,7 +81,15 @@ class IdentifyWithoutEnrolmentActionImpl @Inject() (
     case _: UnsupportedAuthProvider     => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad)
-    case _                              => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+    case _                              =>
+      Redirect(
+        config.loginUrl,
+        Map(
+          "continue"      -> Seq(config.loginContinueUrl),
+          "origin"        -> Seq(config.appName),
+          "affinityGroup" -> Seq(config.affinityGroup)
+        )
+      )
   }
 
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
