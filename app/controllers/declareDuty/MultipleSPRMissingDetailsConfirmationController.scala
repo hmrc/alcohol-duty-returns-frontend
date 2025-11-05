@@ -48,8 +48,6 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
     with I18nSupport
     with Logging {
 
-  val form = formProvider()
-
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       missingSPRRateBandHelper.findMissingSPRRateBands(regime, request.userAnswers) match {
@@ -57,6 +55,7 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
           val missingRateBandDescriptions =
             missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
           val hasMultipleRateBands        = missingRateBands.size > 1
+          val form                        = formProvider(hasMultipleRateBands)
           Ok(view(form, regime, missingRateBandDescriptions, hasMultipleRateBands))
         case _                                                   =>
           logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
@@ -68,13 +67,14 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       missingSPRRateBandHelper.findMissingSPRRateBands(regime, request.userAnswers) match {
         case Some(missingRateBands) if missingRateBands.nonEmpty =>
+          val hasMultipleRateBands = missingRateBands.size > 1
+          val form                 = formProvider(hasMultipleRateBands)
           form
             .bindFromRequest()
             .fold(
               formWithErrors => {
                 val missingRateBandDescriptions =
                   missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
-                val hasMultipleRateBands        = missingRateBands.size > 1
                 Future.successful(
                   BadRequest(view(formWithErrors, regime, missingRateBandDescriptions, hasMultipleRateBands))
                 )

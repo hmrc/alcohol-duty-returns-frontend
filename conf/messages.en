@@ -677,7 +677,8 @@ multipleSPRMissingDetailsConfirmation.p.singular = You’re about to delete this
 multipleSPRMissingDetailsConfirmation.p.plural = You’re about to delete these alcoholic products from your return:
 multipleSPRMissingDetailsConfirmation.label.singular = Are you sure you want to delete it?
 multipleSPRMissingDetailsConfirmation.label.plural = Are you sure you want to delete them?
-multipleSPRMissingDetailsConfirmation.error.required = Select yes if you need to delete these alcoholic products
+multipleSPRMissingDetailsConfirmation.error.required.singular = Select yes if you need to delete this alcoholic product
+multipleSPRMissingDetailsConfirmation.error.required.plural = Select yes if you need to delete these alcoholic products
 
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?

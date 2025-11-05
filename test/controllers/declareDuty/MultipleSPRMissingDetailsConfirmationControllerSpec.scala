@@ -39,7 +39,8 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new MultipleSPRMissingDetailsConfirmationFormProvider()
-  val form         = formProvider()
+  val formPlural   = formProvider(hasMultipleRateBands = true)
+  val formSingular = formProvider(hasMultipleRateBands = false)
   val regime       = regimeGen.sample.value
 
   lazy val multipleSPRMissingDetailsConfirmationRoute =
@@ -114,10 +115,12 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[MultipleSPRMissingDetailsConfirmationView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, regime, missingRateBandDescriptions, hasMultipleRateBands = true)(
-          request,
-          getMessages(application)
-        ).toString
+        contentAsString(result) mustEqual view(
+          formPlural,
+          regime,
+          missingRateBandDescriptions,
+          hasMultipleRateBands = true
+        )(request, getMessages(application)).toString
 
         verify(mockMissingSPRRateBandHelper, times(1))
           .findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
@@ -147,10 +150,12 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[MultipleSPRMissingDetailsConfirmationView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(form, regime, missingSingleDescription, hasMultipleRateBands = false)(
-          request,
-          getMessages(application)
-        ).toString
+        contentAsString(result) mustEqual view(
+          formSingular,
+          regime,
+          missingSingleDescription,
+          hasMultipleRateBands = false
+        )(request, getMessages(application)).toString
 
         verify(mockMissingSPRRateBandHelper, times(1))
           .findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
@@ -238,7 +243,7 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
           FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
             .withFormUrlEncodedBody(("deleteMissingDeclarations", ""))
 
-        val boundForm = form.bind(Map("deleteMissingDeclarations" -> ""))
+        val boundForm = formPlural.bind(Map("deleteMissingDeclarations" -> ""))
 
         val view = application.injector.instanceOf[MultipleSPRMissingDetailsConfirmationView]
 
@@ -250,10 +255,7 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
           regime,
           missingRateBandDescriptions,
           hasMultipleRateBands = true
-        )(
-          request,
-          getMessages(application)
-        ).toString
+        )(request, getMessages(application)).toString
 
         verify(mockMissingSPRRateBandHelper, times(1))
           .findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))
@@ -280,7 +282,7 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
           FakeRequest(POST, multipleSPRMissingDetailsConfirmationRoute)
             .withFormUrlEncodedBody(("deleteMissingDeclarations", ""))
 
-        val boundForm = form.bind(Map("deleteMissingDeclarations" -> ""))
+        val boundForm = formSingular.bind(Map("deleteMissingDeclarations" -> ""))
 
         val view = application.injector.instanceOf[MultipleSPRMissingDetailsConfirmationView]
 
@@ -292,10 +294,7 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
           regime,
           missingSingleDescription,
           hasMultipleRateBands = false
-        )(
-          request,
-          getMessages(application)
-        ).toString
+        )(request, getMessages(application)).toString
 
         verify(mockMissingSPRRateBandHelper, times(1))
           .findMissingSPRRateBands(eqTo(regime), eqTo(userAnswersWithMissingRateBands))

@@ -677,7 +677,8 @@ multipleSPRMissingDetailsConfirmation.p.singular = Rydych chi ar fin dileu’r c
 multipleSPRMissingDetailsConfirmation.p.plural = Rydych chi ar fin dileu’r cynhyrchion alcoholaidd hyn o’ch Ffurflen Dreth:
 multipleSPRMissingDetailsConfirmation.label.singular = A ydych yn siŵr eich bod am ei ddileu?
 multipleSPRMissingDetailsConfirmation.label.plural = A ydych yn siŵr eich bod am eu dileu?
-multipleSPRMissingDetailsConfirmation.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddileu’r cynhyrchion alcoholaidd hyn
+multipleSPRMissingDetailsConfirmation.error.required.singular = Dewiswch ‘Iawn’ os oes angen i chi ddileu’r cynnyrch alcoholaidd hwn
+multipleSPRMissingDetailsConfirmation.error.required.plural = Dewiswch ‘Iawn’ os oes angen i chi ddileu’r cynhyrchion alcoholaidd hyn
 
 deleteMultipleSPREntry.title = Tynnu’r cofnod {0} hwn?
 deleteMultipleSPREntry.heading = Tynnu’r cofnod {0} hwn?
