@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, SubHeading, BackToPayments}
+@import components.{PageHeading, Paragraph, BackToPayments}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
@@ -23,7 +23,6 @@
         govukTable: GovukTable,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        subHeading: SubHeading,
         backToPayments: BackToPayments
 )
 
@@ -33,11 +32,11 @@
 
     @pageHeading(messages("pastYearPayments.heading"))
 
-    @paragraph(messages("pastYearPayments.p"))
-
-    @subHeading(messages("site.year", year), Css.headingMCssClass)
+    @paragraph(messages("pastYearPayments.p"), classes = Css.paddingBottomCssClass)
 
     @govukTable(Table(
+        caption = Some(messages("pastYearPayments.tableCaption", messages("site.year", year))),
+        captionClasses = Css.tableCaptionMCssClass,
         head = Some(historicPaymentsTable.head),
         rows = historicPaymentsTable.rows.map(_.cells),
     ))

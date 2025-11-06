@@ -139,6 +139,7 @@ viewPastReturns.pastYears.link = View {0} returns
 
 completedReturns.title = Completed returns
 completedReturns.heading = Completed returns
+completedReturns.tableCaption = Completed returns in {0}
 backToReturns.Link.text = Back to current returns
 
 viewReturn.heading = {0} Alcohol Duty Return
@@ -232,6 +233,7 @@ backToPayments.Link.text = Back to payments
 pastYearPayments.title = Past payments
 pastYearPayments.heading = Past payments
 pastYearPayments.p = Your payments which have been received by HMRC will appear here.
+pastYearPayments.tableCaption = Past payments in {0}
 
 manageCentralAssessment.title = Manage central assessment
 manageCentralAssessment.heading = Manage central assessment

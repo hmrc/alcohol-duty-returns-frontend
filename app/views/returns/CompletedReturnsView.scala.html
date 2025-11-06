@@ -29,12 +29,12 @@
 
 @(completedReturns: TableViewModel, year: Int)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("completedReturns.title", year))) {
+@layout(pageTitle = titleNoForm(messages("completedReturns.title"))) {
 
-    @pageHeading(messages("completedReturns.heading", year))
+    @pageHeading(messages("completedReturns.heading"))
 
     @govukTable(Table(
-        caption = Some(messages("site.year", year)),
+        caption = Some(messages("completedReturns.tableCaption", messages("site.year", year))),
         captionClasses = Css.tableCaptionMCssClass,
         head = Some(completedReturns.head),
         rows = completedReturns.rows.map { row =>
