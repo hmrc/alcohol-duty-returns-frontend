@@ -33,6 +33,8 @@ import viewmodels.{Money, TableRowViewModel, TableViewModel, TotalsSummaryList}
 import java.time.YearMonth
 import javax.inject.Inject
 
+case class SpiritsTables(mainTable: Option[TableViewModel], spiritTypesTable: Option[TableViewModel])
+
 class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   def createAlcoholDeclaredViewModel(
     returnDetails: ReturnDetails,
@@ -361,27 +363,35 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
 
   def createSpiritsViewModels(
     returnDetails: ReturnDetails
-  )(implicit messages: Messages): Seq[TableViewModel] =
+  )(implicit messages: Messages): SpiritsTables =
     returnDetails.spirits match {
       case Some(spirits) =>
-        Seq(
-          TableViewModel(
-            head = spiritsDeclaredTableHeader(),
-            rows = spiritsDeclaredRows(spirits),
-            caption = Some(messages("viewReturn.spirits.caption"))
+        SpiritsTables(
+          mainTable = Some(
+            TableViewModel(
+              head = spiritsDeclaredTableHeader(),
+              rows = spiritsDeclaredRows(spirits),
+              caption = Some(messages("viewReturn.spirits.caption"))
+            )
           ),
-          TableViewModel(
-            head = spiritsTypesDeclaredTableHeader(),
-            rows = spiritsTypesDeclaredRows(spirits)
+          spiritTypesTable = Some(
+            TableViewModel(
+              head = spiritsTypesDeclaredTableHeader(),
+              rows = spiritsTypesDeclaredRows(spirits),
+              caption = Some(messages("viewReturn.table.typesOfSpirits.legend"))
+            )
           )
         )
       case None          =>
-        Seq(
-          TableViewModel(
-            head = spiritsNotDeclaredTableHeader(),
-            rows = spiritsNotDeclaredRow(),
-            caption = Some(messages("viewReturn.spirits.caption"))
-          )
+        SpiritsTables(
+          mainTable = Some(
+            TableViewModel(
+              head = spiritsNotDeclaredTableHeader(),
+              rows = spiritsNotDeclaredRow(),
+              caption = Some(messages("viewReturn.spirits.caption"))
+            )
+          ),
+          spiritTypesTable = None
         )
     }
 
