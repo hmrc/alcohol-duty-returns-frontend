@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, Paragraph, ReturnToTaskList, SubHeading, TableRowAction, TableRowActionList}
+@import components.{Caption, PageHeading, Paragraph, ReturnToTaskList, ScrollableTable, SubHeading, TableRowAction, TableRowActionList}
 @import config.Constants.{Css, Format}
 @import viewmodels.TableViewModel
 
@@ -26,7 +26,7 @@
         caption: Caption,
         subHeading: SubHeading,
         pageHeading: PageHeading,
-        govukTable: GovukTable,
+        scrollableTable: ScrollableTable,
         tableRowActionList: TableRowActionList,
         tableRowAction: TableRowAction,
         returnToTaskList: ReturnToTaskList
@@ -36,38 +36,40 @@
 
 @layout(pageTitle = titleNoForm(messages("dutyCalculation.title", totalDuty)), fullWidth = true) {
 
-  @formHelper(action = controllers.declareDuty.routes.DutyCalculationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
-    @caption(
-      id = "dutyCalculation-section",
-      text = messages(s"section.return.$regime")
-    )
+    @formHelper(action = controllers.declareDuty.routes.DutyCalculationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
+        @caption(
+            id = "dutyCalculation-section",
+            text = messages(s"section.return.$regime")
+        )
 
-    @pageHeading(messages("dutyCalculation.heading", totalDuty))
+        @pageHeading(messages("dutyCalculation.heading", totalDuty))
 
-    @paragraph(messages("dutyCalculation.paragraph"))
+        @paragraph(messages("dutyCalculation.paragraph"))
 
-    @govukTable(Table(
-      caption = Some(messages("productList.caption")),
-      captionClasses = Css.tableCaptionLCssClass,
-      head = Some(dutyDueViewModel.head),
-      rows = dutyDueViewModel.rows.map(row => {
-        val actions = TableRow(format = Some(Format.numeric), content = HtmlContent(tableRowActionList(
-          id = "productList",
-          actions = row.actions.map(action => tableRowAction(
-            id = "",
-            text = action.label,
-            href = action.href,
-            visuallyHiddenContent = action.visuallyHiddenText
-          )
-          ))))
-        row.cells :+ actions
-      }
-      ))
-    )
+        @scrollableTable(
+            ariaLabel = messages("productList.caption"),
+            table = Table(
+                caption = Some(messages("productList.caption")),
+                captionClasses = Css.tableCaptionLCssClass,
+                head = Some(dutyDueViewModel.head),
+                rows = dutyDueViewModel.rows.map(row => {
+                    val actions = TableRow(format = Some(Format.numeric), content = HtmlContent(tableRowActionList(
+                        id = "productList",
+                        actions = row.actions.map(action => tableRowAction(
+                            id = "",
+                            text = action.label,
+                            href = action.href,
+                            visuallyHiddenContent = action.visuallyHiddenText
+                        )
+                        ))))
+                    row.cells :+ actions
+                })
+            ))
 
-    @govukButton(
-      ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
-    )
-    @returnToTaskList()
-  }
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+        )
+
+        @returnToTaskList()
+    }
 }
