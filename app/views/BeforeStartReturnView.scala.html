@@ -42,6 +42,8 @@
 
         @pageHeading(messages("beforeStartReturn.heading"))
 
+        @govukWarningText(viewModel.warningText)
+
         @paragraph(messages("beforeStartReturn.text.guidance1", returnPeriod.fromDate, returnPeriod.toDate))
 
         @paragraph(messages("beforeStartReturn.text.guidance2"))
@@ -109,8 +111,6 @@
                         ))
             )
         ))
-
-        @govukWarningText(viewModel.warningText)
 
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))
