@@ -49,7 +49,7 @@ class SignOutController @Inject() (
     handleSignOut(
       request,
       Seq(
-        config.loginUrl + s"?continue=${config.loginContinueUrlRequestAccess}"
+        config.loginUrl + s"?continue=${config.loginContinueUrlRequestAccess}&origin=${config.appName}&affinityGroup=${config.affinityGroup}"
       )
     )
   }

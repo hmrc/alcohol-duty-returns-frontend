@@ -26,8 +26,9 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
-  val host: String    = configuration.get[String]("host")
-  val appName: String = configuration.get[String]("appName")
+  val host: String          = configuration.get[String]("host")
+  val appName: String       = configuration.get[String]("appName")
+  val affinityGroup: String = configuration.get[String]("affinityGroup")
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "alcohol-duty-returns-frontend"

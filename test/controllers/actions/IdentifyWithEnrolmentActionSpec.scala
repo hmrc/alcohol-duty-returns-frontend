@@ -206,13 +206,18 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
       ).foreach { exception =>
         when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
         when(mockAppConfig.loginUrl).thenReturn(loginUrl)
+        when(mockAppConfig.appName).thenReturn("alcohol-duty-returns-frontend")
+        when(mockAppConfig.affinityGroup).thenReturn("Organisation")
         when(mockAppConfig.loginContinueUrl).thenReturn(loginContinueUrl)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
         val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
 
-        status(result)                 mustBe SEE_OTHER
-        redirectLocation(result).value mustBe s"$loginUrl?continue=$loginContinueUrl"
+        status(result) mustBe SEE_OTHER
+
+        redirectLocation(
+          result
+        ).value mustBe s"$loginUrl?continue=$loginContinueUrl&origin=alcohol-duty-returns-frontend&affinityGroup=Organisation"
       }
     }
 
