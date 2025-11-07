@@ -82,7 +82,15 @@ class IdentifyWithEnrolmentActionImpl @Inject() (
     case _: UnsupportedAffinityGroup    => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad)
-    case _                              => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+    case _                              =>
+      Redirect(
+        config.loginUrl,
+        Map(
+          "continue"      -> Seq(config.loginContinueUrl),
+          "origin"        -> Seq(config.appName),
+          "affinityGroup" -> Seq(config.affinityGroup)
+        )
+      )
   }
 
   private def getAppaId(enrolments: Enrolments): String = {

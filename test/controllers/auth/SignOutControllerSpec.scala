@@ -153,8 +153,13 @@ class SignOutControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           val encodedContinueUrl  =
-            URLEncoder.encode(appConfig.loginUrl + "?continue=" + appConfig.loginContinueUrlRequestAccess, "UTF-8")
-          val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+            URLEncoder.encode(
+              appConfig.loginUrl + "?continue=" + appConfig.loginContinueUrlRequestAccess +
+                "&origin=alcohol-duty-returns-frontend&affinityGroup=Organisation",
+              "UTF-8"
+            )
+          val expectedRedirectUrl =
+            s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
 
           status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual expectedRedirectUrl
