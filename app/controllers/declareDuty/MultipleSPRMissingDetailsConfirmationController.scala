@@ -48,15 +48,15 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
     with I18nSupport
     with Logging {
 
-  val form = formProvider()
-
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       missingSPRRateBandHelper.findMissingSPRRateBands(regime, request.userAnswers) match {
         case Some(missingRateBands) if missingRateBands.nonEmpty =>
           val missingRateBandDescriptions =
             missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
-          Ok(view(form, regime, missingRateBandDescriptions))
+          val hasMultipleRateBands        = missingRateBands.size > 1
+          val form                        = formProvider(hasMultipleRateBands)
+          Ok(view(form, regime, missingRateBandDescriptions, hasMultipleRateBands))
         case _                                                   =>
           logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
@@ -67,13 +67,17 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       missingSPRRateBandHelper.findMissingSPRRateBands(regime, request.userAnswers) match {
         case Some(missingRateBands) if missingRateBands.nonEmpty =>
+          val hasMultipleRateBands = missingRateBands.size > 1
+          val form                 = formProvider(hasMultipleRateBands)
           form
             .bindFromRequest()
             .fold(
               formWithErrors => {
                 val missingRateBandDescriptions =
                   missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
-                Future.successful(BadRequest(view(formWithErrors, regime, missingRateBandDescriptions)))
+                Future.successful(
+                  BadRequest(view(formWithErrors, regime, missingRateBandDescriptions, hasMultipleRateBands))
+                )
               },
               value =>
                 for {

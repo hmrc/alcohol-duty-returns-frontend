@@ -23,8 +23,11 @@ import javax.inject.Inject
 
 class MultipleSPRMissingDetailsConfirmationFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(hasMultipleRateBands: Boolean): Form[Boolean] =
     Form(
-      "deleteMissingDeclarations" -> boolean("multipleSPRMissingDetailsConfirmation.error.required")
+      "deleteMissingDeclarations" -> boolean(
+        if (hasMultipleRateBands) { "multipleSPRMissingDetailsConfirmation.error.required.plural" }
+        else { "multipleSPRMissingDetailsConfirmation.error.required.singular" }
+      )
     )
 }

@@ -21,25 +21,43 @@ import play.api.data.FormError
 
 class MultipleSPRMissingDetailsConfirmationFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "multipleSPRMissingDetailsConfirmation.error.required"
-  val invalidKey  = "error.boolean"
+  val requiredKeyPlural   = "multipleSPRMissingDetailsConfirmation.error.required.plural"
+  val requiredKeySingular = "multipleSPRMissingDetailsConfirmation.error.required.singular"
+  val invalidKey          = "error.boolean"
 
-  val form = new MultipleSPRMissingDetailsConfirmationFormProvider()()
+  val formPlural   = new MultipleSPRMissingDetailsConfirmationFormProvider()(true)
+  val formSingular = new MultipleSPRMissingDetailsConfirmationFormProvider()(false)
 
   ".value" - {
 
     val fieldName = "deleteMissingDeclarations"
 
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
+    "plural form must" - {
+      behave like booleanField(
+        formPlural,
+        fieldName,
+        invalidError = FormError(fieldName, invalidKey)
+      )
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+      behave like mandatoryField(
+        formPlural,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKeyPlural)
+      )
+    }
+
+    "singular form must" - {
+      behave like booleanField(
+        formSingular,
+        fieldName,
+        invalidError = FormError(fieldName, invalidKey)
+      )
+
+      behave like mandatoryField(
+        formSingular,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKeySingular)
+      )
+    }
   }
 }
