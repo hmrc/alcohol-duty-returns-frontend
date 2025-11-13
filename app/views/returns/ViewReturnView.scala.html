@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, PrintPage, SubHeading}
+@import components.{PageHeading, Paragraph, PrintPage, ScrollableTable, SubHeading}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
+@import viewmodels.returns.SpiritsTables
 
 @this(
     layout: templates.Layout,
@@ -25,7 +26,7 @@
     pageHeading: PageHeading,
     subHeading: SubHeading,
     paragraph: Paragraph,
-    govukTable: GovukTable,
+    scrollableTable: ScrollableTable,
     govukSummaryList : GovukSummaryList,
     printPage: PrintPage
 )
@@ -39,7 +40,7 @@
    adjustments: TableViewModel,
    totalDue: SummaryList,
    netDutySuspension: TableViewModel,
-   spirits: Seq[TableViewModel]
+   spirits: SpiritsTables
 )(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
@@ -54,12 +55,14 @@
 
     <br>
 
-    @govukTable(Table(
-        caption = Some(messages("viewReturn.alcoholDuty.caption")),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(dutyToDeclare.head),
-        rows = dutyToDeclare.rows.map(_.cells)
-    ))
+    @scrollableTable(
+        ariaLabel = messages("viewReturn.alcoholDuty.caption"),
+        table = Table(
+            caption = Some(messages("viewReturn.alcoholDuty.caption")),
+            captionClasses = Css.tableCaptionMCssClass,
+            head = Some(dutyToDeclare.head),
+            rows = dutyToDeclare.rows.map(_.cells)
+        ))
 
     @{dutyToDeclare.total.map { totalSummaryList =>
         govukSummaryList(totalSummaryList)
@@ -67,12 +70,14 @@
 
     <br>
 
-    @govukTable(Table(
-        caption = Some(messages("viewReturn.adjustments.caption")),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(adjustments.head),
-        rows = adjustments.rows.map(_.cells)
-    ))
+    @scrollableTable(
+        ariaLabel = messages("viewReturn.adjustments.caption"),
+        table = Table(
+            caption = Some(messages("viewReturn.adjustments.caption")),
+            captionClasses = Css.tableCaptionMCssClass,
+            head = Some(adjustments.head),
+            rows = adjustments.rows.map(_.cells)
+        ))
 
     @{adjustments.total.map { totalSummaryList =>
          govukSummaryList(totalSummaryList)
@@ -85,22 +90,37 @@
 
     <br>
 
-    @govukTable(Table(
-        caption = Some(messages("viewReturn.netDutySuspension.caption")),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(netDutySuspension.head),
-        rows = netDutySuspension.rows.map(_.cells)
-    ))
+    @scrollableTable(
+        ariaLabel = messages("viewReturn.netDutySuspension.caption"),
+        table = Table(
+            caption = Some(messages("viewReturn.netDutySuspension.caption")),
+            captionClasses = Css.tableCaptionMCssClass,
+            head = Some(netDutySuspension.head),
+            rows = netDutySuspension.rows.map(_.cells)
+        ))
 
     <br>
 
-    @spirits.map { spiritsTable =>
-        @govukTable(Table(
-            caption = spiritsTable.caption,
-            captionClasses = Css.tableCaptionMCssClass,
-            head = Some(spiritsTable.head),
-            rows = spiritsTable.rows.map(_.cells)
-        ))
+    @spirits.mainTable.map { mainTable =>
+        @scrollableTable(
+            ariaLabel = messages("viewReturn.spirits.caption"),
+            table = Table(
+                caption = mainTable.caption,
+                captionClasses = Css.tableCaptionMCssClass,
+                head = Some(mainTable.head),
+                rows = mainTable.rows.map(_.cells)
+            ))
+    }
+
+    @spirits.spiritTypesTable.map { spiritTypesTable =>
+        @scrollableTable(
+            ariaLabel = messages("viewReturn.table.typesOfSpirits.legend"),
+            table = Table(
+                caption = spiritTypesTable.caption,
+                captionClasses = Css.visuallyHiddenCssClass,
+                head = Some(spiritTypesTable.head),
+                rows = spiritTypesTable.rows.map(_.cells)
+            ))
     }
 
     <br>

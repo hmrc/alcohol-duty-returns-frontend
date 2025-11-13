@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.TableViewModel
-@import components.{Caption, PageHeading, ReturnToTaskList, TableRowAction, TableRowActionList}
+@import components.{Caption, PageHeading, ReturnToTaskList, ScrollableTable, TableRowAction, TableRowActionList}
 @import config.Constants.Css
 
 @this(
@@ -24,9 +24,9 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    govukTable: GovukTable,
     pageHeading: PageHeading,
     caption: Caption,
+    scrollableTable: ScrollableTable,
     tableRowActionList: TableRowActionList,
     tableRowAction: TableRowAction,
     returnToTaskList: ReturnToTaskList
@@ -48,25 +48,25 @@
 
         @pageHeading(messages(s"multipleSPRList.heading.${regime.regimeMessageKey}"))
 
-        @govukTable(Table(
-          caption = Some(messages(s"multipleSPRList.heading.${regime.regimeMessageKey}")),
-          captionClasses = Css.visuallyHiddenCssClass,
-          head = Some(sprTable.head),
-          rows = sprTable.rows.map(row => {
-            val actionList = TableRow(content = HtmlContent(tableRowActionList(
-              id = "productList",
-              actions = row.actions.map(action => tableRowAction(
-                id = "",
-                text = action.label,
-                href = action.href,
-                visuallyHiddenContent = action.visuallyHiddenText
-              )
-              ))))
-
-            row.cells :+ actionList
-          }
-          ))
-        )
+        @scrollableTable(
+            ariaLabel = messages(s"multipleSPRList.heading.${regime.regimeMessageKey}"),
+            table = Table(
+                caption = Some(messages(s"multipleSPRList.heading.${regime.regimeMessageKey}")),
+                captionClasses = Css.visuallyHiddenCssClass,
+                head = Some(sprTable.head),
+                rows = sprTable.rows.map(row => {
+                    val actionList = TableRow(content = HtmlContent(tableRowActionList(
+                        id = "productList",
+                        actions = row.actions.map(action => tableRowAction(
+                            id = "",
+                            text = action.label,
+                            href = action.href,
+                            visuallyHiddenContent = action.visuallyHiddenText
+                        )
+                        ))))
+                    row.cells :+ actionList
+                })
+            ))
 
         @govukRadios(
             RadiosViewModel.yesNo(

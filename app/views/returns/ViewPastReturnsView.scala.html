@@ -14,16 +14,16 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, SubHeading}
+@import components.{Link, PageHeading, Paragraph, ScrollableTable, SubHeading}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
 @this(
     layout: templates.Layout,
     pageHeading: PageHeading,
-    govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
+    scrollableTable: ScrollableTable,
     subHeading: SubHeading,
     paragraph: Paragraph,
     link: Link
@@ -37,45 +37,47 @@
         @pageHeading(messages("viewPastReturns.heading"))
 
         @if(outstandingReturns.rows.nonEmpty) {
-            @govukTable(Table(
-                caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
-                captionClasses = Css.tableCaptionMCssClass,
-                head = Some(outstandingReturns.head),
-                rows = outstandingReturns.rows.map(row => {
-                    val actions = TableRow(content = HtmlContent(tableRowActionList(
-                    id = "outstandingReturnsId",
-                    actions = row.actions.map(action => tableRowAction(
-                        id = "",
-                        text = action.label,
-                        href = action.href,
-                        visuallyHiddenContent = action.visuallyHiddenText
-                        )
-                    ))))
-                    row.cells :+ actions
-                }
+            @scrollableTable(
+                ariaLabel = messages("viewPastReturns.outstandingReturns.caption"),
+                table = Table(
+                    caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
+                    captionClasses = Css.tableCaptionMCssClass,
+                    head = Some(outstandingReturns.head),
+                    rows = outstandingReturns.rows.map(row => {
+                        val actions = TableRow(content = HtmlContent(tableRowActionList(
+                            id = "outstandingReturnsId",
+                            actions = row.actions.map(action => tableRowAction(
+                                id = "",
+                                text = action.label,
+                                href = action.href,
+                                visuallyHiddenContent = action.visuallyHiddenText
+                            )
+                            ))))
+                        row.cells :+ actions
+                    })
                 ))
-            )
         }
 
         @if(completedReturns.rows.nonEmpty) {
-            @govukTable(Table(
-                caption = Some(messages("viewPastReturns.completedReturns.caption", messages("site.year", currentYear))),
-                captionClasses = Css.tableCaptionMCssClass,
-                head = Some(completedReturns.head),
-                rows = completedReturns.rows.map(row => {
-                    val actions = TableRow(content = HtmlContent(tableRowActionList(
-                    id = "completedReturnsId",
-                    actions = row.actions.map(action => tableRowAction(
-                        id = "",
-                        text = action.label,
-                        href = action.href,
-                        visuallyHiddenContent = action.visuallyHiddenText
-                        )
-                    ))))
-                    row.cells :+ actions
-                }
+            @scrollableTable(
+                ariaLabel = messages("viewPastReturns.completedReturns.caption", messages("site.year", currentYear)),
+                table = Table(
+                    caption = Some(messages("viewPastReturns.completedReturns.caption", messages("site.year", currentYear))),
+                    captionClasses = Css.tableCaptionMCssClass,
+                    head = Some(completedReturns.head),
+                    rows = completedReturns.rows.map(row => {
+                        val actions = TableRow(content = HtmlContent(tableRowActionList(
+                            id = "completedReturnsId",
+                            actions = row.actions.map(action => tableRowAction(
+                                id = "",
+                                text = action.label,
+                                href = action.href,
+                                visuallyHiddenContent = action.visuallyHiddenText
+                            )
+                            ))))
+                        row.cells :+ actions
+                    })
                 ))
-            )
         }
 
         @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty && pastYears.isEmpty) {

@@ -26,7 +26,7 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.TableViewModel
-import viewmodels.returns.ViewReturnViewModel
+import viewmodels.returns.{SpiritsTables, ViewReturnViewModel}
 import views.html.returns.ViewReturnView
 
 import java.time.Instant
@@ -56,7 +56,7 @@ class ViewReturnControllerSpec extends SpecBase {
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(eqTo(returnDetails))(any())).thenReturn(tableModel)
-        when(mockViewModel.createSpiritsViewModels(eqTo(returnDetails))(any())).thenReturn(Seq(tableModel))
+        when(mockViewModel.createSpiritsViewModels(eqTo(returnDetails))(any())).thenReturn(spiritsTables)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
@@ -78,7 +78,7 @@ class ViewReturnControllerSpec extends SpecBase {
           tableModel,
           totalDueSummaryList,
           tableModel,
-          Seq(tableModel)
+          spiritsTables
         )(
           request,
           messages
@@ -112,7 +112,7 @@ class ViewReturnControllerSpec extends SpecBase {
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
-        when(mockViewModel.createSpiritsViewModels(returnDetails)).thenReturn(Seq(tableModel))
+        when(mockViewModel.createSpiritsViewModels(returnDetails)).thenReturn(spiritsTables)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
@@ -134,7 +134,7 @@ class ViewReturnControllerSpec extends SpecBase {
           tableModel,
           totalDueSummaryList,
           tableModel,
-          Seq.empty
+          SpiritsTables(None, None)
         )(
           request,
           messages
@@ -165,7 +165,7 @@ class ViewReturnControllerSpec extends SpecBase {
         when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(eqTo(nilReturn))(any())).thenReturn(tableModel)
-        when(mockViewModel.createSpiritsViewModels(eqTo(nilReturn))(any())).thenReturn(Seq(tableModel))
+        when(mockViewModel.createSpiritsViewModels(eqTo(nilReturn))(any())).thenReturn(spiritsTables)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(nilReturn), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
@@ -187,7 +187,7 @@ class ViewReturnControllerSpec extends SpecBase {
           tableModel,
           totalDueSummaryList,
           tableModel,
-          Seq(tableModel)
+          spiritsTables
         )(
           request,
           messages
@@ -219,7 +219,7 @@ class ViewReturnControllerSpec extends SpecBase {
         when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(eqTo(nilReturn))(any())).thenReturn(tableModel)
-        when(mockViewModel.createSpiritsViewModels(eqTo(nilReturn))(any())).thenReturn(Seq(tableModel))
+        when(mockViewModel.createSpiritsViewModels(eqTo(nilReturn))(any())).thenReturn(spiritsTables)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(nilReturn), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
@@ -241,7 +241,7 @@ class ViewReturnControllerSpec extends SpecBase {
           tableModel,
           totalDueSummaryList,
           tableModel,
-          Seq(tableModel)
+          spiritsTables
         )(
           request,
           messages
@@ -343,6 +343,7 @@ class ViewReturnControllerSpec extends SpecBase {
     val rateBands             = exampleRateBands(periodKeyUnderTest)
 
     val tableModel              = TableViewModel.empty()
+    val spiritsTables           = SpiritsTables(Some(tableModel), Some(tableModel))
     val totalDueSummaryList     = SummaryList(Seq(SummaryListRow()))
     val mockReturnsConnector    = mock[AlcoholDutyReturnsConnector]
     val mockCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
