@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, SubHeading}
+@import components.{Link, PageHeading, Paragraph, ScrollableTable, SubHeading}
 @import config.Constants.Css
 @import viewmodels.{Money, TableViewModel}
 @import viewmodels.payments.ViewPastPaymentsViewModel
@@ -22,9 +22,9 @@
 @this(
         layout: templates.Layout,
         pageHeading: PageHeading,
-        govukTable: GovukTable,
         paragraph: Paragraph,
         subHeading: SubHeading,
+        scrollableTable: ScrollableTable,
         tableRowActionList: components.TableRowActionList,
         tableRowAction: components.TableRowAction,
         link: Link
@@ -56,36 +56,15 @@
         }
 
         @if(outstandingPaymentsTable.rows.nonEmpty) {
-            @govukTable(Table(
-                caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
-                captionClasses = Css.tableCaptionMCssClass,
-                head = Some(outstandingPaymentsTable.head),
-                rows = outstandingPaymentsTable.rows.map(row => {
-                    val actions = TableRow(content = HtmlContent(tableRowActionList(
-                        id = "outstandingPaymentsId",
-                        actions = row.actions.map(action => tableRowAction(
-                            id = "",
-                            text = action.label,
-                            href = action.href,
-                            visuallyHiddenContent = action.visuallyHiddenText
-                        )
-                        ))))
-                    row.cells :+ actions
-                }
-                )
-            )
-            )
-        }
-
-        @if(unallocatedPaymentsTable.rows.nonEmpty) {
-            @if(viewModel.claimARefundGformEnabled) {
-                @govukTable(Table(
-                    caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+            @scrollableTable(
+                ariaLabel = messages("viewPastPayments.outstandingPayments.caption"),
+                table = Table(
+                    caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
                     captionClasses = Css.tableCaptionMCssClass,
-                    head = Some(unallocatedPaymentsTable.head),
-                    rows = unallocatedPaymentsTable.rows.map(row => {
+                    head = Some(outstandingPaymentsTable.head),
+                    rows = outstandingPaymentsTable.rows.map(row => {
                         val actions = TableRow(content = HtmlContent(tableRowActionList(
-                            id = "unallocatedPaymentsId",
+                            id = "outstandingPaymentsId",
                             actions = row.actions.map(action => tableRowAction(
                                 id = "",
                                 text = action.label,
@@ -94,26 +73,53 @@
                             )
                             ))))
                         row.cells :+ actions
-                    }),
+                    })
                 ))
+        }
+
+        @if(unallocatedPaymentsTable.rows.nonEmpty) {
+            @if(viewModel.claimARefundGformEnabled) {
+                @scrollableTable(
+                    ariaLabel = messages("viewPastPayments.unallocatedPayments.caption"),
+                    table = Table(
+                        caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+                        captionClasses = Css.tableCaptionMCssClass,
+                        head = Some(unallocatedPaymentsTable.head),
+                        rows = unallocatedPaymentsTable.rows.map(row => {
+                            val actions = TableRow(content = HtmlContent(tableRowActionList(
+                                id = "unallocatedPaymentsId",
+                                actions = row.actions.map(action => tableRowAction(
+                                    id = "",
+                                    text = action.label,
+                                    href = action.href,
+                                    visuallyHiddenContent = action.visuallyHiddenText
+                                )
+                                ))))
+                            row.cells :+ actions
+                        }),
+                    ))
             } else {
-                @govukTable(Table(
-                    caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
-                    captionClasses = Css.tableCaptionMCssClass,
-                    head = Some(unallocatedPaymentsTable.head),
-                    rows = unallocatedPaymentsTable.rows.map(_.cells),
-                ))
+                @scrollableTable(
+                    ariaLabel = messages("viewPastPayments.unallocatedPayments.caption"),
+                    table = Table(
+                        caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+                        captionClasses = Css.tableCaptionMCssClass,
+                        head = Some(unallocatedPaymentsTable.head),
+                        rows = unallocatedPaymentsTable.rows.map(_.cells),
+                    ))
             }
             @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), Css.paddingBottomCssClass)
         }
 
         @if(historicPaymentsTable.rows.nonEmpty) {
-            @govukTable(Table(
-                caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", viewModel.year))),
-                captionClasses = Css.tableCaptionMCssClass,
-                head = Some(historicPaymentsTable.head),
-                rows = historicPaymentsTable.rows.map(_.cells),
-            ))
+            @scrollableTable(
+                ariaLabel = messages("viewPastPayments.historic.caption", messages("site.year", viewModel.year)),
+                table = Table(
+                    caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", viewModel.year))),
+                    captionClasses = Css.tableCaptionMCssClass,
+                    head = Some(historicPaymentsTable.head),
+                    rows = historicPaymentsTable.rows.map(_.cells),
+                ))
             @paragraph(messages("viewPastPayments.historic.paragraph"))
         }
 

@@ -14,15 +14,15 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, BackToPayments}
+@import components.{BackToPayments, PageHeading, Paragraph, ScrollableTable}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
 @this(
         layout: templates.Layout,
-        govukTable: GovukTable,
         pageHeading: PageHeading,
         paragraph: Paragraph,
+        scrollableTable: ScrollableTable,
         backToPayments: BackToPayments
 )
 
@@ -34,12 +34,14 @@
 
     @paragraph(messages("pastYearPayments.p"), classes = Css.paddingBottomCssClass)
 
-    @govukTable(Table(
-        caption = Some(messages("pastYearPayments.tableCaption", messages("site.year", year))),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(historicPaymentsTable.head),
-        rows = historicPaymentsTable.rows.map(_.cells),
-    ))
+    @scrollableTable(
+        ariaLabel = messages("pastYearPayments.tableCaption", messages("site.year", year)),
+        table = Table(
+            caption = Some(messages("pastYearPayments.tableCaption", messages("site.year", year))),
+            captionClasses = Css.tableCaptionMCssClass,
+            head = Some(historicPaymentsTable.head),
+            rows = historicPaymentsTable.rows.map(_.cells)
+        ))
 
     @backToPayments()
 

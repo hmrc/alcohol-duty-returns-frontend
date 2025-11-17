@@ -14,16 +14,16 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Link}
+@import components.{Link, PageHeading, ScrollableTable}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
 @this(
     layout: templates.Layout,
     pageHeading: PageHeading,
-    govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
+    scrollableTable: ScrollableTable,
     link: Link
 )
 
@@ -33,27 +33,29 @@
 
     @pageHeading(messages("completedReturns.heading"))
 
-    @govukTable(Table(
-        caption = Some(messages("completedReturns.tableCaption", messages("site.year", year))),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(completedReturns.head),
-        rows = completedReturns.rows.map { row =>
-            val actions = TableRow(
-                content = HtmlContent(tableRowActionList(
-                    id = "completedReturnsId",
-                    actions = row.actions.map { action =>
-                        tableRowAction(
-                            id = "",
-                            text = action.label,
-                            href = action.href,
-                            visuallyHiddenContent = action.visuallyHiddenText
-                        )
-                    }
-                ))
-            )
-            row.cells :+ actions
-        }
-    ))
+    @scrollableTable(
+        ariaLabel = messages("completedReturns.tableCaption", messages("site.year", year)),
+        table = Table(
+            caption = Some(messages("completedReturns.tableCaption", messages("site.year", year))),
+            captionClasses = Css.tableCaptionMCssClass,
+            head = Some(completedReturns.head),
+            rows = completedReturns.rows.map { row =>
+                val actions = TableRow(
+                    content = HtmlContent(tableRowActionList(
+                        id = "completedReturnsId",
+                        actions = row.actions.map { action =>
+                            tableRowAction(
+                                id = "",
+                                text = action.label,
+                                href = action.href,
+                                visuallyHiddenContent = action.visuallyHiddenText
+                            )
+                        }
+                    ))
+                )
+                row.cells :+ actions
+            })
+        )
 
     @link(
         id = "back-to-returns-link",

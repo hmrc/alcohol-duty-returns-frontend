@@ -277,10 +277,8 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        spiritsViewModels.size mustBe 2
-
-        val spiritVolumesTable = spiritsViewModels.head
-        val spiritTypesTable   = spiritsViewModels.last
+        val spiritVolumesTable = spiritsViewModels.mainTable.get
+        val spiritTypesTable   = spiritsViewModels.spiritTypesTable.get
 
         val expectedVolumeRows =
           List(List("Total volume of spirits", "0.05"), List("Scotch Whisky", "0.26"), List("Irish Whiskey", "0.16"))
@@ -309,9 +307,8 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        spiritsViewModels.size mustBe 2
-
-        val spiritTypesTable = spiritsViewModels.last
+        spiritsViewModels.mainTable mustBe defined
+        val spiritTypesTable = spiritsViewModels.spiritTypesTable.get
 
         val expectedTypeRows = List(
           List(
@@ -327,9 +324,8 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with the right label when nothing declared" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(nilReturn)
 
-        spiritsViewModels.size mustBe 1
-
-        val spiritVolumesTable = spiritsViewModels.head
+        val spiritVolumesTable = spiritsViewModels.mainTable.get
+        spiritsViewModels.spiritTypesTable mustNot be(defined)
 
         val expectedVolumeRows = List(
           List("Nothing declared")

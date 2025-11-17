@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.DateTimeHelper
-import viewmodels.returns.ViewReturnViewModel
+import viewmodels.returns.{SpiritsTables, ViewReturnViewModel}
 import views.html.returns.ViewReturnView
 
 import java.time.YearMonth
@@ -67,7 +67,7 @@ class ViewReturnController @Inject() (
           val spirits          = if (returnPeriod.hasQuarterlySpirits) {
             viewModel.createSpiritsViewModels(returnDetails)
           } else {
-            Seq.empty
+            SpiritsTables(mainTable = None, spiritTypesTable = None)
           }
           val returnPeriodStr  = dateTimeHelper.formatMonthYear(returnPeriod.period)
           val submittedDate    = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
