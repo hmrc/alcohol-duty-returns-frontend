@@ -45,6 +45,10 @@ class SignOutController @Inject() (
     handleSignOut(request, Seq(config.exitSurveyUrl))
   }
 
+  def signOutNoSurvey(): Action[AnyContent] = signOutAction.async { implicit request =>
+    handleSignOut(request, Seq(config.serviceTimeoutUrl))
+  }
+
   def signOutDuringEnrolment(): Action[AnyContent] = signOutAction.async { implicit request =>
     handleSignOut(
       request,

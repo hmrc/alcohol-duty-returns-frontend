@@ -14,6 +14,8 @@ GET         /return-locked                               controllers.ReturnLocke
 
 GET         /account/sign-out-survey                     controllers.auth.SignOutController.signOut()
 GET         /account/sign-out-log-in                     controllers.auth.SignOutController.signOutDuringEnrolment()
+GET         /account/sign-out-no-survey                  controllers.auth.SignOutController.signOutNoSurvey()
+GET         /signed-out                                  controllers.auth.ServiceTimeoutController.onPageLoad()
 
 GET         /no-access                                   controllers.auth.UnauthorisedController.onPageLoad
 GET         /enrol-no-access                             controllers.auth.NotOrganisationController.onPageLoad
