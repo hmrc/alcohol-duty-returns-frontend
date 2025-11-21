@@ -65,8 +65,8 @@ class SignOutControllerSpec extends SpecBase {
       }
     }
 
-    "when user is authenticated and there is a period key in session, " - {
-      "must release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
+    "when user is authenticated and there is a period key in session" - {
+      "must release the lock and redirect to sign out, specifying the exit survey as the continue URL" in {
 
         val mockUserAnswersConnector = mock[UserAnswersConnector]
         when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any()))
@@ -128,9 +128,67 @@ class SignOutControllerSpec extends SpecBase {
     }
   }
 
+  "signOutNoSurvey" - {
+    "when user is authenticated and there is a period key in session" - {
+      "must release the lock and redirect to sign out, specifying the ServiceTimeout controller as the continue url" in {
+        val mockUserAnswersConnector = mock[UserAnswersConnector]
+        when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any()))
+          .thenReturn(Future.successful(HttpResponse(OK)))
+
+        val application = applicationBuilder(None)
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[FakeAppaId].toInstance(FakeAppaId(Some(appaId))),
+            bind[SignOutAction].to[FakeSignOutAction]
+          )
+          .build()
+
+        running(application) {
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val request   = FakeRequest(GET, routes.SignOutController.signOutNoSurvey().url)
+
+          val result = route(application, request).value
+
+          val encodedContinueUrl  = URLEncoder.encode(appConfig.serviceTimeoutUrl, "UTF-8")
+          val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
+        }
+      }
+    }
+
+    "when user is not authenticated, must sign out without releasing the lock, specifying the ServiceTimeout controller as the continue URL" in {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[FakeAppaId].toInstance(FakeAppaId(None)),
+          bind[SignOutAction].to[FakeSignOutAction]
+        )
+        .build()
+
+      running(application) {
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val request   = FakeRequest(GET, routes.SignOutController.signOutNoSurvey().url)
+
+        val result = route(application, request).value
+
+        val encodedContinueUrl  = URLEncoder.encode(appConfig.serviceTimeoutUrl, "UTF-8")
+        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual expectedRedirectUrl
+        verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
+      }
+    }
+  }
+
   "signOutDuringEnrolment happy path" - {
-    "when user is authenticated and there is a period key in session, " - {
-      "must release the lock, and redirect the request access controller url" in {
+    "when user is authenticated and there is a period key in session" - {
+      "must release the lock and redirect to the request access controller url" in {
 
         val mockUserAnswersConnector = mock[UserAnswersConnector]
         when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any()))
@@ -165,6 +223,36 @@ class SignOutControllerSpec extends SpecBase {
           redirectLocation(result).value mustEqual expectedRedirectUrl
           verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
         }
+      }
+    }
+
+    "when user is not authenticated, must redirect to the request access controller url without releasing the lock" in {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[FakeAppaId].toInstance(FakeAppaId(None)),
+          bind[SignOutAction].to[FakeSignOutAction]
+        )
+        .build()
+
+      running(application) {
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val request   = FakeRequest(GET, routes.SignOutController.signOutDuringEnrolment().url)
+
+        val result = route(application, request).value
+
+        val encodedContinueUrl  = URLEncoder.encode(
+          appConfig.loginUrl + "?continue=" + appConfig.loginContinueUrlRequestAccess +
+            "&origin=alcohol-duty-returns-frontend&affinityGroup=Organisation",
+          "UTF-8"
+        )
+        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual expectedRedirectUrl
+        verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
       }
     }
   }

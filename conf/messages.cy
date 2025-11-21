@@ -38,6 +38,10 @@ timeout.message = Am resymau diogelwch, cewch eich allgofnodi o’r gwasanaeth h
 timeout.keepAlive = Peidio ag allgofnodi
 timeout.signOut = Allgofnodi
 
+signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.guidance = Gwnaethom gadw’ch atebion.
+
 error.prefix = Gwall
 error.title.prefix = Gwall:
 error.summary.title = Mae problem.
