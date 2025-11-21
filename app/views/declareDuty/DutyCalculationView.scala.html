@@ -50,7 +50,7 @@
             ariaLabel = messages("productList.caption"),
             table = Table(
                 caption = Some(messages("productList.caption")),
-                captionClasses = Css.tableCaptionLCssClass,
+                captionClasses = Css.tableCaptionMCssClass,
                 head = Some(dutyDueViewModel.head),
                 rows = dutyDueViewModel.rows.map(row => {
                     val actions = TableRow(format = Some(Format.numeric), content = HtmlContent(tableRowActionList(

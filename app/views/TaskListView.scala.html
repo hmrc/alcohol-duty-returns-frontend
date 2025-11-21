@@ -26,14 +26,13 @@
         govukTaskList: GovukTaskList,
         govukButton: GovukButton,
         link: Link
-
 )
 
 @(taskList: AlcoholDutyTaskList, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("taskList.title"))) {
 
-@heading(messages("taskList.title"))
+@heading(messages("taskList.title"), classes = Css.headingXLCssClass)
 
 @paragraph(messages("taskList.period", taskList.periodStartDate, taskList.periodEndDate))
 

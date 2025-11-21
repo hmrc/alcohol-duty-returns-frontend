@@ -15,6 +15,7 @@
  *@
 
 @import components.{Caption, ReturnToTaskList}
+@import viewmodels.LegendSize.Large
 
 @this(
     layout: templates.Layout,
@@ -42,7 +43,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("deleteMultipleSPREntry-yesNoValue"),
-                legend = LegendViewModel(messages("deleteMultipleSPREntry.heading", messages(regime.regimeMessageKey))).asPageHeading()
+                legend = LegendViewModel(messages("deleteMultipleSPREntry.heading", messages(regime.regimeMessageKey))).asPageHeading(Large)
             )
             .withHint(Hint(content = HtmlContent(messages("deleteMultipleSPREntry.hint"))))
         )

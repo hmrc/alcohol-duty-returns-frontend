@@ -15,6 +15,7 @@
  *@
 
 @import components.{Caption, ReturnToTaskList}
+@import viewmodels.LegendSize.Large
 
 @this(
     layout: templates.Layout,
@@ -45,7 +46,7 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(Large),
                 items  = SpiritType.checkboxItems
             )
             .withHint(Hint(content =  messages("spiritType.hint")))

@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import viewmodels.LegendSize.Large
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -35,7 +37,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("doYouHaveAnAppaId-yesNoValue"),
-                legend = LegendViewModel(messages("doYouHaveAnAppaId.heading")).asPageHeading()
+                legend = LegendViewModel(messages("doYouHaveAnAppaId.heading")).asPageHeading(Large)
             ).withHint(Hint(content = HtmlContent(messages("doYouHaveAnAppaId.hint"))))
         )
 

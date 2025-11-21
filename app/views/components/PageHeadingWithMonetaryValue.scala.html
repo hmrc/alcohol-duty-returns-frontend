@@ -19,6 +19,6 @@
 
 @this()
 
-@(text: String, amount: BigDecimal)(implicit messages: Messages)
+@(text: String, amount: BigDecimal, classes: String = Css.headingLCssClass)(implicit messages: Messages)
 
-<h1 class="@Css.headingXLCssClass">@text <span class="@Css.noWrap">@Money.format(amount)</span></h1>
+<h1 class="@classes">@text <span class="@Css.noWrap">@Money.format(amount)</span></h1>

@@ -16,7 +16,7 @@
 
 @import models.adjustment.AdjustmentType
 @import components.{Caption, ReturnToTaskList}
-
+@import viewmodels.LegendSize.Large
 
 @this(
     layout: templates.Layout,
@@ -46,7 +46,7 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("adjustment-type-value"),
-                legend = LegendViewModel(messages("adjustmentType.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("adjustmentType.heading")).asPageHeading(Large),
                 items  = AdjustmentType.adjustmentTypeOptions
             )
         )

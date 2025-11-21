@@ -15,6 +15,7 @@
  *@
 
 @import config.Constants
+@import viewmodels.LabelSize.Large
 @import viewmodels.InputWidth._
 @import components.{Caption, ReturnToTaskList, SubHeading}
 
@@ -47,7 +48,7 @@
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("otherSpiritsProduced"),
-                label = LabelViewModel(messages("otherSpiritsProduced.heading")).asPageHeading()
+                label = LabelViewModel(messages("otherSpiritsProduced.heading")).asPageHeading(Large)
             )
             .withWidth(TwoThirds)
             .withMaxLength(Constants.otherSpiritsProducedMaxLength)
