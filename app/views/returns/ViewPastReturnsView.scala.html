@@ -14,21 +14,21 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, ScrollableTable, SubHeading}
+@import components.{Link, PageHeading, Paragraph, ScrollableTable, SpanWithLineBreak, SubHeading, TableRowAction, TableRowActionList}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
 @this(
     layout: templates.Layout,
     pageHeading: PageHeading,
-    tableRowActionList: components.TableRowActionList,
-    tableRowAction: components.TableRowAction,
+    tableRowActionList: TableRowActionList,
+    tableRowAction: TableRowAction,
     scrollableTable: ScrollableTable,
+    spanWithLineBreak: SpanWithLineBreak,
     subHeading: SubHeading,
     paragraph: Paragraph,
     link: Link
 )
-
 
 @(outstandingReturns: TableViewModel, completedReturns: TableViewModel, currentYear: Int, pastYears: Seq[Int])(implicit request: Request[_], messages: Messages)
 
@@ -87,13 +87,15 @@
         @if(pastYears.nonEmpty) {
             @subHeading(messages("viewPastReturns.pastYears.h2"), Css.headingMCssClass)
             @paragraph(HtmlContent(
-                pastYears.map{ year =>
-                    link(
-                        id = s"past-returns-link-$year",
-                        text = messages("viewPastReturns.pastYears.link", messages("site.year", year)),
-                        href = controllers.returns.routes.CompletedReturnsController.onPageLoad(year).url
-                    )
-                }.mkString("<br>")
+                spanWithLineBreak(
+                    pastYears.map{ year =>
+                        HtmlContent(link(
+                            id = s"past-returns-link-$year",
+                            text = messages("viewPastReturns.pastYears.link", messages("site.year", year)),
+                            href = controllers.returns.routes.CompletedReturnsController.onPageLoad(year).url
+                        ))
+                    }
+                )
             ))
         }
 }

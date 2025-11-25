@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, ScrollableTable, SubHeading}
+@import components.{Link, PageHeading, Paragraph, ScrollableTable, SpanWithLineBreak, SubHeading}
 @import config.Constants.Css
 @import viewmodels.{Money, TableViewModel}
 @import viewmodels.payments.ViewPastPaymentsViewModel
@@ -23,6 +23,7 @@
         layout: templates.Layout,
         pageHeading: PageHeading,
         paragraph: Paragraph,
+        spanWithLineBreak: SpanWithLineBreak,
         subHeading: SubHeading,
         scrollableTable: ScrollableTable,
         tableRowActionList: components.TableRowActionList,
@@ -37,14 +38,13 @@
         @pageHeading(messages("viewPastPayments.heading"))
 
         @if(viewModel.isDutyBalancePositive) {
-            <p class=@{
-                Css.headingMCssClass
-            }>@messages("viewPastPayments.youOwe")
-                <br>
-                <span class=@{
-                    Css.headingLCssClass
-                }>@messages("viewPastPayments.duty.value", Money.format(viewModel.dutyBalance))</span>
-            </p>
+            @paragraph(
+                content = HtmlContent(
+                    messages("viewPastPayments.youOwe") +
+                        s"<span class='break ${Css.headingLCssClass}'>${messages("viewPastPayments.duty.value", Money.format(viewModel.dutyBalance))}</span>"
+                ),
+                classes = Css.headingMCssClass
+            )
             @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
         }
         @if(viewModel.isDutyBalanceNegative) {
@@ -131,13 +131,15 @@
         @if(viewModel.historicYears.nonEmpty) {
             @subHeading(messages("viewPastPayments.pastYears.h2"), Css.headingMCssClass)
             @paragraph(HtmlContent(
-                viewModel.historicYears.map{ year =>
-                    link(
-                        id = s"past-payments-link-$year",
-                        text = messages("viewPastPayments.pastYears.link", messages("site.year", year)),
-                        href = controllers.payments.routes.PastYearPaymentsController.onPageLoad(year).url
-                    )
-                }.mkString("<br>")
+              spanWithLineBreak(
+                  viewModel.historicYears.map{ year =>
+                      HtmlContent(link(
+                          id = s"past-payments-link-$year",
+                          text = messages("viewPastPayments.pastYears.link", messages("site.year", year)),
+                          href = controllers.payments.routes.PastYearPaymentsController.onPageLoad(year).url
+                      ))
+                  }
+              )
             ))
         }
 

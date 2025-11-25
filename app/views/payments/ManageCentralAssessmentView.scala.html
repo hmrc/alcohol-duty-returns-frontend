@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, BulletList}
+@import components.{BulletList, PageHeading, Paragraph, SpanWithLineBreak}
 @import viewmodels.payments.CentralAssessmentViewModel
 
 @this(
@@ -25,6 +25,7 @@
         govukButton: GovukButton,
         pageHeading: PageHeading,
         paragraph: Paragraph,
+        spanWithLineBreak: SpanWithLineBreak,
         bulletList: BulletList
 )
 
@@ -41,8 +42,10 @@
         @pageHeading(messages("manageCentralAssessment.heading"))
 
         @paragraph(HtmlContent(
-            messages("manageCentralAssessment.guidance1", viewModel.dateFrom, viewModel.dateTo, viewModel.returnDueDate) + "<br>" +
-            messages("manageCentralAssessment.guidance2", messages("site.currency.2DP", viewModel.amount))
+            spanWithLineBreak(Seq(
+                messages("manageCentralAssessment.guidance1", viewModel.dateFrom, viewModel.dateTo, viewModel.returnDueDate),
+                messages("manageCentralAssessment.guidance2", messages("site.currency.2DP", viewModel.amount))
+            ))
         ))
 
         @paragraph(messages("manageCentralAssessment.guidance3"))
