@@ -22,7 +22,6 @@
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
     pageHeading: PageHeading,
     subHeading: SubHeading,
     paragraph: Paragraph,
@@ -51,9 +50,7 @@
       @paragraph(messages("viewReturn.chargeReference", chargeReference))
     }
 
-    @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
-
-    <br>
+    @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime), Css.paddingBottomCssClass)
 
     @scrollableTable(
         ariaLabel = messages("viewReturn.alcoholDuty.caption"),
@@ -61,14 +58,13 @@
             caption = Some(messages("viewReturn.alcoholDuty.caption")),
             captionClasses = Css.tableCaptionMCssClass,
             head = Some(dutyToDeclare.head),
-            rows = dutyToDeclare.rows.map(_.cells)
+            rows = dutyToDeclare.rows.map(_.cells),
+            classes = if(dutyToDeclare.total.isDefined) "" else Css.marginBottom8CssClass
         ))
 
     @{dutyToDeclare.total.map { totalSummaryList =>
         govukSummaryList(totalSummaryList)
     }}
-
-    <br>
 
     @scrollableTable(
         ariaLabel = messages("viewReturn.adjustments.caption"),
@@ -76,19 +72,16 @@
             caption = Some(messages("viewReturn.adjustments.caption")),
             captionClasses = Css.tableCaptionMCssClass,
             head = Some(adjustments.head),
-            rows = adjustments.rows.map(_.cells)
+            rows = adjustments.rows.map(_.cells),
+            classes = if(adjustments.total.isDefined) "" else Css.marginBottom8CssClass
         ))
 
     @{adjustments.total.map { totalSummaryList =>
          govukSummaryList(totalSummaryList)
     }}
 
-    <br>
-
     @subHeading(messages("viewReturn.dutyDue.caption"), classes = Css.headingMCssClass)
     @govukSummaryList(totalDue)
-
-    <br>
 
     @scrollableTable(
         ariaLabel = messages("viewReturn.netDutySuspension.caption"),
@@ -96,10 +89,9 @@
             caption = Some(messages("viewReturn.netDutySuspension.caption")),
             captionClasses = Css.tableCaptionMCssClass,
             head = Some(netDutySuspension.head),
-            rows = netDutySuspension.rows.map(_.cells)
+            rows = netDutySuspension.rows.map(_.cells),
+            classes = Css.marginBottom8CssClass
         ))
-
-    <br>
 
     @spirits.mainTable.map { mainTable =>
         @scrollableTable(
@@ -108,7 +100,8 @@
                 caption = mainTable.caption,
                 captionClasses = Css.tableCaptionMCssClass,
                 head = Some(mainTable.head),
-                rows = mainTable.rows.map(_.cells)
+                rows = mainTable.rows.map(_.cells),
+                classes = if (spirits.spiritTypesTable.isDefined) "" else Css.marginBottom8CssClass
             ))
     }
 
@@ -119,11 +112,10 @@
                 caption = spiritTypesTable.caption,
                 captionClasses = Css.visuallyHiddenCssClass,
                 head = Some(spiritTypesTable.head),
-                rows = spiritTypesTable.rows.map(_.cells)
+                rows = spiritTypesTable.rows.map(_.cells),
+                classes = Css.marginBottom8CssClass
             ))
     }
-
-    <br>
 
     @printPage("print-past-payments-link", messages("viewReturn.printYourReturn"))
 }

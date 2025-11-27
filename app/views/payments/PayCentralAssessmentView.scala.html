@@ -15,6 +15,7 @@
  *@
 
 @import components.{BulletList, Link, Paragraph, PageHeading}
+@import config.Constants.Css
 @import viewmodels.payments.CentralAssessmentViewModel
 
 @this(
@@ -40,14 +41,17 @@
         messages("payCentralAssessment.bullet2")
     ))
 
-    @paragraph(messages("payCentralAssessment.guidance3"))
-    <br>
+    @paragraph(messages("payCentralAssessment.guidance3"), Css.paddingBottomCssClass)
 
-    @govukButton(
-        ButtonViewModel("payNowButton", messages("site.payNow"))
-        .asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(paymentIndex).url)
+    @paragraph(
+        content = HtmlContent(
+            govukButton(
+                ButtonViewModel("payNowButton", messages("site.payNow"))
+                .asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(paymentIndex).url)
+            )),
+        classes = Css.marginBottom0CssClass
     )
-    <br>
+
     @link(
         id = "submit-return-link",
         text = messages("payCentralAssessment.submitReturn"),

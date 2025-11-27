@@ -119,7 +119,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       .map(toDescription(_, None).capitalize)
       .getOrElse(taxType)
 
-  private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel]                             =
+  private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
     Seq(
       TableRowViewModel(cells =
         Seq(
@@ -131,12 +131,13 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         )
       )
     )
+
   private def dutyToDeclareTotal(alcoholDeclared: ReturnAlcoholDeclared)(implicit messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
         TotalsSummaryList.row(messages("viewReturn.alcoholDuty.total.legend"), Money.format(alcoholDeclared.total))
       )
-    )
+    ).withCssClass(Css.marginBottom8CssClass)
 
   def createAdjustmentsViewModel(
     returnDetails: ReturnDetails,
@@ -240,7 +241,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       rows = Seq(
         TotalsSummaryList.row(messages("viewReturn.adjustments.total.legend"), Money.format(adjustments.total))
       )
-    )
+    ).withCssClass(Css.marginBottom8CssClass)
 
   def createTotalDueSummaryList(returnDetails: ReturnDetails)(implicit messages: Messages): SummaryList = {
     val content =
@@ -258,7 +259,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       rows = Seq(
         TotalsSummaryList.row(messages("viewReturn.dutyDue.total.legend"), content)
       )
-    )
+    ).withCssClass(Css.marginBottom8CssClass)
   }
 
   def createNetDutySuspensionViewModel(

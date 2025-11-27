@@ -15,6 +15,7 @@
  *@
 
 @import components.{PageHeading, Paragraph, Link}
+@import config.Constants.Css
 
 @this(
         layout: templates.Layout,
@@ -43,9 +44,9 @@
                         text = messages("unauthorised.not-org.p2.second"),
                         href = messages("unauthorised.not-org.link.url"),
                         newTab = true) + " " +
-                    messages("unauthorised.not-org.p2.third")))
-
-        <br>
+                    messages("unauthorised.not-org.p2.third")),
+            classes = Css.paddingBottomCssClass
+        )
 
         @govukButton(Button(
             href = Some(continueUrl),

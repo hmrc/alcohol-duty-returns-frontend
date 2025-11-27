@@ -47,6 +47,7 @@
         )
 
         @govukFieldset(Fieldset(
+          classes = Css.paddingBottomCssClass,
           legend = Some(Legend(
             content = Text(messages("whisky.heading")),
             classes = Css.fieldsetLegendXLCssClass,
@@ -76,8 +77,6 @@
             )
           ))
         ))
-
-        <br>
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
