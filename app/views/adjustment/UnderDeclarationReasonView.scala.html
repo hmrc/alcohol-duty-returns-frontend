@@ -16,6 +16,7 @@
 
 @import config.Constants
 @import viewmodels.InputWidth._
+@import viewmodels.LabelSize.Large
 @import components.{Caption, ReturnToTaskList}
 
 @this(
@@ -47,7 +48,7 @@
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("under-declaration-reason-input"),
-                label = LabelViewModel(messages("underDeclarationReason.heading")).asPageHeading()
+                label = LabelViewModel(messages("underDeclarationReason.heading")).asPageHeading(Large)
             )
             .withWidth(TwoThirds)
             .withMaxLength(Constants.overUnderDeclarationReasonLength)

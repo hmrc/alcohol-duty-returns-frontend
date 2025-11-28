@@ -52,7 +52,7 @@
             @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
         }
         @if(viewModel.isDutyBalanceZero) {
-            @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Css.headingLCssClass)
+            @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Css.headingMCssClass)
         }
 
         @if(outstandingPaymentsTable.rows.nonEmpty) {

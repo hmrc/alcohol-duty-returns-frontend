@@ -14,20 +14,18 @@
  * limitations under the License.
  *@
 
-@import config.Constants.Css
-@import components.{Caption, FormGroupWithError, Link, Paragraph, ReturnToTaskList}
+@import components.{Caption, FormGroupWithError, ReturnToTaskList}
+@import viewmodels.LegendSize.Large
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    link: Link,
-    caption: Caption,
-    formGroupWithError: FormGroupWithError,
-    paragraph: Paragraph,
-    returnToTaskList: ReturnToTaskList
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        caption: Caption,
+        formGroupWithError: FormGroupWithError,
+        returnToTaskList: ReturnToTaskList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -36,28 +34,27 @@
 
     @formHelper(action = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-    @caption(
-        id = "declare-dsd-question-section",
-        text = messages("section.dutySuspended"),
-    )
+        @caption(
+            id = "declare-dsd-question-section",
+            text = messages("section.dutySuspended"),
+        )
 
-    @formGroupWithError(form.errors.nonEmpty){
-
+        @formGroupWithError(form.errors.nonEmpty) {
             @govukRadios(
                 RadiosViewModel.yesNo(
                     field = form("declare-duty-suspended-deliveries-input"),
-                    legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asPageHeading()
+                    legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asPageHeading(Large)
                 ).withHint(HintViewModel(messages("declareDutySuspendedDeliveriesQuestion.hint")))
             )
-    }
+        }
 
-    @govukButton(
+        @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
-    @returnToTaskList()
+        @returnToTaskList()
     }
 }

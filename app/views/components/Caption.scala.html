@@ -18,9 +18,9 @@
 
 @this()
 
-@(id: String, text: String)(implicit request: Request[_], messages: Messages)
+@(id: String, text: String, classes: String = Css.captionLCssClass)(implicit request: Request[_], messages: Messages)
 
-<span id = @id class="@Css.captionXLCssClass">
+<span id="@id" class="@classes">
   <span class="@Css.visuallyHiddenCssClass">@messages("section.visuallyHidden")</span>
   @text
 </span>
