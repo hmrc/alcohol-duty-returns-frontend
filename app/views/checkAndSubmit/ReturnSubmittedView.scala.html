@@ -58,7 +58,7 @@
     ), classes = Css.marginBottom0CssClass)
 }
 
-@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false, showUserResearchBanner = true) {
+@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false) {
 
     @if(viewModel.returnDetails.isAmountGreaterThanZero) {
         @govukPanel(Panel(
