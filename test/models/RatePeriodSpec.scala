@@ -72,13 +72,13 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     "when creating an instance" - {
       "must successfully save the BigDecimal value when the value is in range" in
         forAll(genAlcoholByVolumeValue) {
-          validValue: BigDecimal =>
+          (validValue: BigDecimal) =>
             AlcoholByVolume(validValue).value mustEqual validValue
         }
 
       "must throw an exception when the value is not in range" in
         forAll(genAlcoholByVolumeValueOutOfRange) {
-          invalidValue: BigDecimal =>
+          (invalidValue: BigDecimal) =>
             val exception = intercept[IllegalArgumentException] {
               AlcoholByVolume(invalidValue)
             }
@@ -87,7 +87,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
 
       "must throw an exception when the value has more decimal points than 1" in
         forAll(genAlcoholByVolumeValueTooBigScale) {
-          invalidValue: BigDecimal =>
+          (invalidValue: BigDecimal) =>
             val exception = intercept[IllegalArgumentException] {
               AlcoholByVolume(invalidValue)
             }

@@ -20,6 +20,7 @@ import base.SpecBase
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Wine}
 import models.{AlcoholRegimes, ReturnPeriod}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem

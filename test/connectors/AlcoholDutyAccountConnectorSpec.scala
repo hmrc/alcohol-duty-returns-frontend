@@ -18,8 +18,8 @@ package connectors
 
 import base.SpecBase
 import config.FrontendAppConfig
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{atLeastOnce, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{BAD_GATEWAY, CREATED, OK}
 import play.api.libs.json.Json

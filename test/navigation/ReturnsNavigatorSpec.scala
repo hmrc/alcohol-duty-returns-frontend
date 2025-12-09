@@ -21,8 +21,8 @@ import controllers.routes
 import models.AlcoholRegime._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import org.scalacheck.Gen
 import pages.Page
 import viewmodels.declareDuty.MissingSPRRateBandHelper

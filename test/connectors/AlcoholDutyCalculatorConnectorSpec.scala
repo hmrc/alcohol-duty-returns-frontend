@@ -22,8 +22,8 @@ import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models._
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{atLeastOnce, times, verify, when}
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}

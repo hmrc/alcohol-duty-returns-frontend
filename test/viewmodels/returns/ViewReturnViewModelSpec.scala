@@ -20,6 +20,7 @@ import base.SpecBase
 import config.FrontendAppConfig
 import models.checkAndSubmit.AdrTypeOfSpirit
 import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnDetails, ReturnTotalDutyDue}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text

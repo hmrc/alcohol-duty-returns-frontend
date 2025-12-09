@@ -20,8 +20,8 @@ import base.SpecBase
 import config.FrontendAppConfig
 import connectors.UserAnswersConnector
 import controllers.actions.{FakeAppaId, FakeSignOutAction, SignOutAction}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import play.api.http.Status.OK
 import play.api.inject._
 import play.api.test.Helpers._

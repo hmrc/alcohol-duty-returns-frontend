@@ -20,6 +20,7 @@ import base.SpecBase
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.Underdeclaration
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}

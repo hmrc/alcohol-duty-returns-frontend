@@ -38,7 +38,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
   "volumesWithRate" - {
     "must bind valid data" in
       volumeAndRateByTaxTypes.foreach {
-        volumeAndRateByTaxType: VolumeAndRateByTaxType =>
+        (volumeAndRateByTaxType: VolumeAndRateByTaxType) =>
           val result = form.bind(
             Map(
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType,
@@ -52,7 +52,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
 
     "must unbind a valid data" in
       volumeAndRateByTaxTypes.foreach {
-        volumeAndRateByTaxType: VolumeAndRateByTaxType =>
+        (volumeAndRateByTaxType: VolumeAndRateByTaxType) =>
           val result = form.fill(volumeAndRateByTaxType).data
           result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
           result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString

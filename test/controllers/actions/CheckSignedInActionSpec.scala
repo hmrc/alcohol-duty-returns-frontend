@@ -18,8 +18,8 @@ package controllers.actions
 
 import base.SpecBase
 import models.requests.SignedInRequest
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.{BodyParsers, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway

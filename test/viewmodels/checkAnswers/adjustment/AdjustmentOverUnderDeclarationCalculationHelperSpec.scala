@@ -18,10 +18,11 @@ package viewmodels.checkAnswers.adjustment
 
 import base.SpecBase
 import connectors.AlcoholDutyCalculatorConnector
-import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
+import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{AdjustmentEntryListPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
+import org.mockito.Mockito.when
+import pages.adjustment.*
 import play.api.Application
 import play.api.i18n.Messages
 

@@ -20,8 +20,8 @@ import base.SpecBase
 import config.FrontendAppConfig
 import controllers.auth.routes
 import models.requests.IdentifierWithoutEnrolmentRequest
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.{Request, Result}
 import play.api.test.Helpers._
 import play.api.test.Helpers.contentAsString
