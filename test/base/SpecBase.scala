@@ -62,7 +62,7 @@ trait SpecBase
   protected def applicationBuilder(
     userAnswers: Option[UserAnswers] = None,
     signedIn: Boolean = true
-  ): GuiceApplicationBuilder                                 =
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(configOverrides)
       .overrides(

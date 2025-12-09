@@ -285,7 +285,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val boundForm =
           form.bind(Map("volumes.totalLitresVolume" -> "invalid value", "volumes.pureAlcoholVolume" -> "invalid value"))
 
-        val view      = application.injector.instanceOf[AdjustmentVolumeView]
+        val view = application.injector.instanceOf[AdjustmentVolumeView]
 
         val result = route(application, request).value
 

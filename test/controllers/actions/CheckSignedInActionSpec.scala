@@ -71,7 +71,7 @@ class CheckSignedInActionSpec extends SpecBase {
       }
     }
 
-    "execute the block and return not signed in if no longer authorised or never logged in" in {
+    "execute the block and return not signed in if no longer authorised or never logged in" in
       List(
         BearerTokenExpired(),
         MissingBearerToken(),
@@ -98,6 +98,5 @@ class CheckSignedInActionSpec extends SpecBase {
           signedInStore(signedInKey) mustBe false
         }
       }
-    }
   }
 }

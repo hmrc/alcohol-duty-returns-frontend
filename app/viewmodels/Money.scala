@@ -21,9 +21,8 @@ import play.api.i18n.Messages
 object Money {
   private val minus: Char = 0x2212
 
-  /**
-    * Note: This is intended to work with values that are already to 2dp. The rounding rules for
-    * tax may be up or down depending on the context and this code will round to nearest.
+  /** Note: This is intended to work with values that are already to 2dp. The rounding rules for tax may be up or down
+    * depending on the context and this code will round to nearest.
     */
   def format(amount: BigDecimal)(implicit messages: Messages): String =
     if (amount < 0) {

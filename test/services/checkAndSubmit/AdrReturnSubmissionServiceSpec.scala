@@ -150,7 +150,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
     }
 
     "Errors for missing data" - {
-      "Return section" - {
+      "Return section" -
         Seq(
           DeclareAlcoholDutyQuestionPage,
           AlcoholDutyPage
@@ -167,7 +167,6 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
             }
           }
         }
-      }
 
       "Adjustments section" - {
         Seq(

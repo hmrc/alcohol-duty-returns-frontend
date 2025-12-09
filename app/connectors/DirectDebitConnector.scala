@@ -22,6 +22,7 @@ import models.payments.{StartDirectDebitRequest, StartDirectDebitResponse}
 import play.api.Logging
 import play.api.http.Status.CREATED
 import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 

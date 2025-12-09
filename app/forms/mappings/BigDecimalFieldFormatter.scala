@@ -37,13 +37,12 @@ class BigDecimalFieldFormatter(
   exactDecimalPlacesRequired: Boolean = false
 ) extends Formatter[BigDecimal]
     with Formatters {
-  private val decimalRegexp = {
+  private val decimalRegexp =
     if (exactDecimalPlacesRequired) {
       s"""^[+-]?[0-9]*\\.[0-9]{$decimalPlaces}$$"""
     } else {
       s"""^[+-]?[0-9]*(\\.[0-9]{0,$decimalPlaces})?$$"""
     }
-  }
 
   private val baseFormatter = stringFormatter(s"$requiredKey.$fieldKey", args)
 

@@ -142,7 +142,7 @@ class SignOutActionSpec extends SpecBase {
       }
     }
 
-    "redirect to the sign out page and do not release locks if not authorised" in {
+    "redirect to the sign out page and do not release locks if not authorised" in
       List(
         InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
@@ -166,7 +166,6 @@ class SignOutActionSpec extends SpecBase {
           appaIdStore(appaIdStoreKey) mustBe None
         }
       }
-    }
 
     "return the exception if there is any other exception" in {
       val msg = "Test Exception"

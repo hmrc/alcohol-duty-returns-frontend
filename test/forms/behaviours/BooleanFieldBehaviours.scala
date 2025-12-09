@@ -34,10 +34,9 @@ trait BooleanFieldBehaviours extends FieldBehaviours {
       result.errors      mustBe empty
     }
 
-    "throw an exception if non-boolean" in {
+    "throw an exception if non-boolean" in
       forAll(nonBooleans -> "nonBoolean") { nonBoolean =>
         an[IllegalArgumentException] mustBe thrownBy(form.bind(Map(fieldName -> nonBoolean)).apply(fieldName))
       }
-    }
   }
 }

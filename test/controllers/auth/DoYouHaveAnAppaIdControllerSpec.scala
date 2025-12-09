@@ -54,7 +54,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val request = FakeRequest(GET, doYouHaveAnAppaIdRoute)
           .withHeaders("Referer" -> config.fromBusinessAccountPath)
 
-        val result  = route(application, request).value
+        val result = route(application, request).value
 
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 

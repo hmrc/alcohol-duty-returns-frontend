@@ -52,8 +52,7 @@ class DateMappingsSpec
 
   val missingField: Gen[Option[String]] = Gen.option(Gen.const(""))
 
-  "must bind valid data" in {
-
+  "must bind valid data" in
     forAll(validData -> "valid date") { date =>
       val data = Map(
         "value.day"   -> date.getDayOfMonth.toString,
@@ -65,7 +64,6 @@ class DateMappingsSpec
 
       result.value.value mustEqual date
     }
-  }
 
   "must fail to bind an empty date" in {
 
@@ -74,8 +72,7 @@ class DateMappingsSpec
     result.errors must contain only FormError("value", "error.required.all", List.empty)
   }
 
-  "must fail to bind a date with a missing day" in {
-
+  "must fail to bind a date with a missing day" in
     forAll(validData -> "valid date", missingField -> "missing field") { (date, field) =>
       val initialData = Map(
         "value.month" -> date.getMonthValue.toString,
@@ -90,10 +87,8 @@ class DateMappingsSpec
 
       result.errors must contain only FormError("value", "error.required", List("day"))
     }
-  }
 
-  "must fail to bind a date with an invalid day" in {
-
+  "must fail to bind a date with an invalid day" in
     forAll(validData -> "valid date", invalidField -> "invalid field") { (date, field) =>
       val data = Map(
         "value.day"   -> field,
@@ -107,10 +102,8 @@ class DateMappingsSpec
         FormError("value", "error.invalid", List.empty)
       )
     }
-  }
 
-  "must fail to bind a date with a missing month" in {
-
+  "must fail to bind a date with a missing month" in
     forAll(validData -> "valid date", missingField -> "missing field") { (date, field) =>
       val initialData = Map(
         "value.day"  -> date.getDayOfMonth.toString,
@@ -125,10 +118,8 @@ class DateMappingsSpec
 
       result.errors must contain only FormError("value", "error.required", List("month"))
     }
-  }
 
-  "must fail to bind a date with an invalid month" in {
-
+  "must fail to bind a date with an invalid month" in
     forAll(validData -> "valid data", invalidField -> "invalid field") { (date, field) =>
       val data = Map(
         "value.day"   -> date.getDayOfMonth.toString,
@@ -142,10 +133,8 @@ class DateMappingsSpec
         FormError("value", "error.invalid", List.empty)
       )
     }
-  }
 
-  "must fail to bind a date with a missing year" in {
-
+  "must fail to bind a date with a missing year" in
     forAll(validData -> "valid date", missingField -> "missing field") { (date, field) =>
       val initialData = Map(
         "value.day"   -> date.getDayOfMonth.toString,
@@ -160,10 +149,8 @@ class DateMappingsSpec
 
       result.errors must contain only FormError("value", "error.required", List("year"))
     }
-  }
 
-  "must fail to bind a date with an invalid year" in {
-
+  "must fail to bind a date with an invalid year" in
     forAll(validData -> "valid data", invalidField -> "invalid field") { (date, field) =>
       val data = Map(
         "value.day"   -> date.getDayOfMonth.toString,
@@ -177,10 +164,8 @@ class DateMappingsSpec
         FormError("value", "error.invalid", List.empty)
       )
     }
-  }
 
-  "must fail to bind a date with a missing day and month" in {
-
+  "must fail to bind a date with a missing day and month" in
     forAll(validData -> "valid date", missingField -> "missing day", missingField -> "missing month") {
       (date, dayOpt, monthOpt) =>
         val day = dayOpt.fold(Map.empty[String, String]) { value =>
@@ -199,10 +184,8 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.required.two", List("day", "month"))
     }
-  }
 
-  "must fail to bind a date with a missing day and year" in {
-
+  "must fail to bind a date with a missing day and year" in
     forAll(validData -> "valid date", missingField -> "missing day", missingField -> "missing year") {
       (date, dayOpt, yearOpt) =>
         val day = dayOpt.fold(Map.empty[String, String]) { value =>
@@ -221,10 +204,8 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.required.two", List("day", "year"))
     }
-  }
 
-  "must fail to bind a date with a missing month and year" in {
-
+  "must fail to bind a date with a missing month and year" in
     forAll(validData -> "valid date", missingField -> "missing month", missingField -> "missing year") {
       (date, monthOpt, yearOpt) =>
         val month = monthOpt.fold(Map.empty[String, String]) { value =>
@@ -243,10 +224,8 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.required.two", List("month", "year"))
     }
-  }
 
-  "must fail to bind an invalid day and month" in {
-
+  "must fail to bind an invalid day and month" in
     forAll(validData -> "valid date", invalidField -> "invalid day", invalidField -> "invalid month") {
       (date, day, month) =>
         val data = Map(
@@ -259,10 +238,8 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.invalid", List.empty)
     }
-  }
 
-  "must fail to bind an invalid day and year" in {
-
+  "must fail to bind an invalid day and year" in
     forAll(validData -> "valid date", invalidField -> "invalid day", invalidField -> "invalid year") {
       (date, day, year) =>
         val data = Map(
@@ -275,10 +252,8 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.invalid", List.empty)
     }
-  }
 
-  "must fail to bind an invalid month and year" in {
-
+  "must fail to bind an invalid month and year" in
     forAll(validData -> "valid date", invalidField -> "invalid month", invalidField -> "invalid year") {
       (date, month, year) =>
         val data = Map(
@@ -291,10 +266,8 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.invalid", List.empty)
     }
-  }
 
-  "must fail to bind an invalid day, month and year" in {
-
+  "must fail to bind an invalid day, month and year" in
     forAll(invalidField -> "valid day", invalidField -> "invalid month", invalidField -> "invalid year") {
       (day, month, year) =>
         val data = Map(
@@ -307,7 +280,6 @@ class DateMappingsSpec
 
         result.errors must contain only FormError("value", "error.invalid", List.empty)
     }
-  }
 
   "must fail to bind an invalid date" in {
 
@@ -324,8 +296,7 @@ class DateMappingsSpec
     )
   }
 
-  "must unbind a date" in {
-
+  "must unbind a date" in
     forAll(validData -> "valid date") { date =>
       val filledForm = form.fill(date)
 
@@ -333,5 +304,4 @@ class DateMappingsSpec
       filledForm("value.month").value.value mustEqual date.getMonthValue.toString
       filledForm("value.year").value.value  mustEqual date.getYear.toString
     }
-  }
 }

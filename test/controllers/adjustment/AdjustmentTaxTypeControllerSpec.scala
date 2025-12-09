@@ -90,7 +90,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
   "AdjustmentTaxType Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in
       running(application) {
         val request = FakeRequest(GET, adjustmentTaxTypeRoute)
         val result  = route(application, request).value
@@ -102,7 +102,6 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
           getMessages(app)
         ).toString
       }
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 

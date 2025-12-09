@@ -19,21 +19,21 @@ package connectors
 import cats.data.EitherT
 import config.FrontendAppConfig
 import models.audit.AuditReturnSubmitted
-import models.{AlcoholRegime, ErrorModel, FulfilledObligations, ObligationData, UserAnswers}
 import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import models.returns.ReturnDetails
+import models.{AlcoholRegime, ErrorModel, FulfilledObligations, ObligationData, UserAnswers}
 import play.api.Logging
+import play.api.http.Status.*
+import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
+import services.AuditService
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
-import play.api.http.Status._
-import play.api.libs.json.Json
-import services.AuditService
-import uk.gov.hmrc.http.client.HttpClientV2
-
-import java.time.{Clock, Instant}
 
 class AlcoholDutyReturnsConnector @Inject() (
   config: FrontendAppConfig,

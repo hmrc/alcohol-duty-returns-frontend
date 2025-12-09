@@ -36,28 +36,28 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
   val form = new TellUsAboutMultipleSPRRateFormProvider()()
 
   "volumesWithRate" - {
-    "must bind valid data" in {
-      volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
-        val result = form.bind(
-          Map(
-            "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType,
-            "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
-            "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
-            "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
+    "must bind valid data" in
+      volumeAndRateByTaxTypes.foreach {
+        volumeAndRateByTaxType: VolumeAndRateByTaxType =>
+          val result = form.bind(
+            Map(
+              "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType,
+              "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
+              "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
+              "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
+            )
           )
-        )
-        result.value.value mustEqual volumeAndRateByTaxType
+          result.value.value mustEqual volumeAndRateByTaxType
       }
-    }
 
-    "must unbind a valid data" in {
-      volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
-        val result = form.fill(volumeAndRateByTaxType).data
-        result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
-        result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString
-        result("volumesWithRate.dutyRate")    mustBe volumeAndRateByTaxType.dutyRate.toString
+    "must unbind a valid data" in
+      volumeAndRateByTaxTypes.foreach {
+        volumeAndRateByTaxType: VolumeAndRateByTaxType =>
+          val result = form.fill(volumeAndRateByTaxType).data
+          result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
+          result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString
+          result("volumesWithRate.dutyRate")    mustBe volumeAndRateByTaxType.dutyRate.toString
       }
-    }
 
     "must fail to bind when no data is provided" in {
       val result = form.bind(Map.empty[String, String])

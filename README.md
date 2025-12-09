@@ -40,7 +40,7 @@ The service runs on port `16000` by default.
     - [View payments screen](http://localhost:16000/manage-alcohol-duty/view-payments)
     - [View returns screen](http://localhost:16000/manage-alcohol-duty/check-your-returns)
 
-3. When redirected to auth-login-stub, change the following fields:
+2. When redirected to auth-login-stub, change the following fields:
     - **Affinity group**: Organisation
     - **Enrolments**: Add an enrolment with:
         - **Enrolment Key**: HMRC-AD-ORG
@@ -99,17 +99,13 @@ Note: At least one alcohol regime must be approved, otherwise a BAD_REQUEST is r
 
 > `sbt it/test`
 
-## Scalafmt and Scalastyle
+## Scalafmt
 
 To check if all the scala files in the project are formatted correctly:
 > `sbt scalafmtCheckAll`
 
 To format all the scala files in the project correctly:
 > `sbt scalafmtAll`
-
-To check if there are any scalastyle errors, warnings or infos:
-> `sbt scalastyle`
->
 
 ## All tests and checks
 

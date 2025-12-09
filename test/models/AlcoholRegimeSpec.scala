@@ -45,7 +45,7 @@ class AlcoholRegimeSpec extends SpecBase {
     }
   }
 
-  "writes" - {
+  "writes" -
     Seq(
       ("Beer", Beer),
       ("Cider", Cider),
@@ -57,7 +57,6 @@ class AlcoholRegimeSpec extends SpecBase {
         Json.toJson(regime).toString() mustBe s""""$alcoholType""""
       }
     }
-  }
 
   "fromString" - {
     Seq(

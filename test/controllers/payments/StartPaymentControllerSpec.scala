@@ -112,7 +112,7 @@ class StartPaymentControllerSpec extends SpecBase {
           FakeRequest(GET, controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
             .withSession(returnCreatedDetailsKey -> Json.toJson(returnDetails).toString())
 
-        val result  = route(application, request).value
+        val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -197,7 +197,7 @@ class StartPaymentControllerSpec extends SpecBase {
           )
             .withSession(pastPaymentsSessionKey -> Json.toJson(Seq(outstandingPayment)).toString())
 
-        val result  = route(application, request).value
+        val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

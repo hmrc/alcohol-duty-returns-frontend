@@ -50,7 +50,7 @@ class ServiceEntryCheckActionImpl @Inject() (
   ): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(predicate).retrieve(allEnrolments) { enrolments: Enrolments =>
+    authorised(predicate).retrieve(allEnrolments) { (enrolments: Enrolments) =>
       getAppaId(enrolments) match {
         case Some(appaId) if appaId.nonEmpty =>
           block(
