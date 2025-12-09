@@ -64,7 +64,7 @@
 
         @govukDetails(Details(
             summary = messages("beforeStartReturn.details.summary"),
-            content = HtmlContent(
+            content = HtmlContent(HtmlFormat.fill(Seq(
                 paragraph(HtmlContent(
                     Seq(
                         linkWithHiddenText(
@@ -84,32 +84,34 @@
                         ),
                         messages("beforeStartReturn.details.p1.text2")
                     ).mkString(" ")
+                )),
+                paragraph(messages("beforeStartReturn.details.p2")),
+                bulletList(Seq(
+                    HtmlContent(HtmlFormat.fill(Seq(
+                        linkWithHiddenText(
+                            id = "ex46-form-link",
+                            text = messages("beforeStartReturn.details.ex46.link"),
+                            href = messages("beforeStartReturn.details.ex46.url"),
+                            visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
+                            newTab = true
+                        ),
+                        Html(" "),
+                        Html(messages("beforeStartReturn.details.ex46.text"))
+                    ))),
+                    HtmlContent(HtmlFormat.fill(Seq(
+                        linkWithHiddenText(
+                            id = "w5-form-link",
+                            text = messages("beforeStartReturn.details.w5.link"),
+                            href = messages("beforeStartReturn.details.w5.url"),
+                            visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
+                            newTab = true
+                        ),
+                        Html(messages("beforeStartReturn.details.w5.commaForWelsh")),
+                        Html(" "),
+                        Html(messages("beforeStartReturn.details.w5.text"))
+                    ))),
                 ))
-                        +
-                        paragraph(messages("beforeStartReturn.details.p2")).toString
-                        +
-                        bulletList(Seq(
-                            HtmlContent(
-                                linkWithHiddenText(
-                                    id = "ex46-form-link",
-                                    text = messages("beforeStartReturn.details.ex46.link"),
-                                    href = messages("beforeStartReturn.details.ex46.url"),
-                                    visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
-                                    newTab = true
-                                ) + " " + messages("beforeStartReturn.details.ex46.text")
-                            ),
-                            HtmlContent(
-                                linkWithHiddenText(
-                                    id = "w5-form-link",
-                                    text = messages("beforeStartReturn.details.w5.link"),
-                                    href = messages("beforeStartReturn.details.w5.url"),
-                                    visuallyHiddenContent = messages("beforeStartReturn.details.hidden"),
-                                    newTab = true
-                                ) + messages("beforeStartReturn.details.w5.commaForWelsh") +
-                                        " " + messages("beforeStartReturn.details.w5.text")
-                            ),
-                        ))
-            )
+            )))
         ))
 
         @govukButton(

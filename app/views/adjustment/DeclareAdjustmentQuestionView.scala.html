@@ -66,15 +66,18 @@
         @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @paragraph(
-            content = HtmlContent(
-            messages("declareAdjustmentInformation.link.p1") + " " +
-            link(
+            content = HtmlContent(HtmlFormat.fill(Seq(
+                Html(messages("declareAdjustmentInformation.link.p1")),
+                Html(" "),
+                link(
                     id = "declare-adjustment-information-link",
                     text = messages("declareAdjustmentInformation.link.p2"),
                     href = messages("declareAdjustmentInformation.link.url"),
                     newTab = true
-            ) + "."
-        ))
+                ),
+                Html(".")
+            )))
+        )
 
         @formGroupWithError(form.errors.nonEmpty){
                 @subHeading(messages("declareAdjustmentQuestion.question.h2"), classes = Css.headingMCssClass)
