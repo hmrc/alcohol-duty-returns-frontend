@@ -19,11 +19,12 @@ package services.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.AlcoholDutyCalculatorConnector
-import pages.adjustment._
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
-import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
+import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import pages.adjustment.*
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future

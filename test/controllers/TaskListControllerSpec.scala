@@ -18,8 +18,8 @@ package controllers
 
 import base.SpecBase
 import models.UserAnswers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.test.Helpers._
 import viewmodels.tasklist.{AlcoholDutyTaskList, TaskListViewModel}

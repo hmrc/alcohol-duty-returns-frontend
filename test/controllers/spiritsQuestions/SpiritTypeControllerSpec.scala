@@ -21,8 +21,8 @@ import connectors.UserAnswersConnector
 import forms.spiritsQuestions.SpiritTypeFormProvider
 import models.{NormalMode, SpiritType, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.spiritsQuestions.SpiritTypePage
 import play.api.Application
 import play.api.inject.bind

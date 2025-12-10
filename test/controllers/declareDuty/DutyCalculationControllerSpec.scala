@@ -20,11 +20,11 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.ErrorModel
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, DutyCalculationHelper}
 import views.html.declareDuty.DutyCalculationView

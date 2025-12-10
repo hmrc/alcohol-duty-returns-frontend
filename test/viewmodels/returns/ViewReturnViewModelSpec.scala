@@ -112,7 +112,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
 
         totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total adjustments duty value")
-        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq(minus + "£19,434.00")
+        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq(s"$minus£19,434.00")
       }
 
       "must return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
@@ -136,7 +136,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows.flatMap(_.actions)                          mustBe Seq.empty
 
         totalSummaryList.rows.map(_.key.content.asHtml.toString)   mustBe Seq("Total adjustments duty value")
-        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq(minus + "£3,151.50")
+        totalSummaryList.rows.map(_.value.content.asHtml.toString) mustBe Seq(s"$minus£3,151.50")
       }
 
       "must return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {

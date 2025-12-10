@@ -48,10 +48,9 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
     expectedError: FormError
   ): Unit =
     s"not bind big decimals below $minimum" in
-      forAll(bigDecimalsBelowValue(minimum, decimal) -> "bigDecimalBelowMin") {
-        (number: String) =>
-          val result = form.bind(Map(fieldName -> number)).apply(fieldName)
-          result.errors must contain only expectedError
+      forAll(bigDecimalsBelowValue(minimum, decimal) -> "bigDecimalBelowMin") { (number: String) =>
+        val result = form.bind(Map(fieldName -> number)).apply(fieldName)
+        result.errors must contain only expectedError
       }
 
   def bigDecimalFieldWithMaximum(
@@ -62,10 +61,9 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
     expectedError: FormError
   ): Unit =
     s"not bind big decimals above $maximum" in
-      forAll(bigDecimalsAboveValue(maximum, decimal) -> "bigDecimalAboveMax") {
-        (number: String) =>
-          val result = form.bind(Map(fieldName -> number)).apply(fieldName)
-          result.errors must contain only expectedError
+      forAll(bigDecimalsAboveValue(maximum, decimal) -> "bigDecimalAboveMax") { (number: String) =>
+        val result = form.bind(Map(fieldName -> number)).apply(fieldName)
+        result.errors must contain only expectedError
       }
 
   def bigDecimalFieldWithRange(

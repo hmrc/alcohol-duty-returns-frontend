@@ -21,12 +21,13 @@ import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.AdjustmentDuty
-import models.checkAndSubmit._
+import models.checkAndSubmit.*
 import models.{AlcoholRegime, AlcoholRegimes}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.dutySuspended._
+import pages.dutySuspended.*
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import queries.Settable
@@ -172,7 +173,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase {
         Seq(
           DeclareAdjustmentQuestionPage,
           AdjustmentEntryListPage
-        ).foreach { page: Settable[_] =>
+        ).foreach { (page: Settable[_]) =>
           s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
 

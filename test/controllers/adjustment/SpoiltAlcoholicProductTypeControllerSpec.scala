@@ -23,12 +23,12 @@ import models.AlcoholRegime.{Beer, Cider}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.{NormalMode, ReturnPeriod}
 import navigation.AdjustmentNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
 import views.html.adjustment.SpoiltAlcoholicProductTypeView

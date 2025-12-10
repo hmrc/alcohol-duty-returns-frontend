@@ -25,15 +25,16 @@ import models.TransactionType.Return
 import models.audit.AuditPaymentStarted
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentResponse
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{verify, when}
 import play.api.http.Status.SEE_OTHER
 import play.api.inject.bind
 import play.api.libs.json.Json
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.AuditService
 
 import java.time.{Clock, Instant, LocalDate}
+import scala.concurrent.Future
 
 class StartPaymentControllerSpec extends SpecBase {
 
@@ -71,7 +72,7 @@ class StartPaymentControllerSpec extends SpecBase {
       val mockAuditService: AuditService = mock[AuditService]
 
       when(payApiConnector.startPayment(any())(any())).thenReturn(
-        EitherT.rightT(startPaymentResponse)
+        EitherT.rightT[Future, StartPaymentResponse](startPaymentResponse)
       )
 
       val application = applicationBuilder()
@@ -100,7 +101,7 @@ class StartPaymentControllerSpec extends SpecBase {
       val payApiConnector = mock[PayApiConnector]
 
       when(payApiConnector.startPayment(any())(any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.leftT[Future, String]("Error message")
       )
 
       val application = applicationBuilder()
@@ -123,7 +124,7 @@ class StartPaymentControllerSpec extends SpecBase {
       val payApiConnector = mock[PayApiConnector]
 
       when(payApiConnector.startPayment(any())(any())).thenReturn(
-        EitherT.rightT(startPaymentResponse)
+        EitherT.rightT[Future, StartPaymentResponse](startPaymentResponse)
       )
 
       val application = applicationBuilder()
@@ -149,7 +150,7 @@ class StartPaymentControllerSpec extends SpecBase {
       val payApiConnector                = mock[PayApiConnector]
       val mockAuditService: AuditService = mock[AuditService]
       when(payApiConnector.startPayment(any())(any())).thenReturn(
-        EitherT.rightT(startPaymentResponse)
+        EitherT.rightT[Future, StartPaymentResponse](startPaymentResponse)
       )
 
       val application = applicationBuilder()
@@ -182,7 +183,7 @@ class StartPaymentControllerSpec extends SpecBase {
       val payApiConnector = mock[PayApiConnector]
 
       when(payApiConnector.startPayment(any())(any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.leftT[Future, String]("Error message")
       )
 
       val application = applicationBuilder()

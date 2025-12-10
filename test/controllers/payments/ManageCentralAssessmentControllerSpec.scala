@@ -19,8 +19,8 @@ package controllers.payments
 import base.SpecBase
 import config.Constants.pastPaymentsSessionKey
 import forms.payments.ManageCentralAssessmentFormProvider
-import org.mockito.ArgumentMatchers.{any, argThat}
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, argThat, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Session

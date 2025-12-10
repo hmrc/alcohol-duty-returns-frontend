@@ -21,8 +21,8 @@ import connectors.UserAnswersConnector
 import forms.declareDuty.DoYouHaveMultipleSPRDutyRatesFormProvider
 import models.{CheckMode, NormalMode}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -121,7 +121,7 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
             any(),
             any(),
             eqTo(false),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }
@@ -166,7 +166,7 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
             any(),
             any(),
             eqTo(false),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }
@@ -209,7 +209,7 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
             any(),
             any(),
             eqTo(true),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }

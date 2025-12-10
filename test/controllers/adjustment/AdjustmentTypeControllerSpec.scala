@@ -24,12 +24,12 @@ import models.adjustment.AdjustmentType.Spoilt
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.{AlcoholRegimes, NormalMode}
 import navigation.AdjustmentNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.adjustment.{AdjustmentTypePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentTypeView
 

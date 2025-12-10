@@ -71,27 +71,24 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
   "AlcoholByVolume" - {
     "when creating an instance" - {
       "must successfully save the BigDecimal value when the value is in range" in
-        forAll(genAlcoholByVolumeValue) {
-          (validValue: BigDecimal) =>
-            AlcoholByVolume(validValue).value mustEqual validValue
+        forAll(genAlcoholByVolumeValue) { (validValue: BigDecimal) =>
+          AlcoholByVolume(validValue).value mustEqual validValue
         }
 
       "must throw an exception when the value is not in range" in
-        forAll(genAlcoholByVolumeValueOutOfRange) {
-          (invalidValue: BigDecimal) =>
-            val exception = intercept[IllegalArgumentException] {
-              AlcoholByVolume(invalidValue)
-            }
-            exception.getMessage must include("Percentage must be between 0 and 100")
+        forAll(genAlcoholByVolumeValueOutOfRange) { (invalidValue: BigDecimal) =>
+          val exception = intercept[IllegalArgumentException] {
+            AlcoholByVolume(invalidValue)
+          }
+          exception.getMessage must include("Percentage must be between 0 and 100")
         }
 
       "must throw an exception when the value has more decimal points than 1" in
-        forAll(genAlcoholByVolumeValueTooBigScale) {
-          (invalidValue: BigDecimal) =>
-            val exception = intercept[IllegalArgumentException] {
-              AlcoholByVolume(invalidValue)
-            }
-            exception.getMessage must include("Alcohol By Volume must have maximum 1 decimal place")
+        forAll(genAlcoholByVolumeValueTooBigScale) { (invalidValue: BigDecimal) =>
+          val exception = intercept[IllegalArgumentException] {
+            AlcoholByVolume(invalidValue)
+          }
+          exception.getMessage must include("Alcohol By Volume must have maximum 1 decimal place")
         }
     }
 

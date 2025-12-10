@@ -18,8 +18,8 @@ package services
 
 import base.SpecBase
 import models.audit.AuditPaymentStarted
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.verify
 import services.AuditService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
