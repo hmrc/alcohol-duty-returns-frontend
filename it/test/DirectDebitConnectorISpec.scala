@@ -23,18 +23,19 @@ import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import play.api.libs.json.Json
 
 class DirectDebitConnectorISpec extends ISpecBase with WireMockHelper {
-  override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.direct-debit.port" -> server.port()).build()
+  override def fakeApplication(): Application =
+    applicationBuilder(None).configure("microservice.services.direct-debit.port" -> server.port()).build()
 
   "DirectDebitConnector" - {
     "successfully retrieve a start direct debit response" in new SetUp {
       val startDirectDebitResponse = StartDirectDebitResponse("/next-url")
-      val jsonResponse = Json.toJson(startDirectDebitResponse).toString()
+      val jsonResponse             = Json.toJson(startDirectDebitResponse).toString()
 
       server.stubFor(
         post(urlMatching(url))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(startDirectDebitRequest))))
-            .willReturn(aResponse().withBody(jsonResponse).withStatus(CREATED))
-          )
+          .willReturn(aResponse().withBody(jsonResponse).withStatus(CREATED))
+      )
 
       whenReady(connector.startDirectDebit(startDirectDebitRequest).value) { result =>
         result mustBe Right(startDirectDebitResponse)
@@ -62,7 +63,7 @@ class DirectDebitConnectorISpec extends ISpecBase with WireMockHelper {
       server.stubFor(
         post(urlMatching(url))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(startDirectDebitRequest))))
-            .willReturn(aResponse().withBody(invalidJsonResponse).withStatus(OK))
+          .willReturn(aResponse().withBody(invalidJsonResponse).withStatus(OK))
       )
 
       recoverToExceptionIf[Exception] {
@@ -91,7 +92,7 @@ class DirectDebitConnectorISpec extends ISpecBase with WireMockHelper {
       server.stubFor(
         post(urlMatching(url))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(startDirectDebitRequest))))
-            .willReturn(aResponse().withBody("invalidStatusCodeResponse").withStatus(BAD_REQUEST))
+          .willReturn(aResponse().withBody("invalidStatusCodeResponse").withStatus(BAD_REQUEST))
       )
 
       recoverToExceptionIf[Exception] {
@@ -103,8 +104,8 @@ class DirectDebitConnectorISpec extends ISpecBase with WireMockHelper {
   }
 
   class SetUp {
-    val url = "/direct-debit-backend/ad-confirmation/ad/journey/start"
-    val connector = app.injector.instanceOf[DirectDebitConnector]
+    val url                     = "/direct-debit-backend/ad-confirmation/ad/journey/start"
+    val connector               = app.injector.instanceOf[DirectDebitConnector]
     val startDirectDebitRequest = StartDirectDebitRequest("/return/url", "/back/url")
   }
 }
