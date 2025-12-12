@@ -1,6 +1,11 @@
 repoVisibility: public_0C3F0CE3E6E6448FAD341E7BFA50FCD333E06A20CFF05FCACE61154DDBBADF71
+organisation: mdtp
+digital-service: Alcohol Duty Reforms
+description: Alcohol duty is a long-standing system of taxes, comprised of five individual taxes such as beer duty, spirits duty, cider duty, wine duty and other fermented products (OFP) duty
+owning-teams:
+  - Alcohol Duty Reforms
 type: service
 service-type: frontend
-tags: []
 test-repositories:
   - alcohol-duty-performance-tests
+  - alcohol-duty-ui-tests
