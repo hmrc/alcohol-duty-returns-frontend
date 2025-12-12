@@ -55,9 +55,9 @@ class ViewPastPaymentsController @Inject() (
           outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val updatedSession                =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
-        val outstandingPaymentsTable =
+        val outstandingPaymentsTable      =
           helper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
-        val unallocatedPaymentsTable = helper
+        val unallocatedPaymentsTable      = helper
           .getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
 
         OutstandingPayments(

@@ -47,11 +47,13 @@ class RateBandDescriptionSpec extends SpecBase {
     }
 
     Seq(true, false).foreach { showDraughtStatus =>
-      s"when ${if (showDraughtStatus) {
-        "showing"
-      } else {
-        "not showing"
-      }} draught status" - {
+      s"when ${
+          if (showDraughtStatus) {
+            "showing"
+          } else {
+            "not showing"
+          }
+        } draught status" - {
         "must return the correct description" - {
           Seq(
             (AlcoholRegime.Beer, AlcoholType.Beer, "beer"),

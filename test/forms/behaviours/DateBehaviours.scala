@@ -24,8 +24,7 @@ import play.api.data.{Form, FormError}
 class DateBehaviours extends FieldBehaviours {
 
   def dateField(form: Form[_], key: String, validData: Gen[LocalDate]): Unit =
-    "bind valid data" in {
-
+    "bind valid data" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.day"   -> date.getDayOfMonth.toString,
@@ -38,7 +37,6 @@ class DateBehaviours extends FieldBehaviours {
         result.value.value mustEqual date
         result.errors         mustBe empty
       }
-    }
 
   def dateFieldWithMax(form: Form[_], key: String, max: LocalDate, formError: FormError): Unit =
     s"fail to bind a date greater than ${max.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
@@ -111,8 +109,7 @@ class DateBehaviours extends FieldBehaviours {
     }
 
   def yearMonthField(form: Form[_], key: String, validData: Gen[YearMonth]): Unit =
-    "bind valid data" in {
-
+    "bind valid data" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> date.getMonthValue.toString,
@@ -123,7 +120,6 @@ class DateBehaviours extends FieldBehaviours {
 
         result(key).errors mustBe empty
       }
-    }
 
   def yearMonthFieldInFuture(form: Form[_], key: String, returnPeriod: YearMonth, formError: FormError): Unit =
     "fail to bind a date in the future" in {
@@ -174,8 +170,7 @@ class DateBehaviours extends FieldBehaviours {
     validData: Gen[YearMonth],
     formError: FormError
   ): Unit =
-    "fail to bind a date with a month value below 1" in {
-
+    "fail to bind a date with a month value below 1" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> "0",
@@ -186,7 +181,6 @@ class DateBehaviours extends FieldBehaviours {
 
         result.errors must contain only formError
       }
-    }
 
   def yearMonthWithMonthOutOfMaxRange(
     form: Form[_],
@@ -194,8 +188,7 @@ class DateBehaviours extends FieldBehaviours {
     validData: Gen[YearMonth],
     formError: FormError
   ): Unit =
-    "fail to bind a date with a month value greater than 12" in {
-
+    "fail to bind a date with a month value greater than 12" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> "13",
@@ -206,11 +199,9 @@ class DateBehaviours extends FieldBehaviours {
 
         result.errors must contain only formError
       }
-    }
 
   def yearMonthInvalidMonth(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
-    "fail to bind a date with an invalid month" in {
-
+    "fail to bind a date with an invalid month" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> "aaa",
@@ -221,11 +212,9 @@ class DateBehaviours extends FieldBehaviours {
 
         result.errors must contain only formError
       }
-    }
 
   def yearMonthInvalidYear(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
-    "fail to bind a date with an invalid year" in {
-
+    "fail to bind a date with an invalid year" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> date.getMonthValue.toString,
@@ -236,7 +225,6 @@ class DateBehaviours extends FieldBehaviours {
 
         result.errors must contain only formError
       }
-    }
 
   def yearMonthWithYearOutOfMinRange(
     form: Form[_],
@@ -244,8 +232,7 @@ class DateBehaviours extends FieldBehaviours {
     validData: Gen[YearMonth],
     formError: FormError
   ): Unit =
-    "fail to bind a date with a year value with less than 4 digits" in {
-
+    "fail to bind a date with a year value with less than 4 digits" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> date.getMonthValue.toString,
@@ -256,7 +243,6 @@ class DateBehaviours extends FieldBehaviours {
 
         result.errors must contain only formError
       }
-    }
 
   def yearMonthWithYearOutOfMaxRange(
     form: Form[_],
@@ -264,8 +250,7 @@ class DateBehaviours extends FieldBehaviours {
     validData: Gen[YearMonth],
     formError: FormError
   ): Unit =
-    "fail to bind a date with a year value with more than 4 digits" in {
-
+    "fail to bind a date with a year value with more than 4 digits" in
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> date.getMonthValue.toString,
@@ -276,5 +261,4 @@ class DateBehaviours extends FieldBehaviours {
 
         result.errors must contain only formError
       }
-    }
 }

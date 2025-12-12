@@ -43,8 +43,7 @@ class DateTimeHelper @Inject() (languageUtils: LanguageUtils) {
     formatDateMonthYear(localDate).drop(2)
   }
 
-  /**
-    * ante/post meridiem (am/pm) is locale specific, thus convert to lowercase
+  /** ante/post meridiem (am/pm) is locale specific, thus convert to lowercase
     */
   def formatHourMinuteMeridiem(localTime: LocalTime): String = {
     val formattedTime = hourMinuteFormatter.format(localTime)

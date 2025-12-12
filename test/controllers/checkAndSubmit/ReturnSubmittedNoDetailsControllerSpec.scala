@@ -37,7 +37,7 @@ class ReturnSubmittedNoDetailsControllerSpec extends SpecBase {
           controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController.onPageLoad().url
         ).withSession(returnCreatedDetailsKey -> noDetailsValue)
 
-        val result  = route(application, request).value
+        val result = route(application, request).value
 
         val view = application.injector.instanceOf[ReturnSubmittedNoDetailsView]
 

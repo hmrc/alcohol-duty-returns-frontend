@@ -20,9 +20,11 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyReturnsConnector
 import models.ErrorModel
+import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{times, verify, when}
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -31,13 +33,14 @@ import viewmodels.tasklist.TaskListViewModel
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
 import java.time.{Clock, Instant}
+import scala.concurrent.Future
 
 class DutyDueForThisReturnControllerSpec extends SpecBase {
   "onPageLoad" - {
     "must return OK and the correct view if Yes is selected and there is alcohol to declare" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
       when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
-        EitherT.rightT(viewModel)
+        EitherT.rightT[Future, DutyDueForThisReturnViewModel](viewModel)
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -61,7 +64,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     "must redirect in the Journey Recovery screen if any task is not complete" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(false)
       when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
-        EitherT.rightT(viewModel)
+        EitherT.rightT[Future, DutyDueForThisReturnViewModel](viewModel)
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -83,7 +86,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     "must redirect in the Journey Recovery screen if the dutyDueForThisReturnHelper return an error" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
       when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.leftT[Future, String]("Error message")
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -107,14 +110,12 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     "must redirect to the Return Submitted page if the submission is successful" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
-      when(
-        alcoholDutyReturnsConnector.submitReturn(any(), any())(any())
-      ).thenReturn(
-        EitherT.rightT(adrReturnCreatedDetails)
+      when(alcoholDutyReturnsConnector.submitReturn(any(), any())(any())).thenReturn(
+        EitherT.rightT[Future, AdrReturnCreatedDetails](adrReturnCreatedDetails)
       )
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(fullReturn)
+        EitherT.rightT[Future, AdrReturnSubmission](fullReturn)
       )
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
@@ -142,14 +143,12 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     "must redirect to the Return Submitted No Details page if the return has already been submitted" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
-      when(
-        alcoholDutyReturnsConnector.submitReturn(any(), any())(any())
-      ).thenReturn(
-        EitherT.leftT(ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
+      when(alcoholDutyReturnsConnector.submitReturn(any(), any())(any())).thenReturn(
+        EitherT.leftT[Future, ErrorModel](ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
       )
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(fullReturn)
+        EitherT.rightT[Future, AdrReturnSubmission](fullReturn)
       )
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
@@ -177,14 +176,12 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     "must redirect in the Journey Recovery screen if any task is not complete" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(false)
 
-      when(
-        alcoholDutyReturnsConnector.submitReturn(any(), any())(any())
-      ).thenReturn(
-        EitherT.rightT(adrReturnCreatedDetails)
+      when(alcoholDutyReturnsConnector.submitReturn(any(), any())(any())).thenReturn(
+        EitherT.rightT[Future, AdrReturnCreatedDetails](adrReturnCreatedDetails)
       )
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(fullReturn)
+        EitherT.rightT[Future, AdrReturnSubmission](fullReturn)
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -211,7 +208,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.leftT[Future, String]("Error message")
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -238,11 +235,11 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(adrReturnSubmission)
+        EitherT.rightT[Future, AdrReturnSubmission](adrReturnSubmission)
       )
 
       when(alcoholDutyReturnsConnector.submitReturn(any(), any())(any())).thenReturn(
-        EitherT.leftT(ErrorModel(INTERNAL_SERVER_ERROR, "Error message"))
+        EitherT.leftT[Future, ErrorModel](ErrorModel(INTERNAL_SERVER_ERROR, "Error message"))
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))

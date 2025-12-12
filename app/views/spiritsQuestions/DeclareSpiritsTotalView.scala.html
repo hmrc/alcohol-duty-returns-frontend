@@ -58,17 +58,16 @@
 
         @govukDetails(Details(
             summary = messages("declareSpiritsTotal.details.summary"),
-            content = HtmlContent(
-                paragraph(HtmlContent(
-                    messages("declareSpiritsTotal.details.p") +
-                    link(
-                        id = "draught-relief-question-guidance-link",
-                        text = messages("declareSpiritsTotal.guidance.link.text"),
-                        href = messages(declareSpiritsGuidanceUrl),
-                        newTab = true
-                    ) + "."
-                ))
-            ),
+            content = HtmlContent(HtmlFormat.fill(Seq(
+                Html(messages("declareSpiritsTotal.details.p")),
+                link(
+                    id = "draught-relief-question-guidance-link",
+                    text = messages("declareSpiritsTotal.guidance.link.text"),
+                    href = messages(declareSpiritsGuidanceUrl),
+                    newTab = true
+                ),
+                Html(".")
+            ))),
             classes = Css.paddingBottomCssClass
         ))
 

@@ -22,8 +22,8 @@ import forms.dutySuspended.DutySuspendedBeerFormProvider
 import models.NormalMode
 import models.dutySuspended.DutySuspendedBeer
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.dutySuspended.DutySuspendedBeerPage
 import play.api.inject.bind
 import play.api.libs.json.Json

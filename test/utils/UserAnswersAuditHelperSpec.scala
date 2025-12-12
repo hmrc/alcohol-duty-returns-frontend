@@ -20,8 +20,8 @@ import base.SpecBase
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
 import models.{AlcoholRegimes, ObligationData, UserAnswers}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify}
 import services.AuditService
 
 import java.time.Instant

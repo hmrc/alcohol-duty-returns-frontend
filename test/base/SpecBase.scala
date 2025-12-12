@@ -19,14 +19,14 @@ package base
 import common.{TestData, TestPages}
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
-import controllers.actions._
+import controllers.actions.*
 import generators.ModelGenerators
 import models.UserAnswers
-import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
@@ -62,7 +62,7 @@ trait SpecBase
   protected def applicationBuilder(
     userAnswers: Option[UserAnswers] = None,
     signedIn: Boolean = true
-  ): GuiceApplicationBuilder                                 =
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(configOverrides)
       .overrides(

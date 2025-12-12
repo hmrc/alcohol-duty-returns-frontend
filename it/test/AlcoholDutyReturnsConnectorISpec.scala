@@ -306,7 +306,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
         )
 
         whenReady(connector.submitReturn(fullUserAnswers, nilReturn).value) { result =>
-          result.swap.toOption.get.status mustBe UNPROCESSABLE_ENTITY
+          result.swap.toOption.get.status  mustBe UNPROCESSABLE_ENTITY
           result.swap.toOption.get.message mustBe "Return already submitted"
         }
       }

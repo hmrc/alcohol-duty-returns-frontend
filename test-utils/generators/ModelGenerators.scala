@@ -242,7 +242,7 @@ trait ModelGenerators {
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- genAlcoholRegime(alcoholRegime)
-      rate           <- Gen.chooseNum(0, 99999.99).map(BigDecimal(_).setScale(1, BigDecimal.RoundingMode.UP))
+      rate           <- Gen.chooseNum(0.00, 99999.99).map(BigDecimal(_).setScale(1, BigDecimal.RoundingMode.UP))
     } yield RateBand(taxType, description, rateType, Some(rate), Set(alcoholRegimes))
 
   def genRateBandForRegimeWithSPR(alcoholRegime: AlcoholRegime): Gen[RateBand] =
@@ -270,7 +270,7 @@ trait ModelGenerators {
   def genVolumeAndRateByTaxTypeRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {
     for {
       totalLitres <- genAlcoholByVolumeValue
-      sprDutyRate <- Gen.chooseNum(0, 99999.99).map(BigDecimal(_).setScale(1, BigDecimal.RoundingMode.UP))
+      sprDutyRate <- Gen.chooseNum(0.00, 99999.99).map(BigDecimal(_).setScale(1, BigDecimal.RoundingMode.UP))
     } yield VolumeAndRateByTaxType(
       rateBand.taxTypeCode,
       totalLitres.setScale(2, BigDecimal.RoundingMode.UP),

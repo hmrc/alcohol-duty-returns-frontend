@@ -20,10 +20,11 @@ import base.SpecBase
 import config.Constants.returnCreatedDetailsKey
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.libs.json.Json
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import viewmodels.DateTimeHelper
 import viewmodels.returns.ReturnSubmittedHelper
 import views.html.checkAndSubmit.ReturnSubmittedView

@@ -29,7 +29,7 @@ import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
 
 class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
   "SpoiltAlcoholicProductTypeHelper" - {
-    "createRateBandFromRegime" - {
+    "createRateBandFromRegime" -
       AlcoholRegime.values.foreach { regime =>
         s"create an appropriate rate band for the $regime regime" in new SetUp {
           val expectedRateBand = RateBand(
@@ -54,7 +54,6 @@ class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
           spoiltAlcoholicProductTypeHelper.createRateBandFromRegime(regime) mustBe expectedRateBand
         }
       }
-    }
 
     "getViewModel" - {
       "create a view model containing radio options in view order for a set of regimes" in new SetUp {
@@ -80,9 +79,9 @@ class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
     val expectedRegimeToTaxType: Map[AlcoholRegime, String] =
       Map(Beer -> "356", Wine -> "333", Cider -> "357", Spirits -> "345", OtherFermentedProduct -> "324")
 
-    val expectedSpoiltRate: BigDecimal                      = BigDecimal(0.01)
-    val expectedRangeMinABV: BigDecimal                     = BigDecimal(0)
-    val expectedRangeMaxABV: BigDecimal                     = BigDecimal(100)
+    val expectedSpoiltRate: BigDecimal  = BigDecimal(0.01)
+    val expectedRangeMinABV: BigDecimal = BigDecimal(0)
+    val expectedRangeMaxABV: BigDecimal = BigDecimal(100)
 
     val spoiltAlcoholicProductTypeHelper = new SpoiltAlcoholicProductTypeHelper(appConfig)
   }

@@ -18,9 +18,10 @@ package controllers.declareDuty
 
 import base.SpecBase
 import models.ErrorModel
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow, Value}
 import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, ReturnSummaryList}

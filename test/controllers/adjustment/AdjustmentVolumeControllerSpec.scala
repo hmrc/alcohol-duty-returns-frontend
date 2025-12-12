@@ -25,12 +25,12 @@ import models.adjustment.AdjustmentType.Underdeclaration
 import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.AdjustmentNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
 
@@ -285,7 +285,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val boundForm =
           form.bind(Map("volumes.totalLitresVolume" -> "invalid value", "volumes.pureAlcoholVolume" -> "invalid value"))
 
-        val view      = application.injector.instanceOf[AdjustmentVolumeView]
+        val view = application.injector.instanceOf[AdjustmentVolumeView]
 
         val result = route(application, request).value
 

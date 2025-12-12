@@ -34,10 +34,13 @@
 @(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
 
 @posPanelContent = {
-    @paragraph(HtmlContent(
-        messages("returnSubmitted.panel.body.reference") +
-        strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
-    ), classes = "")
+    @paragraph(
+        content = HtmlContent(HtmlFormat.fill(Seq(
+            Html(messages("returnSubmitted.panel.body.reference")),
+            strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
+        ))),
+        classes = ""
+    )
     @paragraphWithMonetaryValue(messages("returnSubmitted.panel.body.balanceDue"), viewModel.returnDetails.amount, classes = Css.marginBottom0CssClass)
 }
 
@@ -48,10 +51,13 @@
 }
 
 @negPanelContent = {
-    @paragraph(HtmlContent(
-        messages("returnSubmitted.panel.body.reference") +
-        strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
-    ), classes = "")
+    @paragraph(
+        content = HtmlContent(HtmlFormat.fill(Seq(
+            Html(messages("returnSubmitted.panel.body.reference")),
+            strongPanelText(viewModel.returnDetails.chargeReference.map(_.value).getOrElse(""))
+        ))),
+        classes = ""
+    )
     @paragraphWithMonetaryValue(messages("returnSubmitted.panel.body.dutyOwed"), -viewModel.returnDetails.amount, classes = "")
     @paragraph(HtmlContent(
         strongPanelText(messages("returnSubmitted.panel.body.nil"))
@@ -94,14 +100,16 @@
             ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
         )
 
-        @paragraph(content =
-            HtmlContent(
-                messages("returnSubmitted.direct.debit.p1") +
+        @paragraph(
+            content = HtmlContent(HtmlFormat.fill(Seq(
+                Html(messages("returnSubmitted.direct.debit.p1")),
                 link(
                     id = "direct-debit-start",
                     text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
                     href = controllers.payments.routes.StartDirectDebitController.initiateAndRedirect().url
-        )))
+                )
+            )))
+        )
     }
 
     @if(viewModel.returnDetails.isAmountZero) {
@@ -160,5 +168,6 @@
                 id = "business-tax-account-link",
                 text = messages("site.returnToBusinessAccount"),
                 href = viewModel.businessTaxAccountUrl
-            )))
+            ))
+    )
 }

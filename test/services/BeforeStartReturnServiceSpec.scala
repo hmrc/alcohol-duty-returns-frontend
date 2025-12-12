@@ -20,11 +20,13 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegime, AlcoholRegimes, ErrorModel, UserAnswers}
+import models.{AlcoholRegime, AlcoholRegimes, ErrorModel, ObligationData, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import play.api.http.Status._
+import org.mockito.Mockito.when
+import play.api.http.Status.*
 
 import java.time.Instant
+import scala.concurrent.Future
 
 class BeforeStartReturnServiceSpec extends SpecBase {
 
@@ -33,12 +35,10 @@ class BeforeStartReturnServiceSpec extends SpecBase {
     "handleExistingUserAnswers" - {
 
       "must return a Right if subscription and obligation status are valid and regimes match the API" in new SetUp {
-        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn EitherT.rightT(
-          allRegimes
-        )
-        when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn EitherT.rightT(
-          obligationDataSingleOpen
-        )
+        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn
+          EitherT.rightT[Future, Set[AlcoholRegime]](allRegimes)
+        when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn
+          EitherT.rightT[Future, ObligationData](obligationDataSingleOpen)
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
           result mustBe Right((): Unit)
@@ -46,12 +46,10 @@ class BeforeStartReturnServiceSpec extends SpecBase {
       }
 
       "must return a Left with CONFLICT if subscription and obligation status are valid but regimes do not match the API" in new SetUp {
-        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn EitherT.rightT(
-          Set(Wine)
-        )
-        when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn EitherT.rightT(
-          obligationDataSingleOpen
-        )
+        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn
+          EitherT.rightT[Future, Set[AlcoholRegime]](Set(Wine))
+        when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn
+          EitherT.rightT[Future, ObligationData](obligationDataSingleOpen)
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
           result mustBe Left(
@@ -61,9 +59,8 @@ class BeforeStartReturnServiceSpec extends SpecBase {
       }
 
       "must return a Left with INTERNAL_SERVER_ERROR if subscription approval status is not Approved or Insolvent" in new SetUp {
-        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn EitherT.leftT(
-          "Forbidden: Subscription status is not Approved or Insolvent."
-        )
+        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn
+          EitherT.leftT[Future, String]("Forbidden: Subscription status is not Approved or Insolvent.")
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
           result mustBe Left(
@@ -73,12 +70,10 @@ class BeforeStartReturnServiceSpec extends SpecBase {
       }
 
       "must return a Left with INTERNAL_SERVER_ERROR if obligation is no longer open" in new SetUp {
-        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn EitherT.rightT(
-          allRegimes
-        )
-        when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn EitherT.leftT(
-          "No open obligation found."
-        )
+        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn
+          EitherT.rightT[Future, Set[AlcoholRegime]](allRegimes)
+        when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn
+          EitherT.leftT[Future, String]("No open obligation found.")
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
           result mustBe Left(ErrorModel(INTERNAL_SERVER_ERROR, "No open obligation found."))
@@ -86,9 +81,8 @@ class BeforeStartReturnServiceSpec extends SpecBase {
       }
 
       "must return a Left with INTERNAL_SERVER_ERROR if another error occurred" in new SetUp {
-        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn EitherT.leftT(
-          "Unexpected status code: 201"
-        )
+        when(mockAlcoholDutyReturnsConnector.getValidSubscriptionRegimes(any())(any())) thenReturn
+          EitherT.leftT[Future, String]("Unexpected status code: 201")
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
           result mustBe Left(ErrorModel(INTERNAL_SERVER_ERROR, "Unexpected status code: 201"))

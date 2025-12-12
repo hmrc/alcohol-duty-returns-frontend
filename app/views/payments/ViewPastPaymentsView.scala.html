@@ -39,10 +39,10 @@
 
         @if(viewModel.isDutyBalancePositive) {
             @paragraph(
-                content = HtmlContent(
-                    messages("viewPastPayments.youOwe") +
-                        s"<span class='break ${Css.headingLCssClass}'>${messages("viewPastPayments.duty.value", Money.format(viewModel.dutyBalance))}</span>"
-                ),
+                content = HtmlContent(HtmlFormat.fill(Seq(
+                    Html(messages("viewPastPayments.youOwe")),
+                    Html(s"<span class='break ${Css.headingLCssClass}'>${messages("viewPastPayments.duty.value", Money.format(viewModel.dutyBalance))}</span>")
+                ))),
                 classes = Css.headingMCssClass
             )
             @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))

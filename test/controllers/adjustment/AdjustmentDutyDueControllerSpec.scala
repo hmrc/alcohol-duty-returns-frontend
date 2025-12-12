@@ -20,17 +20,18 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.Beer
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
-import views.html.adjustment.AdjustmentDutyDueView
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.inject.bind
+import play.api.test.Helpers.*
 import services.adjustment.AdjustmentEntryService
+import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelCreator
+import views.html.adjustment.AdjustmentDutyDueView
 
 import java.time.YearMonth
 import scala.concurrent.Future

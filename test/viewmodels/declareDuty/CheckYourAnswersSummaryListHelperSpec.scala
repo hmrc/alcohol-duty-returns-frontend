@@ -21,6 +21,7 @@ import models.AlcoholRegime.Beer
 import models.ErrorModel
 import play.api.http.Status.BAD_REQUEST
 import play.api.i18n.Messages
+import org.mockito.Mockito.when
 import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryList, SummaryListRow}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}

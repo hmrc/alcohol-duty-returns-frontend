@@ -19,11 +19,11 @@ package controllers.returns
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
 import models.ReturnPeriod
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{never, times, verify, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.TableViewModel
 import viewmodels.returns.{SpiritsTables, ViewReturnViewModel}

@@ -1,10 +1,9 @@
-import sbt._
+import sbt.*
 
 object AppDependencies {
 
   private val bootstrapVersion = "10.4.0"
   private val hmrcMongoVersion = "2.11.0"
-  val mockitoScalaVersion = "2.0.0"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
@@ -22,11 +21,8 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "bootstrap-test-play-30"  % bootstrapVersion,
     "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
     "org.scalatest"           %% "scalatest"               % "3.2.19",
-    "org.scalatestplus"       %% "scalacheck-1-15"         % "3.2.11.0",
-    "org.mockito"             %% "mockito-scala-cats"      % mockitoScalaVersion,
+    "org.scalatestplus"       %% "scalacheck-1-17"         % "3.2.18.0",
     "com.beachape"            %% "enumeratum-scalacheck"   % "1.9.0",
-    "org.scalatestplus"       %% "mockito-3-4"             % "3.2.10.0",
-    "org.mockito"             %% "mockito-scala"           % mockitoScalaVersion,
     "org.scalacheck"          %% "scalacheck"              % "1.19.0",
     "org.jsoup"               %  "jsoup"                   % "1.21.2",
     "com.vladsch.flexmark"    %  "flexmark-all"            % "0.64.8"

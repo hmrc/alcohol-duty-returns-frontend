@@ -15,11 +15,13 @@
  */
 
 package viewmodels.checkAnswers.adjustment
+
 import base.SpecBase
 import models.AlcoholRegime.{Beer, Cider}
 import models.AlcoholRegimes
-import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import org.mockito.Mockito.when
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.i18n.Messages
 

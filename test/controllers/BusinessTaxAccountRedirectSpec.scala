@@ -19,8 +19,8 @@ package controllers
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.UserAnswersConnector
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.inject.bind
 import play.api.test.Helpers._

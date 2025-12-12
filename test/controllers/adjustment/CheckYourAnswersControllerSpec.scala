@@ -19,13 +19,13 @@ package controllers.adjustment
 import base.SpecBase
 import connectors.UserAnswersConnector
 import generators.ModelGenerators
-import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.UserAnswers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.adjustment._
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{never, times, verify, when}
+import pages.adjustment.*
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.http.HttpResponse

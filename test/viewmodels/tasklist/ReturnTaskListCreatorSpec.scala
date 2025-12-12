@@ -239,7 +239,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
       }
 
-      "and has selected a single regime to declare duty on but not started its task" - {
+      "and has selected a single regime to declare duty on but not started its task" -
         AlcoholRegime.values.foreach { regime =>
           s"for ${regime.entryName}" - {
             val declaredAlcoholDutyUserAnswer = emptyUserAnswers
@@ -312,9 +312,8 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             }
           }
         }
-      }
 
-      "and has selected a single regime to declare duty on and started but not finished its task" - {
+      "and has selected a single regime to declare duty on and started but not finished its task" -
         AlcoholRegime.values.foreach { regime =>
           val rateBands                                            = genListOfRateBandForRegime(regime).sample.value
           val declaredAlcoholDutyUserAnswerAndDeclarationForRegime = emptyUserAnswers
@@ -391,9 +390,8 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             }
           }
         }
-      }
 
-      "and has selected a single regime to declare duty on and finished its task" - {
+      "and has selected a single regime to declare duty on and finished its task" -
         AlcoholRegime.values.foreach { regime =>
           val rateBands       = genListOfRateBandForRegime(regime).sample.value
           val volumesAndRates = arbitraryVolumeAndRateByTaxType(
@@ -490,7 +488,6 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             }
           }
         }
-      }
 
       "and has selected two regimes to declare duty on and finished one of the tasks and started the other" - {
         val rateBandsBeer = genListOfRateBandForRegime(Beer).sample.value

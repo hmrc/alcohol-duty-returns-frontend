@@ -22,12 +22,12 @@ import forms.declareDuty.TellUsAboutSingleSPRRateFormProvider
 import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, NormalMode, RateBand}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.CategoriesByRateTypeHelper
 import views.html.declareDuty.TellUsAboutSingleSPRRateView
@@ -148,7 +148,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
             any(),
             any(),
             eqTo(false),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }

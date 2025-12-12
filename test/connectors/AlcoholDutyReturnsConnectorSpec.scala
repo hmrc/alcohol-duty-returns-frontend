@@ -21,8 +21,8 @@ import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider}
 import models.audit.AuditReturnSubmitted
 import models.checkAndSubmit.AdrReturnCreatedDetails
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{atLeastOnce, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}

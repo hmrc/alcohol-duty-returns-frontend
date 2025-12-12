@@ -34,15 +34,18 @@
 
 @paragraph(messages("unauthorised.p1"))
 @paragraph(
-    content = HtmlContent(
-        messages("unauthorised.p2.first") +
+    content = HtmlContent(HtmlFormat.fill(Seq(
+        Html(messages("unauthorised.p2.first")),
         link(
             id = "sign-in-with-an-organisation-account",
             text = messages("unauthorised.p2.link.text"),
             href = messages("unauthorised.link.url"),
-            newTab = true) +
-        messages("unauthorised.p2.commaForWelsh") + " " +
-        messages("unauthorised.p2.second")
-    ))
+            newTab = true
+        ),
+        Html(messages("unauthorised.p2.commaForWelsh")),
+        Html(" "),
+        Html(messages("unauthorised.p2.second"))
+    )))
+)
 
 }

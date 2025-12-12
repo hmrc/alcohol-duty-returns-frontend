@@ -19,8 +19,8 @@ package controllers
 import base.SpecBase
 import connectors.UserAnswersConnector
 import models.ObligationData
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._

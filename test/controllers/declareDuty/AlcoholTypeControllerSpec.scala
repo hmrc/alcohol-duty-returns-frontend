@@ -22,12 +22,12 @@ import forms.declareDuty.AlcoholTypeFormProvider
 import models.AlcoholRegime.{Beer, Cider, Wine}
 import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.AlcoholTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.AlcoholTypeView
 

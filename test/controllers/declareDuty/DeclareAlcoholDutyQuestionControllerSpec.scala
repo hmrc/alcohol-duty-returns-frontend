@@ -22,8 +22,8 @@ import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.Beer
 import models.{AlcoholRegimes, NormalMode}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, sectionPages}
 import play.api.inject.bind
 import play.api.libs.json.Json

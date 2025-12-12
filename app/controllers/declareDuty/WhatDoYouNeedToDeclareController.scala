@@ -73,7 +73,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
   def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       getRateBands(request.userAnswers, request.returnPeriod, regime)
-        .flatMap { rateBands: Seq[RateBand] =>
+        .flatMap { (rateBands: Seq[RateBand]) =>
           formProvider(regime)
             .bindFromRequest()
             .fold(
@@ -92,12 +92,10 @@ class WhatDoYouNeedToDeclareController @Inject() (
                 )
             )
         }
-        .recover(
-          { case e =>
-            logger.warn("Alcohol Type unselected", e)
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-          }
-        )
+        .recover { case e =>
+          logger.warn("Alcohol Type unselected", e)
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        }
     }
 
   private def getRateBands(

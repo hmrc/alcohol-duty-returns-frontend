@@ -19,6 +19,7 @@ package controllers.payments
 import base.SpecBase
 import connectors.AlcoholDutyAccountConnector
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.test.Helpers._
 import viewmodels.payments.ViewPastPaymentsHelper

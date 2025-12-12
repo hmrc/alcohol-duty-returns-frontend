@@ -62,8 +62,8 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         "volumes[0].pureAlcohol"         -> ""
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_totalLitres", "return.journey.error.noValue.totalLitres", Seq(rateBandDescription, "")),
-        FormError("volumes_0_pureAlcohol", "return.journey.error.noValue.pureAlcohol", Seq(rateBandDescription, ""))
+        FormError("volumes_0_totalLitres", "return.journey.error.noValue.totalLitres", Seq(rateBandDescription, null)),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.noValue.pureAlcohol", Seq(rateBandDescription, null))
       )
     }
 
@@ -78,12 +78,12 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         FormError(
           "volumes_0_totalLitres",
           s"return.journey.error.tooManyDecimalPlaces.totalLitres",
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         ),
         FormError(
           "volumes_0_pureAlcohol",
           s"return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         )
       )
     }
@@ -96,8 +96,8 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         "volumes[0].pureAlcohol"         -> "invalid"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_totalLitres", "return.journey.error.invalid.totalLitres", Seq(rateBandDescription, "")),
-        FormError("volumes_0_pureAlcohol", "return.journey.error.invalid.pureAlcohol", Seq(rateBandDescription, ""))
+        FormError("volumes_0_totalLitres", "return.journey.error.invalid.totalLitres", Seq(rateBandDescription, null)),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.invalid.pureAlcohol", Seq(rateBandDescription, null))
       )
     }
 
@@ -112,12 +112,12 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         FormError(
           "volumes_0_totalLitres",
           "return.journey.error.minimumValue.totalLitres",
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         ),
         FormError(
           "volumes_0_pureAlcohol",
           "return.journey.error.minimumValue.pureAlcohol",
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         )
       )
     }
@@ -133,12 +133,12 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         FormError(
           "volumes_0_totalLitres",
           "return.journey.error.maximumValue.totalLitres",
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         ),
         FormError(
           "volumes_0_pureAlcohol",
           "return.journey.error.maximumValue.pureAlcohol",
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         )
       )
     }
@@ -151,7 +151,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         "volumes[0].pureAlcohol"         -> "2.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", Seq(rateBandDescription, ""))
+        FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", Seq(rateBandDescription, null))
       )
     }
 
@@ -166,12 +166,12 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         FormError(
           "volumes_0_totalLitres",
           Seq("return.journey.error.maximumValue.totalLitres"),
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         ),
         FormError(
           "volumes_0_pureAlcohol",
           Seq("return.journey.error.noValue.pureAlcohol"),
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         )
       )
     }
@@ -187,12 +187,12 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         FormError(
           "volumes_0_totalLitres",
           Seq("return.journey.error.tooManyDecimalPlaces.totalLitres"),
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         ),
         FormError(
           "volumes_0_pureAlcohol",
           Seq("return.journey.error.tooManyDecimalPlaces.pureAlcohol"),
-          Seq(rateBandDescription, "")
+          Seq(rateBandDescription, null)
         )
       )
     }

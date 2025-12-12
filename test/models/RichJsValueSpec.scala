@@ -117,8 +117,7 @@ class RichJsValueSpec
       )
     }
 
-    "must add a value to an empty JsArray" in {
-
+    "must add a value to an empty JsArray" in
       forAll(nonEmptyAlphaStr) { newValue =>
         val value = Json.arr()
 
@@ -126,10 +125,8 @@ class RichJsValueSpec
 
         value.set(path, JsString(newValue)) mustEqual JsSuccess(Json.arr(newValue))
       }
-    }
 
-    "must add a value to the end of a JsArray" in {
-
+    "must add a value to the end of a JsArray" in
       forAll(nonEmptyAlphaStr, nonEmptyAlphaStr) { (oldValue, newValue) =>
         val value = Json.arr(oldValue)
 
@@ -137,10 +134,8 @@ class RichJsValueSpec
 
         value.set(path, JsString(newValue)) mustEqual JsSuccess(Json.arr(oldValue, newValue))
       }
-    }
 
-    "must change a value in an existing JsArray" in {
-
+    "must change a value in an existing JsArray" in
       forAll(nonEmptyAlphaStr, nonEmptyAlphaStr, nonEmptyAlphaStr) { (firstValue, secondValue, newValue) =>
         val value = Json.arr(firstValue, secondValue)
 
@@ -148,7 +143,6 @@ class RichJsValueSpec
 
         value.set(path, JsString(newValue)) mustEqual JsSuccess(Json.arr(newValue, secondValue))
       }
-    }
 
     "must set a nested value on a JsArray" in {
 

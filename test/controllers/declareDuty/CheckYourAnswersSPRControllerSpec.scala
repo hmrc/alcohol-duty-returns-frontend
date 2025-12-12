@@ -19,6 +19,7 @@ package controllers.declareDuty
 import base.SpecBase
 import connectors.UserAnswersConnector
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call

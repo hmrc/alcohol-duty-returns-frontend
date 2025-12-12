@@ -21,8 +21,8 @@ import connectors.UserAnswersConnector
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.NormalMode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.dutySuspended._
 import play.api.inject.bind
 import play.api.libs.json.Json

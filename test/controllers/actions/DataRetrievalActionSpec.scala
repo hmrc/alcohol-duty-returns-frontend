@@ -20,8 +20,8 @@ import base.SpecBase
 import config.Constants.periodKeySessionKey
 import connectors.UserAnswersConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.http.Status.{LOCKED, SEE_OTHER}
 import play.api.mvc.Result
 import play.api.test.Helpers._

@@ -21,6 +21,7 @@ import config.Constants.ukTimeZoneStringId
 import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Configuration
 import play.api.inject.bind
 import play.api.test.Helpers._

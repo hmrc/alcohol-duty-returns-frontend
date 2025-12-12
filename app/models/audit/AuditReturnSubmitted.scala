@@ -77,7 +77,7 @@ object AuditReturnSubmitted {
     userAnswers: UserAnswers,
     adrReturnSubmission: AdrReturnSubmission,
     submissionTime: Instant
-  ): AuditReturnSubmitted                            =
+  ): AuditReturnSubmitted =
     AuditReturnSubmitted(
       prePopulatedData = PrePopulatedData(userAnswers, submissionTime),
       dutyDeclared = adrReturnSubmission.dutyDeclared.declared,

@@ -21,16 +21,14 @@ import play.api.i18n.Messages
 
 object TitleUtils {
 
-  /**
-    * Call this one if you have a validated form on your page since it'll prefix the browser title with Error: if one
+  /** Call this one if you have a validated form on your page since it'll prefix the browser title with Error: if one
     *
     * title should already been looked up
     */
   def title(form: Form[_], title: String)(implicit messages: Messages): String =
     titleNoForm(s"${errorPrefix(form)} $title")
 
-  /**
-    * Call this one on a page without a validated form
+  /** Call this one on a page without a validated form
     *
     * title should already been looked up
     */

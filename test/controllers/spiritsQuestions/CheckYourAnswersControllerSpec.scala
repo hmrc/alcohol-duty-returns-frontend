@@ -22,6 +22,7 @@ import generators.ModelGenerators
 import models.SpiritType
 import models.spiritsQuestions.Whisky
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import pages.spiritsQuestions.{DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.inject.bind
 import play.api.test.Helpers._

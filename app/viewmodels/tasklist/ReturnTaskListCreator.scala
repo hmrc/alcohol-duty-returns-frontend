@@ -162,7 +162,7 @@ class ReturnTaskListCreator @Inject() {
   private def returnAdjustmentJourneyTaskListItem(
     userAnswers: UserAnswers
   )(implicit messages: Messages): TaskListItem = {
-    val getDeclarationState = () => {
+    val getDeclarationState = () =>
       (
         userAnswers.get(AdjustmentListPage), // No more adjustments to declare
         userAnswers.get(AdjustmentEntryListPage), // Adjustments entered
@@ -173,7 +173,6 @@ class ReturnTaskListCreator @Inject() {
           NotStarted
         case (_, _, _)                 => InProgress // Something declared or in progress and unknown if more to declare
       }
-    }
 
     val inProgressRoute: String =
       (

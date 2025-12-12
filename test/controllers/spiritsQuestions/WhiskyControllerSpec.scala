@@ -22,8 +22,8 @@ import forms.spiritsQuestions.WhiskyFormProvider
 import models.spiritsQuestions.Whisky
 import models.{NormalMode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.spiritsQuestions.WhiskyPage
 import play.api.Application
 import play.api.inject.bind

@@ -19,8 +19,8 @@ package controllers.actions
 import base.SpecBase
 import config.FrontendAppConfig
 import models.requests.RequestWithOptAppaId
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.{BodyParsers, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -142,7 +142,7 @@ class SignOutActionSpec extends SpecBase {
       }
     }
 
-    "redirect to the sign out page and do not release locks if not authorised" in {
+    "redirect to the sign out page and do not release locks if not authorised" in
       List(
         InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
@@ -166,7 +166,6 @@ class SignOutActionSpec extends SpecBase {
           appaIdStore(appaIdStoreKey) mustBe None
         }
       }
-    }
 
     "return the exception if there is any other exception" in {
       val msg = "Test Exception"

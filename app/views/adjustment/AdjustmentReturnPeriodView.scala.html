@@ -51,15 +51,16 @@
             @pageHeading(messages("adjustmentReturnPeriod.heading"))
 
             @govukInsetText(InsetText(
-                content = HtmlContent(
-                    messages("adjustmentReturnPeriod.guidance") +
+                content = HtmlContent(HtmlFormat.fill(Seq(
+                    Html(messages("adjustmentReturnPeriod.guidance")),
                     link(
                         id = "excise-enquiries-link",
                         text = messages("adjustmentReturnPeriod.exciseEnquiries.link"),
                         href = messages("adjustmentReturnPeriod.exciseEnquiries.url"),
                         newTab = true
-                    ) + "."
-                )
+                    ),
+                    Html(".")
+                )))
             ))
 
             @govukDateInput(

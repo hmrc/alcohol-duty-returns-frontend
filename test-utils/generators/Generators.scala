@@ -101,7 +101,7 @@ trait Generators extends ModelGenerators {
   def nonEnumStrings[E <: EnumEntry](enums: Seq[EnumEntry]): Gen[String] =
     enums.foldLeft(nonEmptyString) { case (genSoFar, e) => genSoFar.suchThat(_ != e.entryName) }
 
-  def nonEmptyString: Gen[String]                                        =
+  def nonEmptyString: Gen[String] =
     arbitrary[String] suchThat (_.nonEmpty)
 
   def stringsWithMaxLength(maxLength: Int): Gen[String] =
