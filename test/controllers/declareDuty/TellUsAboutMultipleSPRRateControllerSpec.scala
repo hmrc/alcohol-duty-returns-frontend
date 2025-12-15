@@ -22,12 +22,12 @@ import forms.declareDuty.TellUsAboutMultipleSPRRateFormProvider
 import models.declareDuty.VolumeAndRateByTaxType
 import models.{CheckMode, NormalMode}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.TellUsAboutMultipleSPRRateHelper
 import views.html.declareDuty.TellUsAboutMultipleSPRRateView

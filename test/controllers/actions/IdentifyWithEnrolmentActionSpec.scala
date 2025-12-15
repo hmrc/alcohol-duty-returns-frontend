@@ -19,8 +19,8 @@ package controllers.actions
 import base.SpecBase
 import config.FrontendAppConfig
 import controllers.auth.routes
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.{BodyParsers, Request, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -177,7 +177,7 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
       }
     }
 
-    "redirect to the unauthorised page if not authorised" in {
+    "redirect to the unauthorised page if not authorised" in
       List(
         InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
@@ -195,9 +195,8 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
         status(result)                 mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad.url
       }
-    }
 
-    "redirect to the login page if no longer authorised or never logged in" in {
+    "redirect to the login page if no longer authorised or never logged in" in
       List(
         BearerTokenExpired(),
         MissingBearerToken(),
@@ -219,7 +218,6 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
           result
         ).value mustBe s"$loginUrl?continue=$loginContinueUrl&origin=alcohol-duty-returns-frontend&affinityGroup=Organisation"
       }
-    }
 
     "return the exception if there is any other exception" in {
       val msg = "Test Exception"

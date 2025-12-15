@@ -21,12 +21,12 @@ import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import forms.declareDuty.WhatDoYouNeedToDeclareFormProvider
 import models.{CheckMode, NormalMode}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{reset, times, verify, when}
 import pages.declareDuty.{AlcoholTypePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.TaxBandsViewModel
 import views.html.declareDuty.WhatDoYouNeedToDeclareView
@@ -160,7 +160,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           .rateBandByRegime(any(), eqTo(userAnswersWithAlcoholType.regimes.regimes.toSeq))(any())
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockReturnsNavigator, times(1))
-          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(NormalMode), any(), any(), eqTo(false), eqTo(None))
+          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(NormalMode), any(), any(), eqTo(false), eqTo(null))
       }
     }
 
@@ -195,7 +195,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           .rateBandByRegime(any(), eqTo(userAnswers.regimes.regimes.toSeq))(any())
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockReturnsNavigator, times(1))
-          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(true), eqTo(None))
+          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(true), eqTo(null))
       }
     }
 
@@ -230,7 +230,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           .rateBandByRegime(any(), eqTo(userAnswers.regimes.regimes.toSeq))(any())
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockReturnsNavigator, times(1))
-          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(false), eqTo(None))
+          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(false), eqTo(null))
       }
     }
 

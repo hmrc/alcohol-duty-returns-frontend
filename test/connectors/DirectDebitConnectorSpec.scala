@@ -19,8 +19,8 @@ package connectors
 import base.SpecBase
 import config.FrontendAppConfig
 import models.payments.{StartDirectDebitRequest, StartDirectDebitResponse}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{atLeastOnce, verify, when}
 import play.api.http.Status.{BAD_GATEWAY, CREATED, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}

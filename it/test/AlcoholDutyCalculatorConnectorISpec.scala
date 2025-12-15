@@ -325,13 +325,13 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
     val periodTaxTypeCodeToRateBands =
       Map((ratePeriod, taxTypeCode) -> rateBand, (ratePeriod2, taxTypeCode2) -> rateBand2)
 
-    val rateBands                    = genListOfRateBandForRegime(regime).sample.value.toSet
-    val repackagedUrl                = s"$url/calculate-repackaged-duty-change"
-    val totalAdjustmentUrl           = s"$url/calculate-total-adjustment"
-    val adjustmentDutyUrl            = s"$url/calculate-adjustment-duty"
-    val totalDuty                    = s"$url/calculate-total-duty"
-    val rateBandUrl                  = s"$url/rate-band"
-    val rateBandsUrl                 = s"$url/rate-bands"
-    val ratesUrl                     = s"$url/rates"
+    val rateBands          = genListOfRateBandForRegime(regime).sample.value.toSet
+    val repackagedUrl      = s"$url/calculate-repackaged-duty-change"
+    val totalAdjustmentUrl = s"$url/calculate-total-adjustment"
+    val adjustmentDutyUrl  = s"$url/calculate-adjustment-duty"
+    val totalDuty          = s"$url/calculate-total-duty"
+    val rateBandUrl        = s"$url/rate-band"
+    val rateBandsUrl       = s"$url/rate-bands"
+    val ratesUrl           = s"$url/rates"
   }
 }

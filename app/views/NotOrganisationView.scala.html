@@ -37,14 +37,17 @@
 
         @paragraph(messages("unauthorised.not-org.p1"))
         @paragraph(
-            content = HtmlContent(
-                messages("unauthorised.not-org.p2.first") +
-                    link(
-                        id = "sign-in-with-an-organisation-account",
-                        text = messages("unauthorised.not-org.p2.second"),
-                        href = messages("unauthorised.not-org.link.url"),
-                        newTab = true) + " " +
-                    messages("unauthorised.not-org.p2.third")),
+            content = HtmlContent(HtmlFormat.fill(Seq(
+                Html(messages("unauthorised.not-org.p2.first")),
+                link(
+                    id = "sign-in-with-an-organisation-account",
+                    text = messages("unauthorised.not-org.p2.second"),
+                    href = messages("unauthorised.not-org.link.url"),
+                    newTab = true
+                ),
+                Html(" "),
+                Html(messages("unauthorised.not-org.p2.third"))
+            ))),
             classes = Css.paddingBottomCssClass
         )
 

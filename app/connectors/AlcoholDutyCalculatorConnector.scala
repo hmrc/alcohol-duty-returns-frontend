@@ -17,12 +17,13 @@
 package connectors
 
 import config.FrontendAppConfig
+import models.*
+import models.RatePeriod.*
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.AlcoholDuty
-import models._
-import models.RatePeriod._
 import play.api.http.Status.OK
 import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
@@ -56,10 +57,10 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient
       .get(url"${config.adrCalculatorRateBandUrl()}?$queryParams")
       .execute[Either[UpstreamErrorResponse, HttpResponse]]
-      .map({
+      .map {
         case Right(response) if response.status == OK => response.json.asOpt[RateBand]
         case _                                        => None
-      })
+      }
   }
 
   def rateBands(ratePeriodsAndTaxCodes: Seq[(YearMonth, String)])(implicit
@@ -74,10 +75,10 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient
       .get(url"${config.adrCalculatorRateBandsUrl()}?$queryParams")
       .execute[Either[UpstreamErrorResponse, HttpResponse]]
-      .map({
+      .map {
         case Right(response) if response.status == OK => response.json.as[Seq[((YearMonth, String), RateBand)]].toMap
         case _                                        => Map.empty
-      })
+      }
   }
 
   def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit

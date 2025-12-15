@@ -72,8 +72,8 @@ class AlcoholRegimesViewOrderSpec extends SpecBase {
     Seq((None, Some(Beer)), (Some(Beer), Some(Spirits)), (Some(Spirits), None)).foreach {
       case (current, expectedNext) =>
         s"find the next view regime when all regimes are present except Cider and Wine and the current regime is ${current
-          .map(_.entryName)
-          .getOrElse("None")}" in new SetUp {
+            .map(_.entryName)
+            .getOrElse("None")}" in new SetUp {
           AlcoholRegimesViewOrder.nextViewRegime(allRegimesExceptCiderWineOtherFermented, current) mustBe expectedNext
         }
     }

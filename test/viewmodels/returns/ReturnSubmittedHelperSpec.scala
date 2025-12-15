@@ -20,8 +20,8 @@ import base.SpecBase
 import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.requests.IdentifierRequest
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text

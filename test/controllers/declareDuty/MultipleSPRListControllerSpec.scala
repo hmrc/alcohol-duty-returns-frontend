@@ -21,12 +21,12 @@ import connectors.UserAnswersConnector
 import forms.declareDuty.MultipleSPRListFormProvider
 import models.NormalMode
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import pages.declareDuty.{DoYouWantToAddMultipleSPRToListPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.MultipleSPRListHelper
 import views.html.declareDuty.MultipleSPRListView
@@ -136,7 +136,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
             any(),
             any(),
             eqTo(false),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }
@@ -191,7 +191,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
             eqTo(expectedSetUserAnswers),
             any(),
             eqTo(false),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }

@@ -39,8 +39,8 @@ class AdjustmentVolumeSummary {
         routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
       } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
       val value = s"<span class='break'>${HtmlFormat.escape(messages("site.2DP", totalLitres))} ${messages(
-        "adjustmentVolume.totalLitres"
-      )}</span><span class='break'>${HtmlFormat.escape(messages("site.4DP", pureAlcohol))} ${messages("adjustmentVolume.pureAlcohol")}</span>"
+          "adjustmentVolume.totalLitres"
+        )}</span><span class='break'>${HtmlFormat.escape(messages("site.4DP", pureAlcohol))} ${messages("adjustmentVolume.pureAlcohol")}</span>"
 
       SummaryListRowViewModel(
         key = "adjustmentVolume.checkYourAnswersLabel",

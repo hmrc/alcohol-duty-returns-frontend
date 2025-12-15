@@ -25,15 +25,15 @@ import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.AdjustmentNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{reset, times, verify, when}
 import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
-import views.html.adjustment.AdjustmentTaxTypeView
 import viewmodels.adjustment.AdjustmentTaxTypeViewModel
+import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
 import scala.concurrent.Future
@@ -90,7 +90,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
   "AdjustmentTaxType Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in
       running(application) {
         val request = FakeRequest(GET, adjustmentTaxTypeRoute)
         val result  = route(application, request).value
@@ -102,7 +102,6 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
           getMessages(app)
         ).toString
       }
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 

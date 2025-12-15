@@ -33,8 +33,8 @@ object SpiritTypeSummary {
       val rowValue = answers.map(spiritType => HtmlFormat.escape(messages(s"spiritType.$spiritType")).toString)
 
       val value = ValueViewModel(HtmlContent(s"""<span aria-label='${messages(
-        "spiritType.checkYourAnswersLabel"
-      )}'><span class='break'>${rowValue.mkString(",</span><span class='break'>")}</span>"""))
+          "spiritType.checkYourAnswersLabel"
+        )}'><span class='break'>${rowValue.mkString(",</span><span class='break'>")}</span>"""))
 
       Some(
         SummaryListRowViewModel(

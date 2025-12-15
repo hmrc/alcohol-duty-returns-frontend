@@ -47,14 +47,17 @@
 
     @subHeading(messages("declaringWineDuty.subHeading1"), classes = Css.headingMCssClass)
 
-    @paragraph(content = HtmlContent(
-        link(
-            id = "alcoholic-strength-guidance-link",
-            text = messages("declaringWineDuty.alcoholicStrength.link"),
-            href = alcoholicStrengthGuidanceUrl,
-            newTab = true
-        ) + "."
-    ))
+    @paragraph(
+        content = HtmlContent(HtmlFormat.fill(Seq(
+            link(
+                id = "alcoholic-strength-guidance-link",
+                text = messages("declaringWineDuty.alcoholicStrength.link"),
+                href = alcoholicStrengthGuidanceUrl,
+                newTab = true
+            ),
+            Html(".")
+        )))
+    )
 
     @paragraph(messages("declaringWineDuty.p2"))
     @bulletList(Seq(
@@ -70,13 +73,13 @@
 
     @govukDetails(Details(
         summary = messages("declaringWineDuty.details.summary"),
-        content = HtmlContent(
-            paragraph(messages("declaringWineDuty.details.p")) +
+        content = HtmlContent(HtmlFormat.fill(Seq(
+            paragraph(messages("declaringWineDuty.details.p")),
             numberedList(Seq(
                 messages("declaringWineDuty.details.calculation1"),
                 messages("declaringWineDuty.details.calculation2")
-            )).toString
-        )
+            ))
+        )))
     ))
 
     @sectionBreak()

@@ -21,8 +21,11 @@ import cats.data.EitherT
 import connectors.DirectDebitConnector
 import models.payments.StartDirectDebitResponse
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
+
+import scala.concurrent.Future
 
 class StartDirectDebitControllerSpec extends SpecBase {
 
@@ -34,7 +37,7 @@ class StartDirectDebitControllerSpec extends SpecBase {
       val directDebitConnector = mock[DirectDebitConnector]
 
       when(directDebitConnector.startDirectDebit(any())(any())).thenReturn(
-        EitherT.rightT(startDirectDebitResponse)
+        EitherT.rightT[Future, StartDirectDebitResponse](startDirectDebitResponse)
       )
 
       val application = applicationBuilder()
@@ -56,7 +59,7 @@ class StartDirectDebitControllerSpec extends SpecBase {
       val directDebitConnector = mock[DirectDebitConnector]
 
       when(directDebitConnector.startDirectDebit(any())(any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.leftT[Future, String]("Error message")
       )
 
       val application = applicationBuilder()

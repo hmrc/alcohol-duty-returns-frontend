@@ -21,12 +21,12 @@ import connectors.UserAnswersConnector
 import forms.declareDuty.MultipleSPRMissingDetailsConfirmationFormProvider
 import models.NormalMode
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.declareDuty._
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{reset, times, verify, when}
+import pages.declareDuty.*
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.MissingSPRRateBandHelper
 import views.html.declareDuty.MultipleSPRMissingDetailsConfirmationView
@@ -220,7 +220,7 @@ class MultipleSPRMissingDetailsConfirmationControllerSpec extends SpecBase {
           eqTo(expectedCachedUserAnswers),
           eqTo(regime),
           eqTo(false),
-          eqTo(None)
+          eqTo(null)
         )
       }
     }

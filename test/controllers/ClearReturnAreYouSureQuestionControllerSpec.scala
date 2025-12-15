@@ -20,8 +20,8 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.ClearReturnAreYouSureQuestionFormProvider
 import models.AlcoholRegime.Beer
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{never, times, verify, when}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails

@@ -18,8 +18,8 @@ package controllers.actions
 
 import base.SpecBase
 import models.requests.SignedInRequest
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.{BodyParsers, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -71,7 +71,7 @@ class CheckSignedInActionSpec extends SpecBase {
       }
     }
 
-    "execute the block and return not signed in if no longer authorised or never logged in" in {
+    "execute the block and return not signed in if no longer authorised or never logged in" in
       List(
         BearerTokenExpired(),
         MissingBearerToken(),
@@ -98,6 +98,5 @@ class CheckSignedInActionSpec extends SpecBase {
           signedInStore(signedInKey) mustBe false
         }
       }
-    }
   }
 }

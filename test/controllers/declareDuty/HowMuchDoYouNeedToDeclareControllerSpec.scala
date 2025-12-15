@@ -21,8 +21,8 @@ import connectors.UserAnswersConnector
 import forms.declareDuty.HowMuchDoYouNeedToDeclareFormProvider
 import models.{AlcoholRegime, NormalMode}
 import navigation.ReturnsNavigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Arbitrary._
 import pages.declareDuty.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
@@ -161,7 +161,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
             any(),
             any(),
             eqTo(false),
-            eqTo(None)
+            eqTo(null)
           )
       }
     }

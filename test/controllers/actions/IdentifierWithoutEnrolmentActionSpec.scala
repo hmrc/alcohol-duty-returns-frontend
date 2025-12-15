@@ -19,8 +19,8 @@ package controllers.actions
 import base.SpecBase
 import config.FrontendAppConfig
 import controllers.auth.routes
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.{BodyParsers, Request, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -115,7 +115,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
       }
     }
 
-    "redirect to the unauthorised page if not authorised" in {
+    "redirect to the unauthorised page if not authorised" in
       List(
         InsufficientConfidenceLevel(),
         UnsupportedAuthProvider(),
@@ -130,7 +130,6 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
         status(result)                 mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad.url
       }
-    }
 
     "redirect to the not an organisation custom no access page" in {
       when(mockAuthConnector.authorise[Unit](any(), any())(any(), any()))
@@ -142,7 +141,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
       redirectLocation(result).value mustBe routes.NotOrganisationController.onPageLoad.url
     }
 
-    "redirect to the login page if no longer authorised or never logged in" in {
+    "redirect to the login page if no longer authorised or never logged in" in
       List(
         BearerTokenExpired(),
         MissingBearerToken(),
@@ -163,7 +162,6 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
           result
         ).value mustBe s"$loginUrl?continue=$loginContinueUrl&origin=alcohol-duty-returns-frontend&affinityGroup=Organisation"
       }
-    }
 
     "return the exception if there is any other exception" in {
       val msg = "Test Exception"
