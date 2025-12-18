@@ -21,6 +21,7 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
+        govukInsetText: GovukInsetText,
         pageHeading: PageHeading,
         paragraph: Paragraph,
         link: Link,
@@ -41,7 +42,9 @@
         messages("payCentralAssessment.bullet2")
     ))
 
-    @paragraph(messages("payCentralAssessment.guidance3"), Css.paddingBottomCssClass)
+    @govukInsetText(InsetText(
+        content = messages("payCentralAssessment.guidance3")
+    ))
 
     @paragraph(
         content = HtmlContent(
