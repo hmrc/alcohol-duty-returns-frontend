@@ -18,7 +18,6 @@
 @import config.Constants.Css
 @import templates.FullWidthMainContent
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import views.html.helper.CSPNonce
 
 @this(
@@ -33,7 +32,6 @@
     hmrcTimeoutDialog: HmrcTimeoutDialog,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcScripts: HmrcScripts,
-    betaBanner: StandardBetaBanner,
     defaultMainContentLayout: TwoThirdsMainContent,
     fullWidthPageLayout: FullWidthMainContent
 )
@@ -100,8 +98,7 @@
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(routes.ServiceEntryController.onPageLoad.url),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None,
-        phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
+        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None
     )),
     beforeContentBlock = Some(beforeContent),
     footerBlock        = Some(hmrcStandardFooter()),

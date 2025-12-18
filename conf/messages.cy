@@ -243,6 +243,7 @@ manageCentralAssessment.title = Rheoli asesiad canolog
 manageCentralAssessment.heading = Rheoli asesiad canolog
 manageCentralAssessment.guidance1 = Ni chawsom eich Datganiad ar gyfer {0} i {1} (a oedd yn ddyledus ar {2}).
 manageCentralAssessment.guidance2 = Gwnaethom asesu bod {0} yn ddyledus gennych am y cyfnod hwnnw.
+manageCentralAssessment.inset = Mae’r asesiad hwn yn seiliedig ar yr hyn rydych wedi rhoi gwybod i ni eisoes ynglŷn â’ch cynhyrchiant yn eich datganiad Toll Alcohol, neu yn eich cais gwreiddiol am gymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA).
 manageCentralAssessment.guidance3 = Os byddwch yn gwneud y canlynol:
 manageCentralAssessment.bullet1 = cyflwyno’ch Datganiad a thalu unrhyw doll sy’n ddyledus, yna bydd y taliad hwn yn cael ei ganslo
 manageCentralAssessment.bullet2 = talu’r tâl nawr, yna mae’n dal i fod yn rhaid i chi gyflwyno’ch Datganiad hwyr
