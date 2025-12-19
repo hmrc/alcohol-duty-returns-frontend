@@ -23,6 +23,7 @@
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
         govukButton: GovukButton,
+        govukInsetText: GovukInsetText,
         pageHeading: PageHeading,
         paragraph: Paragraph,
         spanWithLineBreak: SpanWithLineBreak,
@@ -46,6 +47,10 @@
                 messages("manageCentralAssessment.guidance1", viewModel.dateFrom, viewModel.dateTo, viewModel.returnDueDate),
                 messages("manageCentralAssessment.guidance2", messages("site.currency.2DP", viewModel.amount))
             ))
+        ))
+
+        @govukInsetText(InsetText(
+            content = messages("manageCentralAssessment.inset")
         ))
 
         @paragraph(messages("manageCentralAssessment.guidance3"))
