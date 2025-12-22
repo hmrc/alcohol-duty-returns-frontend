@@ -57,7 +57,9 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends Logging {
       case Some(true)  => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
       case Some(false) => routes.TaskListController.onPageLoad
       case None        =>
-        logger.warn("There was no value for DeclareQuarterlySpiritsPage in the database")
+        logger.warn(
+          "[QuarterlySpiritsQuestionsNavigator] [checkDeclareQuarterlySpiritsNavigation] There was no value for DeclareQuarterlySpiritsPage in the database"
+        )
         routes.JourneyRecoveryController.onPageLoad()
     }
 
