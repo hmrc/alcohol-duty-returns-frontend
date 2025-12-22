@@ -77,7 +77,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           )
         )
       case _                                                                                                      =>
-        logger.warn("Couldn't fetch the adjustmentType and repackagedRateBand in AdjustmentEntry from user answers")
+        logger.warn(
+          "[AdjustmentRepackagedTaxTypeController] [onPageLoad] Couldn't fetch the adjustmentType and repackagedRateBand in AdjustmentEntry from user answers"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
@@ -109,11 +111,15 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
                     }
                   case _                                    =>
-                    logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
+                    logger.warn(
+                      "[AdjustmentRepackagedTaxTypeController] [onSubmit] Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers"
+                    )
                     Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 }
               case None                         =>
-                logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
+                logger.warn(
+                  "[AdjustmentRepackagedTaxTypeController] [onSubmit] Couldn't fetch currentAdjustmentEntry from user answers"
+                )
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
         )
@@ -156,7 +162,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           )
         )
       case _                                                                               =>
-        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
+        logger.warn(
+          "[AdjustmentRepackagedTaxTypeController] [handleFormWithErrors] Couldn't fetch the adjustmentType in AdjustmentEntry from user answers"
+        )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 

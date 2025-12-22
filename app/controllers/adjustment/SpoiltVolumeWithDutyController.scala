@@ -63,7 +63,7 @@ class SpoiltVolumeWithDutyController @Inject() (
           .get(CurrentAdjustmentEntryPage) match {
           case None =>
             logger.warn(
-              "Couldn't fetch CurrentAdjustmentEntryPage from user answers"
+              "[SpoiltVolumeWithDutyController] [onPageLoad] Couldn't fetch CurrentAdjustmentEntryPage from user answers"
             )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           case Some(
@@ -95,7 +95,9 @@ class SpoiltVolumeWithDutyController @Inject() (
             Ok(view(form, mode, regime))
         }
       case _            =>
-        logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
+        logger.warn(
+          "[SpoiltVolumeWithDutyController] [onPageLoad] Couldn't fetch regime value in AdjustmentEntry from user answers"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
@@ -131,7 +133,9 @@ class SpoiltVolumeWithDutyController @Inject() (
               }
             )
         case _            =>
-          logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
+          logger.warn(
+            "[SpoiltVolumeWithDutyController] [onSubmit] Couldn't fetch regime value in AdjustmentEntry from user answers"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
   }

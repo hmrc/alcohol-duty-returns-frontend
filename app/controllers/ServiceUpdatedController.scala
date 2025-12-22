@@ -50,7 +50,7 @@ class ServiceUpdatedController @Inject() (
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case None            =>
-        logger.warn("Period key not present in session")
+        logger.warn("[ServiceUpdatedController] [onSubmit] Period key not present in session")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
         val returnId             = ReturnId(request.appaId, periodKey)
@@ -62,11 +62,11 @@ class ServiceUpdatedController @Inject() (
         } yield newAnswers
         newUserAnswers.map {
           case Right(userAnswer) =>
-            logger.info(s"Return ${request.appaId}/$periodKey created")
+            logger.info(s"[ServiceUpdatedController] [onSubmit] Return ${request.appaId}/$periodKey created")
             userAnswersAuditHelper.auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
-            logger.warn(s"Unable to create new userAnswers: $error")
+            logger.warn(s"[ServiceUpdatedController] [onSubmit] Unable to create new userAnswers: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }

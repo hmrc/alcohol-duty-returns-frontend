@@ -55,7 +55,7 @@ class MultipleSPRListController @Inject() (
         .sprTableViewModel(request.userAnswers, regime)
         .fold(
           error => {
-            logger.warn(s"Failed to create SPR table: $error")
+            logger.warn(s"[MultipleSPRListController] [onPageLoad] Failed to create SPR table: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           },
           sprTable => Ok(view(form, regime, sprTable))
@@ -72,7 +72,7 @@ class MultipleSPRListController @Inject() (
               .sprTableViewModel(request.userAnswers, regime)
               .fold(
                 error => {
-                  logger.warn(s"Failed to create SPR table: $error")
+                  logger.warn(s"[MultipleSPRListController] [onSubmit] Failed to create SPR table: $error")
                   Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 },
                 sprTable => Future.successful(BadRequest(view(formWithErrors, regime, sprTable)))

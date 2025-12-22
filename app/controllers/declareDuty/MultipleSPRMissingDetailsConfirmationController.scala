@@ -58,7 +58,9 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
           val form                        = formProvider(hasMultipleRateBands)
           Ok(view(form, regime, missingRateBandDescriptions, hasMultipleRateBands))
         case _                                                   =>
-          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
+          logger.warn(
+            "[MultipleSPRMissingDetailsConfirmationController] [onPageLoad] User answers do not contain the required data"
+          )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }
@@ -100,7 +102,9 @@ class MultipleSPRMissingDetailsConfirmationController @Inject() (
                 )
             )
         case _                                                   =>
-          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetailsConfirmation page")
+          logger.warn(
+            "[MultipleSPRMissingDetailsConfirmationController] [onSubmit] User answers do not contain the required data"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
     }

@@ -42,7 +42,7 @@ class ReturnSubmittedController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify { implicit request =>
     request.session.get(returnCreatedDetailsKey) match {
       case None                       =>
-        logger.warn("return details not present in session")
+        logger.warn("[ReturnSubmittedController] [onPageLoad] Return details not present in session")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       case Some(returnCreatedDetails) =>
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
@@ -50,7 +50,7 @@ class ReturnSubmittedController @Inject() (
             val viewModel: ReturnSubmittedViewModel = returnSubmittedHelper.getReturnSubmittedViewModel(returnDetails)
             Ok(view(viewModel))
           case None                                         =>
-            logger.warn("return details not valid")
+            logger.warn("[ReturnSubmittedController] [onPageLoad] Return details not valid")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }

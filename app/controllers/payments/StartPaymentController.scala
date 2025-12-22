@@ -64,7 +64,7 @@ class StartPaymentController @Inject() (
         startPayment(startPaymentRequest, appaId, credentialID)
       case _                   =>
         logger.warn(
-          "Return details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
+          "[StartPaymentController] [initiateAndRedirect] Return details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
         )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
@@ -78,7 +78,7 @@ class StartPaymentController @Inject() (
       case Some(startPaymentRequest) => startPayment(startPaymentRequest, appaId, credentialID)
       case _                         =>
         logger.warn(
-          "OutstandingPayment details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
+          "[StartPaymentController] [initiateAndRedirectFromPastPayments] OutstandingPayment details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
         )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
@@ -97,7 +97,8 @@ class StartPaymentController @Inject() (
       .startPayment(startPaymentRequest)
       .foldF(
         _ => {
-          logger.warn("Start payment failed. Redirecting user to Journey Recovery")
+          logger
+            .warn("[StartPaymentController] [startPayment] Start payment failed. Redirecting user to Journey Recovery")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         },
         startPaymentResponse => {
@@ -126,7 +127,9 @@ class StartPaymentController @Inject() (
             outstandingPayments.lift(index) match {
               case Some(outstandingPayment) => Some(StartPaymentRequest(outstandingPayment, appaId, url))
               case None                     =>
-                logger.warn(s"outstandingPayment details at index $index not found.")
+                logger.warn(
+                  s"[StartPaymentController] [getPaymentDetails] outstandingPayment details at index $index not found."
+                )
                 None
             }
           case _                         => None

@@ -58,7 +58,9 @@ class MultipleSPRMissingDetailsController @Inject() (
             missingSPRRateBandHelper.getMissingRateBandDescriptions(regime, missingRateBands)
           Ok(view(form, regime, missingRateBandDescriptions))
         case _                                                   =>
-          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetails page")
+          logger.warn(
+            "[MultipleSPRMissingDetailsController] [onPageLoad] User answers do not contain the required data"
+          )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }
@@ -85,7 +87,7 @@ class MultipleSPRMissingDetailsController @Inject() (
                 )
             )
         case _                                                   =>
-          logger.warn("User answers do not contain the required data for MultipleSPRMissingDetails page")
+          logger.warn("[MultipleSPRMissingDetailsController] [onSubmit] User answers do not contain the required data")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
     }
