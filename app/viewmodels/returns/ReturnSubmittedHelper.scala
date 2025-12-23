@@ -24,8 +24,6 @@ import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.requests.IdentifierRequest
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 import viewmodels.{DateTimeHelper, ReturnPeriodViewModelFactory}
 
 case class ReturnSubmittedViewModel(
@@ -37,8 +35,7 @@ case class ReturnSubmittedViewModel(
   isOverdue: Boolean,
   periodKey: String,
   businessTaxAccountUrl: String,
-  claimRefundUrl: String,
-  warningText: WarningText
+  claimRefundUrl: String
 )
 
 class ReturnSubmittedHelper @Inject() (
@@ -74,16 +71,9 @@ class ReturnSubmittedHelper @Inject() (
       isOverdue = isOverdue,
       periodKey = periodKey,
       businessTaxAccountUrl = appConfig.businessTaxAccountUrl,
-      claimRefundUrl = appConfig.claimRefundGformUrl((-returnDetails.amount).toString),
-      warningText = getWarningText
+      claimRefundUrl = appConfig.claimRefundGformUrl((-returnDetails.amount).toString)
     )
 
   }
-
-  private def getWarningText(implicit messages: Messages): WarningText =
-    WarningText(
-      iconFallbackText = Some(messages("returnSubmitted.warningFallbackText")),
-      content = Text(messages("returnSubmitted.warningText"))
-    )
 
 }

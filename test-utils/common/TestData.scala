@@ -1289,12 +1289,6 @@ trait TestData extends ModelGenerators {
     paymentDueDate = Some(LocalDate.now(clock))
   )
 
-  val warningMessage = WarningText(
-    iconFallbackText = Some("Warning"),
-    content =
-      Text("Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.")
-  )
-
   def returnPeriodViewModel(dateTimeHelper: DateTimeHelper)(implicit messages: Messages): ReturnPeriodViewModel =
     new ReturnPeriodViewModelFactory(dateTimeHelper).apply(
       ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
@@ -1311,8 +1305,7 @@ trait TestData extends ModelGenerators {
     isOverdue = false,
     periodKey = periodKey,
     businessTaxAccountUrl = "http://localhost:9020/business-account/",
-    claimRefundUrl = "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=1",
-    warningText = warningMessage
+    claimRefundUrl = "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=1"
   )
 
   val spoiltRateBand = RateBand(

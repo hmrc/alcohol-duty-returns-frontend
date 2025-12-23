@@ -27,8 +27,7 @@
         paragraph: Paragraph,
         paragraphWithMonetaryValue: ParagraphWithMonetaryValue,
         strongPanelText: StrongPanelText,
-        link: Link,
-        govukWarningText: GovukWarningText
+        link: Link
 )
 
 @(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
@@ -93,8 +92,6 @@
             @paragraph(messages("returnSubmitted.positive.p1.notOverdue", viewModel.formattedPaymentDueDate))
             @paragraph(messages("returnSubmitted.positive.p2.notOverdue"))
         }
-
-        @govukWarningText(viewModel.warningText)
 
         @govukButton(
             ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
