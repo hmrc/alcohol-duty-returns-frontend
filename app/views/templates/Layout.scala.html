@@ -28,7 +28,6 @@
     hmrcStandardHeader: HmrcStandardHeader,
     hmrcStandardFooter: HmrcStandardFooter,
     hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-    hmrcLanguageSelect: HmrcLanguageSelect,
     hmrcTimeoutDialog: HmrcTimeoutDialog,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcScripts: HmrcScripts,
@@ -72,12 +71,6 @@
 
 @beforeContent = {
 
-    @hmrcLanguageSelect(LanguageSelect(
-        if (messages.lang.code == "cy") Cy else En,
-            (En, routes.LanguageSwitchController.switchToLanguage("en").url),
-                (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
-    ))
-
     @if(showBackLink) {
         @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible").withAttribute(("id" -> "back-link")))
     }
@@ -98,7 +91,8 @@
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(routes.ServiceEntryController.onPageLoad.url),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None
+        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignOutController.signOut().url) else None,
+        isWelshTranslationAvailable = true
     )),
     beforeContentBlock = Some(beforeContent),
     footerBlock        = Some(hmrcStandardFooter()),
