@@ -22,6 +22,7 @@
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
         govukDetails: GovukDetails,
+        govukInsetText: GovukInsetText,
         bulletList: BulletList,
         caption: Caption,
         linkWithHiddenText: LinkWithHiddenText,
@@ -60,7 +61,9 @@
 
         @paragraph(messages("beforeStartReturn.text.guidance4"))
 
-        @paragraph(messages("beforeStartReturn.text.guidance5"))
+        @govukInsetText(InsetText(
+            content = messages("beforeStartReturn.text.guidance5")
+        ))
 
         @govukDetails(Details(
             summary = messages("beforeStartReturn.details.summary"),
