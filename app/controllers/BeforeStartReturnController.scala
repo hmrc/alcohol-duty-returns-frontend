@@ -95,10 +95,14 @@ class BeforeStartReturnController @Inject() (
       val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
       Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
     case err if err.statusCode == LOCKED    =>
-      logger.info(s"[BeforeStartReturnController] [handleGetUserAnswersError] Return $appaId/$periodKey locked for the user")
+      logger.info(
+        s"[BeforeStartReturnController] [handleGetUserAnswersError] Return $appaId/$periodKey locked for the user"
+      )
       Redirect(controllers.routes.ReturnLockedController.onPageLoad())
     case _                                  =>
-      logger.warn(s"[BeforeStartReturnController] [handleGetUserAnswersError] Error retrieving the return $appaId/$periodKey for the user")
+      logger.warn(
+        s"[BeforeStartReturnController] [handleGetUserAnswersError] Error retrieving the return $appaId/$periodKey for the user"
+      )
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
   }
 
