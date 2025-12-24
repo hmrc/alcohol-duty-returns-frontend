@@ -16,7 +16,7 @@
 
 @import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
-@import components.{Caption, ErrorMessageStandalone, FormGroupWithError, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
+@import components.{BulletList, Caption, ErrorMessageStandalone, FormGroupWithError, Link, PageHeading, Paragraph, ReturnToTaskList, SubHeading}
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukDetails
 @import config.{Constants, FrontendAppConfig}
 
@@ -28,7 +28,9 @@
     govukButton: GovukButton,
     pageHeading: PageHeading,
     paragraph: Paragraph,
+    bulletList: BulletList,
     caption: Caption,
+    link: Link,
     subHeading: SubHeading,
     formGroupWithError: FormGroupWithError,
     errorMessage: ErrorMessageStandalone,
@@ -104,24 +106,30 @@
 
         @govukDetails(Details(
             summary = Text(messages("whatDoYouNeedToDeclare.details.link.title")),
-            content = HtmlContent(
-                    s"""<p class="govuk-body">
-                        ${messages("whatDoYouNeedToDeclare.details.link.heading")}
-                    <ul class="govuk-list govuk-list--bullet">
-                            <li>
-                                    <a href="${appConfig.checkTaxTypeCodesUrl}"
-                                        class="${Constants.Css.linkNoVisitedStateCssClass}"
-                                        target="_blank">
-                                            ${messages("whatDoYouNeedToDeclare.details.link.p1")}</a>.</li>
-                             <li>
-                                    <a href="${messages("whatDoYouNeedToDeclare.exciseHelp.url")}"
-                                        class="${Constants.Css.linkNoVisitedStateCssClass}"
-                                        target="_blank">
-                                         ${messages("whatDoYouNeedToDeclare.details.link.p2")}</a>.</li>
-                </ul>
-        </p>"""
-    )
-))
+            content = HtmlContent(HtmlFormat.fill(Seq(
+                paragraph(messages("whatDoYouNeedToDeclare.details.link.heading")),
+                bulletList(Seq(
+                    HtmlContent(HtmlFormat.fill(Seq(
+                        link(
+                            id = "tax-type-codes-link",
+                            text = messages("whatDoYouNeedToDeclare.details.link.p1"),
+                            href = appConfig.checkTaxTypeCodesUrl,
+                            newTab = true
+                        ),
+                        Html(".")
+                    ))),
+                    HtmlContent(HtmlFormat.fill(Seq(
+                        link(
+                            id = "excise-help-link",
+                            text = messages("whatDoYouNeedToDeclare.details.link.p2"),
+                            href = messages("whatDoYouNeedToDeclare.exciseHelp.url"),
+                            newTab = true
+                        ),
+                        Html(".")
+                    )))
+                ))
+            )))
+        ))
 
         @govukButton(
           ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
