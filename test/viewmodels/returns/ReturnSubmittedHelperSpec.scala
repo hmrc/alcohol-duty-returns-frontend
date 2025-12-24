@@ -24,8 +24,6 @@ import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 
 import java.time.{Instant, LocalDate}
@@ -56,11 +54,6 @@ class ReturnSubmittedHelperSpec extends SpecBase {
   val formattedDueDateOverdue: String    = "25 May 2024"
   val dummyStartDate: String             = "Period start date"
   val dummyEndDate: String               = "Period end date"
-
-  val warningText = WarningText(
-    iconFallbackText = Some(messages("returnSubmitted.warningFallbackText")),
-    content = Text(messages("returnSubmitted.warningText"))
-  )
 
   val testReturnDetailsNotOverdue: AdrReturnCreatedDetails     = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
@@ -100,7 +93,6 @@ class ReturnSubmittedHelperSpec extends SpecBase {
         result.periodEndDate         mustBe dummyEndDate
         result.periodKey             mustBe periodKey
         result.businessTaxAccountUrl mustBe btaUrl
-        result.warningText           mustBe warningText
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe formattedDueDateNotOverdue
@@ -116,7 +108,6 @@ class ReturnSubmittedHelperSpec extends SpecBase {
         result.periodEndDate         mustBe dummyEndDate
         result.periodKey             mustBe periodKey
         result.businessTaxAccountUrl mustBe btaUrl
-        result.warningText           mustBe warningText
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe formattedDueDateOverdue
@@ -139,7 +130,6 @@ class ReturnSubmittedHelperSpec extends SpecBase {
         result.periodEndDate         mustBe dummyEndDate
         result.periodKey             mustBe periodKey
         result.businessTaxAccountUrl mustBe btaUrl
-        result.warningText           mustBe warningText
 
         result.formattedProcessingDate mustBe formattedProcessingDate
         result.formattedPaymentDueDate mustBe ""
