@@ -50,7 +50,7 @@ class CheckYourAnswersSPRController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
         case None              =>
-          logger.warn("No SPR summary list items found")
+          logger.warn("[CheckYourAnswersSPRController] [onPageLoad] No SPR summary list items found")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(summaryList) =>
           Ok(view(regime, summaryList, index))
@@ -61,7 +61,9 @@ class CheckYourAnswersSPRController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
         case None               =>
-          logger.warn("Impossible to retrieve TellUsAboutMultipleSPRRatePage from userAnswers")
+          logger.warn(
+            "[CheckYourAnswersSPRController] [onSubmit] Impossible to retrieve TellUsAboutMultipleSPRRatePage from userAnswers"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(sprRateEntry) =>
           for {

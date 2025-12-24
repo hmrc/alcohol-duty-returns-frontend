@@ -57,7 +57,9 @@ class AdjustmentReturnPeriodController @Inject() (
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))            =>
         Ok(view(form, mode, adjustmentType))
       case _                                                                                          =>
-        logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
+        logger.warn(
+          "[AdjustmentReturnPeriodController] [onPageLoad] Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
@@ -76,7 +78,9 @@ class AdjustmentReturnPeriodController @Inject() (
                   BadRequest(view(formWithErrors, mode, adjustmentType))
                 )
               case _                                                                               =>
-                logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
+                logger.warn(
+                  "[AdjustmentReturnPeriodController] [onSubmit] Couldn't fetch the adjustmentType in AdjustmentEntry from user answers"
+                )
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             },
           value => {

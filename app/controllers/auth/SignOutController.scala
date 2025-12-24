@@ -69,13 +69,11 @@ class SignOutController @Inject() (
               .releaseLock(ReturnId(appaId, periodKey))
               .map(_ => Redirect(config.signOutUrl, Map("continue" -> continueUrl)))
           case None            =>
-            logger.info("Period key not found during sign out")
+            logger.info("[SignOutController] [handleSignOut] Period key not found during sign out")
             Future.successful(Redirect(config.signOutUrl, Map("continue" -> continueUrl)))
         }
       case None         =>
-        logger.info(
-          "User not authenticated. No locks to release."
-        )
+        logger.info("[SignOutController] [handleSignOut] User not authenticated. No locks to release.")
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> continueUrl)))
     }
 }

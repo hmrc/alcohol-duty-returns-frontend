@@ -57,7 +57,9 @@ class CheckYourAnswersController @Inject() (
         _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry))
       } yield Ok(view(summaryList, adjustmentType))
       result.getOrElse {
-        logger.warn("Couldn't create the summaryList from user answers or adjustment type is missing")
+        logger.warn(
+          "[adjustment/CheckYourAnswersController] [onPageLoad] Couldn't create the summaryList from user answers or adjustment type is missing"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
@@ -80,10 +82,12 @@ class CheckYourAnswersController @Inject() (
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
         )
       case Some(_)                                             =>
-        logger.warn("Adjustment Entry not completed")
+        logger.warn("[adjustment/CheckYourAnswersController] [onSubmit] Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case _                                                   =>
-        logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
+        logger.warn(
+          "[adjustment/CheckYourAnswersController] [onSubmit] Couldn't fetch currentAdjustmentEntry from user answers"
+        )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }

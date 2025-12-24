@@ -37,7 +37,7 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
         )
       case (maybeData, maybeReturnPeriod)   =>
         logger.info(
-          s"Unable to get all data - Got userAnswers ${maybeData.nonEmpty}, returnPeriod ${maybeReturnPeriod.nonEmpty}"
+          s"[DataRequiredAction] [refine] Unable to get all data - Got userAnswers ${maybeData.nonEmpty}, returnPeriod ${maybeReturnPeriod.nonEmpty}"
         )
         Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
     }

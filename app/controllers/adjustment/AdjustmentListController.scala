@@ -86,7 +86,7 @@ class AdjustmentListController @Inject() (
           }
         }
         .recover { case _ =>
-          logger.warn("Unable to fetch adjustment total")
+          logger.warn("[AdjustmentListController] [onPageLoad] Unable to fetch adjustment total")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
   }

@@ -42,7 +42,7 @@ class CheckYourAnswersController @Inject() (
         spiritsList <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
       } yield Ok(view(spiritsList))
       result.getOrElse {
-        logger.warn("Impossible to create summary list")
+        logger.warn("[spiritsQuestions/CheckYourAnswersController] [onPageLoad] Impossible to create summary list")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }

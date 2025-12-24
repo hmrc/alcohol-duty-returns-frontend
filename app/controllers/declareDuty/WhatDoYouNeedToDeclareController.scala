@@ -93,7 +93,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
             )
         }
         .recover { case e =>
-          logger.warn("Alcohol Type unselected", e)
+          logger.warn("[WhatDoYouNeedToDeclareController] [onSubmit] Alcohol Type unselected", e)
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }

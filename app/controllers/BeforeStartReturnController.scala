@@ -58,22 +58,22 @@ class BeforeStartReturnController @Inject() (
 
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None               =>
-        logger.warn("Period key is not valid")
+        logger.warn("[BeforeStartReturnController] [onPageLoad] Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
         val session = request.session + (periodKeySessionKey, periodKey)
         userAnswersConnector.get(request.appaId, periodKey).flatMap {
           case Right(ua)   =>
-            logger.info(s"Return $appaId/$periodKey retrieved by the user")
+            logger.info(s"[BeforeStartReturnController] [onPageLoad] Return $appaId/$periodKey retrieved by the user")
             beforeStartReturnService.handleExistingUserAnswers(ua).map {
               case Right(_)                            =>
                 userAnswersAuditHelper.auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
                 Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
               case Left(ErrorModel(CONFLICT, message)) =>
-                logger.warn(s"Conflict: $message")
+                logger.warn(s"[BeforeStartReturnController] [onPageLoad] Conflict: $message")
                 Redirect(controllers.routes.ServiceUpdatedController.onPageLoad).withSession(session)
               case Left(ErrorModel(_, message))        =>
-                logger.warn(s"Unexpected error: $message")
+                logger.warn(s"[BeforeStartReturnController] [onPageLoad] Unexpected error: $message")
                 Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
             }
           case Left(error) =>
@@ -90,33 +90,37 @@ class BeforeStartReturnController @Inject() (
     error: UpstreamErrorResponse
   )(implicit request: Request[_]): Result = error match {
     case err if err.statusCode == NOT_FOUND =>
-      logger.info(s"Return $appaId/$periodKey not found")
+      logger.info(s"[BeforeStartReturnController] [handleGetUserAnswersError] Return $appaId/$periodKey not found")
       val currentDate = LocalDate.now(clock)
       val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
       Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
     case err if err.statusCode == LOCKED    =>
-      logger.info(s"Return $appaId/$periodKey locked for the user")
+      logger.info(
+        s"[BeforeStartReturnController] [handleGetUserAnswersError] Return $appaId/$periodKey locked for the user"
+      )
       Redirect(controllers.routes.ReturnLockedController.onPageLoad())
     case _                                  =>
-      logger.warn(s"Error retrieving the return $appaId/$periodKey for the user")
+      logger.warn(
+        s"[BeforeStartReturnController] [handleGetUserAnswersError] Error retrieving the return $appaId/$periodKey for the user"
+      )
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case None            =>
-        logger.warn("Period key not present in session")
+        logger.warn("[BeforeStartReturnController] [onSubmit] Period key not present in session")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
         val returnAndUserDetails =
           ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
         userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
           case Right(userAnswer) =>
-            logger.info(s"Return ${request.appaId}/$periodKey created")
+            logger.info(s"[BeforeStartReturnController] [onSubmit] Return ${request.appaId}/$periodKey created")
             userAnswersAuditHelper.auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
-            logger.warn(s"Unable to create userAnswers: $error")
+            logger.warn(s"[BeforeStartReturnController] [onSubmit] Unable to create userAnswers: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }

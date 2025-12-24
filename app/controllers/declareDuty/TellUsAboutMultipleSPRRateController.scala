@@ -59,7 +59,9 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime), index))
 
       result.getOrElse {
-        logger.warn("Error creating the form for TellUsAboutMultipleSPRRate screen")
+        logger.warn(
+          "[TellUsAboutMultipleSPRRateController] [onPageLoad] Error creating the form for TellUsAboutMultipleSPRRate screen"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }
@@ -68,7 +70,9 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
+          logger.warn(
+            s"[TellUsAboutMultipleSPRRateController] [onSubmit] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           formProvider()
@@ -145,7 +149,9 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     answers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
       case Some(value) => Some(formProvider().fill(value))
       case None        =>
-        logger.warn(s"Failed to retrieve SPR list entry for regime $regime at index $i")
+        logger.warn(
+          s"[TellUsAboutMultipleSPRRateController] [fillPreviousAnswersWithIndex] Failed to retrieve SPR list entry for regime $regime at index $i"
+        )
         None
     }
 

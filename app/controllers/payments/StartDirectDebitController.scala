@@ -51,7 +51,9 @@ class StartDirectDebitController @Inject() (
       .startDirectDebit(startDirectDebitRequest)
       .foldF(
         _ => {
-          logger.warn("Start direct debit failed. Redirecting user to Journey Recovery")
+          logger.warn(
+            "[StartDirectDebitController] [initiateAndRedirect] Start direct debit failed. Redirecting user to Journey Recovery"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         },
         startDirectDebitResponse => Future.successful(Redirect(startDirectDebitResponse.nextUrl))

@@ -100,11 +100,15 @@ class AdjustmentVolumeController @Inject() (
               )
             )
           case _                                                                                            =>
-            logger.warn("Couldn't fetch values in AdjustmentEntry from user answers")
+            logger.warn(
+              "[AdjustmentVolumeController] [onPageLoad] Couldn't fetch values in AdjustmentEntry from user answers"
+            )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       case _            =>
-        logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
+        logger.warn(
+          "[AdjustmentVolumeController] [onPageLoad] Couldn't fetch regime value in AdjustmentEntry from user answers"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
@@ -137,7 +141,9 @@ class AdjustmentVolumeController @Inject() (
               }
             )
         case _            =>
-          logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
+          logger.warn(
+            "[AdjustmentVolumeController] [onSubmit] Couldn't fetch regime value in AdjustmentEntry from user answers"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
   }
@@ -159,7 +165,9 @@ class AdjustmentVolumeController @Inject() (
           )
         )
       case _                                                                                            =>
-        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
+        logger.warn(
+          "[AdjustmentVolumeController] [handleFormErrors] Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers"
+        )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
