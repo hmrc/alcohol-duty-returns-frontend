@@ -44,7 +44,7 @@ class BusinessTaxAccountRedirect @Inject() (
           .releaseLock(ReturnId(request.appaId, periodKey))
           .map(_ => Redirect(config.businessTaxAccountUrl))
       case None            =>
-        logger.info("Period key not found during redirection to BTA")
+        logger.info("[BusinessTaxAccountRedirect] [onPageLoad] Period key not found during redirection to BTA")
         Future.successful(Redirect(config.businessTaxAccountUrl))
     }
   }

@@ -70,7 +70,7 @@ class UserAnswersAuditHelper @Inject() (
         auditService.audit(auditReturnStarted)
       case None                 =>
         logger.warn(
-          "Impossible to create Return Started Audit Event, obligation data unexpectedly missing from user answers"
+          "[UserAnswersAuditHelper] [auditReturnStarted] Impossible to create Return Started Audit Event, obligation data unexpectedly missing from user answers"
         )
     }
 

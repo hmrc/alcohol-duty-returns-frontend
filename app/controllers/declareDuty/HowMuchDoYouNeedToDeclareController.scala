@@ -58,7 +58,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
+          logger.warn(
+            s"[HowMuchDoYouNeedToDeclareController] [onPageLoad] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime"
+          )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
           val categoriesByRateType =
@@ -77,7 +79,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
+          logger.warn(
+            s"[HowMuchDoYouNeedToDeclareController] [onSubmit] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           val howMuchDoYouNeedToDeclareHelper =
@@ -132,7 +136,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
       .foldLeft(Success(Seq.empty): Try[Seq[VolumeAndRateByTaxType]]) {
         case (acc, Some(value)) => acc.map(_ :+ value)
         case (_, None)          =>
-          logger.warn("Failed to find rate band for tax type")
+          logger.warn(
+            "[HowMuchDoYouNeedToDeclareController] [rateBandFromTaxType] Failed to find rate band for tax type"
+          )
           Failure(new Exception("Failed to find rate band for tax type"))
       }
 }

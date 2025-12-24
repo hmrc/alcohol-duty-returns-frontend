@@ -40,7 +40,9 @@ class CentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends
   def getCentralAssessmentChargeFromSession(session: Session, chargeRef: String): Option[(OutstandingPayment, Int)] =
     session.get(pastPaymentsSessionKey) match {
       case None                 =>
-        logger.warn("Outstanding payment details not present in session")
+        logger.warn(
+          "[CentralAssessmentHelper] [getCentralAssessmentChargeFromSession] Outstanding payment details not present in session"
+        )
         None
       case Some(paymentDetails) =>
         Json.parse(paymentDetails).asOpt[Seq[OutstandingPayment]] match {
@@ -48,7 +50,9 @@ class CentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends
             outstandingPayments.find(p => p.chargeReference.contains(chargeRef) && p.transactionType == CA) match {
               case Some(charge) => Some((charge, outstandingPayments.indexOf(charge)))
               case None         =>
-                logger.warn("Could not find required Central Assessment charge in session")
+                logger.warn(
+                  "[CentralAssessmentHelper] [getCentralAssessmentChargeFromSession] Could not find required Central Assessment charge in session"
+                )
                 None
             }
           case None                      =>

@@ -58,7 +58,9 @@ class TellUsAboutSingleSPRRateController @Inject() (
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
+          logger.warn(
+            s"[TellUsAboutSingleSPRRateController] [onPageLoad] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime"
+          )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
           val preparedForm               = request.userAnswers.getByKey(currentPage, regime) match {
@@ -74,7 +76,9 @@ class TellUsAboutSingleSPRRateController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
+          logger.warn(
+            s"[TellUsAboutSingleSPRRateController] [onSubmit] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           formProvider(regime)

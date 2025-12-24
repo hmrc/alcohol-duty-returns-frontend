@@ -50,13 +50,18 @@ class CompletedReturnsController @Inject() (
             val fulfilledObligationsTable = viewModelHelper.getReturnsTable(fulfilledObligations.obligations)
             Ok(view(fulfilledObligationsTable, year))
           case _                                                                       =>
-            logger.warn(s"No fulfilled obligations available for year $year (appaId: $appaId)")
+            logger.warn(
+              s"[CompletedReturnsController] [onPageLoad] No fulfilled obligations available for year $year (appaId: $appaId)"
+            )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       }
 
     fulfilledObligationsFuture.recover { case ex =>
-      logger.warn(s"Error fetching fulfilled obligations for $appaId, year $year", ex)
+      logger.warn(
+        s"[CompletedReturnsController] [onPageLoad] Error fetching fulfilled obligations for $appaId, year $year",
+        ex
+      )
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

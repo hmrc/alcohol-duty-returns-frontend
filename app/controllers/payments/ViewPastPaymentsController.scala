@@ -92,7 +92,7 @@ class ViewPastPaymentsController @Inject() (
     ).withSession(pastPaymentsData.session)
 
     openAndHistoricPaymentsFuture.recover { case ex =>
-      logger.warn(s"Error fetching payments data for $appaId", ex)
+      logger.warn(s"[ViewPastPaymentsController] [onPageLoad] Error fetching payments data for $appaId", ex)
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

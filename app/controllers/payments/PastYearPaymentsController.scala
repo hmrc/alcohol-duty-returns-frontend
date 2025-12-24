@@ -49,13 +49,18 @@ class PastYearPaymentsController @Inject() (
           val historicPaymentsTable = helper.getHistoricPaymentsTable(historicPayments.payments)
           Ok(view(year, historicPaymentsTable))
         case _                                                            =>
-          logger.warn(s"No past payments available for year $year (appaId: $appaId)")
+          logger.warn(
+            s"[PastYearPaymentsController] [onPageLoad] No past payments available for year $year (appaId: $appaId)"
+          )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }
 
     historicPaymentsFuture.recover { case ex =>
-      logger.warn(s"Error fetching past payments data for $appaId, year $year", ex)
+      logger.warn(
+        s"[PastYearPaymentsController] [onPageLoad] Error fetching past payments data for $appaId, year $year",
+        ex
+      )
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

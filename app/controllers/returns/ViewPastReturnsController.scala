@@ -71,7 +71,7 @@ class ViewPastReturnsController @Inject() (
     } yield Ok(view(openObligationsTable, fulfilledObligationsTable, currentYear, pastYears))
 
     obligationsFuture.recover { case ex =>
-      logger.warn(s"Error fetching obligation data for $appaId", ex)
+      logger.warn(s"[ViewPastReturnsController] [onPageLoad] Error fetching obligation data for $appaId", ex)
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

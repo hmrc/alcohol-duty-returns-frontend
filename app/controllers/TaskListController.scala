@@ -51,7 +51,7 @@ class TaskListController @Inject() (
           )
         )
       case None             =>
-        logger.warn("'Valid until' property not defined in User Answers")
+        logger.warn("[TaskListController] [onPageLoad] 'Valid until' property not defined in User Answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

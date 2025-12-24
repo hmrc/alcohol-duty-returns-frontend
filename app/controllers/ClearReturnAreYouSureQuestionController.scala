@@ -69,10 +69,15 @@ class ClearReturnAreYouSureQuestionController @Inject() (
         case Success(httpResponse) if httpResponse.status == OK =>
           recreateUserAnswers(appaId, periodKey)
         case Success(httpResponse)                              =>
-          logger.warn(s"Unable to clear user answers: $appaId/$periodKey: ${httpResponse.status} ${httpResponse.body}")
+          logger.warn(
+            s"[ClearReturnAreYouSureQuestionController] [handleAnswer] Unable to clear user answers: $appaId/$periodKey: ${httpResponse.status} ${httpResponse.body}"
+          )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Failure(e)                                         =>
-          logger.warn(s"Unable to clear user answers: $appaId/$periodKey", e)
+          logger.warn(
+            s"[ClearReturnAreYouSureQuestionController] [handleAnswer] Unable to clear user answers: $appaId/$periodKey",
+            e
+          )
           Future.failed(e)
       }
     } else {
@@ -86,10 +91,14 @@ class ClearReturnAreYouSureQuestionController @Inject() (
       ReturnAndUserDetails(ReturnId(appaId, periodKey), request.groupId, request.userId)
     userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
       case Right(_)    =>
-        logger.info(s"Return $appaId/$periodKey recreated")
+        logger.info(
+          s"[ClearReturnAreYouSureQuestionController] [recreateUserAnswers] Return $appaId/$periodKey recreated"
+        )
         Redirect(routes.TaskListController.onPageLoad.url)
       case Left(error) =>
-        logger.warn(s"Unable to recreate userAnswers: $error")
+        logger.warn(
+          s"[ClearReturnAreYouSureQuestionController] [recreateUserAnswers] Unable to recreate userAnswers: $error"
+        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
