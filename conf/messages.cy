@@ -536,13 +536,7 @@ howMuchDoYouNeedToDeclare.heading.Cider = Rhoi gwybod i ni am y seidr y mae ange
 howMuchDoYouNeedToDeclare.heading.Wine = Rhoi gwybod i ni am y gwin y mae angen i chi ei ddatgan
 howMuchDoYouNeedToDeclare.heading.Spirits = Rhoi gwybod i ni am y gwirodydd y mae angen i chi eu datgan
 howMuchDoYouNeedToDeclare.heading.OtherFermentedProduct = Rhoi gwybod i ni am y cynhyrchion eplesedig eraill y mae angen i chi eu datgan
-
-howMuchDoYouNeedToDeclare.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i chi ei ddatgan a’r alcohol pur yn y cwrw hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan a’r alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan a’r alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan a’r alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyrchion eplesedig eraill y mae angen i chi eu datgan a’r alcohol pur ynddyn nhw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
+howMuchDoYouNeedToDeclare.p1 = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 
 howMuchDoYouNeedToDeclare.core.heading.regime.beer = Faint o gwrw (cyfradd safonol) y mae angen i chi ei ddatgan?
 howMuchDoYouNeedToDeclare.core.heading.regime.cider = Faint o seidr nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
@@ -590,11 +584,6 @@ tellUsAboutSingleSPRRate.heading.Wine = Rhoi gwybod i ni am y gwin sy’n gymwys
 tellUsAboutSingleSPRRate.heading.Spirits = Rhoi gwybod i ni am y gwirodydd sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
 tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Rhoi gwybod i ni am y cynnyrch eplesedig arall sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
 
-tellUsAboutSingleSPRRate.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), ac am yr alcohol pur yn y cwrw hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), ac am yr alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), ac am yr alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), ac am yr alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Rhowch wybod i ni am y cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), ac am yr alcohol pur yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
 
 tellUsAboutSingleSPRRate.smallProducer.heading.regime.beer = Faint o gwrw nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
@@ -624,12 +613,7 @@ tellUsAboutMultipleSPRRate.radioHeading.regime.cider = Pa fath o seidr y mae ang
 tellUsAboutMultipleSPRRate.radioHeading.regime.wine = Pa fath o win y mae angen i chi ei ddatgan?
 tellUsAboutMultipleSPRRate.radioHeading.regime.spirits = Pa fath o wirodydd y mae angen i chi eu datgan?
 tellUsAboutMultipleSPRRate.radioHeading.regime.otherfermentedproduct = Pa fath o gynhyrchion eplesedig eraill y mae angen i chi eu datgan?
-tellUsAboutMultipleSPRRate.p1.regime.beer = Ar gyfer pob cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y cwrw hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.cider = Ar gyfer pob seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y seidr hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.wine = Ar gyfer pob gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y gwin hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.spirits = Ar gyfer pob gwirod y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y gwirod hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.p1.regime.otherfermentedproduct = Ar gyfer pob cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (SPR), mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder alcohol yn ôl cyfaint (ABV) canlynol.
-tellUsAboutMultipleSPRRate.warning = Os oes gennych fwy nag un gyfradd doll ar gyfer {0} sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
+tellUsAboutMultipleSPRRate.p1 = Os oes gennych fwy nag un gyfradd doll ar gyfer {0} sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
 tellUsAboutMultipleSPRRate.h3.Beer = Faint o’r cwrw hwn y mae angen i chi ei ddatgan?
 tellUsAboutMultipleSPRRate.h3.Cider = Faint o’r seidr hwn y mae angen i chi ei ddatgan?
 tellUsAboutMultipleSPRRate.h3.Spirits = Faint o’r gwirodydd hyn y mae angen i chi eu datgan?

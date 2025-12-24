@@ -536,13 +536,7 @@ howMuchDoYouNeedToDeclare.heading.Cider = Tell us about the cider you need to de
 howMuchDoYouNeedToDeclare.heading.Wine = Tell us about the wine you need to declare
 howMuchDoYouNeedToDeclare.heading.Spirits = Tell us about the spirits you need to declare
 howMuchDoYouNeedToDeclare.heading.OtherFermentedProduct = Tell us about other fermented products you need to declare
-
-howMuchDoYouNeedToDeclare.p1.Beer = Tell us about the beer you need to declare and the pure alcohol in that beer at the following alcohol by volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.p1.Cider = Tell us about the cider you need to declare and the pure alcohol in that cider at the following alcohol by volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.p1.Wine = Tell us about the wine you need to declare and the pure alcohol in that wine at the following alcohol by volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to declare and the pure alcohol in those spirits at the following alcohol by volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about other fermented products you need to declare and the pure alcohol in them at the following alcohol by volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.warning = We will ask about {0} eligible for Small Producer Relief on the next page.
+howMuchDoYouNeedToDeclare.p1 = We will ask about {0} eligible for Small Producer Relief on the next page.
 
 howMuchDoYouNeedToDeclare.core.heading.regime.beer = How much beer (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.core.heading.regime.cider = How much non-draught cider (standard rate) do you need to declare?
@@ -590,11 +584,6 @@ tellUsAboutSingleSPRRate.heading.Wine = Tell us about the wine that is eligible 
 tellUsAboutSingleSPRRate.heading.Spirits = Tell us about the spirits that are eligible for Small Producer Relief
 tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Tell us about the other fermented product that is eligible for Small Producer Relief
 
-tellUsAboutSingleSPRRate.p1.Beer = Tell us about the beer you need to declare that is eligible for Small Producer Relief (SPR) and the pure alcohol in that beer at the following alcohol by volume (ABV) strengths.
-tellUsAboutSingleSPRRate.p1.Cider = Tell us about the cider you need to declare that is eligible for Small Producer Relief (SPR) and the pure alcohol in that cider at the following alcohol by volume (ABV) strengths.
-tellUsAboutSingleSPRRate.p1.Wine = Tell us about the wine you need to declare that is eligible for Small Producer Relief (SPR) and the pure alcohol in that wine at the following alcohol by volume (ABV) strengths.
-tellUsAboutSingleSPRRate.p1.Spirits = Tell us about the spirits you need to declare that are eligible for Small Producer Relief (SPR) and the pure alcohol in those spirits at the following alcohol by volume (ABV) strengths.
-tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare that is eligible for Small Producer Relief (SPR) and the pure alcohol in that other fermented product at the following alcohol by volume (ABV) strengths.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
 
 tellUsAboutSingleSPRRate.smallProducer.heading.regime.beer = How much non-draught beer that is eligible for Small Producer Relief do you need to declare?
@@ -624,12 +613,7 @@ tellUsAboutMultipleSPRRate.radioHeading.regime.cider = What type of cider do you
 tellUsAboutMultipleSPRRate.radioHeading.regime.wine = What type of wine do you need to declare?
 tellUsAboutMultipleSPRRate.radioHeading.regime.spirits = What type of spirits do you need to declare?
 tellUsAboutMultipleSPRRate.radioHeading.regime.otherfermentedproduct = What type of other fermented products do you need to declare?
-tellUsAboutMultipleSPRRate.p1.regime.beer = For each beer you need to declare that is eligible for Small Producer Relief (SPR) you need to tell us the total volume and the pure alcohol in that beer at the following alcohol by volume (ABV) strengths.
-tellUsAboutMultipleSPRRate.p1.regime.cider = For each cider you need to declare that is eligible for Small Producer Relief (SPR) you need to tell us the total volume and the pure alcohol in that cider at the following alcohol by volume (ABV) strengths.
-tellUsAboutMultipleSPRRate.p1.regime.wine = For each wine you need to declare that is eligible for Small Producer Relief (SPR) you need to tell us the total volume and the pure alcohol in that wine at the following alcohol by volume (ABV) strengths.
-tellUsAboutMultipleSPRRate.p1.regime.spirits = For each spirit you need to declare that is eligible for Small Producer Relief (SPR) you need to tell us the total volume and the pure alcohol in that spirit at the following alcohol by volume (ABV) strengths.
-tellUsAboutMultipleSPRRate.p1.regime.otherfermentedproduct = For each other fermented product you need to declare that is eligible for Small Producer Relief (SPR) you need to tell us the total volume and the pure alcohol in that other fermented product at the following alcohol by volume (ABV) strengths.
-tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for {0} in the same ABV range enter them one at a time.
+tellUsAboutMultipleSPRRate.p1 = If you have more than one duty rate for {0} in the same ABV range enter them one at a time.
 tellUsAboutMultipleSPRRate.h3.Beer = How much of this beer do you need to declare?
 tellUsAboutMultipleSPRRate.h3.Cider = How much of this cider do you need to declare?
 tellUsAboutMultipleSPRRate.h3.Spirits = How much of these spirits do you need to declare?

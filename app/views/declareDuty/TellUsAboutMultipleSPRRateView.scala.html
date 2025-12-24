@@ -30,7 +30,6 @@
     caption: Caption,
     subHeading: SubHeading,
     pageHeading: PageHeading,
-    govukWarningText: GovukWarningText,
     govukFieldset: GovukFieldset,
     returnToTaskList: ReturnToTaskList
 )
@@ -52,12 +51,7 @@
 
         @pageHeading(messages(s"tellUsAboutMultipleSPRRate.heading.${regime.regimeMessageKey}"))
 
-        @paragraph(messages(s"tellUsAboutMultipleSPRRate.p1.${regime.regimeMessageKey}"))
-
-        @govukWarningText(WarningText(
-            iconFallbackText = Some(messages("site.warning")),
-            content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(regime.regimeMessageKey)))
-        ))
+        @paragraph(messages("tellUsAboutMultipleSPRRate.p1", messages(regime.regimeMessageKey)))
 
         @if(rateBandRadioItems.size > 1){
             @govukRadios(

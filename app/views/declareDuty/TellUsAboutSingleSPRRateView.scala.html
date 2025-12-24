@@ -50,8 +50,6 @@
 
         @pageHeading(messages(s"tellUsAboutSingleSPRRate.heading.$regime"))
 
-        @paragraph(messages(s"tellUsAboutSingleSPRRate.p1.$regime"))
-
       @if(categories.smallProducer.nonEmpty) {
         @subHeading(messages(s"tellUsAboutSingleSPRRate.smallProducer.heading.${regime.regimeMessageKey}"), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {

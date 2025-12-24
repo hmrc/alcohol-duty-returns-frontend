@@ -29,7 +29,6 @@
     subHeading: SubHeading,
     pageHeading: PageHeading,
     paragraph: Paragraph,
-    govukInsetText: GovukInsetText,
     govukFieldset: GovukFieldset,
     returnToTaskList: ReturnToTaskList
 )
@@ -51,12 +50,8 @@
 
         @pageHeading(messages(s"howMuchDoYouNeedToDeclare.heading.$regime"))
 
-        @paragraph(messages(s"howMuchDoYouNeedToDeclare.p1.$regime"))
-
         @if(howMuchDoYouNeedToDeclareHelper.draughtAndSmallProducer.nonEmpty || howMuchDoYouNeedToDeclareHelper.smallProducer.nonEmpty) {
-            @govukInsetText(InsetText(
-                content = messages("howMuchDoYouNeedToDeclare.warning", messages(regime.regimeMessageKey))
-            ))
+            @paragraph(messages("howMuchDoYouNeedToDeclare.p1", messages(regime.regimeMessageKey)))
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
