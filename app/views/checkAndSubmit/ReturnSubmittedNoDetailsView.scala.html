@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, Link, PageHeading, Paragraph, SubHeading}
+@import components.{BulletList, Link, PageHeading, Paragraph, PrintPage, SubHeading}
 @import config.Constants.Css
 
 @this(
@@ -25,12 +25,13 @@
         govukPanel: GovukPanel,
         paragraph: Paragraph,
         link: Link,
-        bulletList: BulletList
+        bulletList: BulletList,
+        printPage: PrintPage
 )
 
 @(businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false, withPrintCss = true) {
 
     @govukPanel(Panel(
         title = Text((messages("returnSubmitted.heading")))
@@ -38,7 +39,10 @@
 
     @paragraph(messages("returnSubmitted.noDetails.p1"))
 
-    @subHeading(messages("returnSubmitted.whatHappensNext"), Css.headingMCssClass)
+    @subHeading(messages("returnSubmitted.printPage.h2"), s"${Css.headingMCssClass} ${Css.displayNonePrintCssClass}")
+    @printPage("print-return-confirmation-link", messages("site.printPage"))
+
+    @subHeading(messages("returnSubmitted.whatHappensNext"))
 
     @paragraph(messages("returnSubmitted.noDetails.youCan"))
 
@@ -55,8 +59,7 @@
                 text = messages("returnSubmitted.noDetails.viewPayments"),
                 href = controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url
             ))
-    )
-    )
+    ))
 
     @paragraph(messages("returnSubmitted.noDetails.p2"))
 

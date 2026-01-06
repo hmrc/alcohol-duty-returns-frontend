@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, ParagraphWithMonetaryValue, StrongPanelText, SubHeading}
+@import components.{Link, PageHeading, Paragraph, ParagraphWithMonetaryValue, PrintPage, StrongPanelText, SubHeading}
 @import config.Constants.Css
 @import viewmodels.returns.ReturnSubmittedViewModel
 
@@ -27,7 +27,8 @@
         paragraph: Paragraph,
         paragraphWithMonetaryValue: ParagraphWithMonetaryValue,
         strongPanelText: StrongPanelText,
-        link: Link
+        link: Link,
+        printPage: PrintPage
 )
 
 @(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
@@ -63,7 +64,7 @@
     ), classes = Css.marginBottom0CssClass)
 }
 
-@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false, withPrintCss = true) {
 
     @if(viewModel.returnDetails.isAmountGreaterThanZero) {
         @govukPanel(Panel(
@@ -81,14 +82,17 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
+        @subHeading(messages("returnSubmitted.printPage.h2", s"${Css.headingMCssClass} ${Css.displayNonePrintCssClass}"))
+        @printPage("print-return-confirmation-link", messages("site.printPage"))
+
         @if(viewModel.isOverdue) {
-            @subHeading(messages("returnSubmitted.returnSubmittedLate"), classes = Css.headingMCssClass)
+            @subHeading(messages("returnSubmitted.returnSubmittedLate"))
             @paragraph(messages("returnSubmitted.positive.p1.overdue", viewModel.formattedPaymentDueDate))
 
-            @subHeading(messages("returnSubmitted.whatYouNeedToDo"), classes = Css.headingMCssClass)
+            @subHeading(messages("returnSubmitted.whatYouNeedToDo"))
             @paragraph(messages("returnSubmitted.positive.p2.overdue", viewModel.formattedPaymentDueDate))
         } else {
-            @subHeading(messages("returnSubmitted.whatHappensNext"), classes = Css.headingMCssClass)
+            @subHeading(messages("returnSubmitted.whatHappensNext"))
             @paragraph(messages("returnSubmitted.positive.p1.notOverdue", viewModel.formattedPaymentDueDate))
             @paragraph(messages("returnSubmitted.positive.p2.notOverdue"))
         }
@@ -124,6 +128,13 @@
                     text = messages("returnSubmitted.viewReturnLink.text"),
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
+
+        @subHeading(messages("returnSubmitted.printPage.h2"), s"${Css.headingMCssClass} ${Css.displayNonePrintCssClass}")
+        @printPage(
+            id = "print-return-confirmation-link",
+            text = messages("site.printPage"),
+            paragraphClasses = Css.paddingBottomCssClass
+        )
     }
 
     @if(viewModel.returnDetails.isAmountLessThanZero) {
@@ -142,7 +153,10 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.whatHappensNext"), classes = Css.headingMCssClass)
+        @subHeading(messages("returnSubmitted.printPage.h2"), s"${Css.headingMCssClass} ${Css.displayNonePrintCssClass}")
+        @printPage("print-return-confirmation-link", messages("site.printPage"))
+
+        @subHeading(messages("returnSubmitted.whatHappensNext"))
         @paragraph(content =
             HtmlContent(
                 Seq(link(

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, ScrollableTable, SpanWithLineBreak, SubHeading}
+@import components.{Link, PageHeading, Paragraph, PrintPage, ScrollableTable, SpanWithLineBreak, SubHeading}
 @import config.Constants.Css
 @import viewmodels.{Money, TableViewModel}
 @import viewmodels.payments.ViewPastPaymentsViewModel
@@ -28,14 +28,17 @@
         scrollableTable: ScrollableTable,
         tableRowActionList: components.TableRowActionList,
         tableRowAction: components.TableRowAction,
-        link: Link
+        link: Link,
+        printPage: PrintPage
 )
 
 @(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, historicPaymentsTable: TableViewModel, viewModel: ViewPastPaymentsViewModel)(implicit request: Request[_], messages: Messages)
 
-    @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true) {
+    @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true, withPrintCss = true) {
 
         @pageHeading(messages("viewPastPayments.heading"))
+
+        @printPage("print-payments-link", messages("site.printPage"))
 
         @if(viewModel.isDutyBalancePositive) {
             @paragraph(
@@ -129,7 +132,7 @@
         }
 
         @if(viewModel.historicYears.nonEmpty) {
-            @subHeading(messages("viewPastPayments.pastYears.h2"), Css.headingMCssClass)
+            @subHeading(messages("viewPastPayments.pastYears.h2"))
             @paragraph(HtmlContent(
               spanWithLineBreak(
                   viewModel.historicYears.map{ year =>

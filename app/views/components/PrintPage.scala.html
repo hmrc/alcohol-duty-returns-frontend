@@ -18,6 +18,13 @@
 
 @this()
 
-@(id: String, text: String, classes: String = s"${Css.linkNoVisitedStateCssClass} ${Css.jsVisibleCssClass} ${Css.displayNonePrintCssClass}")
+@(
+        id: String,
+        text: String,
+        classes: String = s"${Css.linkNoVisitedStateCssClass} ${Css.jsVisibleCssClass} ${Css.displayNonePrintCssClass}",
+        paragraphClasses: String = Css.bodyCssClass
+)
 
-<a href="#" class="@classes" data-module="hmrc-print-link" id="@id">@text</a>
+<p class="@paragraphClasses">
+    <a href="#" class="@classes" data-module="hmrc-print-link" id="@id">@text</a>
+</p>
