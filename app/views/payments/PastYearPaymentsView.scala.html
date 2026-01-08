@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{BackToPayments, PageHeading, Paragraph, ScrollableTable}
+@import components.{BackToPayments, PageHeading, Paragraph, PrintPage, ScrollableTable}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
@@ -23,14 +23,17 @@
         pageHeading: PageHeading,
         paragraph: Paragraph,
         scrollableTable: ScrollableTable,
-        backToPayments: BackToPayments
+        backToPayments: BackToPayments,
+        printPage: PrintPage
 )
 
 @(year: Int, historicPaymentsTable: TableViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("pastYearPayments.title")), fullWidth = true) {
+@layout(pageTitle = titleNoForm(messages("pastYearPayments.title")), fullWidth = true, withPrintCss = true) {
 
     @pageHeading(messages("pastYearPayments.heading"))
+
+    @printPage("print-past-payments-link", messages("site.printPage"))
 
     @paragraph(messages("pastYearPayments.p"), classes = Css.paddingBottomCssClass)
 

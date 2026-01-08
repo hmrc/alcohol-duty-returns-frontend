@@ -1,11 +1,13 @@
   @media print {
-    header,
-    footer,
     nav {
       display: none !important;
     }
     html {
       font-size: 62.5%;
+    }
+
+    a[href]:after {
+      content: none !important;
     }
 
     /* reset everything */

@@ -46,6 +46,8 @@
 
     @pageHeading(messages("viewReturn.heading", period))
 
+    @printPage("print-return-link", messages("site.printPage"))
+
     @chargeReference.map { chargeReference =>
       @paragraph(messages("viewReturn.chargeReference", chargeReference))
     }
@@ -80,7 +82,7 @@
          govukSummaryList(totalSummaryList)
     }}
 
-    @subHeading(messages("viewReturn.dutyDue.caption"), classes = Css.headingMCssClass)
+    @subHeading(messages("viewReturn.dutyDue.caption"))
     @govukSummaryList(totalDue)
 
     @scrollableTable(
@@ -116,6 +118,4 @@
                 classes = Css.marginBottom8CssClass
             ))
     }
-
-    @printPage("print-past-payments-link", messages("viewReturn.printYourReturn"))
 }
