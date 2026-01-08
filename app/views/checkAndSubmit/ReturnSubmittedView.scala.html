@@ -82,7 +82,7 @@
                     href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
-        @subHeading(messages("returnSubmitted.printPage.h2", s"${Css.headingMCssClass} ${Css.displayNonePrintCssClass}"))
+        @subHeading(messages("returnSubmitted.printPage.h2"), s"${Css.headingMCssClass} ${Css.displayNonePrintCssClass}")
         @printPage("print-return-confirmation-link", messages("site.printPage"))
 
         @if(viewModel.isOverdue) {
