@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, ScrollableTable, SpanWithLineBreak, SubHeading, TableRowAction, TableRowActionList}
+@import components.{BulletList, Link, PageHeading, Paragraph, ScrollableTable, SubHeading, TableRowAction, TableRowActionList}
 @import config.Constants.Css
 @import viewmodels.TableViewModel
 
@@ -24,9 +24,9 @@
     tableRowActionList: TableRowActionList,
     tableRowAction: TableRowAction,
     scrollableTable: ScrollableTable,
-    spanWithLineBreak: SpanWithLineBreak,
     subHeading: SubHeading,
     paragraph: Paragraph,
+    bulletList: BulletList,
     link: Link
 )
 
@@ -86,16 +86,16 @@
 
         @if(pastYears.nonEmpty) {
             @subHeading(messages("viewPastReturns.pastYears.h2"), Css.headingMCssClass)
-            @paragraph(HtmlContent(
-                spanWithLineBreak(
-                    pastYears.map{ year =>
-                        HtmlContent(link(
-                            id = s"past-returns-link-$year",
-                            text = messages("viewPastReturns.pastYears.link", messages("site.year", year)),
-                            href = controllers.returns.routes.CompletedReturnsController.onPageLoad(year).url
-                        ))
-                    }
-                )
-            ))
+            @bulletList(
+                pastYears.map{ year =>
+                    HtmlContent(link(
+                        id = s"past-returns-link-$year",
+                        text = messages("viewPastReturns.pastYears.link", messages("site.year", year)),
+                        href = controllers.returns.routes.CompletedReturnsController.onPageLoad(year).url
+                    ))
+                },
+                classes = Css.noBulletListCssClass,
+                listItemClasses = None
+            )
         }
 }

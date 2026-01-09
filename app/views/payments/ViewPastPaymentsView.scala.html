@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, PrintPage, ScrollableTable, SpanWithLineBreak, SubHeading}
+@import components.{BulletList, Link, PageHeading, Paragraph, PrintPage, ScrollableTable, SubHeading, TableRowAction, TableRowActionList}
 @import config.Constants.Css
 @import viewmodels.{Money, TableViewModel}
 @import viewmodels.payments.ViewPastPaymentsViewModel
@@ -23,11 +23,11 @@
         layout: templates.Layout,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        spanWithLineBreak: SpanWithLineBreak,
         subHeading: SubHeading,
         scrollableTable: ScrollableTable,
-        tableRowActionList: components.TableRowActionList,
-        tableRowAction: components.TableRowAction,
+        tableRowActionList: TableRowActionList,
+        tableRowAction: TableRowAction,
+        bulletList: BulletList,
         link: Link,
         printPage: PrintPage
 )
@@ -133,17 +133,17 @@
 
         @if(viewModel.historicYears.nonEmpty) {
             @subHeading(messages("viewPastPayments.pastYears.h2"))
-            @paragraph(HtmlContent(
-              spanWithLineBreak(
-                  viewModel.historicYears.map{ year =>
-                      HtmlContent(link(
-                          id = s"past-payments-link-$year",
-                          text = messages("viewPastPayments.pastYears.link", messages("site.year", year)),
-                          href = controllers.payments.routes.PastYearPaymentsController.onPageLoad(year).url
-                      ))
-                  }
-              )
-            ))
+            @bulletList(
+                viewModel.historicYears.map{ year =>
+                    HtmlContent(link(
+                        id = s"past-payments-link-$year",
+                        text = messages("viewPastPayments.pastYears.link", messages("site.year", year)),
+                        href = controllers.payments.routes.PastYearPaymentsController.onPageLoad(year).url
+                    ))
+                },
+                classes = Css.noBulletListCssClass,
+                listItemClasses = None
+            )
         }
 
     }
