@@ -22,7 +22,7 @@
 
 <ol class="@classes" @id.map{id => id="@id"}>
     @elements.map { element =>
-    <li class="dashed-list-item">
+    <li class="@Css.dashedListItemCssClass">
         @element.asHtml
     </li>
     }

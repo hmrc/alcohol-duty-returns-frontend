@@ -160,8 +160,10 @@ object Constants {
 
     val inlineRadiosCssClass = "govuk-radios--inline"
 
-    val numberListCssClass = "govuk-list govuk-list--number"
-    val bulletListCssClass = "govuk-list govuk-list--bullet"
+    val numberListCssClass     = "govuk-list govuk-list--number"
+    val bulletListCssClass     = "govuk-list govuk-list--bullet"
+    val noBulletListCssClass   = "govuk-list"
+    val dashedListItemCssClass = "dashed-list-item"
 
     val visuallyHiddenCssClass = "govuk-visually-hidden"
 

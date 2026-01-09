@@ -25,7 +25,7 @@
 
 <ol class="@classes" @id.map { id => id="@id" }>
 @for((mainText, subList) <- elements) {
-    <li class="dashed-list-item">
+    <li class="@Css.dashedListItemCssClass">
         @mainText.asHtml
         @bulletList(subList)
     </li>

@@ -18,11 +18,16 @@
 
 @this()
 
-@(elements: Seq[Content], classes: String = Css.bulletListCssClass, id: Option[String] = None)
+@(
+        elements: Seq[Content],
+        classes: String = Css.bulletListCssClass,
+        listItemClasses: Option[String] = Some(Css.dashedListItemCssClass),
+        id: Option[String] = None
+)
 
 <ul class="@classes" @id.map{id => id="@id"}>
 @elements.map { element =>
-    <li class="dashed-list-item">
+    <li @listItemClasses.map{classes => class="@classes"}>
         @element.asHtml
     </li>
 }
