@@ -314,7 +314,7 @@ beforeStartReturn.text.guidance3.usecase5 = alcoholic products you have exported
 beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much duty you owe for this period.
 beforeStartReturn.text.guidance5 = You cannot use this service to declare or pay VAT.
 beforeStartReturn.details.summary = Find out how to declare VAT on your alcoholic products
-beforeStartReturn.details.linksOpenInEnglish =
+
 beforeStartReturn.details.p1.technicalGuide.link = Read the technical guide
 beforeStartReturn.details.p1.technicalGuide.url = https://www.gov.uk/guidance/alcoholic-products-technical-guide/section-27-accounting-for-vat
 beforeStartReturn.details.p1.text1 = or
