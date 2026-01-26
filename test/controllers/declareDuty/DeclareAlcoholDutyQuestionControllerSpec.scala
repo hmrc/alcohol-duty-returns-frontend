@@ -24,11 +24,12 @@ import models.{AlcoholRegimes, NormalMode}
 import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{times, verify, when}
+import org.scalacheck.Gen
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, sectionPages}
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.DeclareAlcoholDutyQuestionView
 
@@ -58,8 +59,27 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
         status(result)          mustEqual OK
-        // TODO: make it testable (contains Cider flag depends on regimes)
         contentAsString(result) mustEqual view(form, true, NormalMode)(request, getMessages(application)).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when approved regimes do not include Cider or OFP" in {
+      val userAnswers = Gen.oneOf(Seq(userAnswersWithBeer, userAnswersWithWine, userAnswersWithSpirits)).sample.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(form, showSparklingCider = false, NormalMode)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
