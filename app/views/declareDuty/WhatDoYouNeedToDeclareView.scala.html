@@ -109,24 +109,18 @@
             content = HtmlContent(HtmlFormat.fill(Seq(
                 paragraph(messages("whatDoYouNeedToDeclare.details.link.heading")),
                 bulletList(Seq(
-                    HtmlContent(HtmlFormat.fill(Seq(
-                        link(
-                            id = "tax-type-codes-link",
-                            text = messages("whatDoYouNeedToDeclare.details.link.p1"),
-                            href = appConfig.checkTaxTypeCodesUrl,
-                            newTab = true
-                        ),
-                        Html(".")
-                    ))),
-                    HtmlContent(HtmlFormat.fill(Seq(
-                        link(
-                            id = "excise-help-link",
-                            text = messages("whatDoYouNeedToDeclare.details.link.p2"),
-                            href = messages("whatDoYouNeedToDeclare.exciseHelp.url"),
-                            newTab = true
-                        ),
-                        Html(".")
-                    )))
+                    HtmlContent(link(
+                        id = "tax-type-codes-link",
+                        text = messages("whatDoYouNeedToDeclare.details.link.p1"),
+                        href = appConfig.checkTaxTypeCodesUrl,
+                        newTab = true
+                    )),
+                    HtmlContent(link(
+                        id = "excise-help-link",
+                        text = messages("whatDoYouNeedToDeclare.details.link.p2"),
+                        href = messages("whatDoYouNeedToDeclare.exciseHelp.url"),
+                        newTab = true
+                    ))
                 ))
             )))
         ))

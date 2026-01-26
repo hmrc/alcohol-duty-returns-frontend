@@ -68,6 +68,7 @@
         @govukDetails(Details(
             summary = messages("beforeStartReturn.details.summary"),
             content = HtmlContent(HtmlFormat.fill(Seq(
+                if (messages.lang.code == "cy") paragraph(messages("beforeStartReturn.details.linksOpenInEnglish")) else Html(""),
                 paragraph(HtmlContent(
                     Seq(
                         linkWithHiddenText(
