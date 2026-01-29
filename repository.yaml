@@ -3,7 +3,7 @@ organisation: mdtp
 digital-service: Alcohol Duty Reforms
 description: Alcohol duty is a long-standing system of taxes, comprised of five individual taxes such as beer duty, spirits duty, cider duty, wine duty and other fermented products (OFP) duty
 owning-teams:
-  - DDCE Live Services
+  - DDCE Live Service
 type: service
 service-type: frontend
 test-repositories:
