@@ -16,7 +16,6 @@
 
 package models
 
-import config.FrontendAppConfig
 import enumeratum.{Enum, EnumEntry, PlayEnum, PlayJsonEnum}
 import play.api.libs.json.{Json, OFormat}
 
