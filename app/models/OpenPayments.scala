@@ -35,6 +35,8 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
   case object CA extends TransactionType
 
   case object CAI extends TransactionType
+
+  case object OfficerAssessment extends TransactionType
 }
 
 sealed trait OpenPayment

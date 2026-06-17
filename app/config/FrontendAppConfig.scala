@@ -96,6 +96,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
+  val isOfficerAssessment: Boolean = configuration.get[Boolean]("toggle.isOfficerAssessment")
+
   def adrUserAnswersGetUrl(appaId: String, periodKey: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/user-answers/$appaId/$periodKey"
 
