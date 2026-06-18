@@ -22,7 +22,35 @@ create new pages.
 
    > `sbt run`
 
-The service runs on port `16000` by default.
+   The service runs on port `16000` by default.
+
+3. For the card payment service to run successfully, you need the internal auth service running and to enable a token by doing the following command:
+   ```
+   sm2 --start INTERNAL_AUTH INTERNAL_AUTH_FRONTEND --appendArgs '{"INTERNAL_AUTH": ["-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"], "INTERNAL_AUTH_FRONTEND": ["-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"]}'
+   ```
+
+   And then insert a token using:
+   ```
+   curl -X POST http://localhost:8470/test-only/token \
+      -H "Content-Type: application/json" \
+      -d '{
+        "token": "123456",
+        "principal": "card-payment-frontend",
+        "permissions": [
+          {
+            "resourceType": "card-payment",
+            "resourceLocation": "card-payment/*",
+            "actions": ["READ", "WRITE"]
+          }
+        ]
+      }'
+   ```
+   Start pay-frontend with the transitionary toggle off so all journey's go via card-payment-frontend:
+
+   ```
+   sm2 -start OPS_ACCEPTANCE --appendArgs '{"PAY_FRONTEND" : ["-Dfeature.percentage-of-users-to-go-use-soap=0"]}'
+   ```
+
 
 ## Navigating the service
 
