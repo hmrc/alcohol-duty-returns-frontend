@@ -48,7 +48,7 @@ create new pages.
    Start pay-frontend with the transitionary toggle off so all journey's go via card-payment-frontend:
 
    ```
-   sm2 -start OPS_ACCEPTANCE --appendArgs '{"PAY_FRONTEND" : ["-Dfeature.percentage-of-users-to-go-use-soap=0"]}'
+   sm2 --start OPS_ACCEPTANCE --appendArgs '{"PAY_FRONTEND" : ["-Dfeature.percentage-of-users-to-go-use-soap=0"]}'
    ```
 
 
