@@ -19,14 +19,14 @@ package viewmodels.payments
 import config.Constants.Css
 import config.FrontendAppConfig
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
-import models.TransactionType.{CA, RPI}
+import models.TransactionType.{CA, OfficerAssessment, OfficerAssessmentLPI, RPI}
 import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import play.api.Logging
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, TableRow, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
-import viewmodels._
+import viewmodels.*
 import play.api.mvc.Call
 
 import java.time.{Clock, LocalDate, YearMonth}
@@ -185,7 +185,15 @@ class ViewPastPaymentsHelper @Inject() (
   def getHistoricPaymentsTable(
     historicPaymentsData: Seq[HistoricPayment]
   )(implicit messages: Messages): TableViewModel = {
-    val sortedHistoricPaymentsData = historicPaymentsData.sortBy(_.period.period)(Ordering[YearMonth].reverse)
+    val sortedHistoricPaymentsData = if (frontendAppConfig.isOfficerAssessment) {
+      historicPaymentsData.sortBy(_.period.period)(Ordering[YearMonth].reverse)
+    } else {
+      historicPaymentsData
+        .sortBy(_.period.period)(Ordering[YearMonth].reverse)
+        .filterNot(payment =>
+          payment.transactionType == OfficerAssessment || payment.transactionType == OfficerAssessmentLPI
+        )
+    }
     if (sortedHistoricPaymentsData.nonEmpty) {
       TableViewModel(
         head = getHistoricPaymentsHeader("historic"),
