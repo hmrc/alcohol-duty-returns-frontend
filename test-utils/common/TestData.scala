@@ -609,15 +609,30 @@ trait TestData extends ModelGenerators {
       amountPaid = amount
     )
 
-  val historicReturnPayment = historicPayment(YearMonth.of(2025, Month.APRIL), Return, BigDecimal(1236.45))
-  val historicLPIPayment    = historicPayment(YearMonth.of(2025, Month.JUNE), LPI, BigDecimal(12.45))
-  val historicCAPayment     = historicPayment(YearMonth.of(2025, Month.MAY), CA, BigDecimal(234.45))
-  val historicCAIPayment    = historicPayment(YearMonth.of(2025, Month.JULY), CAI, BigDecimal(123.45))
+  val historicReturnPayment            = historicPayment(YearMonth.of(2025, Month.APRIL), Return, BigDecimal(1236.45))
+  val historicLPIPayment               = historicPayment(YearMonth.of(2025, Month.JUNE), LPI, BigDecimal(12.45))
+  val historicCAPayment                = historicPayment(YearMonth.of(2025, Month.MAY), CA, BigDecimal(234.45))
+  val historicCAIPayment               = historicPayment(YearMonth.of(2025, Month.JULY), CAI, BigDecimal(123.45))
+  val historicOfficerAssessmentPayment =
+    historicPayment(YearMonth.of(2025, Month.JULY), OfficerAssessment, BigDecimal(123.45))
 
   val emptyHistoricPayments = HistoricPayments(2024, Seq.empty)
 
   val historicPayments2025 =
     HistoricPayments(2025, Seq(historicReturnPayment, historicLPIPayment, historicCAPayment, historicCAIPayment))
+
+  val historicPayments2025withOfficerAssessment: HistoricPayments =
+    HistoricPayments(
+      2025,
+      Seq(
+        historicReturnPayment,
+        historicLPIPayment,
+        historicCAPayment,
+        historicCAIPayment,
+        historicOfficerAssessmentPayment
+      )
+    )
+
   val historicPayments2024 = HistoricPayments(
     2024,
     Seq(
