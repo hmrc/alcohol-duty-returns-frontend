@@ -12,9 +12,9 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-30"            % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"                    % hmrcMongoVersion,
     "org.typelevel"     %% "cats-core"                             % "2.13.0",
-    "com.beachape"      %% "enumeratum"                            % "1.9.7",
-    "com.beachape"      %% "enumeratum-play"                       % "1.9.7",
-    "com.beachape"      %% "enumeratum-cats"                       % "1.9.7"
+    "com.beachape"      %% "enumeratum"                            % "1.9.8",
+    "com.beachape"      %% "enumeratum-play"                       % "1.9.8",
+    "com.beachape"      %% "enumeratum-cats"                       % "1.9.8"
   )
 
   val test: Seq[ModuleID] = Seq(
@@ -22,7 +22,7 @@ object AppDependencies {
     "uk.gov.hmrc.mongo"   %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
     "org.scalatest"       %% "scalatest"               % "3.2.20",
     "org.scalatestplus"   %% "scalacheck-1-17"         % "3.2.18.0",
-    "com.beachape"        %% "enumeratum-scalacheck"   % "1.9.7",
+    "com.beachape"        %% "enumeratum-scalacheck"   % "1.9.8",
     "org.scalacheck"      %% "scalacheck"              % "1.19.0",
     "org.jsoup"            % "jsoup"                   % "1.22.2",
     "com.vladsch.flexmark" % "flexmark-all"            % "0.64.8"
