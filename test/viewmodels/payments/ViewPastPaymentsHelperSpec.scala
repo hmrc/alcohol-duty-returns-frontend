@@ -169,7 +169,12 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
     ),
     List(
       "July 2025",
-      s"<span class='break'>Cleared officers assessment payment</span><span class='break'>(ref: $chargeReference)</span>",
+      s"<span class='break'>Cleared officer's assessment payment</span><span class='break'>(ref: $chargeReference)</span>",
+      "£123.45"
+    ),
+    List(
+      "July 2025",
+      s"<span class='break'>Cleared officer's assessment interest payment</span><span class='break'>(ref: $chargeReference)</span>",
       "£123.45"
     ),
     List(
