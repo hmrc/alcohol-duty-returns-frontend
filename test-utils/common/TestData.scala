@@ -526,7 +526,16 @@ trait TestData extends ModelGenerators {
   val outstandingOfficerAssessmentPayment = OutstandingPayment(
     Some(LocalDate.of(2024, 7, 1)),
     Some(LocalDate.of(2024, 7, 31)),
-    CAI,
+    OfficerAssessment,
+    LocalDate.of(2024, 9, 25),
+    Some(chargeReference),
+    BigDecimal(3234.18)
+  )
+
+  val outstandingOfficerAssessmentLPIPayment = OutstandingPayment(
+    Some(LocalDate.of(2024, 7, 1)),
+    Some(LocalDate.of(2024, 7, 31)),
+    OfficerAssessmentLPI,
     LocalDate.of(2024, 9, 25),
     Some(chargeReference),
     BigDecimal(3234.18)
@@ -548,6 +557,29 @@ trait TestData extends ModelGenerators {
       outstandingLPIPayment,
       outstandingCAPayment,
       outstandingCAIPayment,
+      RPIPayment,
+      outstandingOverduePartialPayment,
+      outstandingDuePayment
+    ),
+    unallocatedPayments = Seq(
+      UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(-123)),
+      UnallocatedPayment(LocalDate.of(2024, 8, 25), BigDecimal(-1273)),
+      UnallocatedPayment(LocalDate.of(2024, 7, 25), BigDecimal(-1273))
+    ),
+    totalOpenPaymentsAmount = BigDecimal(12134.67),
+    totalUnallocatedPayments = BigDecimal(134.67),
+    totalOutstandingPayments = BigDecimal(1234.67)
+  )
+
+  val openPaymentsDataWithOfficerAssessment = OpenPayments(
+    outstandingPayments = Seq(
+      outstandingCreditPayment,
+      outstandingPartialPayment,
+      outstandingLPIPayment,
+      outstandingCAPayment,
+      outstandingCAIPayment,
+      outstandingOfficerAssessmentPayment,
+      outstandingOfficerAssessmentLPIPayment,
       RPIPayment,
       outstandingOverduePartialPayment,
       outstandingDuePayment
@@ -646,8 +678,10 @@ trait TestData extends ModelGenerators {
     Seq(historicPayment(YearMonth.of(2022, Month.DECEMBER), Return, BigDecimal(123.45)))
   )
 
-  val historicPaymentsData  = Seq(historicPayments2022, historicPayments2023, historicPayments2024, historicPayments2025)
-  val historicPaymentsData2 = Seq(emptyHistoricPayments, historicPayments2025)
+  val historicPaymentsData                      = Seq(historicPayments2022, historicPayments2023, historicPayments2024, historicPayments2025)
+  val historicPaymentsData2                     = Seq(emptyHistoricPayments, historicPayments2025)
+  val historicPaymentsDataWithOfficerAssessment =
+    Seq(historicPayments2022, historicPayments2023, historicPayments2024, historicPayments2025withOfficerAssessment)
 
   val currentDate    = LocalDate.now(clock)
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)

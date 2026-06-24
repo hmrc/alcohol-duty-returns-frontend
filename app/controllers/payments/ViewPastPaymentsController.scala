@@ -20,7 +20,7 @@ import config.Constants.pastPaymentsSessionKey
 import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
-import models.TransactionType.OfficerAssessment
+import models.TransactionType.{OfficerAssessment, OfficerAssessmentLPI}
 import models.payments.OutstandingPayments
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -58,7 +58,9 @@ class ViewPastPaymentsController @Inject() (
           outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         } else {
           outstandingPaymentsData.outstandingPayments
-            .filter(payment => payment.transactionType != OfficerAssessment)
+            .filter(payment =>
+              payment.transactionType != OfficerAssessment && payment.transactionType != OfficerAssessmentLPI
+            )
             .sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         }
 

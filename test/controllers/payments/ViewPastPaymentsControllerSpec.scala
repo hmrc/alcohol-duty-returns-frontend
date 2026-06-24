@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Configuration
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import viewmodels.payments.ViewPastPaymentsHelper
 import viewmodels.payments.ViewPastPaymentsViewModel
@@ -77,6 +77,132 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments2025.payments)(getMessages(application))
+        val viewModel                     = ViewPastPaymentsViewModel(
+          openPaymentsData.totalOpenPaymentsAmount,
+          2025,
+          Seq(2024, 2022),
+          claimARefundGformEnabled = false
+        )
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(
+          outstandingPaymentsTable,
+          unallocatedPaymentsTable,
+          historicPaymentsTable,
+          viewModel
+        )(
+          request,
+          getMessages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when the officer assessment feature toggle is enabled" in {
+      val testConfiguration  = app.injector.instanceOf[Configuration]
+      val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+
+      val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
+        override val isOfficerAssessment      = true
+        override val claimARefundGformEnabled = false
+      }
+
+      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock2025)
+      val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
+        openPaymentsDataWithOfficerAssessment
+      )
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+        historicPaymentsDataWithOfficerAssessment
+      )
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
+          bind[FrontendAppConfig].toInstance(testAppConfig),
+          bind[Clock].toInstance(clock2025)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+        val result  = route(application, request).value
+
+        val view                          = application.injector.instanceOf[ViewPastPaymentsView]
+        val sortedOutstandingPaymentsData =
+          openPaymentsDataWithOfficerAssessment.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+        val outstandingPaymentsTable      =
+          viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
+        val unallocatedPaymentsTable      =
+          viewModelHelper.getUnallocatedPaymentsTable(openPaymentsDataWithOfficerAssessment.unallocatedPayments)(
+            getMessages(application)
+          )
+        val historicPaymentsTable         =
+          viewModelHelper.getHistoricPaymentsTable(historicPayments2025withOfficerAssessment.payments)(
+            getMessages(application)
+          )
+        val viewModel                     = ViewPastPaymentsViewModel(
+          openPaymentsDataWithOfficerAssessment.totalOpenPaymentsAmount,
+          2025,
+          Seq(2024, 2022),
+          claimARefundGformEnabled = false
+        )
+
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(
+          outstandingPaymentsTable,
+          unallocatedPaymentsTable,
+          historicPaymentsTable,
+          viewModel
+        )(
+          request,
+          getMessages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when the officer assessment feature toggle is disabled" in {
+      val testConfiguration  = app.injector.instanceOf[Configuration]
+      val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+
+      val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
+        override val isOfficerAssessment      = false
+        override val claimARefundGformEnabled = false
+      }
+
+      val viewModelHelper                  = new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfig, clock2025)
+      val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
+        openPaymentsData
+      )
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any())(any())) thenReturn Future.successful(
+        historicPaymentsData
+      )
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
+          bind[FrontendAppConfig].toInstance(testAppConfig),
+          bind[Clock].toInstance(clock2025)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+        val result  = route(application, request).value
+
+        val view                          = application.injector.instanceOf[ViewPastPaymentsView]
+        val sortedOutstandingPaymentsData =
+          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+        val outstandingPaymentsTable      =
+          viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
+        val unallocatedPaymentsTable      =
+          viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(
+            getMessages(application)
+          )
+        val historicPaymentsTable         =
+          viewModelHelper.getHistoricPaymentsTable(historicPayments2025.payments)(
+            getMessages(application)
+          )
         val viewModel                     = ViewPastPaymentsViewModel(
           openPaymentsData.totalOpenPaymentsAmount,
           2025,

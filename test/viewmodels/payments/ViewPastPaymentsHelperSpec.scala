@@ -426,6 +426,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         }
       }
 
+      "must return the Due status for an outstanding OA LPI payment" in {
+        val table =
+          viewPastPaymentsWithOfficerAssessment.getOutstandingPaymentsTable(Seq(outstandingOfficerAssessmentLPIPayment))
+        table.rows.map { row =>
+          row.cells(3).content.asHtml mustBe dueTag
+        }
+      }
+
       "must return the Nothing to pay status for an RPI payment" in {
         val table =
           viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(Seq(RPIPayment))
