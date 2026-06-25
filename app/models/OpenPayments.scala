@@ -16,6 +16,7 @@
 
 package models
 
+import config.FrontendAppConfig
 import enumeratum.{Enum, EnumEntry, PlayEnum, PlayJsonEnum}
 import play.api.libs.json.{Json, OFormat}
 
@@ -37,6 +38,8 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
   case object CAI extends TransactionType
 
   case object OfficerAssessment extends TransactionType
+
+  def isOfficerAssessment(tt: TransactionType): Boolean = tt.equals(TransactionType.OfficerAssessment)
 }
 
 sealed trait OpenPayment
