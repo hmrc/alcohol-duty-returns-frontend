@@ -34,7 +34,9 @@ class CentralAssessmentHelperSpec extends SpecBase {
         outstandingLPIPayment.copy(chargeReference = Some("BBB")),
         outstandingCAPayment.copy(chargeReference = Some("CCC")),
         outstandingCAPayment,
-        outstandingCAIPayment.copy(chargeReference = Some("EEE"))
+        outstandingCAIPayment.copy(chargeReference = Some("EEE")),
+        outstandingOfficerAssessmentPayment.copy(chargeReference = Some("FFF")),
+        outstandingOfficerAssessmentLPIPayment.copy(chargeReference = Some("GGG"))
       )
 
       val session = Session(data = Map(pastPaymentsSessionKey -> Json.toJson(outstandingPayments).toString))
