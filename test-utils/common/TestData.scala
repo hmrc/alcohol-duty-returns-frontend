@@ -523,6 +523,15 @@ trait TestData extends ModelGenerators {
     BigDecimal(3234.18)
   )
 
+  val outstandingOfficerAssessmentPayment = OutstandingPayment(
+    Some(LocalDate.of(2024, 7, 1)),
+    Some(LocalDate.of(2024, 7, 31)),
+    CAI,
+    LocalDate.of(2024, 9, 25),
+    Some(chargeReference),
+    BigDecimal(3234.18)
+  )
+
   val RPIPayment = OutstandingPayment(
     None,
     None,

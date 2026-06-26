@@ -209,6 +209,7 @@ viewPastPayments.RPI.description = Refund payment interest charge
 viewPastPayments.LPI.description = Late payment interest charge
 viewPastPayments.CA.description = Central assessment charge
 viewPastPayments.CAI.description = Central assessment interest charge
+viewPastPayments.OfficerAssessment.description = Officer's assessment charge
 viewPastPayments.credit.description = Credit for Alcohol Duty return
 viewPastPayments.ref = (ref: {0})
 viewPastPayments.status.nothingToPay = Nothing to pay

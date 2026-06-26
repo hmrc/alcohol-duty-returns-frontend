@@ -17,8 +17,10 @@
 package controllers.payments
 
 import config.Constants.pastPaymentsSessionKey
+import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
+import models.TransactionType.{OfficerAssessment, isOfficerAssessment}
 import models.payments.OutstandingPayments
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -39,7 +41,8 @@ class ViewPastPaymentsController @Inject() (
   helper: ViewPastPaymentsHelper,
   view: ViewPastPaymentsView,
   alcoholDutyAccountConnector: AlcoholDutyAccountConnector,
-  clock: Clock
+  clock: Clock,
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -51,13 +54,19 @@ class ViewPastPaymentsController @Inject() (
 
     val outstandingPaymentsFuture =
       alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
-        val sortedOutstandingPaymentsData =
+        val sortedOutstandingPaymentsData = if (appConfig.isOfficerAssessment) {
           outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-        val updatedSession                =
+        } else {
+          outstandingPaymentsData.outstandingPayments
+            .filter(payment => !isOfficerAssessment(payment.transactionType))
+            .sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+        }
+
+        val updatedSession           =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
-        val outstandingPaymentsTable      =
+        val outstandingPaymentsTable =
           helper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
-        val unallocatedPaymentsTable      = helper
+        val unallocatedPaymentsTable = helper
           .getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
 
         OutstandingPayments(
