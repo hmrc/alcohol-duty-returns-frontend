@@ -20,7 +20,7 @@ import config.Constants.pastPaymentsSessionKey
 import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
-import models.TransactionType.{OfficerAssessment, isOfficerAssessment}
+import models.TransactionType.isOfficerAssessment
 import models.payments.OutstandingPayments
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
