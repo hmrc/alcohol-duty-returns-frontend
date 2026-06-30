@@ -47,8 +47,25 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
     override val claimARefundGformEnabled = true
   }
 
+  val testAppConfigOfficerAssessmentOn: FrontendAppConfig =
+    new FrontendAppConfig(testConfiguration, testServicesConfig) {
+      override val claimARefundGformEnabled     = true
+      override val isOfficerAssessment: Boolean = true
+    }
+
+  val testAppConfigOfficerAssessmentOff: FrontendAppConfig =
+    new FrontendAppConfig(testConfiguration, testServicesConfig) {
+      override val isOfficerAssessment: Boolean = false
+    }
+
   val viewPastPaymentsHelperToggleOn =
     new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfigToggleOn, clock)
+
+  val viewPastPaymentsWithOfficerAssessment =
+    new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfigOfficerAssessmentOn, clock)
+
+  val viewPastPaymentsWithOfficerAssessmentOff =
+    new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfigOfficerAssessmentOff, clock)
 
   val dueTag          = new GovukTag()(
     Tag(content = Text("Due"), classes = Css.blueTagCssClass)
@@ -125,6 +142,34 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
     List(
       "July 2025",
       s"<span class='break'>Cleared central assessment interest payment</span><span class='break'>(ref: $chargeReference)</span>",
+      "£123.45"
+    ),
+    List(
+      "June 2025",
+      s"<span class='break'>Cleared late payment interest charge payments</span><span class='break'>(ref: $chargeReference)</span>",
+      "£12.45"
+    ),
+    List(
+      "May 2025",
+      s"<span class='break'>Cleared central assessment payment</span><span class='break'>(ref: $chargeReference)</span>",
+      "£234.45"
+    ),
+    List(
+      "April 2025",
+      s"<span class='break'>Cleared Alcohol Duty payments</span><span class='break'>(ref: $chargeReference)</span>",
+      "£1,236.45"
+    )
+  )
+
+  val expectedClearedRowsWithOfficerAssessment: List[List[String]] = List(
+    List(
+      "July 2025",
+      s"<span class='break'>Cleared central assessment interest payment</span><span class='break'>(ref: $chargeReference)</span>",
+      "£123.45"
+    ),
+    List(
+      "July 2025",
+      s"<span class='break'>Cleared officers assessment payment</span><span class='break'>(ref: $chargeReference)</span>",
       "£123.45"
     ),
     List(
@@ -381,6 +426,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         }
       }
 
+      "must return the Due status for an outstanding OA LPI payment" in {
+        val table =
+          viewPastPaymentsWithOfficerAssessment.getOutstandingPaymentsTable(Seq(outstandingOfficerAssessmentLPIPayment))
+        table.rows.map { row =>
+          row.cells(3).content.asHtml mustBe dueTag
+        }
+      }
+
       "must return the Nothing to pay status for an RPI payment" in {
         val table =
           viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(Seq(RPIPayment))
@@ -491,7 +544,30 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRows
         table.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
+
+      "when isOfficerAssessment toggle is enabled" - {
+        "must return a sorted table by return period in descending order for historic payments" in {
+          val table = viewPastPaymentsWithOfficerAssessment.getHistoricPaymentsTable(
+            historicPayments2025withOfficerAssessment.payments
+          )
+
+          table.head.map(_.content.asHtml.toString)              mustBe expectedClearedHeader
+          table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRowsWithOfficerAssessment
+          table.rows.flatMap(_.actions)                          mustBe Seq.empty
+        }
+      }
+
+      "when isOfficerAssessment toggle is not enabled" - {
+        "must return a sorted table by return period in descending order for historic payments without Officer Assessment payments" in {
+          val table = viewPastPaymentsWithOfficerAssessmentOff.getHistoricPaymentsTable(
+            historicPayments2025withOfficerAssessment.payments
+          )
+
+          table.head.map(_.content.asHtml.toString)              mustBe expectedClearedHeader
+          table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRows
+          table.rows.flatMap(_.actions)                          mustBe Seq.empty
+        }
+      }
     }
   }
-
 }
