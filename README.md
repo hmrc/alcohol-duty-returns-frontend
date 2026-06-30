@@ -14,13 +14,16 @@ create new pages.
 
 1. Make sure you run all the dependant services through the service manager:
 
-   > `sm2 --start ALCOHOL_DUTY_ALL`
+```shell
+sm2 --start ALCOHOL_DUTY_ALL
+```
 
 2. Stop the frontend microservice from the service manager and run it locally:
 
-   > `sm2 --stop ALCOHOL_DUTY_RETURNS_FRONTEND`
-
-   > `sbt run`
+```shell
+sm2 --stop ALCOHOL_DUTY_RETURNS_FRONTEND
+```
+> `sbt run`
 
    The service runs on port `16000` by default.
 
