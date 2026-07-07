@@ -228,6 +228,7 @@ viewPastPayments.historic.LPI.description = Taliadau llog am dalu’n hwyr sydd 
 viewPastPayments.historic.CA.description = Taliad yn sgil asesiad canolog, sydd wedi’i glirio
 viewPastPayments.historic.CAI.description = Taliad llog yn sgil asesiad canolog, sydd wedi’i glirio
 viewPastPayments.historic.OfficerAssessment.description = Tâl asesiad y swyddog wedi’i glirio
+viewPastPayments.historic.OfficerAssessmentLPI.description = Tâl llog asesiad y swyddog wedi’i glirio
 viewPastPayments.historic.paragraph = Mae ‘Taliadau wedi’u clirio’ yn golygu achosion pan fo arian wedi dod i law CThEF, neu pan fo balans credyd presennol wedi’i ddefnyddio i dalu unrhyw doll berthnasol.
 viewPastPayments.visually-hidden.pay-now = swm o £{0} sy’n ddyledus ar {1}
 viewPastPayments.visually-hidden.claim-refund = o £{0}

@@ -38,6 +38,8 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
 
   case object OfficerAssessment extends TransactionType
 
+  case object OfficerAssessmentLPI extends TransactionType
+
   def isOfficerAssessment(tt: TransactionType): Boolean = tt.equals(TransactionType.OfficerAssessment)
 }
 
