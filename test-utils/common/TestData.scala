@@ -593,29 +593,6 @@ trait TestData extends ModelGenerators {
     totalOutstandingPayments = BigDecimal(1234.67)
   )
 
-  val openPaymentsDataWithOfficerAssessment = OpenPayments(
-    outstandingPayments = Seq(
-      outstandingCreditPayment,
-      outstandingPartialPayment,
-      outstandingLPIPayment,
-      outstandingCAPayment,
-      outstandingCAIPayment,
-      outstandingOfficerAssessmentPayment,
-      outstandingOfficerAssessmentLPIPayment,
-      RPIPayment,
-      outstandingOverduePartialPayment,
-      outstandingDuePayment
-    ),
-    unallocatedPayments = Seq(
-      UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(-123)),
-      UnallocatedPayment(LocalDate.of(2024, 8, 25), BigDecimal(-1273)),
-      UnallocatedPayment(LocalDate.of(2024, 7, 25), BigDecimal(-1273))
-    ),
-    totalOpenPaymentsAmount = BigDecimal(12134.67),
-    totalUnallocatedPayments = BigDecimal(134.67),
-    totalOutstandingPayments = BigDecimal(1234.67)
-  )
-
   val openPaymentsWithoutUnallocatedData = OpenPayments(
     outstandingPayments = Seq(
       outstandingCreditPayment,
