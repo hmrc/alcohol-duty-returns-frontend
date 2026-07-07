@@ -210,6 +210,7 @@ viewPastPayments.LPI.description = Llog am dalu’n hwyr
 viewPastPayments.CA.description = Tâl yn sgil asesiad canolog
 viewPastPayments.CAI.description = Tâl llog yn sgil asesiad canolog
 viewPastPayments.OfficerAssessment.description = Tâl asesiad y swyddog
+viewPastPayments.OfficerAssessmentLPI.description = Tâl llog asesiad y swyddog
 viewPastPayments.credit.description = Credyd ar gyfer Datganiad Toll Alcohol
 viewPastPayments.ref = (cyf: {0})
 viewPastPayments.status.nothingToPay = Dim byd i’w dalu

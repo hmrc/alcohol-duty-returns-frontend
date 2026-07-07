@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Configuration
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import viewmodels.payments.ViewPastPaymentsHelper
 import viewmodels.payments.ViewPastPaymentsViewModel
