@@ -80,7 +80,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val fromBusinessAccountPath: String = configuration.get[String]("fromBusinessAccountPath")
 
   private val exitSurveyBaseUrl: String = configuration.get[String]("urls.feedbackFrontendBase")
-  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend"
+  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend?useServiceNavigation"
 
   val claimARefundGformEnabled: Boolean =
     configuration.get[Boolean]("features.claim-a-refund-gform")
