@@ -40,7 +40,7 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
 
   case object OfficerAssessmentLPI extends TransactionType
 
-  def isOfficerAssessment(tt: TransactionType): Boolean = tt.equals(TransactionType.OfficerAssessment)
+  def isOfficerAssessment(tt: TransactionType): Boolean = tt.equals(TransactionType.OfficerAssessment) || tt.equals(TransactionType.OfficerAssessmentLPI)
 }
 
 sealed trait OpenPayment
