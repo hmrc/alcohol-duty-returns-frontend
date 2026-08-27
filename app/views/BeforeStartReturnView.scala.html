@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, Caption, LinkWithHiddenText, PageHeading}
+@import components.{BulletList, LinkWithHiddenText, PageHeading}
 @import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
 
 @this(
@@ -24,7 +24,6 @@
         govukDetails: GovukDetails,
         govukInsetText: GovukInsetText,
         bulletList: BulletList,
-        caption: Caption,
         linkWithHiddenText: LinkWithHiddenText,
         pageHeading: PageHeading,
         paragraph: components.Paragraph,
@@ -36,11 +35,6 @@
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
     @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
-        @caption(
-            id = "before-start-return-section",
-            text = messages("section.alcoholDutyReturn"),
-        )
-
         @pageHeading(messages("beforeStartReturn.heading"))
 
         @govukWarningText(viewModel.warningText)
@@ -119,7 +113,7 @@
         ))
 
         @govukButton(
-            ButtonViewModel("continueButton", messages("site.continue"))
+            ButtonViewModel("continueButton", messages("site.startNow")).asStartButton()
         )
     }
 }
