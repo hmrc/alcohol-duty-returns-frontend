@@ -88,7 +88,9 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.AdjustmentTaxTypePage                     =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) {
+          val entryComplete =
+            userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage).exists(_.isComplete)
+          if (hasChanged || !entryComplete) {
             adjustmentTaxTypePageRoute(userAnswers, CheckMode)
           } else {
             controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
