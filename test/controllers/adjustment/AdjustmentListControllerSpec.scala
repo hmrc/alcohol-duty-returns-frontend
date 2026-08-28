@@ -45,20 +45,20 @@ class AdjustmentListControllerSpec extends SpecBase {
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider                              = new AdjustmentListFormProvider()
-  val form: Form[Boolean]                       = formProvider()
-  val pageNumber                                = 1
-  lazy val adjustmentListRoute: String          =
+  val formProvider                     = new AdjustmentListFormProvider()
+  val form: Form[Boolean]              = formProvider()
+  val pageNumber                       = 1
+  lazy val adjustmentListRoute: String =
     controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
-  val dutyDue: BigDecimal                       = BigDecimal(34.2)
-  val rate: BigDecimal                          = BigDecimal(9.27)
-  val pureAlcoholVolume: BigDecimal             = BigDecimal(3.69)
-  val taxCode                                   = "311"
-  val volume: BigDecimal                        = BigDecimal(10)
-  val repackagedRate: BigDecimal                = BigDecimal(10)
-  val repackagedDuty: BigDecimal                = BigDecimal(33.2)
-  val newDuty: BigDecimal                       = BigDecimal(1)
-  val rateBand: RateBand                        = RateBand(
+  val dutyDue: BigDecimal              = BigDecimal(34.2)
+  val rate: BigDecimal                 = BigDecimal(9.27)
+  val pureAlcoholVolume: BigDecimal    = BigDecimal(3.69)
+  val taxCode                          = "311"
+  val volume: BigDecimal               = BigDecimal(10)
+  val repackagedRate: BigDecimal       = BigDecimal(10)
+  val repackagedDuty: BigDecimal       = BigDecimal(33.2)
+  val newDuty: BigDecimal              = BigDecimal(1)
+  val rateBand: RateBand               = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -76,7 +76,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       )
     )
   )
-  val adjustmentEntry: AdjustmentEntry          = AdjustmentEntry(
+  val adjustmentEntry: AdjustmentEntry = AdjustmentEntry(
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(volume),
     rateBand = Some(rateBand),
@@ -85,7 +85,9 @@ class AdjustmentListControllerSpec extends SpecBase {
     adjustmentType = Some(Spoilt),
     period = Some(YearMonth.of(24, 1))
   )
-  val adjustmentEntryList: Seq[AdjustmentEntry] = List(adjustmentEntry)
+
+  // enough for showing 3 pages
+  val adjustmentEntryList: Seq[AdjustmentEntry] = List.fill(rowsPerPage * 2 + 1)(adjustmentEntry)
 
   val userAnswers: UserAnswers = emptyUserAnswers
     .set(AdjustmentEntryListPage, adjustmentEntryList)
@@ -130,7 +132,8 @@ class AdjustmentListControllerSpec extends SpecBase {
         val adjustmentTable: TableViewModel =
           AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
 
-        val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
+        val totalPages =
+          Math.ceil(userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty).size.toDouble / rowsPerPage).toInt
 
         val paginationViewModel: PaginationViewModel = PaginationViewModel(
           pageNumber,
@@ -172,7 +175,8 @@ class AdjustmentListControllerSpec extends SpecBase {
         val adjustmentTable: TableViewModel =
           AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total, pageNumber)(getMessages(app))
 
-        val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
+        val totalPages =
+          Math.ceil(userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty).size.toDouble / rowsPerPage).toInt
 
         val paginationViewModel: PaginationViewModel = PaginationViewModel(
           pageNumber,
@@ -269,7 +273,8 @@ class AdjustmentListControllerSpec extends SpecBase {
         val adjustmentTable: TableViewModel =
           AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
 
-        val totalPages = Math.ceil(userAnswers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
+        val totalPages =
+          Math.ceil(userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty).size.toDouble / rowsPerPage).toInt
 
         val paginationViewModel: PaginationViewModel = PaginationViewModel(
           pageNumber,
