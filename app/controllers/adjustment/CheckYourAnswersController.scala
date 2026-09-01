@@ -51,6 +51,7 @@ class CheckYourAnswersController @Inject() (
       val result = for {
         adjustmentEntry <- OptionT.fromOption[Future](getAdjustmentEntry(request.userAnswers, index))
         adjustmentType  <- OptionT.fromOption[Future](adjustmentEntry.adjustmentType)
+        _               <- OptionT.fromOption[Future](Option.when(adjustmentEntry.isComplete)(()))
         summaryList     <- OptionT.fromOption[Future](
                              checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
                            )
