@@ -38,7 +38,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswersController" - {
     "must display answers when no index is supplied and update current adjustment entry" in new SetUp {
       val userAnswers: UserAnswers = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+        .set(CurrentAdjustmentEntryPage, completedAdjustmentEntry)
         .success
         .value
 
@@ -50,7 +50,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         )
         .build()
 
-      when(mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(adjustmentEntry))(any()))
+      when(
+        mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(completedAdjustmentEntry))(any())
+      )
         .thenReturn(Some(summaryList))
 
       when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future(HttpResponse(OK)))
@@ -69,12 +71,12 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must display answers when an index is supplied and update current adjustment entry" in new SetUp {
       val userAnswers: UserAnswers = emptyUserAnswers
-        .set(AdjustmentEntryListPage, Seq(adjustmentEntry))
+        .set(AdjustmentEntryListPage, Seq(completedAdjustmentEntry))
         .success
         .value
 
       val userAnswersWithCurrentAdjustmentSet: UserAnswers = userAnswers
-        .set(CurrentAdjustmentEntryPage, adjustmentEntryWithIndex)
+        .set(CurrentAdjustmentEntryPage, completedAdjustmentEntryWithIndex)
         .success
         .value
 
@@ -87,7 +89,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .build()
 
       when(
-        mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(adjustmentEntryWithIndex))(any())
+        mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(
+          eqTo(completedAdjustmentEntryWithIndex)
+        )(
+          any()
+        )
       ).thenReturn(Some(summaryList))
 
       when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future(HttpResponse(OK)))
@@ -101,6 +107,35 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         contentAsString(result) mustEqual content.body
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersWithCurrentAdjustmentSet))(any())
+      }
+    }
+
+    "must redirect to journey recovery when the current adjustment entry is incomplete" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+        .success
+        .value
+
+      val application = applicationBuilder(Some(userAnswers))
+        .overrides(
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper),
+          bind[CheckYourAnswersView].toInstance(mockView),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
+      when(mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(adjustmentEntry))(any()))
+        .thenReturn(Some(summaryList))
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockUserAnswersConnector, never).set(any())(any())
       }
     }
 
