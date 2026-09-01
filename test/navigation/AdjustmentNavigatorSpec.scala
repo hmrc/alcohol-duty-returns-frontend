@@ -462,7 +462,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(CheckMode)
     }
 
-    "must go from the Adjustment Tax Type page to the CYA page if RateType is Core if the answer is the same" in {
+    "must go from the Adjustment Tax Type page to the Adjustment Volume page if RateType is Core and the entry is incomplete even if the answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTaxTypePage,
         CheckMode,
@@ -474,7 +474,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           .success
           .value,
         Some(false)
-      ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+      ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(CheckMode)
     }
 
     "must go from the Adjustment Tax Type page to the Adjustment Volume page if RateType is SmallProducerRelief if the answer has changed" in {
@@ -501,7 +501,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
-    "must go from the Adjustment Tax Type page to CYA page if RateType is SmallProducerRelief if the answer is the same" in {
+    "must go from the Adjustment Tax Type page to the Adjustment Volume With SPR page if RateType is SmallProducerRelief and the entry is incomplete even if the answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTaxTypePage,
         CheckMode,
@@ -510,6 +510,18 @@ class AdjustmentNavigatorSpec extends SpecBase {
             pages.adjustment.CurrentAdjustmentEntryPage,
             AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = SmallProducerRelief)))
           )
+          .success
+          .value,
+        Some(false)
+      ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode)
+    }
+
+    "must go from the Adjustment Tax Type page to the CYA page if the entry is complete and the answer is the same" in {
+      navigator.nextPage(
+        pages.adjustment.AdjustmentTaxTypePage,
+        CheckMode,
+        emptyUserAnswers
+          .set(pages.adjustment.CurrentAdjustmentEntryPage, fullAdjustmentEntry)
           .success
           .value,
         Some(false)
