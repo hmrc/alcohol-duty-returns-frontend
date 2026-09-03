@@ -17,15 +17,16 @@
 package controllers
 
 import config.Constants.periodKeySessionKey
-import connectors.UserAnswersConnector
+import config.FrontendAppConfig
+import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
 import controllers.actions._
+import models.requests.OptionalDataRequest
 import models.{ErrorModel, ReturnId, ReturnPeriod}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.BeforeStartReturnService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
-import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.UserAnswersAuditHelper
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
@@ -37,11 +38,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeStartReturnController @Inject() (
   userAnswersConnector: UserAnswersConnector,
+  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
   beforeStartReturnService: BeforeStartReturnService,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   userAnswersAuditHelper: UserAnswersAuditHelper,
   clock: Clock,
+  config: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView,
   beforeStartReturnViewModelFactory: BeforeStartReturnViewModelFactory,
@@ -63,7 +66,7 @@ class BeforeStartReturnController @Inject() (
       case Some(returnPeriod) =>
         val session = request.session + (periodKeySessionKey, periodKey)
         userAnswersConnector.get(request.appaId, periodKey).flatMap {
-          case Right(ua)   =>
+          case Right(ua)                                    =>
             logger.info(s"[BeforeStartReturnController] [onPageLoad] Return $appaId/$periodKey retrieved by the user")
             beforeStartReturnService.handleExistingUserAnswers(ua).map {
               case Right(_)                            =>
@@ -76,34 +79,40 @@ class BeforeStartReturnController @Inject() (
                 logger.warn(s"[BeforeStartReturnController] [onPageLoad] Unexpected error: $message")
                 Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
             }
-          case Left(error) =>
-            Future.successful(handleGetUserAnswersError(appaId, periodKey, returnPeriod, session, error))
+          case Left(error) if error.statusCode == NOT_FOUND =>
+            logger.info(s"[BeforeStartReturnController] [onPageLoad] Return $appaId/$periodKey not found")
+            alcoholDutyReturnsConnector.shouldAskContactPreference(appaId).value.map {
+              case Right(true)  =>
+                logger.info(
+                  s"[BeforeStartReturnController] [onPageLoad] Redirecting $appaId/$periodKey to set a contact preference"
+                )
+                Redirect(config.contactPreferencesFrontendPreReturnUrl(periodKey)).withSession(session)
+              case Right(false) =>
+                beforeYouStartView(returnPeriod, session)
+              case Left(err)    =>
+                logger.warn(
+                  s"[BeforeStartReturnController] [onPageLoad] Unable to check contact preference for $appaId/$periodKey, continuing: $err"
+                )
+                beforeYouStartView(returnPeriod, session)
+            }
+          case Left(error) if error.statusCode == LOCKED    =>
+            logger.info(s"[BeforeStartReturnController] [onPageLoad] Return $appaId/$periodKey locked for the user")
+            Future.successful(Redirect(controllers.routes.ReturnLockedController.onPageLoad()))
+          case Left(error)                                  =>
+            logger.warn(
+              s"[BeforeStartReturnController] [onPageLoad] Error retrieving the return $appaId/$periodKey for the user: $error"
+            )
+            Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         }
     }
   }
 
-  private def handleGetUserAnswersError(
-    appaId: String,
-    periodKey: String,
-    returnPeriod: ReturnPeriod,
-    session: Session,
-    error: UpstreamErrorResponse
-  )(implicit request: Request[_]): Result = error match {
-    case err if err.statusCode == NOT_FOUND =>
-      logger.info(s"[BeforeStartReturnController] [handleGetUserAnswersError] Return $appaId/$periodKey not found")
-      val currentDate = LocalDate.now(clock)
-      val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
-      Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
-    case err if err.statusCode == LOCKED    =>
-      logger.info(
-        s"[BeforeStartReturnController] [handleGetUserAnswersError] Return $appaId/$periodKey locked for the user"
-      )
-      Redirect(controllers.routes.ReturnLockedController.onPageLoad())
-    case _                                  =>
-      logger.warn(
-        s"[BeforeStartReturnController] [handleGetUserAnswersError] Error retrieving the return $appaId/$periodKey for the user"
-      )
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+  private def beforeYouStartView(returnPeriod: ReturnPeriod, session: Session)(implicit
+    request: Request[_]
+  ): Result = {
+    val currentDate = LocalDate.now(clock)
+    val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
+    Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
@@ -112,17 +121,39 @@ class BeforeStartReturnController @Inject() (
         logger.warn("[BeforeStartReturnController] [onSubmit] Period key not present in session")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
-        val returnAndUserDetails =
-          ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
-        userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
-          case Right(userAnswer) =>
-            logger.info(s"[BeforeStartReturnController] [onSubmit] Return ${request.appaId}/$periodKey created")
-            userAnswersAuditHelper.auditReturnStarted(userAnswer)
-            Redirect(controllers.routes.TaskListController.onPageLoad)
-          case Left(error)       =>
-            logger.warn(s"[BeforeStartReturnController] [onSubmit] Unable to create userAnswers: $error")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        }
+        createUserAnswersAndRedirect(periodKey)
+    }
+  }
+
+  def onContactPreferenceComplete(periodKey: String): Action[AnyContent] = (identify andThen getData).async {
+    implicit request =>
+      ReturnPeriod.fromPeriodKey(periodKey) match {
+        case None               =>
+          logger.warn("[BeforeStartReturnController] [onContactPreferenceComplete] Period key is not valid")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(returnPeriod) =>
+          val session = request.session + (periodKeySessionKey, periodKey)
+          Future.successful(beforeYouStartView(returnPeriod, session))
+      }
+  }
+
+  private def createUserAnswersAndRedirect(
+    periodKey: String
+  )(implicit request: OptionalDataRequest[_]): Future[Result] = {
+    val returnAndUserDetails =
+      ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
+    userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
+      case Right(userAnswer) =>
+        logger.info(
+          s"[BeforeStartReturnController] [createUserAnswersAndRedirect] Return ${request.appaId}/$periodKey created"
+        )
+        userAnswersAuditHelper.auditReturnStarted(userAnswer)
+        Redirect(controllers.routes.TaskListController.onPageLoad)
+      case Left(error)       =>
+        logger.warn(
+          s"[BeforeStartReturnController] [createUserAnswersAndRedirect] Unable to create userAnswers: $error"
+        )
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 
