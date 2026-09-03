@@ -42,6 +42,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private lazy val adrCalculatorHost: String =
     servicesConfig.baseUrl("alcohol-duty-calculator")
 
+  private lazy val contactPreferencesFrontendHost: String =
+    servicesConfig.baseUrl("alcohol-duty-contact-preferences-frontend")
+
   private val adrCalculatorRootUrl: String                              =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.rootUrl")
   private val adrCalculatorRatesUrlPart: String                         =
@@ -139,6 +142,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrGetValidSubscriptionRegimes(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/subscriptionSummary/$appaId"
+
+  def adrShouldAskContactPreferenceUrl(appaId: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/contact-preference/should-ask/$appaId"
+
+  def contactPreferencesFrontendPreReturnUrl(periodKey: String): String =
+    s"$contactPreferencesFrontendHost/manage-alcohol-duty/contact-preference/start/pre-return?periodKey=$periodKey"
 
   def adrGetReturnsUrl(appaId: String, periodKey: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/producers/$appaId/returns/$periodKey"

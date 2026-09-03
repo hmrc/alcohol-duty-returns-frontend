@@ -139,6 +139,37 @@ class AlcoholDutyReturnsConnector @Inject() (
         }
     }
 
+  def shouldAskContactPreference(
+    appaId: String
+  )(implicit hc: HeaderCarrier): EitherT[Future, String, Boolean] =
+    EitherT {
+      httpClient
+        .post(url"${config.adrShouldAskContactPreferenceUrl(appaId)}")
+        .execute[Either[UpstreamErrorResponse, HttpResponse]]
+        .map {
+          case Right(response) if response.status == OK =>
+            Try(response.json.as[Boolean]) match {
+              case Success(data)      => Right[String, Boolean](data)
+              case Failure(exception) =>
+                logger.warn(
+                  s"[AlcoholDutyReturnsConnector] [shouldAskContactPreference] Invalid JSON format",
+                  exception
+                )
+                Left(s"Invalid JSON format $exception")
+            }
+          case Left(errorResponse)                      =>
+            logger.warn(
+              s"[AlcoholDutyReturnsConnector] [shouldAskContactPreference] Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+            )
+            Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
+          case Right(response)                          =>
+            logger.warn(
+              s"[AlcoholDutyReturnsConnector] [shouldAskContactPreference] Unexpected status code: ${response.status}"
+            )
+            Left(s"Unexpected status code: ${response.status}")
+        }
+    }
+
   def getReturn(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[ReturnDetails] =
     httpClient
       .get(url"${config.adrGetReturnsUrl(appaId, periodKey)}")
