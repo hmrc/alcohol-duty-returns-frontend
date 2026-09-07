@@ -6,6 +6,7 @@ owning-teams:
   - DDCE Live Service
 type: service
 service-type: frontend
+serviceNowMapping: SNSVC0021012
 test-repositories:
   - alcohol-duty-performance-tests
   - alcohol-duty-ui-tests
