@@ -17,7 +17,8 @@
 package controllers
 
 import base.SpecBase
-import connectors.UserAnswersConnector
+import cats.data.EitherT
+import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ErrorModel, ObligationData, ReturnPeriod, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
@@ -132,15 +133,86 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         }
       }
 
-      "must return OK and the correct view for a GET if the userAnswer does not exist yet" in new SetUp {
+      "must return OK and the correct view for a GET if the userAnswer does not exist yet and no contact preference needs to be set" in new SetUp {
         when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
         when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
           Left(mockUpstreamErrorResponse)
         )
+        when(mockAlcoholDutyReturnsConnector.shouldAskContactPreference(any())(any())) thenReturn
+          EitherT.rightT[Future, String](false)
 
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+          )
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[BeforeStartReturnView]
+
+          val returnPeriodViewModel =
+            new ReturnPeriodViewModelFactory(createDateTimeHelper())(
+              ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
+            )
+
+          status(result)          mustEqual OK
+          contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
+            request,
+            getMessages(application)
+          ).toString
+        }
+      }
+
+      "must redirect to the contact-preferences-frontend for a GET if the userAnswer does not exist yet and the user should be asked for a contact preference" in new SetUp {
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
+        when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
+          Left(mockUpstreamErrorResponse)
+        )
+        when(mockAlcoholDutyReturnsConnector.shouldAskContactPreference(any())(any())) thenReturn
+          EitherT.rightT[Future, String](true)
+
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+          )
+
+          val result = route(application, request).value
+
+          status(result)            mustEqual SEE_OTHER
+          redirectLocation(result).value must include(s"/start/pre-return?periodKey=$periodKey")
+        }
+      }
+
+      "must return OK and the correct view (fail open) for a GET if the userAnswer does not exist yet and checking the contact preference fails" in new SetUp {
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
+        when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
+          Left(mockUpstreamErrorResponse)
+        )
+        when(mockAlcoholDutyReturnsConnector.shouldAskContactPreference(any())(any())) thenReturn
+          EitherT.leftT[Future, Boolean]("Unexpected response. Status: 500")
+
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
             bind[Clock].toInstance(clock)
           )
           .build()
@@ -317,13 +389,70 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         }
       }
     }
+
+    "onContactPreferenceComplete" - {
+
+      "must return OK and the correct view for a GET, without creating userAnswers" in new SetUp {
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(GET, controllers.routes.BeforeStartReturnController.onContactPreferenceComplete(periodKey).url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[BeforeStartReturnView]
+
+          val returnPeriodViewModel =
+            new ReturnPeriodViewModelFactory(createDateTimeHelper())(
+              ReturnPeriod.fromPeriodKey(periodKey).get
+            )
+
+          status(result)          mustEqual OK
+          contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
+            request,
+            getMessages(application)
+          ).toString
+
+          verify(mockUserAnswersConnector, times(0)).createUserAnswers(any())(any())
+        }
+      }
+
+      "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(
+              GET,
+              controllers.routes.BeforeStartReturnController.onContactPreferenceComplete(badPeriodKey).url
+            )
+
+          val result = route(application, request).value
+
+          status(result)                 mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+    }
   }
 
   class SetUp {
-    val mockUserAnswersConnector     = mock[UserAnswersConnector]
-    val mockBeforeStartReturnService = mock[BeforeStartReturnService]
-    val mockUserAnswersAuditHelper   = mock[UserAnswersAuditHelper]
-    val mockUpstreamErrorResponse    = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector        = mock[UserAnswersConnector]
+    val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+    val mockBeforeStartReturnService    = mock[BeforeStartReturnService]
+    val mockUserAnswersAuditHelper      = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse       = mock[UpstreamErrorResponse]
 
     implicit val messages: Messages = getMessages(app)
 

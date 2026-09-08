@@ -448,6 +448,95 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
     }
   }
 
+  "shouldAskContactPreference" - {
+    val mockUrl = s"http://alcohol-duty-returns/contact-preference/should-ask/$appaId"
+
+    "successfully retrieve true" in new SetUp {
+      val httpResponse = HttpResponse(OK, "true")
+
+      when(mockConfig.adrShouldAskContactPreferenceUrl(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.shouldAskContactPreference(appaId).value) { result =>
+        result mustBe Right(true)
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "successfully retrieve false" in new SetUp {
+      val httpResponse = HttpResponse(OK, "false")
+
+      when(mockConfig.adrShouldAskContactPreferenceUrl(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.shouldAskContactPreference(appaId).value) { result =>
+        result mustBe Right(false)
+      }
+    }
+
+    "fail when invalid JSON is returned" in new SetUp {
+      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(mockConfig.adrShouldAskContactPreferenceUrl(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidJsonResponse)))
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.shouldAskContactPreference(appaId).value) { result =>
+        result match {
+          case Left(err) => err must include("Invalid JSON format")
+          case Right(_)  => fail("Expected a Left")
+        }
+      }
+    }
+
+    "fail when an unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
+
+      when(mockConfig.adrShouldAskContactPreferenceUrl(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.shouldAskContactPreference(appaId).value) { result =>
+        result mustBe Left("Unexpected response. Status: 502")
+      }
+    }
+
+    "fail when unexpected status code is returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(CREATED, "")
+
+      when(mockConfig.adrShouldAskContactPreferenceUrl(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.shouldAskContactPreference(appaId).value) { result =>
+        result mustBe Left("Unexpected status code: 201")
+      }
+    }
+  }
+
   "submitReturn" - {
     val mockUrl = s"http://alcohol-duty-returns/producers/$appaId/returns/$periodKey"
 
