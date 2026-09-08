@@ -201,6 +201,46 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         }
       }
 
+      "must return OK and the correct view for a GET without checking the contact preference if the userAnswer does not exist yet and the pre-return-ask-contact-preference toggle is disabled" in new SetUp {
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
+        when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
+          Left(mockUpstreamErrorResponse)
+        )
+
+        val application = applicationBuilder()
+          .configure("features.pre-return-ask-contact-preference" -> false)
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+          )
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[BeforeStartReturnView]
+
+          val returnPeriodViewModel =
+            new ReturnPeriodViewModelFactory(createDateTimeHelper())(
+              ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
+            )
+
+          status(result)          mustEqual OK
+          contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
+            request,
+            getMessages(application)
+          ).toString
+
+          verify(mockAlcoholDutyReturnsConnector, times(0)).shouldAskContactPreference(any())(any())
+        }
+      }
+
       "must return OK and the correct view (fail open) for a GET if the userAnswer does not exist yet and checking the contact preference fails" in new SetUp {
         when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
         when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
