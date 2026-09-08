@@ -81,19 +81,23 @@ class BeforeStartReturnController @Inject() (
             }
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"[BeforeStartReturnController] [onPageLoad] Return $appaId/$periodKey not found")
-            alcoholDutyReturnsConnector.shouldAskContactPreference(appaId).value.map {
-              case Right(true)  =>
-                logger.info(
-                  s"[BeforeStartReturnController] [onPageLoad] Redirecting $appaId/$periodKey to set a contact preference"
-                )
-                Redirect(config.contactPreferencesFrontendPreReturnUrl(periodKey)).withSession(session)
-              case Right(false) =>
-                beforeYouStartView(returnPeriod, session)
-              case Left(err)    =>
-                logger.warn(
-                  s"[BeforeStartReturnController] [onPageLoad] Unable to check contact preference for $appaId/$periodKey, continuing: $err"
-                )
-                beforeYouStartView(returnPeriod, session)
+            if (config.preReturnAskContactPreferenceEnabled) {
+              alcoholDutyReturnsConnector.shouldAskContactPreference(appaId).value.map {
+                case Right(true)  =>
+                  logger.info(
+                    s"[BeforeStartReturnController] [onPageLoad] Redirecting $appaId/$periodKey to set a contact preference"
+                  )
+                  Redirect(config.contactPreferencesFrontendPreReturnUrl(periodKey)).withSession(session)
+                case Right(false) =>
+                  beforeYouStartView(returnPeriod, session)
+                case Left(err)    =>
+                  logger.warn(
+                    s"[BeforeStartReturnController] [onPageLoad] Unable to check contact preference for $appaId/$periodKey, continuing: $err"
+                  )
+                  beforeYouStartView(returnPeriod, session)
+              }
+            } else {
+              Future.successful(beforeYouStartView(returnPeriod, session))
             }
           case Left(error) if error.statusCode == LOCKED    =>
             logger.info(s"[BeforeStartReturnController] [onPageLoad] Return $appaId/$periodKey locked for the user")
