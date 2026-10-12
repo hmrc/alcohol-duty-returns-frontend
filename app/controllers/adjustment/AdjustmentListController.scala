@@ -77,9 +77,9 @@ class AdjustmentListController @Inject() (
                 preparedForm,
                 paginatedViewModel.tableViewModel,
                 PaginationViewModel(
-                  paginatedViewModel.totalPages,
-                  pageNumber,
-                  controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+                  currentPage = pageNumber,
+                  totalPages = paginatedViewModel.totalPages,
+                  baseUrl = controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
                 )
               )
             )
@@ -106,9 +106,9 @@ class AdjustmentListController @Inject() (
                   formWithErrors,
                   paginatedViewModel.tableViewModel,
                   PaginationViewModel(
-                    paginatedViewModel.totalPages,
-                    pageNumber,
-                    controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+                    currentPage = pageNumber,
+                    totalPages = paginatedViewModel.totalPages,
+                    baseUrl = controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
                   )
                 )
               )
