@@ -121,7 +121,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
     List(
       "25 July 2024",
       s"<span class='break'>Refund payment interest charge</span><span class='break'>(ref: $chargeReference)</span>",
-      "−£2,011.00",
+      "£2,011.00",
       nothingToPayTag.toString
     ),
     List(
