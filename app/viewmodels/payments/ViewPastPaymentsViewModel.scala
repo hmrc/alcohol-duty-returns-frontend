@@ -96,7 +96,12 @@ class ViewPastPaymentsHelper @Inject() (
             )
           ),
           TableRow(
-            content = Text(Money.format(outstandingPaymentsData.remainingAmount)),
+            content = Text(
+              Money.format(
+                if (outstandingPaymentsData.transactionType == RPI) outstandingPaymentsData.remainingAmount.abs
+                else outstandingPaymentsData.remainingAmount
+              )
+            ),
             classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
           ),
           TableRow(content = HtmlContent(statusTag))

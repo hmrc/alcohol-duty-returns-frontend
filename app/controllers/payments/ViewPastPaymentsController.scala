@@ -20,7 +20,7 @@ import config.Constants.pastPaymentsSessionKey
 import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
-import models.TransactionType.isOfficerAssessment
+import models.TransactionType.{RPI, isOfficerAssessment}
 import models.payments.OutstandingPayments
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -55,11 +55,16 @@ class ViewPastPaymentsController @Inject() (
     val outstandingPaymentsFuture =
       alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
         val sortedOutstandingPaymentsData = if (appConfig.isOfficerAssessment) {
-          outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          outstandingPaymentsData.outstandingPayments
+            .sortBy(payment => (payment.dueDate, payment.transactionType == RPI))(
+              Ordering.Tuple2(Ordering[LocalDate].reverse, Ordering.Boolean)
+            )
         } else {
           outstandingPaymentsData.outstandingPayments
             .filter(payment => !isOfficerAssessment(payment.transactionType))
-            .sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+            .sortBy(payment => (payment.dueDate, payment.transactionType == RPI))(
+              Ordering.Tuple2(Ordering[LocalDate].reverse, Ordering.Boolean)
+            )
         }
 
         val updatedSession           =
