@@ -18,7 +18,7 @@ package viewmodels.payments
 
 import config.Constants.Css
 import config.FrontendAppConfig
-import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
+import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue, UnderReview}
 import models.TransactionType.{CA, OfficerAssessment, OfficerAssessmentLPI, RPI}
 import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import play.api.Logging
@@ -112,7 +112,8 @@ class ViewPastPaymentsHelper @Inject() (
           outstandingPaymentsData.remainingAmount,
           outstandingPaymentsData.dueDate,
           outstandingPaymentsData.transactionType,
-          outstandingPaymentsData.chargeReference
+          outstandingPaymentsData.chargeReference,
+          outstandingPaymentsData.runningLock
         )
       )
     }
@@ -241,7 +242,7 @@ class ViewPastPaymentsHelper @Inject() (
     Seq(
       TableRowActionViewModel(
         label = messages("viewPastPayments.claimRefund.linkText"),
-        href = Call("GET", frontendAppConfig.claimRefundGformUrl(gformAmount)),
+        href = Some(Call("GET", frontendAppConfig.claimRefundGformUrl(gformAmount))),
         visuallyHiddenText = Some(getClaimRefundHiddenText(amount = amount))
       )
     )
@@ -253,14 +254,15 @@ class ViewPastPaymentsHelper @Inject() (
     amount: BigDecimal,
     paymentDate: LocalDate,
     transactionType: TransactionType,
-    chargeReference: Option[String]
+    chargeReference: Option[String],
+    runningLock: Option[String]
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
       if (frontendAppConfig.claimARefundGformEnabled) {
         Seq(
           TableRowActionViewModel(
             label = messages("viewPastPayments.claimRefund.linkText"),
-            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString)),
+            href = Some(Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString))),
             visuallyHiddenText = Some(getClaimRefundHiddenText(amount = amount))
           )
         )
@@ -271,19 +273,29 @@ class ViewPastPaymentsHelper @Inject() (
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastPayments.manage.linkText"),
-          href = controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(
-            chargeReference.getOrElse(
-              throw new IllegalStateException("Charge reference is required for Central Assessment")
+          href = Some(
+            controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(
+              chargeReference.getOrElse(
+                throw new IllegalStateException("Charge reference is required for Central Assessment")
+              )
             )
           ),
           visuallyHiddenText = Some(getManageCentralAssessmentHiddenText(amount = amount))
+        )
+      )
+    } else if (transactionType == OfficerAssessment && runningLock.nonEmpty) {
+      Seq(
+        TableRowActionViewModel(
+          label = messages("viewPastPayments.review.linkText"),
+          href = None,
+          visuallyHiddenText = Some(getPayNowHiddenText(amount = amount, paymentDate = paymentDate))
         )
       )
     } else {
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastPayments.payNow.linkText"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
+          href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index)),
           visuallyHiddenText = Some(getPayNowHiddenText(amount = amount, paymentDate = paymentDate))
         )
       )
@@ -337,6 +349,10 @@ class ViewPastPaymentsHelper @Inject() (
   ): OutstandingPaymentStatusToDisplay =
     if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount <= 0) {
       NothingToPay
+    } else if (
+      outstandingPaymentsData.transactionType == OfficerAssessment && outstandingPaymentsData.runningLock.nonEmpty
+    ) {
+      UnderReview
     } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now(clock))) {
       Overdue
     } else {
@@ -353,6 +369,8 @@ class ViewPastPaymentsHelper @Inject() (
         Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Css.redTagCssClass)
       case OutstandingPaymentStatusToDisplay.NothingToPay =>
         Tag(content = Text(messages("viewPastPayments.status.nothingToPay")), classes = Css.greyTagCssClass)
+      case OutstandingPaymentStatusToDisplay.UnderReview  =>
+        Tag(content = Text(messages("viewPastPayments.status.underReview")), classes = Css.yellowTagCssClass)
     }
     new GovukTag()(tag)
   }

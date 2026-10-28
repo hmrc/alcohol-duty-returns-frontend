@@ -80,27 +80,27 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val expectedActions = Seq(
         TableRowActionViewModel(
           label = "Complete return",
-          href = controllers.routes.BeforeStartReturnController.onPageLoad("24AL"),
+          href = Some(controllers.routes.BeforeStartReturnController.onPageLoad("24AL")),
           visuallyHiddenText = Some("for December 2024")
         ),
         TableRowActionViewModel(
           label = "Complete return",
-          href = controllers.routes.BeforeStartReturnController.onPageLoad("24AK"),
+          href = Some(controllers.routes.BeforeStartReturnController.onPageLoad("24AK")),
           visuallyHiddenText = Some("for November 2024")
         ),
         TableRowActionViewModel(
           label = "Complete return",
-          href = controllers.routes.BeforeStartReturnController.onPageLoad("24AJ"),
+          href = Some(controllers.routes.BeforeStartReturnController.onPageLoad("24AJ")),
           visuallyHiddenText = Some("for October 2024")
         ),
         TableRowActionViewModel(
           label = "Complete return",
-          href = controllers.routes.BeforeStartReturnController.onPageLoad("24AI"),
+          href = Some(controllers.routes.BeforeStartReturnController.onPageLoad("24AI")),
           visuallyHiddenText = Some("for September 2024")
         ),
         TableRowActionViewModel(
           label = "Complete return",
-          href = controllers.routes.BeforeStartReturnController.onPageLoad("24AH"),
+          href = Some(controllers.routes.BeforeStartReturnController.onPageLoad("24AH")),
           visuallyHiddenText = Some("for August 2024")
         )
       )
@@ -123,22 +123,22 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val expectedActions = Seq(
         TableRowActionViewModel(
           label = "View return",
-          href = controllers.returns.routes.ViewReturnController.onPageLoad("24AG"),
+          href = Some(controllers.returns.routes.ViewReturnController.onPageLoad("24AG")),
           visuallyHiddenText = Some("for July 2024")
         ),
         TableRowActionViewModel(
           label = "View return",
-          href = controllers.returns.routes.ViewReturnController.onPageLoad("24AF"),
+          href = Some(controllers.returns.routes.ViewReturnController.onPageLoad("24AF")),
           visuallyHiddenText = Some("for June 2024")
         ),
         TableRowActionViewModel(
           label = "View return",
-          href = controllers.returns.routes.ViewReturnController.onPageLoad("24AE"),
+          href = Some(controllers.returns.routes.ViewReturnController.onPageLoad("24AE")),
           visuallyHiddenText = Some("for May 2024")
         ),
         TableRowActionViewModel(
           label = "View return",
-          href = controllers.returns.routes.ViewReturnController.onPageLoad("24AD"),
+          href = Some(controllers.returns.routes.ViewReturnController.onPageLoad("24AD")),
           visuallyHiddenText = Some("for April 2024")
         )
       )

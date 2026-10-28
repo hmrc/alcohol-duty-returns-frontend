@@ -18,9 +18,20 @@
 
 @this()
 
-@(id: String, text: String, href: Call, visuallyHiddenContent: Option[String] = None, classes: String = Css.linkNoVisitedStateCssClass)
-<a id="@id" href="@href" class="@classes">
-    @text
-    <span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span>
-</a>
+@(id: String, text: String, href: Option[Call], visuallyHiddenContent: Option[String] = None, classes: String = Css.linkNoVisitedStateCssClass)
+
+@href match {
+ case Some(url) => { <a id="@id" href="@href" class="@classes">
+                      @text
+                      <span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span>
+                    </a>
+}
+case None => { <span id="@id" class="break">
+                @text
+               <span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span>
+              </span>
+}
+
+}
+
 

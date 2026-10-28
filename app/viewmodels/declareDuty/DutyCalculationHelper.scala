@@ -87,7 +87,7 @@ object DutyCalculationHelper {
       actions = Seq(
         TableRowActionViewModel(
           label = messages("site.change"),
-          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)),
           visuallyHiddenText = Some(toDescription(rateBand, Some(regime)))
         )
       )
