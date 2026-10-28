@@ -53,7 +53,8 @@ class StartPaymentControllerSpec extends SpecBase {
     Return,
     LocalDate.of(2024, 6, 25),
     Some(chargeReference),
-    BigDecimal(10.45)
+    BigDecimal(10.45),
+    None
   )
 
   val expectedAuditEvent = AuditPaymentStarted(

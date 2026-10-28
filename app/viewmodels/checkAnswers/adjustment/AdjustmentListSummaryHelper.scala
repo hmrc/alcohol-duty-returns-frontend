@@ -91,14 +91,14 @@ object AdjustmentListSummaryHelper {
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(adjustmentIndex)),
+            href = Some(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(adjustmentIndex))),
             visuallyHiddenText = Some(
               messages(s"adjustmentEntryList.change.$adjustmentType.hidden", formattedDutyValue)
             )
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(adjustmentIndex),
+            href = Some(controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(adjustmentIndex)),
             visuallyHiddenText = Some(
               messages(s"adjustmentEntryList.remove.$adjustmentType.hidden", formattedDutyValue)
             )

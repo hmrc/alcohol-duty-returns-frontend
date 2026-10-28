@@ -52,26 +52,30 @@ class MultipleSPRListHelperSpec extends SpecBase {
         Seq(
           TableRowActionViewModel(
             label = "Change",
-            href = controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
-              .onPageLoad(NormalMode, regime, Some(0)),
+            href = Some(
+              controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
+                .onPageLoad(NormalMode, regime, Some(0))
+            ),
             visuallyHiddenText = Some("non-draught beer between 3% and 4% ABV (tax type code 125 SPR)")
           ),
           TableRowActionViewModel(
             label = "Remove",
-            href = controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(0)),
+            href = Some(controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(0))),
             visuallyHiddenText = Some("non-draught beer between 3% and 4% ABV (tax type code 125 SPR)")
           )
         ),
         Seq(
           TableRowActionViewModel(
             label = "Change",
-            href = controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
-              .onPageLoad(NormalMode, regime, Some(1)),
+            href = Some(
+              controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
+                .onPageLoad(NormalMode, regime, Some(1))
+            ),
             visuallyHiddenText = Some("draught beer between 4% and 5% ABV (tax type code 126 SPR)")
           ),
           TableRowActionViewModel(
             label = "Remove",
-            href = controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(1)),
+            href = Some(controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(1))),
             visuallyHiddenText = Some("draught beer between 4% and 5% ABV (tax type code 126 SPR)")
           )
         )
