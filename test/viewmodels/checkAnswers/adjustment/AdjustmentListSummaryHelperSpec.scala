@@ -111,24 +111,24 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
         Seq(
           TableRowActionViewModel(
             label = "Change",
-            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(0)),
+            href = Some(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(0))),
             visuallyHiddenText = Some("Spoilt adjustment with duty value £34.20")
           ),
           TableRowActionViewModel(
             label = "Remove",
-            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(0),
+            href = Some(controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(0)),
             visuallyHiddenText = Some("Spoilt adjustment with duty value £34.20")
           )
         ),
         Seq(
           TableRowActionViewModel(
             label = "Change",
-            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(1)),
+            href = Some(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(1))),
             visuallyHiddenText = Some("Repackaged adjustment with duty value £10.00")
           ),
           TableRowActionViewModel(
             label = "Remove",
-            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(1),
+            href = Some(controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(1)),
             visuallyHiddenText = Some("Repackaged adjustment with duty value £10.00")
           )
         )

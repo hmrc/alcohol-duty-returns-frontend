@@ -78,6 +78,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase {
         viewModel.isDutyBalanceZero mustBe true
       }
     }
+
   }
 
 }

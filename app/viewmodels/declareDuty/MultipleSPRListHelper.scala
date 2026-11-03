@@ -102,13 +102,16 @@ object MultipleSPRListHelper {
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
-              .onPageLoad(NormalMode, regime, Some(index)),
+            href = Some(
+              controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
+                .onPageLoad(NormalMode, regime, Some(index))
+            ),
             visuallyHiddenText = Some(rateBandDescription)
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(index)),
+            href =
+              Some(controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(index))),
             visuallyHiddenText = Some(rateBandDescription)
           )
         )

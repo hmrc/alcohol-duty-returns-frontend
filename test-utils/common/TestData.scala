@@ -466,7 +466,8 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(9998, 7, 25),
     Some(chargeReference),
-    BigDecimal(3234.12)
+    BigDecimal(3234.12),
+    None
   )
 
   val outstandingDuePayment = OutstandingPayment(
@@ -475,7 +476,8 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(9999, 6, 25),
     Some(chargeReference),
-    BigDecimal(4773.34)
+    BigDecimal(4773.34),
+    None
   )
 
   val outstandingOverduePartialPayment = OutstandingPayment(
@@ -484,7 +486,8 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(2022, 9, 25),
     Some(chargeReference),
-    BigDecimal(4773.34)
+    BigDecimal(4773.34),
+    None
   )
 
   val outstandingCreditPayment = OutstandingPayment(
@@ -493,7 +496,8 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(2024, 10, 25),
     Some(chargeReference),
-    BigDecimal(-4773.34)
+    BigDecimal(-4773.34),
+    None
   )
 
   val outstandingLPIPayment = OutstandingPayment(
@@ -502,7 +506,8 @@ trait TestData extends ModelGenerators {
     LPI,
     LocalDate.of(9997, 8, 25),
     Some(chargeReference),
-    BigDecimal(3234.18)
+    BigDecimal(3234.18),
+    None
   )
 
   val outstandingCAPayment = OutstandingPayment(
@@ -511,7 +516,8 @@ trait TestData extends ModelGenerators {
     CA,
     LocalDate.of(2024, 8, 25),
     Some(chargeReference),
-    BigDecimal(3234.18)
+    BigDecimal(3234.18),
+    None
   )
 
   val outstandingCAIPayment = OutstandingPayment(
@@ -520,7 +526,8 @@ trait TestData extends ModelGenerators {
     CAI,
     LocalDate.of(2024, 9, 25),
     Some(chargeReference),
-    BigDecimal(3234.18)
+    BigDecimal(3234.18),
+    None
   )
 
   val outstandingOfficerAssessmentPayment = OutstandingPayment(
@@ -529,7 +536,18 @@ trait TestData extends ModelGenerators {
     OfficerAssessment,
     LocalDate.of(2024, 9, 25),
     Some(chargeReference),
-    BigDecimal(3234.18)
+    BigDecimal(3234.18),
+    None
+  )
+
+  val outstandingOfficerAssessmentPaymentWithLock = OutstandingPayment(
+    Some(LocalDate.of(2024, 7, 1)),
+    Some(LocalDate.of(2024, 7, 31)),
+    OfficerAssessment,
+    LocalDate.of(2024, 9, 25),
+    Some(chargeReference),
+    BigDecimal(3234.18),
+    Some("Stand over order")
   )
 
   val outstandingOfficerAssessmentLPIPayment = OutstandingPayment(
@@ -538,7 +556,8 @@ trait TestData extends ModelGenerators {
     OfficerAssessmentLPI,
     LocalDate.of(2024, 9, 25),
     Some(chargeReference),
-    BigDecimal(3234.18)
+    BigDecimal(3234.18),
+    None
   )
 
   val RPIPayment = OutstandingPayment(
@@ -547,7 +566,8 @@ trait TestData extends ModelGenerators {
     RPI,
     LocalDate.of(2024, 7, 25),
     Some(chargeReference),
-    BigDecimal(-2011)
+    BigDecimal(-2011),
+    None
   )
 
   val openPaymentsDataWithOfficerAssessment = OpenPayments(
@@ -610,7 +630,8 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(9999, 6, 25),
     None,
-    BigDecimal(4773.34)
+    BigDecimal(4773.34),
+    None
   )
 
   val emptyOutstandingPaymentData = OpenPayments(

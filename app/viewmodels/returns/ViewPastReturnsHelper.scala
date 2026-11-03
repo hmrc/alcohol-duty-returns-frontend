@@ -77,7 +77,7 @@ class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper, clock: Cl
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastReturns.viewReturn"),
-          href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey),
+          href = Some(controllers.returns.routes.ViewReturnController.onPageLoad(periodKey)),
           visuallyHiddenText =
             Some(messages("viewPastReturns.viewReturn.hidden", formatYearMonth(getPeriod(periodKey))))
         )
@@ -86,7 +86,7 @@ class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper, clock: Cl
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastReturns.submitReturn"),
-          href = controllers.routes.BeforeStartReturnController.onPageLoad(obligationData.periodKey),
+          href = Some(controllers.routes.BeforeStartReturnController.onPageLoad(obligationData.periodKey)),
           visuallyHiddenText =
             Some(messages("viewPastReturns.submitReturn.hidden", formatYearMonth(getPeriod(periodKey))))
         )

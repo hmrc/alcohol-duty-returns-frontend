@@ -33,4 +33,4 @@ object TableViewModel {
 
 case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
 
-case class TableRowActionViewModel(label: String, href: Call, visuallyHiddenText: Option[String] = None)
+case class TableRowActionViewModel(label: String, href: Option[Call], visuallyHiddenText: Option[String] = None)

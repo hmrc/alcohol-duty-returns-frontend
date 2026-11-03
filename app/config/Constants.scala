@@ -110,6 +110,7 @@ object Constants {
     val greenTagCssClass     = "govuk-tag--green"
     val redTagCssClass       = "govuk-tag--red"
     val greyTagCssClass      = "govuk-tag--grey"
+    val yellowTagCssClass    = "govuk-tag--yellow"
 
     val cannotStartYetCssClass = "govuk-task-list__status govuk-task-list__status--cannot-start-yet"
 

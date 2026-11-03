@@ -64,22 +64,22 @@ class DutyCalculationHelperSpec extends SpecBase {
       val expectedActions = Seq(
         TableRowActionViewModel(
           label = "Change",
-          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)),
           visuallyHiddenText = Some("non-draught beer between 1% and 3% ABV (tax type code 123)")
         ),
         TableRowActionViewModel(
           label = "Change",
-          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)),
           visuallyHiddenText = Some("draught beer between 2% and 3% ABV (tax type code 124)")
         ),
         TableRowActionViewModel(
           label = "Change",
-          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)),
           visuallyHiddenText = Some("non-draught beer between 3% and 4% ABV (tax type code 125 SPR)")
         ),
         TableRowActionViewModel(
           label = "Change",
-          href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
+          href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)),
           visuallyHiddenText = Some("draught beer between 4% and 5% ABV (tax type code 126 SPR)")
         )
       )

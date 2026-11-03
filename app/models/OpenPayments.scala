@@ -52,7 +52,8 @@ case class OutstandingPayment(
   transactionType: TransactionType,
   dueDate: LocalDate,
   chargeReference: Option[String],
-  remainingAmount: BigDecimal
+  remainingAmount: BigDecimal,
+  runningLock: Option[String]
 ) extends OpenPayment
 
 object OutstandingPayment {
@@ -87,4 +88,5 @@ object OutstandingPaymentStatusToDisplay extends PlayEnum[OutstandingPaymentStat
   case object Due extends OutstandingPaymentStatusToDisplay
   case object Overdue extends OutstandingPaymentStatusToDisplay
   case object NothingToPay extends OutstandingPaymentStatusToDisplay
+  case object UnderReview extends OutstandingPaymentStatusToDisplay
 }

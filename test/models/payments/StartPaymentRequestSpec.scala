@@ -53,7 +53,8 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
     Return,
     LocalDate.of(2024, 6, 25),
     Some(chargeReference),
-    BigDecimal(4773.34)
+    BigDecimal(4773.34),
+    None
   )
 
   val startPaymentRequestJson = Json.obj(

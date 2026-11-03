@@ -76,6 +76,9 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
   val nothingToPayTag = new GovukTag()(
     Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
   )
+  val underReviewTag  = new GovukTag()(
+    Tag(content = Text("Under review"), classes = Css.yellowTagCssClass)
+  )
 
   val expectedOutstandingHeader = Seq("To be paid by", "Description", "Left to pay", "Status", "Action")
   val expectedUnallocatedHeader = Seq("Payment date", "Description", "Amount", "Action")
@@ -273,16 +276,20 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       "must have the correct pay now action link for Due/Overdue return" in {
         val table = viewPastPaymentsHelper.getOutstandingPaymentsTable(Seq(outstandingDuePayment))
         table.rows.map { row =>
-          row.actions.head.href mustBe controllers.payments.routes.StartPaymentController
-            .initiateAndRedirectFromPastPayments(0)
+          row.actions.head.href mustBe Some(
+            controllers.payments.routes.StartPaymentController
+              .initiateAndRedirectFromPastPayments(0)
+          )
         }
       }
 
       "must have the correct 'Manage' action link for Central Assessment" in {
         val table = viewPastPaymentsHelper.getOutstandingPaymentsTable(Seq(outstandingCAPayment))
         table.rows.map { row =>
-          row.actions.head.href mustBe controllers.payments.routes.ManageCentralAssessmentController
-            .onPageLoad(chargeReference)
+          row.actions.head.href mustBe Some(
+            controllers.payments.routes.ManageCentralAssessmentController
+              .onPageLoad(chargeReference)
+          )
         }
       }
 
@@ -295,21 +302,21 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Seq(
             TableRowActionViewModel(
               label = "Pay now",
-              href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0),
+              href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0)),
               visuallyHiddenText = Some("amount of £4,773.34 due 25 June 9999")
             )
           ),
           Seq(
             TableRowActionViewModel(
               label = "Pay now",
-              href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(1),
+              href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(1)),
               visuallyHiddenText = Some("amount of £3,234.12 due 25 July 9998")
             )
           ),
           Seq(
             TableRowActionViewModel(
               label = "Pay now",
-              href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(2),
+              href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(2)),
               visuallyHiddenText = Some("amount of £3,234.18 due 25 August 9997")
             )
           ),
@@ -317,14 +324,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Seq(
             TableRowActionViewModel(
               label = "Pay now",
-              href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(4),
+              href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(4)),
               visuallyHiddenText = Some("amount of £3,234.18 due 25 September 2024")
             )
           ),
           Seq(
             TableRowActionViewModel(
               label = "Manage",
-              href = controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(chargeReference),
+              href = Some(controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(chargeReference)),
               visuallyHiddenText = Some("central assessment charge of £3,234.18")
             )
           ),
@@ -332,7 +339,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           Seq(
             TableRowActionViewModel(
               label = "Pay now",
-              href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(7),
+              href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(7)),
               visuallyHiddenText = Some("amount of £4,773.34 due 25 September 2022")
             )
           )
@@ -366,14 +373,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         val table            = viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
         val gformExpectedUrl =
           "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=4773.34"
-        table.rows.head.actions.head.href.url mustBe gformExpectedUrl
+        table.rows.head.actions.head.href.get.url mustBe gformExpectedUrl
       }
 
       "must present the link to the Gform for an unallocated payment" in {
         val table            = viewPastPaymentsHelperToggleOn.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
         val gformExpectedUrl =
           "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=123"
-        table.rows.head.actions.head.href.url mustBe gformExpectedUrl
+        table.rows.head.actions.head.href.get.url mustBe gformExpectedUrl
       }
 
       "must not return a table when outstanding payments are not present" in {
@@ -450,16 +457,20 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       "must have the correct pay now action link for Due/Overdue return" in {
         val table = viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(Seq(outstandingDuePayment))
         table.rows.map { row =>
-          row.actions.head.href mustBe controllers.payments.routes.StartPaymentController
-            .initiateAndRedirectFromPastPayments(0)
+          row.actions.head.href mustBe Some(
+            controllers.payments.routes.StartPaymentController
+              .initiateAndRedirectFromPastPayments(0)
+          )
         }
       }
 
       "must have the correct 'Manage' action link for Central Assessment" in {
         val table = viewPastPaymentsHelperToggleOn.getOutstandingPaymentsTable(Seq(outstandingCAPayment))
         table.rows.map { row =>
-          row.actions.head.href mustBe controllers.payments.routes.ManageCentralAssessmentController
-            .onPageLoad(chargeReference)
+          row.actions.head.href mustBe Some(
+            controllers.payments.routes.ManageCentralAssessmentController
+              .onPageLoad(chargeReference)
+          )
         }
       }
 
@@ -471,42 +482,42 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         val expectedActions = Seq(
           TableRowActionViewModel(
             label = "Pay now",
-            href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0),
+            href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0)),
             visuallyHiddenText = Some("amount of £4,773.34 due 25 June 9999")
           ),
           TableRowActionViewModel(
             label = "Pay now",
-            href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(1),
+            href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(1)),
             visuallyHiddenText = Some("amount of £3,234.12 due 25 July 9998")
           ),
           TableRowActionViewModel(
             label = "Pay now",
-            href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(2),
+            href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(2)),
             visuallyHiddenText = Some("amount of £3,234.18 due 25 August 9997")
           ),
           TableRowActionViewModel(
             label = "Claim refund",
-            href = Call("GET", appConfig.claimRefundGformUrl("4773.34")),
+            href = Some(Call("GET", appConfig.claimRefundGformUrl("4773.34"))),
             visuallyHiddenText = Some("of £4773.34")
           ),
           TableRowActionViewModel(
             label = "Pay now",
-            href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(4),
+            href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(4)),
             visuallyHiddenText = Some("amount of £3,234.18 due 25 September 2024")
           ),
           TableRowActionViewModel(
             label = "Manage",
-            href = controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(chargeReference),
+            href = Some(controllers.payments.routes.ManageCentralAssessmentController.onPageLoad(chargeReference)),
             visuallyHiddenText = Some("central assessment charge of £3,234.18")
           ),
           TableRowActionViewModel(
             label = "Claim refund",
-            href = Call("GET", appConfig.claimRefundGformUrl("2011")),
+            href = Some(Call("GET", appConfig.claimRefundGformUrl("2011"))),
             visuallyHiddenText = Some("of £2011")
           ),
           TableRowActionViewModel(
             label = "Pay now",
-            href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(7),
+            href = Some(controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(7)),
             visuallyHiddenText = Some("amount of £4,773.34 due 25 September 2022")
           )
         )
@@ -522,17 +533,17 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         val expectedActions = Seq(
           TableRowActionViewModel(
             label = "Claim refund",
-            href = Call("GET", appConfig.claimRefundGformUrl("123")),
+            href = Some(Call("GET", appConfig.claimRefundGformUrl("123"))),
             visuallyHiddenText = Some("of £123")
           ),
           TableRowActionViewModel(
             label = "Claim refund",
-            href = Call("GET", appConfig.claimRefundGformUrl("1273")),
+            href = Some(Call("GET", appConfig.claimRefundGformUrl("1273"))),
             visuallyHiddenText = Some("of £1273")
           ),
           TableRowActionViewModel(
             label = "Claim refund",
-            href = Call("GET", appConfig.claimRefundGformUrl("1273")),
+            href = Some(Call("GET", appConfig.claimRefundGformUrl("1273"))),
             visuallyHiddenText = Some("of £1273")
           )
         )
@@ -551,7 +562,7 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
       }
 
       "when isOfficerAssessment toggle is enabled" - {
-        "must return a sorted table by return period in descending order for historic payments" in {
+        "must return a sorted table by return period in descending order for historic payments with Officer Assessment" in {
           val table = viewPastPaymentsWithOfficerAssessment.getHistoricPaymentsTable(
             historicPayments2025withOfficerAssessment.payments
           )
@@ -559,6 +570,14 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
           table.head.map(_.content.asHtml.toString)              mustBe expectedClearedHeader
           table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRowsWithOfficerAssessment
           table.rows.flatMap(_.actions)                          mustBe Seq.empty
+        }
+
+        "must return the Under review status for an outstanding payment which has a running lock of a Stand over order" in {
+          val table =
+            viewPastPaymentsHelper.getOutstandingPaymentsTable(Seq(outstandingOfficerAssessmentPaymentWithLock))
+          table.rows.map { row =>
+            row.cells(3).content.asHtml mustBe underReviewTag
+          }
         }
       }
 
