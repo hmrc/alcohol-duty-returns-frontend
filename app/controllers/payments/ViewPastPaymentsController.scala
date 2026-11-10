@@ -54,18 +54,11 @@ class ViewPastPaymentsController @Inject() (
 
     val outstandingPaymentsFuture =
       alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
-        val sortedOutstandingPaymentsData = if (appConfig.isOfficerAssessment) {
+        val sortedOutstandingPaymentsData =
           outstandingPaymentsData.outstandingPayments
             .sortBy(payment => (payment.dueDate, payment.transactionType == RPI))(
               Ordering.Tuple2(Ordering[LocalDate].reverse, Ordering.Boolean)
             )
-        } else {
-          outstandingPaymentsData.outstandingPayments
-            .filter(payment => !isOfficerAssessment(payment.transactionType))
-            .sortBy(payment => (payment.dueDate, payment.transactionType == RPI))(
-              Ordering.Tuple2(Ordering[LocalDate].reverse, Ordering.Boolean)
-            )
-        }
 
         val updatedSession           =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)

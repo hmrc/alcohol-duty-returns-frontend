@@ -102,7 +102,6 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
 
       val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
-        override val isOfficerAssessment      = true
         override val claimARefundGformEnabled = false
       }
 
@@ -165,7 +164,6 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
 
       val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
-        override val isOfficerAssessment      = false
         override val claimARefundGformEnabled = false
       }
 
