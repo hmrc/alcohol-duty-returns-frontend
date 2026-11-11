@@ -51,7 +51,7 @@ class CompletedReturnsController @Inject() (
             Ok(view(fulfilledObligationsTable, year))
           case _                                                                       =>
             logger.warn(
-              s"[CompletedReturnsController] [onPageLoad] No fulfilled obligations available for year $year (appaId: $appaId)"
+              s"No fulfilled obligations available for year $year (appaId: $appaId)"
             )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
@@ -59,7 +59,7 @@ class CompletedReturnsController @Inject() (
 
     fulfilledObligationsFuture.recover { case ex =>
       logger.warn(
-        s"[CompletedReturnsController] [onPageLoad] Error fetching fulfilled obligations for $appaId, year $year",
+        s"Error fetching fulfilled obligations for $appaId, year $year",
         ex
       )
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

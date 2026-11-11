@@ -60,7 +60,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
 
       result.getOrElse {
         logger.warn(
-          "[TellUsAboutMultipleSPRRateController] [onPageLoad] Error creating the form for TellUsAboutMultipleSPRRate screen"
+          "Error creating the form for TellUsAboutMultipleSPRRate screen"
         )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
@@ -71,7 +71,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
           logger.warn(
-            s"[TellUsAboutMultipleSPRRateController] [onSubmit] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime"
+            s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers when submitting the multiple SPR rate with regime: $regime"
           )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
@@ -150,7 +150,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       case Some(value) => Some(formProvider().fill(value))
       case None        =>
         logger.warn(
-          s"[TellUsAboutMultipleSPRRateController] [fillPreviousAnswersWithIndex] Failed to retrieve SPR list entry for regime $regime at index $i"
+          s"Failed to retrieve SPR list entry for regime $regime at index $i"
         )
         None
     }

@@ -102,13 +102,13 @@ class AdjustmentVolumeWithSPRController @Inject() (
             )
           case _                                                                                            =>
             logger.warn(
-              "[AdjustmentVolumeWithSPRController] [onPageLoad] Couldn't fetch values in AdjustmentEntry from user answers"
+              "Couldn't fetch values in AdjustmentEntry from user answers when loading the adjustment volume with SPR page"
             )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       case _            =>
         logger.warn(
-          "[AdjustmentVolumeWithSPRController] [onPageLoad] Couldn't fetch regime value in AdjustmentEntry from user answers"
+          "Couldn't fetch regime value in AdjustmentEntry from user answers when loading the adjustment volume with SPR page"
         )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
@@ -145,7 +145,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
             )
         case _            =>
           logger.warn(
-            "[AdjustmentVolumeWithSPRController] [onSubmit] Couldn't fetch regime value in AdjustmentEntry from user answers"
+            "Couldn't fetch regime value in AdjustmentEntry from user answers when submitting the adjustment volume with SPR"
           )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
@@ -169,7 +169,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
         )
       case _                                                                                            =>
         logger.warn(
-          "[AdjustmentVolumeWithSPRController] [handleFormErrors] Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers"
+          "Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers when handling adjustment volume with SPR form errors"
         )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }

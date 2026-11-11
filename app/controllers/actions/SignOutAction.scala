@@ -62,13 +62,13 @@ class SignOutActionImpl @Inject() (
     } recoverWith {
       case e: AuthorisationException =>
         logger.debug(
-          s"[SignOutAction] [invokeBlock] Returning a request with AppaId set to None since there was an AuthorisationException:",
+          s"Returning a request with AppaId set to None since there was an AuthorisationException:",
           e
         )
         block(RequestWithOptAppaId(request, None))
       case e: UnauthorizedException  =>
         logger.debug(
-          s"[SignOutAction] [invokeBlock] Returning a request with AppaId set to None since there was an UnauthorizedException:",
+          s"Returning a request with AppaId set to None since there was an UnauthorizedException:",
           e
         )
         block(RequestWithOptAppaId(request, None))
@@ -88,7 +88,7 @@ class SignOutActionImpl @Inject() (
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
     o.getOrElse {
       logger.warn(
-        s"[SignOutAction] [getOrElseFailWithUnauthorised] Identifier Action failed with error: $failureMessage"
+        s"Identifier Action failed with error while signing the user out: $failureMessage"
       )
       throw new IllegalStateException(failureMessage)
     }

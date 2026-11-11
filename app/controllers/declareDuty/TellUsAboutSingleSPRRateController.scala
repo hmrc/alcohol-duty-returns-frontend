@@ -59,7 +59,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
           logger.warn(
-            s"[TellUsAboutSingleSPRRateController] [onPageLoad] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime"
+            s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer when loading the single SPR rate page with regime: $regime"
           )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
@@ -77,7 +77,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
           logger.warn(
-            s"[TellUsAboutSingleSPRRateController] [onSubmit] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime"
+            s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer when submitting the single SPR rate with regime: $regime"
           )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>

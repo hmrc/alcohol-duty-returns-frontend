@@ -43,7 +43,7 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
         case summaryList if summaryList.rows.nonEmpty => Ok(view(summaryList))
         case _                                        =>
           logger.warn(
-            "[CheckYourAnswersDutySuspendedDeliveriesController] [onPageLoad] No duty suspended summary list items found"
+            "No duty suspended summary list items found"
           )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }

@@ -59,7 +59,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
           logger.warn(
-            s"[HowMuchDoYouNeedToDeclareController] [onPageLoad] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime"
+            s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers when loading the how much do you need to declare page with regime: $regime"
           )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
@@ -80,7 +80,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
           logger.warn(
-            s"[HowMuchDoYouNeedToDeclareController] [onSubmit] Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime"
+            s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers when submitting how much you need to declare with regime: $regime"
           )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
@@ -137,7 +137,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
         case (acc, Some(value)) => acc.map(_ :+ value)
         case (_, None)          =>
           logger.warn(
-            "[HowMuchDoYouNeedToDeclareController] [rateBandFromTaxType] Failed to find rate band for tax type"
+            "Failed to find rate band for tax type"
           )
           Failure(new Exception("Failed to find rate band for tax type"))
       }

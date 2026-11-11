@@ -43,7 +43,7 @@ class ReturnSubmittedNoDetailsController @Inject() (
         Ok(view(businessTaxAccountUrl))
       case _                                      =>
         logger.warn(
-          "[ReturnSubmittedNoDetailsController] [onPageLoad] Trying to access return sent no details page without correct key in session"
+          "Trying to access return sent no details page without correct key in session"
         )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }

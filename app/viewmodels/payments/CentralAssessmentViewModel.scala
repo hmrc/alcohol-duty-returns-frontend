@@ -41,7 +41,7 @@ class CentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends
     session.get(pastPaymentsSessionKey) match {
       case None                 =>
         logger.warn(
-          "[CentralAssessmentHelper] [getCentralAssessmentChargeFromSession] Outstanding payment details not present in session"
+          "Outstanding payment details not present in session"
         )
         None
       case Some(paymentDetails) =>
@@ -51,7 +51,7 @@ class CentralAssessmentHelper @Inject() (dateTimeHelper: DateTimeHelper) extends
               case Some(charge) => Some((charge, outstandingPayments.indexOf(charge)))
               case None         =>
                 logger.warn(
-                  "[CentralAssessmentHelper] [getCentralAssessmentChargeFromSession] Could not find required Central Assessment charge in session"
+                  "Could not find required Central Assessment charge in session"
                 )
                 None
             }

@@ -61,14 +61,14 @@ class DutyCalculationController @Inject() (
             case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel, totalDuty.totalDuty))
             case Left(errorMessage)      =>
               logger.warn(
-                s"[DutyCalculationController] [onPageLoad] Failed to create duty due table view model: $errorMessage"
+                s"Failed to create duty due table view model: $errorMessage"
               )
               Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           }
         case Left(error) =>
           val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
           logger.warn(
-            s"[DutyCalculationController] [onPageLoad] Error on Duty due page for appa id $appaId, period key $periodKey: ${error.message}"
+            s"Error on Duty due page for appa id $appaId, period key $periodKey: ${error.message}"
           )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
@@ -79,7 +79,7 @@ class DutyCalculationController @Inject() (
       request.userAnswers.getByKey(DutyCalculationPage, regime) match {
         case None            =>
           logger.warn(
-            s"[DutyCalculationController] [onSubmit] Failed to get DutyCalculationPage from user answers for regime: $regime"
+            s"Failed to get DutyCalculationPage from user answers for regime: $regime"
           )
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(totalDuty) =>
