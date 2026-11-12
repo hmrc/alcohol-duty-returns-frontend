@@ -191,15 +191,8 @@ class ViewPastPaymentsHelper @Inject() (
   def getHistoricPaymentsTable(
     historicPaymentsData: Seq[HistoricPayment]
   )(implicit messages: Messages): TableViewModel = {
-    val sortedHistoricPaymentsData = if (frontendAppConfig.isOfficerAssessment) {
+    val sortedHistoricPaymentsData =
       historicPaymentsData.sortBy(_.period.period)(Ordering[YearMonth].reverse)
-    } else {
-      historicPaymentsData
-        .sortBy(_.period.period)(Ordering[YearMonth].reverse)
-        .filterNot(payment =>
-          payment.transactionType == OfficerAssessment || payment.transactionType == OfficerAssessmentLPI
-        )
-    }
     if (sortedHistoricPaymentsData.nonEmpty) {
       TableViewModel(
         head = getHistoricPaymentsHeader("historic"),

@@ -49,14 +49,11 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
 
   val testAppConfigOfficerAssessmentOn: FrontendAppConfig =
     new FrontendAppConfig(testConfiguration, testServicesConfig) {
-      override val claimARefundGformEnabled     = true
-      override val isOfficerAssessment: Boolean = true
+      override val claimARefundGformEnabled = true
     }
 
   val testAppConfigOfficerAssessmentOff: FrontendAppConfig =
-    new FrontendAppConfig(testConfiguration, testServicesConfig) {
-      override val isOfficerAssessment: Boolean = false
-    }
+    new FrontendAppConfig(testConfiguration, testServicesConfig)
 
   val viewPastPaymentsHelperToggleOn =
     new ViewPastPaymentsHelper(createDateTimeHelper(), testAppConfigToggleOn, clock)
@@ -561,35 +558,21 @@ class ViewPastPaymentsHelperSpec extends SpecBase with ScalaCheckPropertyChecks 
         table.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
 
-      "when isOfficerAssessment toggle is enabled" - {
-        "must return a sorted table by return period in descending order for historic payments with Officer Assessment" in {
-          val table = viewPastPaymentsWithOfficerAssessment.getHistoricPaymentsTable(
-            historicPayments2025withOfficerAssessment.payments
-          )
+      "must return a sorted table by return period in descending order for historic payments with Officer Assessment" in {
+        val table = viewPastPaymentsWithOfficerAssessment.getHistoricPaymentsTable(
+          historicPayments2025withOfficerAssessment.payments
+        )
 
-          table.head.map(_.content.asHtml.toString)              mustBe expectedClearedHeader
-          table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRowsWithOfficerAssessment
-          table.rows.flatMap(_.actions)                          mustBe Seq.empty
-        }
-
-        "must return the Under review status for an outstanding payment which has a running lock of a Stand over order" in {
-          val table =
-            viewPastPaymentsHelper.getOutstandingPaymentsTable(Seq(outstandingOfficerAssessmentPaymentWithLock))
-          table.rows.map { row =>
-            row.cells(3).content.asHtml mustBe underReviewTag
-          }
-        }
+        table.head.map(_.content.asHtml.toString)              mustBe expectedClearedHeader
+        table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRowsWithOfficerAssessment
+        table.rows.flatMap(_.actions)                          mustBe Seq.empty
       }
 
-      "when isOfficerAssessment toggle is not enabled" - {
-        "must return a sorted table by return period in descending order for historic payments without Officer Assessment payments" in {
-          val table = viewPastPaymentsWithOfficerAssessmentOff.getHistoricPaymentsTable(
-            historicPayments2025withOfficerAssessment.payments
-          )
-
-          table.head.map(_.content.asHtml.toString)              mustBe expectedClearedHeader
-          table.rows.map(_.cells.map(_.content.asHtml.toString)) mustBe expectedClearedRows
-          table.rows.flatMap(_.actions)                          mustBe Seq.empty
+      "must return the Under review status for an outstanding payment which has a running lock of a Stand over order" in {
+        val table =
+          viewPastPaymentsHelper.getOutstandingPaymentsTable(Seq(outstandingOfficerAssessmentPaymentWithLock))
+        table.rows.map { row =>
+          row.cells(3).content.asHtml mustBe underReviewTag
         }
       }
     }
