@@ -69,7 +69,7 @@ class DutyDueForThisReturnController @Inject() (
 
     dutyDueViewModelOrError.foldF(
       error => {
-        logger.warn(s"[DutyDueForThisReturnController] [onPageLoad] $error")
+        logger.warn(s"Unable to show the duty due for this return page: $error")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       },
       result => Future.successful(Ok(view(result)))
@@ -102,7 +102,7 @@ class DutyDueForThisReturnController @Inject() (
     result.foldF(
       error =>
         if (error.status == UNPROCESSABLE_ENTITY) {
-          logger.info(s"[DutyDueForThisReturnController] [onSubmit] ${error.message}")
+          logger.info(s"Return could not be processed: ${error.message}")
           val session = request.session + (returnCreatedDetailsKey -> noDetailsValue)
 
           Future.successful(
@@ -110,11 +110,11 @@ class DutyDueForThisReturnController @Inject() (
               .withSession(session)
           )
         } else {
-          logger.error(s"[DutyDueForThisReturnController] [onSubmit] Failed to submit return: $error")
+          logger.error(s"Failed to submit return: $error")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         },
       adrSubmissionCreatedDetails => {
-        logger.info("[DutyDueForThisReturnController] [onSubmit] Successfully submitted return")
+        logger.info("Successfully submitted return")
         val session =
           request.session + (returnCreatedDetailsKey -> Json.toJson(adrSubmissionCreatedDetails).toString)
         Future.successful(

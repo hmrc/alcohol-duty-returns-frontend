@@ -125,7 +125,7 @@ class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper, clock: Cl
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case Some(returnPeriod) => returnPeriod.period
       case _                  =>
-        logger.warn("[ViewPastReturnsHelper] [getPeriod] Couldn't fetch period from periodKey")
+        logger.warn("Couldn't fetch period from periodKey")
         throw new RuntimeException(
           "Couldn't fetch period from periodKey"
         )

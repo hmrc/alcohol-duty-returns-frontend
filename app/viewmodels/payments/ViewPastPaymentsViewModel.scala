@@ -313,7 +313,7 @@ class ViewPastPaymentsHelper @Inject() (
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
         logger.warn(
-          "[ViewPastPaymentsHelper] [formatDescription] Couldn't fetch chargeReference for outstanding payment"
+          "Couldn't fetch chargeReference for outstanding payment"
         )
         (messages(s"viewPastPayments.$transactionType.description"), "")
     }
@@ -325,7 +325,7 @@ class ViewPastPaymentsHelper @Inject() (
   ): Html = {
     val (description, reference) = chargeReference.fold {
       logger.warn(
-        "[ViewPastPaymentsHelper] [formatHistoricPaymentsDescription] Couldn't fetch chargeReference for historic payment"
+        "Couldn't fetch chargeReference for historic payment"
       )
       (messages(s"viewPastPayments.historic.$transactionType.description"), "")
     } { chargeReference =>

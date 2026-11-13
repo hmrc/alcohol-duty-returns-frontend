@@ -67,10 +67,10 @@ class IdentifyWithoutEnrolmentActionImpl @Inject() (
       block(IdentifierWithoutEnrolmentRequest(request, groupId, internalId))
     } recover {
       case e: AuthorisationException =>
-        logger.debug("[IdentifyWithoutEnrolmentAction] [invokeBlock] Got AuthorisationException:", e)
+        logger.debug("Got AuthorisationException while identifying the user without enrolment:", e)
         handleAuthException(e)
       case e: UnauthorizedException  =>
-        logger.debug("[IdentifyWithoutEnrolmentAction] [invokeBlock] Got UnauthorizedException:", e)
+        logger.debug("Got UnauthorizedException while identifying the user without enrolment:", e)
         Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }
@@ -95,7 +95,7 @@ class IdentifyWithoutEnrolmentActionImpl @Inject() (
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
     o.getOrElse {
       logger.warn(
-        s"[IdentifyWithoutEnrolmentAction] [getOrElseFailWithUnauthorised] Identifier Action failed with error: $failureMessage"
+        s"Identifier Action failed with error while identifying the user without enrolment: $failureMessage"
       )
       throw new IllegalStateException(failureMessage)
     }

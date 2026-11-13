@@ -84,21 +84,21 @@ class AlcoholDutyReturnsConnector @Inject() (
             Try(response.json.as[ObligationData]) match {
               case Success(data)      => Right[String, ObligationData](data)
               case Failure(exception) =>
-                logger.warn(s"[AlcoholDutyReturnsConnector] [getOpenObligation] Invalid JSON format", exception)
+                logger.warn(s"Invalid JSON format in the open obligation response", exception)
                 Left(s"Invalid JSON format $exception")
             }
           case Left(errorResponse) if errorResponse.statusCode == NOT_FOUND =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [getOpenObligation] No open obligation found. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+              s"No open obligation found. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
             )
             Left("No open obligation found.")
           case Left(errorResponse)                                          =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [getOpenObligation] Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+              s"Unexpected response when getting the open obligation. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
             )
             Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
           case Right(response)                                              =>
-            logger.warn(s"[AlcoholDutyReturnsConnector] [getOpenObligation] Unexpected status code: ${response.status}")
+            logger.warn(s"Unexpected status code when getting the open obligation: ${response.status}")
             Left(s"Unexpected status code: ${response.status}")
         }
     }
@@ -116,24 +116,24 @@ class AlcoholDutyReturnsConnector @Inject() (
               case Success(data)      => Right[String, Set[AlcoholRegime]](data)
               case Failure(exception) =>
                 logger.warn(
-                  s"[AlcoholDutyReturnsConnector] [getValidSubscriptionRegimes] Invalid JSON format",
+                  s"Invalid JSON format in the valid subscription regimes response",
                   exception
                 )
                 Left(s"Invalid JSON format $exception")
             }
           case Left(errorResponse) if errorResponse.statusCode == FORBIDDEN =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [getValidSubscriptionRegimes] Forbidden: Subscription status is not Approved or Insolvent. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+              s"Forbidden: Subscription status is not Approved or Insolvent. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
             )
             Left("Forbidden: Subscription status is not Approved or Insolvent.")
           case Left(errorResponse)                                          =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [getValidSubscriptionRegimes] Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+              s"Unexpected response when getting the valid subscription regimes. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
             )
             Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
           case Right(response)                                              =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [getValidSubscriptionRegimes] Unexpected status code: ${response.status}"
+              s"Unexpected status code when getting the valid subscription regimes: ${response.status}"
             )
             Left(s"Unexpected status code: ${response.status}")
         }
@@ -152,19 +152,19 @@ class AlcoholDutyReturnsConnector @Inject() (
               case Success(data)      => Right[String, Boolean](data)
               case Failure(exception) =>
                 logger.warn(
-                  s"[AlcoholDutyReturnsConnector] [shouldAskContactPreference] Invalid JSON format",
+                  s"Invalid JSON format in the contact preference response",
                   exception
                 )
                 Left(s"Invalid JSON format $exception")
             }
           case Left(errorResponse)                      =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [shouldAskContactPreference] Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+              s"Unexpected response when checking whether to ask for a contact preference. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
             )
             Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
           case Right(response)                          =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [shouldAskContactPreference] Unexpected status code: ${response.status}"
+              s"Unexpected status code when checking whether to ask for a contact preference: ${response.status}"
             )
             Left(s"Unexpected status code: ${response.status}")
         }
@@ -199,16 +199,16 @@ class AlcoholDutyReturnsConnector @Inject() (
                 auditReturnSubmitted(userAnswers, returnSubmission)
                 Right[ErrorModel, AdrReturnCreatedDetails](data)
               case Failure(exception) =>
-                logger.warn(s"[AlcoholDutyReturnsConnector] [submitReturn] Invalid JSON format", exception)
+                logger.warn(s"Invalid JSON format in the submit return response", exception)
                 Left(ErrorModel(INTERNAL_SERVER_ERROR, s"Invalid JSON format $exception"))
             }
           case Left(errorResponse) if errorResponse.statusCode == UNPROCESSABLE_ENTITY =>
-            logger.warn(s"[AlcoholDutyReturnsConnector] [submitReturn] Return already submitted")
+            logger.warn(s"Return already submitted")
             auditReturnSubmitted(userAnswers, returnSubmission)
             Left(ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
           case Left(errorResponse)                                                     =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [submitReturn] Unable to submit return. Unexpected response: ${errorResponse.message}"
+              s"Unable to submit return. Unexpected response: ${errorResponse.message}"
             )
             Left(
               ErrorModel(
@@ -218,7 +218,7 @@ class AlcoholDutyReturnsConnector @Inject() (
             )
           case Right(response)                                                         =>
             logger.warn(
-              s"[AlcoholDutyReturnsConnector] [submitReturn] Unable to submit return. Unexpected status code: ${response.status}"
+              s"Unable to submit return. Unexpected status code: ${response.status}"
             )
             Left(
               ErrorModel(INTERNAL_SERVER_ERROR, s"Unable to submit return. Unexpected status code: ${response.status}")

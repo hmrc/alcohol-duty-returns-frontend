@@ -81,7 +81,7 @@ class AdjustmentDutyDueController @Inject() (
       )
     )
     result.getOrElse {
-      logger.warn("[AdjustmentDutyDueController] [getView] Couldn't fetch correct AdjustmentEntry from user answers")
+      logger.warn("Couldn't fetch correct AdjustmentEntry from user answers when building the adjustment duty due view")
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
