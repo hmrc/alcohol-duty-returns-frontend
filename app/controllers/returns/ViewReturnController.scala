@@ -51,7 +51,7 @@ class ViewReturnController @Inject() (
     ReturnPeriod
       .fromPeriodKey(periodKey)
       .fold {
-        logger.warn(s"[ViewReturnController] [onPageLoad] Cannot parse period key $periodKey for $appaId on return")
+        logger.warn(s"Cannot parse period key $periodKey for $appaId on return")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       } { returnPeriod =>
         (for {
@@ -92,7 +92,7 @@ class ViewReturnController @Inject() (
         })
           .recover { case e =>
             logger.warn(
-              s"[ViewReturnController] [onPageLoad] Unable to fetch return $appaId $periodKey: ${e.getMessage}"
+              s"Unable to fetch return $appaId $periodKey: ${e.getMessage}"
             )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           }
@@ -115,7 +115,7 @@ class ViewReturnController @Inject() (
     if (returnDetails.identification.periodKey != periodKey) {
       val error =
         s"Period key on the return ${returnDetails.identification.periodKey} does not match the return $periodKey requested for $appaId"
-      logger.warn(s"[ViewReturnController] [handleInvalidPeriodKey] $error")
+      logger.warn(s"Invalid period key on the return being viewed: $error")
       Future.failed(new RuntimeException(error))
     } else {
       Future.unit

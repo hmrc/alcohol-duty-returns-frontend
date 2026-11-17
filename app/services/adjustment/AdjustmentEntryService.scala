@@ -55,7 +55,7 @@ class AdjustmentEntryServiceImpl @Inject() (
       case Some(adjustmentEntry) => adjustmentEntry
       case _                     =>
         logger.warn(
-          "[AdjustmentEntryService] [createAdjustment] Couldn't fetch correct AdjustmentEntry from user answers"
+          "Couldn't fetch correct AdjustmentEntry from user answers when creating the adjustment"
         )
         Future.failed(new Exception("Couldn't fetch correct AdjustmentEntry from user answers"))
     }

@@ -78,7 +78,7 @@ class AdjustmentTaxTypeController @Inject() (
         )
       case _                                                                                            =>
         logger.warn(
-          "[AdjustmentTaxTypeController] [onPageLoad] Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers"
+          "Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers when loading the adjustment tax type page"
         )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
@@ -117,13 +117,13 @@ class AdjustmentTaxTypeController @Inject() (
                     }
                   case _                                    =>
                     logger.warn(
-                      "[AdjustmentTaxTypeController] [onSubmit] Impossible to retrieve adjustmentType and period in currentAdjustmentEntry"
+                      "Impossible to retrieve adjustmentType and period in currentAdjustmentEntry"
                     )
                     Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 }
               case None                         =>
                 logger.warn(
-                  "[AdjustmentTaxTypeController] [onSubmit] Couldn't fetch currentAdjustmentEntry from user answers"
+                  "Couldn't fetch currentAdjustmentEntry from user answers when submitting the adjustment tax type"
                 )
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
@@ -151,7 +151,7 @@ class AdjustmentTaxTypeController @Inject() (
         )
       case _                                                                               =>
         logger.warn(
-          "[AdjustmentTaxTypeController] [handleFormWithErrors] Couldn't fetch the adjustmentType in AdjustmentEntry from user answers"
+          "Couldn't fetch the adjustmentType in AdjustmentEntry from user answers when handling adjustment tax type form errors"
         )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }

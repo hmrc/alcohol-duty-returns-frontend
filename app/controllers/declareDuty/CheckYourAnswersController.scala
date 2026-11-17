@@ -46,7 +46,7 @@ class CheckYourAnswersController @Inject() (
         case Left(error)        =>
           val (appaId, periodKey) = (request.userAnswers.returnId.appaId, request.userAnswers.returnId.periodKey)
           logger.warn(
-            s"[declareDuty/CheckYourAnswersController] [onPageLoad] Error on declare duty CYA for appa id $appaId, period key $periodKey: ${error.message}"
+            s"Error on declare duty CYA for appa id $appaId, period key $periodKey: ${error.message}"
           )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }

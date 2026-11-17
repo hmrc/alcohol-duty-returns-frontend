@@ -44,7 +44,7 @@ class JourneyRecoveryController @Inject() (
         case Right(safeUrl) =>
           Some(safeUrl.url)
         case Left(message)  =>
-          logger.info(s"[JourneyRecoveryController] [onPageLoad] $message")
+          logger.info(s"Unsafe continue URL on journey recovery: $message")
           None
       }
     }

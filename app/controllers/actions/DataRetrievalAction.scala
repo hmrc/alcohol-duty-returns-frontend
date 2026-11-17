@@ -63,7 +63,7 @@ class DataRetrievalActionImpl @Inject() (
                 )
               )
             case Left(ex) if ex.statusCode == NOT_FOUND =>
-              logger.info(s"[DataRetrievalAction] [refine] Return ${request.appaId}/$periodKey not found")
+              logger.info(s"Return ${request.appaId}/$periodKey not found during data retrieval")
               Right(
                 OptionalDataRequest(
                   request.request,
@@ -75,10 +75,10 @@ class DataRetrievalActionImpl @Inject() (
                 )
               )
             case Left(ex) if ex.statusCode == LOCKED    =>
-              logger.info(s"[DataRetrievalAction] [refine] Return ${request.appaId}/$periodKey locked for the user")
+              logger.info(s"Return ${request.appaId}/$periodKey locked for the user during data retrieval")
               Left(Redirect(routes.ReturnLockedController.onPageLoad()))
             case Left(ex)                               =>
-              logger.warn("[DataRetrievalAction] [refine] Data retrieval failed with exception: ", ex)
+              logger.warn("Data retrieval failed with exception: ", ex)
               Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
           }
     }

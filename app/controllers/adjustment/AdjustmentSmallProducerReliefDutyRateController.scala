@@ -70,7 +70,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
         )
       case _                                                                                                         =>
         logger.warn(
-          "[AdjustmentSmallProducerReliefDutyRateController] [onPageLoad] Couldn't fetch the adjustmentType and repackagedSprDutyRate in AdjustmentEntry from user answers"
+          "Couldn't fetch the adjustmentType and repackagedSprDutyRate in AdjustmentEntry from user answers"
         )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
@@ -95,7 +95,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
                 )
               case _                                                                               =>
                 logger.warn(
-                  "[AdjustmentSmallProducerReliefDutyRateController] [onSubmit] Couldn't fetch the adjustmentType in AdjustmentEntry from user answers"
+                  "Couldn't fetch the adjustmentType in AdjustmentEntry from user answers when submitting the small producer relief duty rate"
                 )
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             },

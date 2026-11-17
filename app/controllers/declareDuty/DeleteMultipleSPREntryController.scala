@@ -53,7 +53,7 @@ class DeleteMultipleSPREntryController @Inject() (
       indexOpt match {
         case Some(index) => Ok(view(form, regime, index))
         case None        =>
-          logger.warn("[DeleteMultipleSPREntryController] [onPageLoad] No index provided")
+          logger.warn("No index provided when loading the delete multiple SPR entry page")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
     }
@@ -62,7 +62,7 @@ class DeleteMultipleSPREntryController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       indexOpt match {
         case None        =>
-          logger.warn("[DeleteMultipleSPREntryController] [onSubmit] No index provided")
+          logger.warn("No index provided when submitting the delete multiple SPR entry page")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(index) =>
           form
