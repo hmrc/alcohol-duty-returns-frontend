@@ -59,7 +59,7 @@ class CheckYourAnswersController @Inject() (
       } yield Ok(view(summaryList, adjustmentType))
       result.getOrElse {
         logger.warn(
-          "[adjustment/CheckYourAnswersController] [onPageLoad] Couldn't create the summaryList from user answers or adjustment type is missing"
+          "Couldn't create the summaryList from user answers or adjustment type is missing"
         )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
@@ -83,11 +83,11 @@ class CheckYourAnswersController @Inject() (
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
         )
       case Some(_)                                             =>
-        logger.warn("[adjustment/CheckYourAnswersController] [onSubmit] Adjustment Entry not completed")
+        logger.warn("Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case _                                                   =>
         logger.warn(
-          "[adjustment/CheckYourAnswersController] [onSubmit] Couldn't fetch currentAdjustmentEntry from user answers"
+          "Couldn't fetch currentAdjustmentEntry from user answers"
         )
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
